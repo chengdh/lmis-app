@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:padding="3dp" >
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/container_drop_shadow"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal" >
+
+      <com.lmis.util.contactview.LmisContactView
+        android:id="@+id/imgUserPicture"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="5dp"
+        android:background="#f3f3f3"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_action_user" />
+
+      <LinearLayout
+        android:id="@+id/layoutMessageDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="8dp"
+        android:weightSum="4" >
+        <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="3"
+          android:gravity="left|top"
+          android:orientation="vertical" >
+
+          <TextView
+            android:id="@+id/txvMessageAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#414141"
+            android:textStyle="bold" />
+
+          <TextView
+            android:id="@+id/txvAuthorEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_weight="3"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#414141" />
+
+          <TextView
+            android:id="@+id/txvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="right|center_horizontal"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#414141"
+            android:typeface="sans" />
+
+        </LinearLayout>
+      </LinearLayout>
+    </LinearLayout>
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#eeeeee" />
+
+    <LinearLayout
+      android:id="@+id/layoutMessageBody"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="8dp" >
+
+      <WebView
+        android:id="@+id/webViewMessageBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
