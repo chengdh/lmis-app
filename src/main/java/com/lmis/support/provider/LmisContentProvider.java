@@ -30,8 +30,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
+import com.lmis.addons.expense.Expense;
 import com.lmis.orm.LmisSQLiteHelper;
-import com.lmis.providers.note.NoteProvider;
+import com.lmis.providers.expense.ExpenseProvider;
 
 /**
  * The Class LmisContentProvider.
@@ -152,8 +153,8 @@ public abstract class LmisContentProvider extends ContentProvider implements
                 initialValues);
 
         if (rowID > 0) {
-            Uri uriObj = ContentUris.withAppendedId(
-                    NoteProvider.Constants.CONTENT_URI, rowID);
+            //FIXME 此处应修改
+            Uri uriObj = ContentUris.withAppendedId(ExpenseProvider.Constants.CONTENT_URI, rowID);
             getContext().getContentResolver().notifyChange(uri, null);
 
             return (uriObj);

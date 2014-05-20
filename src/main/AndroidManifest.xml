@@ -60,62 +60,11 @@
         <action android:name="com.lmis.ACTION_ACCOUNT_CONFIG" />
       </intent-filter>
     </activity>
-    <activity android:name="com.lmis.addons.note.NoteComposeActivity" />
-    <activity android:name="com.lmis.addons.message.MessageComposeActivity" >
-      <intent-filter>
-        <action android:name="android.intent.action.SEND" />
-        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT" />
+      <!-- Message provider -->
+      <!-- Message provider service -->
 
-        <data android:mimeType="image/*" />
-        <data android:mimeType="vnd.android.cursor.item/vnd.com.lmis.auth.profile" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-
-        <data android:mimeType="text/plain" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND_MULTIPLE" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-
-        <data android:mimeType="image/*" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND_MULTIPLE" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-
-        <data android:mimeType="text/plain" />
-      </intent-filter>
-    </activity>
-
-    <!-- Message provider -->
-    <provider
-      android:name="com.lmis.providers.message.MessageProvider"
-      android:authorities="com.lmis.providers.message"
-      android:enabled="true"
-      android:exported="true"
-      android:label="@string/label_messages"
-      android:syncable="true" />
-    <!-- Message provider service -->
-    <service
-      android:name="com.lmis.services.MessageSyncService"
-      android:exported="true" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
-
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_messages" />
-    </service>
-
-    <!-- Expense provider service -->
+      <!-- Expense provider service -->
     <service
       android:name="com.lmis.services.ExpenseSyncService" android:exported="true" >
       <intent-filter>
@@ -137,117 +86,22 @@
 
 
     <!-- account voucher provider service -->
-    <service
-      android:name="com.lmis.services.VoucherSyncService" android:exported="true" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_voucher" />
-    </service>
 
-    <!-- voucher provider -->
-    <provider
-      android:name="com.lmis.providers.voucher.VoucherProvider"
-      android:authorities="com.lmis.providers.voucher"
-      android:enabled="true"
-      android:exported="true"
-      android:label="@string/label_vouchers"
-      android:syncable="true" />
+      <!-- voucher provider -->
 
-    <!-- Note provider -->
-    <provider
-      android:name="com.lmis.providers.note.NoteProvider"
-      android:authorities="com.lmis.providers.note"
-      android:enabled="true"
-      android:exported="true"
-      android:label="@string/label_notes"
-      android:syncable="true" />
-    <!-- Note provider service -->
-    <service
-      android:name="com.lmis.services.NoteSyncService"
-      android:exported="true" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
+      <!-- Note provider -->
+      <!-- Note provider service -->
 
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_notes" />
-    </service>
+      <!-- Mail Group provider -->
 
-    <!-- Mail Group provider -->
-    <provider
-      android:name="com.lmis.providers.groups.MailGroupProvider"
-      android:authorities="com.lmis.providers.groups"
-      android:enabled="true"
-      android:exported="true"
-      android:label="@string/label_groups"
-      android:syncable="true" />
+      <!-- Mail Group provider service -->
 
-    <!-- Mail Group provider service -->
-    <service
-      android:name="com.lmis.services.MailGroupSyncService"
-      android:exported="true" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
+      <!-- Meeting service -->
 
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_groups" />
-    </service>
+      <!-- Contact service -->
 
-    <!-- Meeting service -->
-    <service
-      android:name="com.lmis.services.MeetingSyncService"
-      android:exported="true" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
-
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_meetings" />
-    </service>
-
-    <!-- Contact service -->
-    <service
-      android:name="com.lmis.services.ContactSyncService"
-      android:exported="true"
-      android:process=":contacts" >
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter" />
-      </intent-filter>
-
-      <meta-data
-        android:name="android.content.SyncAdapter"
-        android:resource="@xml/sync_contacts" />
-      <meta-data
-        android:name="android.provider.CONTACTS_STRUCTURE"
-        android:resource="@xml/contacts" />
-    </service>
-
-    <!-- Message Widget -->
-    <receiver android:name="com.lmis.widgets.message.MessageWidget" >
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-      </intent-filter>
-
-      <meta-data
-        android:name="android.appwidget.provider"
-        android:resource="@xml/widget_message" />
-    </receiver>
-    <!-- Message widget remote view service -->
-    <service
-      android:name="com.lmis.widgets.message.MessageRemoteViewService"
-      android:permission="android.permission.BIND_REMOTEVIEWS" />
-    <!-- Message widget configuration -->
-    <activity android:name="com.lmis.widgets.message.MessageWidgetConfigure" >
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-      </intent-filter>
-    </activity>
+      <!-- Message Widget -->
+      <!-- Message widget remote view service -->
+      <!-- Message widget configuration -->
   </application>
 </manifest>

@@ -24,13 +24,9 @@ import java.util.List;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 
-import com.lmis.providers.groups.MailGroupProvider;
-import com.lmis.providers.voucher.VoucherProvider;
 import com.lmis.support.SyncValue;
 import com.lmis.support.SyncWizardHelper;
 import com.lmis.providers.expense.ExpenseProvider;
-import com.lmis.providers.message.MessageProvider;
-import com.lmis.providers.note.NoteProvider;
 
 public class SyncWizardValues implements SyncWizardHelper {
 
@@ -41,15 +37,17 @@ public class SyncWizardValues implements SyncWizardHelper {
         //单据信息
         list.add(new SyncValue("bills"));
 		list.add(new SyncValue("expenses", ExpenseProvider.AUTHORITY,SyncValue.Type.CHECKBOX));
-		list.add(new SyncValue("vouchers", VoucherProvider.AUTHORITY,SyncValue.Type.CHECKBOX));
 		/* Social */
+        /*
 		list.add(new SyncValue("social"));
 		list.add(new SyncValue("messages", MessageProvider.AUTHORITY,
 				SyncValue.Type.CHECKBOX));
 		list.add(new SyncValue("groups", MailGroupProvider.AUTHORITY,
 				SyncValue.Type.CHECKBOX));
+	    */
 
 		/* Contacts */
+        /*
 		list.add(new SyncValue("contacts"));
 		List<SyncValue> radioGroups = new ArrayList<SyncValue>();
 		radioGroups.add(new SyncValue("all_contacts",
@@ -59,14 +57,18 @@ public class SyncWizardValues implements SyncWizardHelper {
 		list.add(new SyncValue(radioGroups));
 
 		/* Notes */
+        /*
 		list.add(new SyncValue("notes"));
 		list.add(new SyncValue("notes", NoteProvider.AUTHORITY,
 				SyncValue.Type.CHECKBOX));
 
+        */
 		/* Meetings */
+        /*
 		list.add(new SyncValue("calendar"));
 		list.add(new SyncValue("meetings", CalendarContract.AUTHORITY,
 				SyncValue.Type.CHECKBOX));
+        */
 		return list;
 	}
 }

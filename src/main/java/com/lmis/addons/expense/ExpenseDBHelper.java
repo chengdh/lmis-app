@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.lmis.addons.message.MessageDB;
 import com.lmis.orm.LmisColumn;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
@@ -112,7 +111,6 @@ public class ExpenseDBHelper extends LmisDatabase {
     cols.add(new LmisColumn("next_workflow_signal","next_signal", LmisFields.varchar(20)));
     cols.add(new LmisColumn("processed","is processed", LmisFields.varchar(20)));
 
-    cols.add(new LmisColumn("message_ids","messages", LmisFields.oneToMany(new MessageDB(mContext))));
 
     return cols;
   }

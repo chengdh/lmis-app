@@ -77,7 +77,7 @@ public class LmisHelper extends Lmis {
         /*
          * Required to login with server.
 		 */
-        login(mUser.getUsername(), mUser.getPassword(), mUser.getDatabase(),
+        login(mUser.getUsername(), mUser.getPassword(),
                 mUser.getHost());
     }
 
@@ -86,38 +86,23 @@ public class LmisHelper extends Lmis {
         mPref = new PreferenceManager(mContext);
     }
 
-    public LmisUser login(String username, String password, String database,
-                          String serverURL) {
+    public LmisUser login(String username, String password, String serverURL) {
         LmisUser userObj = null;
         try {
-            JSONObject response = this.authenticate(username, password,
-                    database);
+            JSONObject rs = this.authenticate(username, password);
             int userId = 0;
-            if (response.get("uid") instanceof Integer) {
-                userId = response.getInt("uid");
-
-                LmisFieldsHelper fields = new LmisFieldsHelper(new String[]{
-                        "partner_id", "tz", "image", "company_id"});
-                LmisDomain domain = new LmisDomain();
-                domain.add("id", "=", userId);
-                JSONObject res = search_read("res.users", fields.get(),
-                        domain.get()).getJSONArray("records").getJSONObject(0);
+            if (rs.get("id") instanceof Integer) {
+                userId = rs.getInt("id");
 
                 userObj = new LmisUser();
-                userObj.setAvatar(res.getString("image"));
-
-                userObj.setDatabase(database);
                 userObj.setHost(serverURL);
                 userObj.setIsactive(true);
-                userObj.setAndroidName(androidName(username, database));
-                userObj.setPartner_id(res.getJSONArray("partner_id").getInt(0));
-                userObj.setTimezone(res.getString("tz"));
+                userObj.setAndroidName(rs.getString("real_name"));
+                userObj.setReal_name(rs.getString("real_name"));
                 userObj.setUser_id(userId);
                 userObj.setUsername(username);
                 userObj.setPassword(password);
-                String company_id = new JSONArray(res.getString("company_id"))
-                        .getString(0);
-                userObj.setCompany_id(company_id);
+                userObj.setDefault_org_id(rs.getInt("default_org_id"));
 
             }
         } catch (Exception e) {
@@ -372,9 +357,6 @@ public class LmisHelper extends Lmis {
             model = mDatabase.getModelName();
         }
         try {
-            if (context != null) {
-                arguments.add(updateContext(context));
-            }
             result = call_kw(model, method, arguments.getArray());
             return result.get("result");
         } catch (Exception e) {

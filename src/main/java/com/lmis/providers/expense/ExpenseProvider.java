@@ -26,7 +26,7 @@ import com.lmis.support.provider.LmisContentProvider;
  */
 public class ExpenseProvider extends LmisContentProvider {
 	public static String CONTENTURI = "ExpenseProvider";
-	public static String AUTHORITY = "com.openerp.providers.expense";
+	public static String AUTHORITY = "com.lmis.providers.expense";
 
 	@Override
 	public String authority() {

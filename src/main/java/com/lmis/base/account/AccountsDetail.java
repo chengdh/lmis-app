@@ -145,7 +145,6 @@ public class AccountsDetail extends BaseFragment {
 			LmisDataRow row_data = new LmisDataRow();
 
 			row_data.put("name", account.getAndroidName());
-			row_data.put("image", account.getAvatar());
 			row_data.put("host", account.getHost());
 			row_data.put("is_active", account.isIsactive());
 			list.add(row_data);

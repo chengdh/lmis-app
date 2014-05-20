@@ -41,7 +41,7 @@ public class LmisServerConnection {
     /**
      * The openerp.
      */
-    public Lmis openerp = null;
+    public Lmis lmis = null;
 
     /**
      * Test connection.
@@ -58,45 +58,13 @@ public class LmisServerConnection {
             return false;
         }
         try {
-            openerp = new Lmis(serverURL);
-            openerp.getDatabaseList();
-        } catch (LmisVersionException version) {
-            throw new LmisVersionException(version.getMessage());
+            lmis = new Lmis(serverURL);
+            lmis.testConnection();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return true;
-    }
-
-    /**
-     * Gets the databases.
-     *
-     * @param context   the context
-     * @param serverURL the server url
-     * @return the databases
-     * @throws com.lmis.LmisVersionException
-     */
-    public JSONArray getDatabases(Context context, String serverURL)
-            throws LmisVersionException {
-        JSONArray dbList = null;
-        if (this.testConnection(context, serverURL)) {
-            try {
-                dbList = openerp.getDatabaseList();
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-        return dbList;
     }
 
     /**

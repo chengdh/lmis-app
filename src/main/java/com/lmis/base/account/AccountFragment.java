@@ -66,7 +66,7 @@ public class AccountFragment extends BaseFragment {
 	ActionMode mActionMode;
 
 	/** The open erp server url. */
-	String openERPServerURL = "";
+	String LmisServerURL = "";
 
 	/** The edt server url. */
 	LmisEditText edtServerUrl = null;
@@ -185,7 +185,7 @@ public class AccountFragment extends BaseFragment {
 			}
 
 			serverURL.append(edtServerUrl.getText());
-			this.openERPServerURL = serverURL.toString();
+			this.LmisServerURL = serverURL.toString();
 			serverConnectASync = new ConnectToServer();
 			serverConnectASync.execute((Void) null);
 
@@ -232,8 +232,7 @@ public class AccountFragment extends BaseFragment {
 			LmisServerConnection oeConnect = new LmisServerConnection();
 			boolean flag = false;
 			try {
-				flag = oeConnect
-						.testConnection(getActivity(), openERPServerURL);
+				flag = oeConnect.testConnection(getActivity(), LmisServerURL);
 				if (!flag) {
 					errorMsg = "Unable to reach Lmis 7.0 Server.";
 				}
@@ -258,7 +257,7 @@ public class AccountFragment extends BaseFragment {
 				// Start New Fragment for Login
 				Login loginFragment = new Login();
 				Bundle bundle = new Bundle();
-				bundle.putString("openERPServerURL", openERPServerURL);
+				bundle.putString("LmisServerURL", LmisServerURL);
 				loginFragment.setArguments(bundle);
 				FragmentListener fragment = (FragmentListener) getActivity();
 				fragment.startMainFragment(loginFragment, true);

@@ -145,7 +145,6 @@ public class ExpenseSyncService extends Service {
       //LmisDomain domain = new LmisDomain();
       //arguments.add(domain);
       // Param 2 : context
-      arguments.add(oe.updateContext(newContext));
 
       //数据库中原有的数据也需要更新
       List<Integer> ids = expense_db.ids();

@@ -36,273 +36,252 @@ import com.lmis.config.SyncWizardValues;
  */
 public class LmisAccountManager {
 
-	/** The Constant PARAM_AUTHTOKEN_TYPE. */
-	private static final String PARAM_AUTHTOKEN_TYPE = "com.openerp.auth";
-	public static LmisUser current_user = null;
+    /**
+     * The Constant PARAM_AUTHTOKEN_TYPE.
+     */
+    private static final String PARAM_AUTHTOKEN_TYPE = "com.lmis.auth";
+    public static LmisUser current_user = null;
 
-	/**
-	 * Fetch all accounts.
-	 * 
-	 * @param context
-	 *            the context
-	 * @return the list
-	 */
-	public static List<LmisUser> fetchAllAccounts(Context context) {
-		List<LmisUser> userObjs = null;
+    /**
+     * Fetch all accounts.
+     *
+     * @param context the context
+     * @return the list
+     */
+    public static List<LmisUser> fetchAllAccounts(Context context) {
+        List<LmisUser> userObjs = null;
 
-		AccountManager accMgr = AccountManager.get(context);
-		Account[] accounts = accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE);
-		if (accounts.length > 0) {
-			userObjs = new ArrayList<LmisUser>();
-			for (Account account : accounts) {
-				LmisUser userobj = new LmisUser();
-				userobj.fillFromAccount(accMgr, account);
-				userObjs.add(userobj);
-			}
-		}
-		return userObjs;
-	}
+        AccountManager accMgr = AccountManager.get(context);
+        Account[] accounts = accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE);
+        if (accounts.length > 0) {
+            userObjs = new ArrayList<LmisUser>();
+            for (Account account : accounts) {
+                LmisUser userobj = new LmisUser();
+                userobj.fillFromAccount(accMgr, account);
+                userObjs.add(userobj);
+            }
+        }
+        return userObjs;
+    }
 
-	/**
-	 * hasAccounts
-	 * 
-	 * checks for availability of any account for Lmis
-	 * 
-	 * @param context
-	 * @return true if there is any account related to type
-	 */
-	public static boolean hasAccounts(Context context) {
-		boolean flag = false;
-		AccountManager accMgr = AccountManager.get(context);
-		if (accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE).length > 0) {
-			flag = true;
-		}
-		return flag;
-	}
+    /**
+     * hasAccounts
+     * <p/>
+     * checks for availability of any account for Lmis
+     *
+     * @param context
+     * @return true if there is any account related to type
+     */
+    public static boolean hasAccounts(Context context) {
+        boolean flag = false;
+        AccountManager accMgr = AccountManager.get(context);
+        if (accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE).length > 0) {
+            flag = true;
+        }
+        return flag;
+    }
 
-	/**
-	 * Creates the account.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param bundleData
-	 *            the bundle data
-	 * @return true, if successful
-	 */
-	public static boolean createAccount(Context context, LmisUser bundleData) {
-		AccountManager accMgr = null;
-		accMgr = AccountManager.get(context);
-		String accountType = PARAM_AUTHTOKEN_TYPE;
-		String password = String.valueOf(bundleData.getPassword());
-		String accountName = bundleData.getAndroidName();
-		Account account = new Account(accountName, accountType);
-		Bundle bundle = bundleData.getAsBundle();
-		return accMgr.addAccountExplicitly(account, password, bundle);
-	}
+    /**
+     * Creates the account.
+     *
+     * @param context    the context
+     * @param bundleData the bundle data
+     * @return true, if successful
+     */
+    public static boolean createAccount(Context context, LmisUser bundleData) {
+        AccountManager accMgr = null;
+        accMgr = AccountManager.get(context);
+        String accountType = PARAM_AUTHTOKEN_TYPE;
+        String password = String.valueOf(bundleData.getPassword());
+        String accountName = bundleData.getAndroidName();
+        Account account = new Account(accountName, accountType);
+        Bundle bundle = bundleData.getAsBundle();
+        return accMgr.addAccountExplicitly(account, password, bundle);
+    }
 
-	/**
-	 * Checks if is any user.
-	 * 
-	 * @param context
-	 *            the context
-	 * @return true, if is any user
-	 */
-	public static boolean isAnyUser(Context context) {
-		boolean flag = false;
-		if (current_user != null) {
-			flag = true;
-		} else {
-			List<LmisUser> accounts = LmisAccountManager
-					.fetchAllAccounts(context);
-			if (accounts != null) {
-				for (LmisUser user : accounts) {
-					if (user.isIsactive()) {
-						flag = true;
-						current_user = user;
-						break;
-					}
-				}
-			}
-		}
-		return flag;
-	}
+    /**
+     * Checks if is any user.
+     *
+     * @param context the context
+     * @return true, if is any user
+     */
+    public static boolean isAnyUser(Context context) {
+        boolean flag = false;
+        if (current_user != null) {
+            flag = true;
+        } else {
+            List<LmisUser> accounts = LmisAccountManager
+                    .fetchAllAccounts(context);
+            if (accounts != null) {
+                for (LmisUser user : accounts) {
+                    if (user.isIsactive()) {
+                        flag = true;
+                        current_user = user;
+                        break;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
 
-	/**
-	 * Current user.
-	 * 
-	 * @param context
-	 *            the context
-	 * @return the user object
-	 */
-	public static LmisUser currentUser(Context context) {
-		if (current_user != null) {
-			return current_user;
-		} else {
-			if (LmisAccountManager.isAnyUser(context)) {
-				List<LmisUser> accounts = LmisAccountManager
-						.fetchAllAccounts(context);
-				for (LmisUser user : accounts) {
+    /**
+     * Current user.
+     *
+     * @param context the context
+     * @return the user object
+     */
+    public static LmisUser currentUser(Context context) {
+        if (current_user != null) {
+            return current_user;
+        } else {
+            if (LmisAccountManager.isAnyUser(context)) {
+                List<LmisUser> accounts = LmisAccountManager
+                        .fetchAllAccounts(context);
+                for (LmisUser user : accounts) {
 
-					if (user.isIsactive()) {
-						return user;
-					}
-				}
-			}
-		}
-		return null;
-	}
+                    if (user.isIsactive()) {
+                        return user;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Gets the account detail.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param username
-	 *            the username
-	 * @return the account detail
-	 */
-	public static LmisUser getAccountDetail(Context context, String username) {
+    /**
+     * Gets the account detail.
+     *
+     * @param context  the context
+     * @param username the username
+     * @return the account detail
+     */
+    public static LmisUser getAccountDetail(Context context, String username) {
 
-		List<LmisUser> allAccounts = LmisAccountManager
-				.fetchAllAccounts(context);
-		for (LmisUser user : allAccounts) {
-			if (user.getAndroidName().equals(username)) {
-				return user;
-			}
-		}
-		return null;
-	}
+        List<LmisUser> allAccounts = LmisAccountManager
+                .fetchAllAccounts(context);
+        for (LmisUser user : allAccounts) {
+            if (user.getAndroidName().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Gets the account.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param username
-	 *            the username
-	 * @return the account
-	 */
-	public static Account getAccount(Context context, String username) {
-		AccountManager accMgr = AccountManager.get(context);
-		Account[] accounts = accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE);
+    /**
+     * Gets the account.
+     *
+     * @param context  the context
+     * @param username the username
+     * @return the account
+     */
+    public static Account getAccount(Context context, String username) {
+        AccountManager accMgr = AccountManager.get(context);
+        Account[] accounts = accMgr.getAccountsByType(PARAM_AUTHTOKEN_TYPE);
 
-		Account userAc = null;
-		for (Account account : accounts) {
+        Account userAc = null;
+        for (Account account : accounts) {
 
-			LmisUser userData = new LmisUser();
-			userData.fillFromAccount(accMgr, account);
+            LmisUser userData = new LmisUser();
+            userData.fillFromAccount(accMgr, account);
 
-			if (userData != null) {
-				if (userData.getAndroidName().equals(username)) {
-					userAc = account;
-				}
-			}
-		}
-		return userAc;
+            if (userData != null) {
+                if (userData.getAndroidName().equals(username)) {
+                    userAc = account;
+                }
+            }
+        }
+        return userAc;
 
-	}
+    }
 
-	/**
-	 * Logout user.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param username
-	 *            the username
-	 * @return true, if successful
-	 */
-	public static boolean logoutUser(Context context, String username) {
-		boolean flag = false;
-		LmisUser user = LmisAccountManager.getAccountDetail(context, username);
-		Account account = LmisAccountManager.getAccount(context,
+    /**
+     * Logout user.
+     *
+     * @param context  the context
+     * @param username the username
+     * @return true, if successful
+     */
+    public static boolean logoutUser(Context context, String username) {
+        boolean flag = false;
+        LmisUser user = LmisAccountManager.getAccountDetail(context, username);
+        Account account = LmisAccountManager.getAccount(context,
                 user.getAndroidName());
-		if (user != null) {
-			if (cancelAllSync(account)) {
-				AccountManager accMgr = AccountManager.get(context);
-				user.setIsactive(false);
+        if (user != null) {
+            if (cancelAllSync(account)) {
+                AccountManager accMgr = AccountManager.get(context);
+                user.setIsactive(false);
 
-				accMgr.setUserData(account, "isactive", "0");
-				flag = true;
-				current_user = null;
-			}
-		}
-		return flag;
+                accMgr.setUserData(account, "isactive", "0");
+                flag = true;
+                current_user = null;
+            }
+        }
+        return flag;
 
-	}
+    }
 
-	private static boolean cancelAllSync(Account account) {
-		SyncWizardValues syncVals = new SyncWizardValues();
-		boolean flag = false;
-		for (SyncValue sync : syncVals.syncValues()) {
-			ContentResolver.cancelSync(account, sync.getAuthority());
-			flag = true;
-		}
-		return flag;
-	}
+    private static boolean cancelAllSync(Account account) {
+        SyncWizardValues syncVals = new SyncWizardValues();
+        boolean flag = false;
+        for (SyncValue sync : syncVals.syncValues()) {
+            ContentResolver.cancelSync(account, sync.getAuthority());
+            flag = true;
+        }
+        return flag;
+    }
 
-	/**
-	 * Login user.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param username
-	 *            the username
-	 * @return the user object
-	 */
-	public static LmisUser loginUser(Context context, String username) {
-		LmisUser userData = null;
+    /**
+     * Login user.
+     *
+     * @param context  the context
+     * @param username the username
+     * @return the user object
+     */
+    public static LmisUser loginUser(Context context, String username) {
+        LmisUser userData = null;
 
-		List<LmisUser> allAccounts = LmisAccountManager
-				.fetchAllAccounts(context);
-		for (LmisUser user : allAccounts) {
-			LmisAccountManager.logoutUser(context, user.getAndroidName());
-		}
+        List<LmisUser> allAccounts = LmisAccountManager.fetchAllAccounts(context);
+        for (LmisUser user : allAccounts) {
+            LmisAccountManager.logoutUser(context, user.getAndroidName());
+        }
 
-		userData = LmisAccountManager.getAccountDetail(context, username);
-		if (userData != null) {
-			AccountManager accMgr = AccountManager.get(context);
+        userData = LmisAccountManager.getAccountDetail(context, username);
+        if (userData != null) {
+            AccountManager accMgr = AccountManager.get(context);
 
-			accMgr.setUserData(
-					LmisAccountManager.getAccount(context,
-                            userData.getAndroidName()), "isactive", "true");
-		}
-		current_user = userData;
-		return userData;
-	}
+            accMgr.setUserData(LmisAccountManager.getAccount(context, userData.getAndroidName()), "isactive", "true");
+        }
+        current_user = userData;
+        return userData;
+    }
 
-	/**
-	 * Removes the account.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param username
-	 *            the username
-	 */
-	public static void removeAccount(Context context, String username) {
-		AccountManager accMgr = AccountManager.get(context);
-		accMgr.removeAccount(
-				LmisAccountManager.getAccount(context, username), null, null);
+    /**
+     * Removes the account.
+     *
+     * @param context  the context
+     * @param username the username
+     */
+    public static void removeAccount(Context context, String username) {
+        AccountManager accMgr = AccountManager.get(context);
+        accMgr.removeAccount(LmisAccountManager.getAccount(context, username), null, null);
 
-	}
+    }
 
-	public static boolean updateAccountDetails(Context context,
-			LmisUser userObject) {
+    public static boolean updateAccountDetails(Context context, LmisUser userObject) {
 
-		boolean flag = false;
-		LmisUser user = LmisAccountManager.getAccountDetail(context,
+        boolean flag = false;
+        LmisUser user = LmisAccountManager.getAccountDetail(context,
                 userObject.getAndroidName());
-		Bundle userBundle = userObject.getAsBundle();
-		if (user != null) {
-			AccountManager accMgr = AccountManager.get(context);
-			for (String key : userBundle.keySet()) {
-				accMgr.setUserData(
-						LmisAccountManager.getAccount(context,
-                                user.getAndroidName()), key,
-						userBundle.getString(key));
-			}
+        Bundle userBundle = userObject.getAsBundle();
+        if (user != null) {
+            AccountManager accMgr = AccountManager.get(context);
+            for (String key : userBundle.keySet()) {
+                accMgr.setUserData(LmisAccountManager.getAccount(context, user.getAndroidName()), key, userBundle.getString(key));
+            }
 
-			flag = true;
-		}
-		return flag;
-	}
+            flag = true;
+        }
+        return flag;
+    }
 }

@@ -43,29 +43,9 @@ public class LmisUser {
     private int user_id;
 
     /**
-     * The partner_id.
-     */
-    private int partner_id;
-
-    /**
-     * The timezone.
-     */
-    private String timezone;
-
-    /**
      * The isactive.
      */
-    private boolean isactive;
-
-    /**
-     * The avatar.
-     */
-    private String avatar;
-
-    /**
-     * The database.
-     */
-    private String database;
+    private boolean is_active;
 
     /**
      * The host.
@@ -83,9 +63,25 @@ public class LmisUser {
     private String password;
 
     /**
-     * The company_id.
+     * isactive
      */
-    private String company_id;
+    private Boolean isactive;
+
+
+    /**
+     * The default_org_id.
+     */
+    private int default_org_id;
+
+    /**
+     * The real name
+     */
+    private String real_name;
+
+    /**
+     * The auth_token
+     */
+    private String authentication_token;
 
     /**
      * Gets the data as bundle.
@@ -96,35 +92,16 @@ public class LmisUser {
         Bundle bundle = new Bundle();
         bundle.putString("username", this.getUsername());
         bundle.putString("user_id", this.getUser_id() + "");
-        bundle.putString("partner_id", this.getPartner_id() + "");
-        bundle.putString("timezone", this.getTimezone());
         bundle.putString("isactive", String.valueOf(this.isIsactive()));
-        bundle.putString("avatar", this.getAvatar());
-        bundle.putString("database", this.getDatabase());
         bundle.putString("host", this.getHost());
         bundle.putString("android_name", this.getAndroidName());
         bundle.putString("password", this.getPassword());
-        bundle.putString("company_id", this.getCompany_id());
+        bundle.putString("default_org_id", this.getDefault_org_id() + "");
+        bundle.putString("real_name", this.getReal_name());
+        bundle.putString("authentication_token",this.getAuthentication_token());
         return bundle;
     }
 
-    /**
-     * Gets the company_id.
-     *
-     * @return the company_id
-     */
-    public String getCompany_id() {
-        return company_id;
-    }
-
-    /**
-     * Sets the company_id.
-     *
-     * @param company_id the new company_id
-     */
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
-    }
 
     /**
      * Sets the data from bundle.
@@ -134,15 +111,13 @@ public class LmisUser {
     public void setFromBundle(Bundle data) {
         this.setUsername(data.getString("username"));
         this.setUser_id(Integer.parseInt(data.getString("user_id")));
-        this.setPartner_id(Integer.parseInt(data.getString("partner_id")));
-        this.setTimezone(data.getString("timezone"));
         this.setIsactive(data.getBoolean("isactive"));
-        this.setAvatar(data.getString("avatar"));
-        this.setDatabase(data.getString("database"));
         this.setHost(data.getString("host"));
         this.setAndroidName(data.getString("android_name"));
         this.setPassword(data.getString("password"));
-        this.setCompany_id(data.getString("company_id"));
+        this.setReal_name(data.getString("real_name"));
+        this.setDefault_org_id(Integer.parseInt(data.getString("default_org_id")));
+        this.setAuthentication_token(data.getString("authentication_token"));
     }
 
     /**
@@ -153,18 +128,13 @@ public class LmisUser {
      */
     public void fillFromAccount(AccountManager accMgr, Account account) {
         this.setUsername(accMgr.getUserData(account, "username"));
+        this.setReal_name(accMgr.getUserData(account, "real_name"));
         this.setUser_id(Integer.parseInt(accMgr.getUserData(account, "user_id")));
-        this.setPartner_id(Integer.parseInt(accMgr.getUserData(account,
-                "partner_id")));
-        this.setTimezone(accMgr.getUserData(account, "timezone"));
-        this.setIsactive(Boolean.parseBoolean(accMgr.getUserData(account,
-                "isactive")));
-        this.setAvatar(accMgr.getUserData(account, "avatar"));
-        this.setDatabase(accMgr.getUserData(account, "database"));
+        this.setDefault_org_id(Integer.parseInt(accMgr.getUserData(account,"default_org_id")));
+        this.setIsactive(Boolean.parseBoolean(accMgr.getUserData(account,"isactive")));
         this.setHost(accMgr.getUserData(account, "host"));
         this.setAndroidName(accMgr.getUserData(account, "android_name"));
         this.setPassword(accMgr.getUserData(account, "password"));
-        this.setCompany_id(accMgr.getUserData(account, "company_id"));
     }
 
     /**
@@ -221,6 +191,31 @@ public class LmisUser {
         this.username = username;
     }
 
+    public int getDefault_org_id() {
+        return default_org_id;
+    }
+
+    public String getReal_name() {
+        return real_name;
+    }
+
+    public String getAuthentication_token() {
+        return authentication_token;
+    }
+
+
+    public void setDefault_org_id(int default_org_id) {
+        this.default_org_id = default_org_id;
+    }
+
+    public void setReal_name(String real_name) {
+        this.real_name = real_name;
+    }
+
+    public void setAuthentication_token(String authentication_token) {
+        this.authentication_token = authentication_token;
+    }
+
     /**
      * Gets the user_id.
      *
@@ -239,41 +234,6 @@ public class LmisUser {
         this.user_id = user_id;
     }
 
-    /**
-     * Gets the partner_id.
-     *
-     * @return the partner_id
-     */
-    public int getPartner_id() {
-        return partner_id;
-    }
-
-    /**
-     * Sets the partner_id.
-     *
-     * @param partner_id the new partner_id
-     */
-    public void setPartner_id(int partner_id) {
-        this.partner_id = partner_id;
-    }
-
-    /**
-     * Gets the timezone.
-     *
-     * @return the timezone
-     */
-    public String getTimezone() {
-        return timezone;
-    }
-
-    /**
-     * Sets the timezone.
-     *
-     * @param timezone the new timezone
-     */
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
 
     /**
      * Checks if is isactive.
@@ -293,41 +253,6 @@ public class LmisUser {
         this.isactive = isactive;
     }
 
-    /**
-     * Gets the avatar.
-     *
-     * @return the avatar
-     */
-    public String getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * Sets the avatar.
-     *
-     * @param avatar the new avatar
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    /**
-     * Gets the database.
-     *
-     * @return the database
-     */
-    public String getDatabase() {
-        return database;
-    }
-
-    /**
-     * Sets the database.
-     *
-     * @param database the new database
-     */
-    public void setDatabase(String database) {
-        this.database = database;
-    }
 
     /**
      * Gets the host.

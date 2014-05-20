@@ -19,8 +19,6 @@
 package com.lmis.config;
 
 import com.lmis.addons.expense.Expense;
-import com.lmis.addons.message.Message;
-import com.lmis.addons.voucher.Voucher;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
 
@@ -36,8 +34,6 @@ public class ModulesConfig extends ModulesConfigHelper {
 		/* application modules */
 		//add(new Module("module_idea", "Idea", new Idea(), 0), true);
 		add(new Module("module_expense", "Expense", new Expense(), 0), true);
-		add(new Module("module_voucher", "Voucher", new Voucher(), 0), true);
-		add(new Module("module_message", "Message", new Message()), true);
 		//add(new Module("module_mail_groups", "Mail Groups", new MailGroup()));
 		//add(new Module("module_note", "Note", new Note()));
 		//add(new Module("module_meeting", "Meeting/Calendar Event",new Meeting()));

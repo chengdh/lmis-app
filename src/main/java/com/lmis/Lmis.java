@@ -8,71 +8,38 @@ import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 
-import java.io.*;
-import java.util.Iterator;
-import java.util.Scanner;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Scanner;
 
 
 public class Lmis {
 
 
-    public class LmisVersion {
-
-        public String getServer_serie() {
-            return server_serie;
-        }
-
-        public void setServer_serie(String server_serie) {
-            this.server_serie = server_serie;
-        }
-
-        public String getServer_version() {
-            return server_version;
-        }
-
-        public void setServer_version(String server_version) {
-            this.server_version = server_version;
-        }
-
-        public String getVersion_type() {
-            return version_type;
-        }
-
-        public void setVersion_type(String version_type) {
-            this.version_type = version_type;
-        }
-
-        public int getVersion_number() {
-            return version_number;
-        }
-
-        public void setVersion_number(int version_number) {
-            this.version_number = version_number;
-        }
-
-        public int getVersion_type_number() {
-            return version_type_number;
-        }
-
-        public void setVersion_type_number(int version_type_number) {
-            this.version_type_number = version_type_number;
-        }
-
-        String server_serie;
-        String server_version;
-        String version_type;
-        int version_number;
-        int version_type_number;
-    }
-
+    public static final String TAG = "lmis.Lmis";
+    public static DefaultHttpClient httpclient = new DefaultHttpClient();
+    private boolean debugMode;
+    public String _base_url;
+    public final String DESC = "DESC";
+    public final String ASC = "ASC";
+    private String kwargs;
+    private static SharedPreferences pref;
+    protected String _base_location;
+    protected String _port;
 
     public static DefaultHttpClient getThreadSafeClient() {
         httpclient = new DefaultHttpClient();
@@ -82,20 +49,9 @@ public class Lmis {
     public Lmis(SharedPreferences pref) {
         debugMode = false;
         _base_url = null;
-        user_context = null;
-        sessionInfo = null;
         kwargs = null;
         _base_location = null;
         _port = null;
-        _session_id = null;
-        serverVersionInfo = null;
-        mOEVersion = null;
-        try {
-            get_session_info();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        user_context = pref.getString("user_context", null);
         _base_url = stripURL(pref.getString("base_url", null));
     }
 
@@ -103,50 +59,31 @@ public class Lmis {
             throws ClientProtocolException, JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        user_context = null;
-        sessionInfo = null;
         kwargs = null;
         _base_location = null;
         _port = null;
-        _session_id = null;
-        serverVersionInfo = null;
-        mOEVersion = null;
         _port = String.valueOf(port);
         _base_url = (new StringBuilder(String.valueOf(stripURL(base_url)))).append(":").append(_port).toString();
-        sessionInfo = get_session_info();
     }
 
     public Lmis(String base_url)
             throws ClientProtocolException, JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        user_context = null;
-        sessionInfo = null;
         kwargs = null;
         _base_location = null;
         _port = null;
-        _session_id = null;
-        serverVersionInfo = null;
-        mOEVersion = null;
         _base_url = stripURL(base_url);
-        sessionInfo = get_session_info();
     }
 
     public Lmis(String base_url, boolean isnetwork)
             throws ClientProtocolException, JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        user_context = null;
-        sessionInfo = null;
         kwargs = null;
         _base_location = null;
         _port = null;
-        _session_id = null;
-        serverVersionInfo = null;
-        mOEVersion = null;
         _base_url = stripURL(base_url);
-        if (isnetwork)
-            sessionInfo = get_session_info();
     }
 
     public void debugMode(boolean on) {
@@ -154,7 +91,8 @@ public class Lmis {
     }
 
     private synchronized JSONObject callHTTP(String RequestURL, String jsonString)
-            throws ClientProtocolException, IOException, JSONException {
+            throws IOException, JSONException {
+        debugMode(true);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             android.os.StrictMode.ThreadPolicy policy = (new android.os.StrictMode.ThreadPolicy.Builder()).permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -162,8 +100,8 @@ public class Lmis {
         HttpPost httppost = new HttpPost(RequestURL);
         StringEntity se = new StringEntity(jsonString);
         JSONObject obj = null;
-        se.setContentEncoding(new BasicHeader("Content-Type", "application/json"));
         httppost.setEntity(se);
+        httppost.setHeader("Content-type", "application/json");
         HttpResponse httpresponse = null;
         httpresponse = httpclient.execute(httppost);
         if (httpresponse != null) {
@@ -179,128 +117,42 @@ public class Lmis {
             }
         }
         if (debugMode) {
-            Log.i("OPENERP_POST_URL", RequestURL);
-            Log.i("OPENERP_POST", jsonString);
-            Log.i("OPENERP_RESPONSE", obj.toString());
+            Log.i("LMIS_POST_URL", RequestURL);
+            Log.i("LMIS_POST", jsonString);
+            Log.i("LMIS_RESPONSE", obj.toString());
         }
         return obj;
     }
 
-    public JSONArray getDatabaseList()
-            throws JSONException, ClientProtocolException, IOException {
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/database/get_list").toString();
-        JSONObject obj = new JSONObject();
+    public JSONObject testConnection() throws JSONException, IOException {
+
+        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/tokens/test_connect.json").toString();
+        JSONObject obj;
         JSONObject params = new JSONObject();
-        if (is7_0Version)
-            params.put("session_id", _session_id);
-        params.put("context", new JSONObject());
         String jsonString = generate_json_request(params);
         obj = callHTTP(req_url, jsonString);
-        return obj.getJSONArray("result");
-    }
-
-    private JSONObject get_session_info()
-            throws JSONException, ClientProtocolException, IOException, LmisVersionException {
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/session/get_session_info").toString();
-        JSONObject obj = null;
-        if (isValidVersion()) {
-            JSONObject params = new JSONObject();
-            if (is7_0Version)
-                params.put("session_id", "");
-            String jsonString = generate_json_request(params);
-            obj = callHTTP(req_url, jsonString);
-            if (obj != null && obj.has("result"))
-                _session_id = obj.getJSONObject("result").getString("session_id");
-        } else {
-            throw new LmisVersionException("Server version is different from the application supported version.");
-        }
         return obj;
     }
 
-    private boolean isValidVersion()
-            throws ClientProtocolException, JSONException, IOException {
-        Log.d("openerp.Lmis", "Lmis->isValidVersion()");
-        JSONObject version = serverVersion().getJSONObject("result");
-        if (version.has("server_version_info")) {
-            boolean flag = false;
-            mOEVersion = new LmisVersion();
-            mOEVersion.setServer_version(version.getString("server_version"));
-            mOEVersion.setServer_serie(version.getString("server_serie"));
-            JSONArray version_info = version.getJSONArray("server_version_info");
-            mOEVersion.setVersion_number(version_info.getInt(0));
-            mOEVersion.setVersion_type(version_info.getString(3));
-            mOEVersion.setVersion_type_number(version_info.getInt(4));
-            if (version_info.getInt(0) >= 7) {
-                Log.d("openerp.Lmis", (new StringBuilder("isValidVersion() : ")).append(version_info.toString()).toString());
-                int subVersion = 0;
-                if (version_info.get(1) instanceof String)
-                    subVersion = Integer.parseInt(version_info.getString(1).split("\\~")[1]);
-                else
-                    subVersion = version_info.getInt(1);
-                if (version_info.getInt(0) == 7 && subVersion == 0)
-                    is7_0Version = true;
-                flag = true;
-            } else {
-                flag = false;
-            }
-            return flag;
-        } else {
-            return false;
-        }
-    }
 
-    public LmisVersion getOEVersion() {
-        if (mOEVersion == null)
-            try {
-                isValidVersion();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return mOEVersion;
-    }
-
-    public JSONObject serverVersion()
-            throws JSONException, ClientProtocolException, IOException {
-        String url = (new StringBuilder(String.valueOf(_base_url))).append("/web/webclient/version_info").toString();
-        JSONObject obj = new JSONObject("{\"jsonrpc\":\"2.0\",\"method\":\"call\",\"params\":{},\"id\":1}");
-        if (serverVersionInfo == null)
-            serverVersionInfo = callHTTP(url, obj.toString());
-        return serverVersionInfo;
-    }
-
-    public static Object getResourceID() {
-        Object id = String.valueOf(rID);
-        rID++;
-        if (is7_0Version)
-            return (new StringBuilder("r")).append(id).toString();
-        else
-            return Integer.valueOf(Integer.parseInt(id.toString()));
-    }
-
-    public JSONObject authenticate(String Username, String password, String dbName)
-            throws JSONException, ClientProtocolException, IOException {
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/session/authenticate").toString();
-        JSONObject obj = null;
+    public JSONObject authenticate(String Username, String password)
+            throws JSONException, IOException {
+        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/tokens.json").toString();
+        JSONObject obj = null ;
         JSONObject params = new JSONObject();
-        params.put("db", dbName);
-        params.put("login", Username);
+        params.put("username", Username);
         params.put("password", password);
-        if (is7_0Version)
-            params.put("session_id", _session_id);
-        params.put("context", new JSONObject());
         String jsonString = generate_json_request(params);
         obj = callHTTP(req_url, jsonString);
-        user_context = obj.getJSONObject("result").getJSONObject("user_context").toString();
         return obj.getJSONObject("result");
     }
 
-    public JSONObject search_count(String model, JSONArray args)
-            throws ClientProtocolException, JSONException, IOException {
+    public JSONObject search_count(String model, JSONArray args) throws JSONException, IOException {
         return call_kw(model, "search_count", args);
     }
 
     public JSONObject search_read(String model, JSONObject fieldsAccumulates, JSONObject domainAccumulates, int offset, int limit, String sortField, String sortType)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException,  IOException {
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/search_read").toString();
         JSONObject obj = null;
         JSONObject params = new JSONObject();
@@ -315,15 +167,12 @@ public class Lmis {
             params.put("domain", domainAccumulates.get("domain"));
         else
             params.put("domain", new JSONArray());
-        params.put("context", new JSONObject(user_context));
         params.put("offset", offset);
         params.put("limit", limit);
         if (sortField != null && sortType != null)
             params.put("sort", (new StringBuilder(String.valueOf(sortField))).append(" ").append(sortType).toString());
         else
             params.put("sort", "");
-        if (is7_0Version)
-            params.put("session_id", _session_id);
         String jsonString = generate_json_request(params);
         obj = callHTTP(req_url, jsonString);
         return obj.getJSONObject("result");
@@ -353,16 +202,12 @@ public class Lmis {
             _args = new JSONArray((new StringBuilder("[[")).append(String.valueOf(id)).append("]]").toString());
         params.put("args", _args);
         JSONObject kwargs = new JSONObject();
-        kwargs.put("context", new JSONObject(user_context));
         params.put("kwargs", kwargs);
-        if (is7_0Version)
-            params.put("session_id", _session_id);
-        params.put("context", new JSONObject(user_context));
         return params;
     }
 
     public JSONObject callMethod(String modelName, String methodName, JSONObject args, Integer id)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException, IOException {
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/call_kw/").append(modelName).append(":").append(methodName).toString();
         JSONObject params = new JSONObject();
         params = createWriteParams(modelName, methodName, args, id);
@@ -383,28 +228,8 @@ public class Lmis {
         return response.getBoolean("result");
     }
 
-    //执行workflow
-    public JSONObject exec_workflow(String modelName, Integer res_id, String signal)
-            throws JSONException, ClientProtocolException, IOException {
-        JSONObject response = null;
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/exec_workflow").toString();
-        JSONObject params = new JSONObject();
-        params.put("model", modelName);
-        params.put("id", res_id);
-        params.put("signal", signal);
-        JSONObject kwargs = null;
-        if (is7_0Version)
-            params.put("session_id", _session_id);
-        params.put("context", new JSONObject(user_context));
-        String jsonString = generate_json_request(params);
-        Log.d("Openerp->exec_workflow", "params = " + jsonString);
-        response = callHTTP(req_url, jsonString);
-        Log.d("Openerp->exec_workflow", "response = " + response);
-        return response;
-    }
-
     public boolean unlink(String modelName, Integer id)
-            throws ClientProtocolException, JSONException, IOException {
+            throws JSONException, IOException {
         JSONObject response = callMethod(modelName, "unlink", null, id);
         return response.getBoolean("result");
     }
@@ -467,12 +292,11 @@ public class Lmis {
 
     private String generate_json_request(JSONObject params)
             throws JSONException {
-        JSONObject postObj = new JSONObject();
-        postObj.put("jsonrpc", "2.0");
-        postObj.put("method", "call");
-        postObj.put("params", params);
-        postObj.put("id", getResourceID());
-        return postObj.toString();
+        //JSONObject postObj = new JSONObject();
+        //postObj.put("jsonrpc", "2.0");
+        //postObj.put("method", "call");
+        //postObj.put("params", params);
+        return params.toString();
     }
 
     private String convertStreamToString(InputStream is) {
@@ -502,16 +326,12 @@ public class Lmis {
         else
             kwargs = new JSONObject();
         params.put("kwargs", kwargs);
-        if (is7_0Version)
-            params.put("session_id", _session_id);
-        params.put("context", new JSONObject(user_context));
         String jsonString = generate_json_request(params);
         response = callHTTP(req_url, jsonString);
         return response;
     }
 
-    public boolean updateKWargs(JSONObject newValues)
-            throws JSONException {
+    public boolean updateKWargs(JSONObject newValues) throws JSONException {
         JSONObject kwargs = null;
         if (newValues != null) {
             if (this.kwargs != null)
@@ -527,16 +347,6 @@ public class Lmis {
             this.kwargs = (new JSONObject()).toString();
         }
         return true;
-    }
-
-    public JSONObject updateContext(JSONObject newValues)
-            throws JSONException {
-        JSONObject userContext = new JSONObject(user_context);
-        String key;
-        for (Iterator iter = newValues.keys(); iter.hasNext(); userContext.put(key, newValues.get(key)))
-            key = (String) iter.next();
-
-        return userContext;
     }
 
     public static String getSessionData(Context context, String key) {
@@ -559,13 +369,6 @@ public class Lmis {
         return _base_url;
     }
 
-    public String downloadUrl(String type, String model, int id, String method, int attachment_id) {
-        String url = "";
-        url = (new StringBuilder(String.valueOf(_base_url))).append("/").append(type).append("/download_attachment?model=").append(model).append("&id=").append(String.valueOf(id)).toString();
-        url = (new StringBuilder(String.valueOf(url))).append("&method=").append(method).append("&attachment_id=").append(String.valueOf(attachment_id)).append("&session_id=").append(_session_id).toString();
-        return url;
-    }
-
     public static SharedPreferences getSessions(Context context) {
         return context.getApplicationContext().getSharedPreferences("OpenERP_Preferences", 1);
     }
@@ -581,18 +384,6 @@ public class Lmis {
         return newURL.toString();
     }
 
-    public boolean isServerDatabaseExists(String databaseName) {
-        boolean flag = false;
-        try {
-            JSONArray dbList = getDatabaseList();
-            for (int i = 0; i < dbList.length(); i++)
-                if (dbList.getString(i).equals(databaseName))
-                    flag = true;
-
-        } catch (Exception exception) {
-        }
-        return flag;
-    }
 
     public String stripURL(String url) {
         if (url.endsWith("/"))
@@ -600,23 +391,5 @@ public class Lmis {
         else
             return url;
     }
-
-    public static final String TAG = "openerp.Lmis";
-    public static DefaultHttpClient httpclient = new DefaultHttpClient();
-    private boolean debugMode;
-    public String _base_url;
-    public static int rID = 0;
-    protected String user_context;
-    public final String DESC = "DESC";
-    private JSONObject sessionInfo;
-    public final String ASC = "ASC";
-    private String kwargs;
-    private static SharedPreferences pref;
-    protected String _base_location;
-    protected String _port;
-    public String _session_id;
-    public static boolean is7_0Version = false;
-    public JSONObject serverVersionInfo;
-    LmisVersion mOEVersion;
 }
 
