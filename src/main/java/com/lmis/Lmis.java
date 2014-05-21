@@ -13,10 +13,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,6 +22,12 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import us.monoid.json.JSONArray;
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
+import us.monoid.web.Resty;
+
+import static us.monoid.web.Resty.content;
 
 public class Lmis {
 
@@ -90,7 +92,12 @@ public class Lmis {
         debugMode = on;
     }
 
-    private synchronized JSONObject callHTTP(String RequestURL, String jsonString)
+    private synchronized JSONObject  callHTTP(String RequestURL, String jsonString)
+            throws IOException, JSONException {
+        JSONObject paramsObj = new JSONObject(jsonString);
+        return new Resty().json(RequestURL, content(paramsObj)).object();
+    }
+    private synchronized JSONObject callHTTPOLD(String RequestURL, String jsonString)
             throws IOException, JSONException {
         debugMode(true);
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -124,10 +131,10 @@ public class Lmis {
         return obj;
     }
 
-    public JSONObject testConnection() throws JSONException, IOException {
+    public Object testConnection() throws JSONException, IOException {
 
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/tokens/test_connect.json").toString();
-        JSONObject obj;
+        Object obj;
         JSONObject params = new JSONObject();
         String jsonString = generate_json_request(params);
         obj = callHTTP(req_url, jsonString);

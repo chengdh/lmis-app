@@ -31,15 +31,15 @@ import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisHelper;
 import com.lmis.support.LmisServerConnection;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+
+import us.monoid.json.JSONArray;
+import us.monoid.json.JSONObject;
 
 public class LmisBinaryDownloadHelper {
     public static final String TAG = "LmisBinaryDownloadHelper";
