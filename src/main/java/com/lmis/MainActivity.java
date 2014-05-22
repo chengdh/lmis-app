@@ -103,8 +103,7 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
-            mDrawerItemSelectedPosition = savedInstanceState
-                    .getInt("current_drawer_item");
+            mDrawerItemSelectedPosition = savedInstanceState.getInt("current_drawer_item");
         }
         mContext = this;
         mFragment = getSupportFragmentManager();
@@ -138,8 +137,9 @@ public class MainActivity extends FragmentActivity implements
             if (!LmisAccountManager.isAnyUser(mContext)) {
                 accountSelectionDialog(LmisAccountManager.fetchAllAccounts(mContext)).show();
             } else {
-                mTouchAttacher = new OETouchListener(this);
-                new DrawerItemsLoader().execute();
+                //mTouchAttacher = new OETouchListener(this);
+                //new DrawerItemsLoader().execute();
+                initDrawer();
             }
         }
     }
@@ -186,11 +186,12 @@ public class MainActivity extends FragmentActivity implements
             mDrawerTitle = LmisUser.current(mContext).getUsername();
             mDrawerSubtitle = LmisUser.current(mContext).getHost();
         }
+        mDrawerAdatper.notifiyDataChange(mDrawerListItems);
         Log.d(TAG, "MainActivity->setDrawerItems() finish");
     }
 
     private void initDrawer() {
-        //setDrawerItems();
+        setDrawerItems();
         Log.d(TAG, "MainActivity->initDrawer()");
         mDrawerListView.setOnItemClickListener(this);
         int position = -1;
@@ -416,7 +417,7 @@ public class MainActivity extends FragmentActivity implements
                 .current(mContext).getAndroidName());
 
         for (SyncAdapterType lst : list) {
-            if (lst.authority.contains("com.openerp.providers")) {
+            if (lst.authority.contains("com.lmis.providers")) {
                 default_authorities.add(lst.authority);
             }
         }
@@ -564,7 +565,7 @@ public class MainActivity extends FragmentActivity implements
                             long id) {
         DrawerItem item = mDrawerListItems.get(position);
         if (!item.isGroupTitle()) {
-            if (!item.getKey().equals("com.openerp.settings")) {
+            if (!item.getKey().equals("com.lmis.settings")) {
                 mDrawerItemSelectedPosition = position;
             }
             mAppTitle = item.getTitle();
@@ -606,7 +607,7 @@ public class MainActivity extends FragmentActivity implements
 
     private List<DrawerItem> setSettingMenu() {
         List<DrawerItem> sys = new ArrayList<DrawerItem>();
-        String key = "com.openerp.settings";
+        String key = "com.lmis.settings";
 
         String settings_group_title = getResources().getString(R.string.settings_group_title);
         String locale_profile = getResources().getString(R.string.settings_drawer_item_profile);
@@ -705,6 +706,8 @@ public class MainActivity extends FragmentActivity implements
         @Override
         protected void onPostExecute(final Boolean success) {
             Log.d(TAG, "initDrawer() finished");
+
+            //setDrawerItems();
             mDrawerAdatper.notifiyDataChange(mDrawerListItems);
             initDrawer();
             mProgressDialog.dismiss();

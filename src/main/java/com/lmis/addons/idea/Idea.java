@@ -38,32 +38,32 @@ import com.lmis.util.drawer.DrawerListener;
  */
 public class Idea extends BaseFragment {
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_idea, container,
-				false);
-		// Res_PartnerDBHelper partner = new Res_PartnerDBHelper(getActivity());
-		// boolean flag = partner.getOEInstance().syncWithServer();
-		// LmisLog.log("Synced: " + flag);
-		DrawerListener drawer = (DrawerListener) getActivity();
-		drawer.refreshDrawer("idea");
-		return rootView;
-	}
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_idea, container,
+                false);
+        // Res_PartnerDBHelper partner = new Res_PartnerDBHelper(getActivity());
+        // boolean flag = partner.getOEInstance().syncWithServer();
+        // LmisLog.log("Synced: " + flag);
+        DrawerListener drawer = (DrawerListener) getActivity();
+        drawer.refreshDrawer("idea");
+        return rootView;
+    }
 
-	@Override
-	public Object databaseHelper(Context context) {
-		return new IdeaDBHelper(context);
-	}
+    @Override
+    public Object databaseHelper(Context context) {
+        return new IdeaDBHelper(context);
+    }
 
-	@Override
-	public List<DrawerItem> drawerMenus(Context context) {
-		List<DrawerItem> menu = new ArrayList<DrawerItem>();
-		menu.add(new DrawerItem("idea_home", "Idea", true));
-		Idea idea = new Idea();
-		Bundle args = new Bundle();
-		args.putString("key", "idea");
-		idea.setArguments(args);
-		menu.add(new DrawerItem("idea_home", "Idea", 5, 0, idea));
-		return menu;
-	}
+    @Override
+    public List<DrawerItem> drawerMenus(Context context) {
+        List<DrawerItem> menu = new ArrayList<DrawerItem>();
+        menu.add(new DrawerItem("idea_home", "Idea", true));
+        Idea idea = new Idea();
+        Bundle args = new Bundle();
+        args.putString("key", "idea");
+        idea.setArguments(args);
+        menu.add(new DrawerItem("idea_home", "Idea", 5, 0, idea));
+        return menu;
+    }
 }

@@ -8,11 +8,7 @@ import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,9 +27,7 @@ import static us.monoid.web.Resty.content;
 
 public class Lmis {
 
-
     public static final String TAG = "lmis.Lmis";
-    public static DefaultHttpClient httpclient = new DefaultHttpClient();
     private boolean debugMode;
     public String _base_url;
     public final String DESC = "DESC";
@@ -42,11 +36,6 @@ public class Lmis {
     private static SharedPreferences pref;
     protected String _base_location;
     protected String _port;
-
-    public static DefaultHttpClient getThreadSafeClient() {
-        httpclient = new DefaultHttpClient();
-        return httpclient;
-    }
 
     public Lmis(SharedPreferences pref) {
         debugMode = false;
@@ -58,7 +47,7 @@ public class Lmis {
     }
 
     public Lmis(String base_url, long port)
-            throws ClientProtocolException, JSONException, IOException, LmisVersionException {
+            throws JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
         kwargs = null;
@@ -79,7 +68,7 @@ public class Lmis {
     }
 
     public Lmis(String base_url, boolean isnetwork)
-            throws ClientProtocolException, JSONException, IOException, LmisVersionException {
+            throws JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
         kwargs = null;
@@ -92,65 +81,40 @@ public class Lmis {
         debugMode = on;
     }
 
-    private synchronized JSONObject  callHTTP(String RequestURL, String jsonString)
+
+    private synchronized JSONObject callHTTP(String RequestURL, JSONObject params)
             throws IOException, JSONException {
-        JSONObject paramsObj = new JSONObject(jsonString);
-        return new Resty().json(RequestURL, content(paramsObj)).object();
-    }
-    private synchronized JSONObject callHTTPOLD(String RequestURL, String jsonString)
-            throws IOException, JSONException {
-        debugMode(true);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             android.os.StrictMode.ThreadPolicy policy = (new android.os.StrictMode.ThreadPolicy.Builder()).permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        HttpPost httppost = new HttpPost(RequestURL);
-        StringEntity se = new StringEntity(jsonString);
-        JSONObject obj = null;
-        httppost.setEntity(se);
-        httppost.setHeader("Content-type", "application/json");
-        HttpResponse httpresponse = null;
-        httpresponse = httpclient.execute(httppost);
-        if (httpresponse != null) {
-            String a = "";
-            try {
-                InputStream in = httpresponse.getEntity().getContent();
-                a = convertStreamToString(in);
-                obj = new JSONObject(a);
-                in.close();
-                httpresponse.getEntity().consumeContent();
-            } catch (JSONException jexe) {
-                return null;
-            }
-        }
+        if (params == null)
+            params = new JSONObject();
+
+        JSONObject ret = new Resty().json(RequestURL, content(params)).object();
         if (debugMode) {
             Log.i("LMIS_POST_URL", RequestURL);
-            Log.i("LMIS_POST", jsonString);
-            Log.i("LMIS_RESPONSE", obj.toString());
+            Log.i("LMIS_POST", params.toString());
+            Log.i("LMIS_RESPONSE", ret.toString());
         }
-        return obj;
+        return ret;
     }
 
-    public Object testConnection() throws JSONException, IOException {
+    public JSONObject testConnection() throws JSONException, IOException {
 
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/tokens/test_connect.json").toString();
-        Object obj;
-        JSONObject params = new JSONObject();
-        String jsonString = generate_json_request(params);
-        obj = callHTTP(req_url, jsonString);
-        return obj;
+        return callHTTP(req_url, null);
     }
 
 
     public JSONObject authenticate(String Username, String password)
             throws JSONException, IOException {
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/tokens.json").toString();
-        JSONObject obj = null ;
+        JSONObject obj = null;
         JSONObject params = new JSONObject();
         params.put("username", Username);
         params.put("password", password);
-        String jsonString = generate_json_request(params);
-        obj = callHTTP(req_url, jsonString);
+        obj = callHTTP(req_url, params);
         return obj.getJSONObject("result");
     }
 
@@ -159,8 +123,8 @@ public class Lmis {
     }
 
     public JSONObject search_read(String model, JSONObject fieldsAccumulates, JSONObject domainAccumulates, int offset, int limit, String sortField, String sortType)
-            throws JSONException,  IOException {
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/search_read").toString();
+            throws JSONException, IOException {
+        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/dataset/search_read").toString();
         JSONObject obj = null;
         JSONObject params = new JSONObject();
         params.put("model", model);
@@ -180,18 +144,18 @@ public class Lmis {
             params.put("sort", (new StringBuilder(String.valueOf(sortField))).append(" ").append(sortType).toString());
         else
             params.put("sort", "");
-        String jsonString = generate_json_request(params);
-        obj = callHTTP(req_url, jsonString);
+
+        obj = callHTTP(req_url, params);
         return obj.getJSONObject("result");
     }
 
     public JSONObject search_read(String model, JSONObject fieldsAccumulates, JSONObject domainAccumulates)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException, IOException {
         return search_read(model, fieldsAccumulates, domainAccumulates, 0, 0, null, null);
     }
 
     public JSONObject search_read(String model, JSONObject fieldsAccumulates)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException, IOException {
         return search_read(model, fieldsAccumulates, null, 0, 0, null, null);
     }
 
@@ -215,21 +179,20 @@ public class Lmis {
 
     public JSONObject callMethod(String modelName, String methodName, JSONObject args, Integer id)
             throws JSONException, IOException {
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/call_kw/").append(modelName).append(":").append(methodName).toString();
+        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/dataset/call_kw/").toString();
         JSONObject params = new JSONObject();
         params = createWriteParams(modelName, methodName, args, id);
-        String jsonString = generate_json_request(params);
-        JSONObject response = callHTTP(req_url, jsonString);
+        JSONObject response = callHTTP(req_url, params);
         return response;
     }
 
     public JSONObject createNew(String modelName, JSONObject arguments)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException, IOException {
         return callMethod(modelName, "create", arguments, null);
     }
 
     public boolean updateValues(String modelName, JSONObject arguments, Integer id)
-            throws ClientProtocolException, JSONException, IOException {
+            throws JSONException, IOException {
         JSONObject response = null;
         response = callMethod(modelName, "write", arguments, id);
         return response.getBoolean("result");
@@ -297,15 +260,6 @@ public class Lmis {
         return null;
     }
 
-    private String generate_json_request(JSONObject params)
-            throws JSONException {
-        //JSONObject postObj = new JSONObject();
-        //postObj.put("jsonrpc", "2.0");
-        //postObj.put("method", "call");
-        //postObj.put("params", params);
-        return params.toString();
-    }
-
     private String convertStreamToString(InputStream is) {
         Scanner s = (new Scanner(is)).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
@@ -320,9 +274,9 @@ public class Lmis {
     }
 
     public JSONObject call_kw(String modelName, String methodName, JSONArray args)
-            throws JSONException, ClientProtocolException, IOException {
+            throws JSONException, IOException {
         JSONObject response = null;
-        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/web/dataset/call_kw").toString();
+        String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/dataset/call_kw").toString();
         JSONObject params = new JSONObject();
         params.put("model", modelName);
         params.put("method", methodName);
@@ -333,8 +287,7 @@ public class Lmis {
         else
             kwargs = new JSONObject();
         params.put("kwargs", kwargs);
-        String jsonString = generate_json_request(params);
-        response = callHTTP(req_url, jsonString);
+        response = callHTTP(req_url, params);
         return response;
     }
 

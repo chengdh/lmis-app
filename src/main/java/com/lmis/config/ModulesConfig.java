@@ -18,7 +18,7 @@
  */
 package com.lmis.config;
 
-import com.lmis.addons.expense.Expense;
+import com.lmis.addons.idea.Idea;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
 
@@ -27,15 +27,15 @@ import com.lmis.support.ModulesConfigHelper;
  */
 public class ModulesConfig extends ModulesConfigHelper {
 
-	/**
-	 * Instantiates a new modules config.
-	 */
-	public ModulesConfig() {
-		/* application modules */
-		//add(new Module("module_idea", "Idea", new Idea(), 0), true);
-		add(new Module("module_expense", "Expense", new Expense(), 0), true);
-		//add(new Module("module_mail_groups", "Mail Groups", new MailGroup()));
-		//add(new Module("module_note", "Note", new Note()));
-		//add(new Module("module_meeting", "Meeting/Calendar Event",new Meeting()));
-	}
+    /**
+     * Instantiates a new modules config.
+     */
+    public ModulesConfig() {
+        /* application modules */
+        add(new Module("module_idea", "Idea", new Idea(), 0), true);
+        //add(new Module("module_expense", "Expense", new Expense(), 0), true);
+        //add(new Module("module_mail_groups", "Mail Groups", new MailGroup()));
+        //add(new Module("module_note", "Note", new Note()));
+        //add(new Module("module_meeting", "Meeting/Calendar Event",new Meeting()));
+    }
 }
