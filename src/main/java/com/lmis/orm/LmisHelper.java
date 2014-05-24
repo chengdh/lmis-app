@@ -54,7 +54,7 @@ public class LmisHelper extends Lmis {
 
     @Override
     protected String getAuthToken() {
-        if(mUser == null)
+        if (mUser == null)
             return null;
 
         return mUser.getAuthentication_token();
@@ -208,25 +208,23 @@ public class LmisHelper extends Lmis {
         Log.d(TAG, "LmisHelper->syncWithServer()");
         Log.d(TAG, "Model: " + mDatabase.getModelName());
         Log.d(TAG, "User: " + mUser.getAndroidName());
-        LmisFieldsHelper fields = new LmisFieldsHelper(
-                mDatabase.getDatabaseColumns());
+        LmisFieldsHelper fields = new LmisFieldsHelper(mDatabase.getDatabaseColumns());
         try {
             if (domain == null) {
                 domain = new LmisDomain();
             }
             if (ids != null) {
-                domain.add("id", "in", ids);
+                domain.add("id_in", ids);
             }
             if (limitedData) {
                 int data_limit = mPref.getInt("sync_data_limit", 60);
-                domain.add("create_date", ">=",
-                        LmisDate.getDateBefore(data_limit));
+                domain.add("created_at_gte", LmisDate.getDateBefore(data_limit));
             }
 
             if (limits == -1) {
                 limits = 50;
             }
-            JSONArray result = search_read(mDatabase.getModelName(),fields.get(), domain.get(), 0, limits, null, null);
+            JSONArray result = search_read(mDatabase.getModelName(), fields.get(), domain.get(), 0, limits, null, null);
             mAffectedRows = result.length();
             synced = handleResultArray(fields, result, removeLocalIfNotExists);
 
@@ -267,13 +265,13 @@ public class LmisHelper extends Lmis {
         return search_read(true);
     }
 
-    private LmisDomain getLocalIdsDomain(String operator) {
+    private LmisDomain getLocalIdsDomain(String operator) throws JSONException {
         LmisDomain domain = new LmisDomain();
         JSONArray ids = new JSONArray();
         for (LmisDataRow row : mDatabase.select()) {
             ids.put(row.getInt("id"));
         }
-        domain.add("id", operator, ids);
+        domain.add("id_" + operator, ids);
         return domain;
     }
 
@@ -285,7 +283,7 @@ public class LmisHelper extends Lmis {
             JSONObject domain = null;
             if (getRemain)
                 domain = getLocalIdsDomain("not in").get();
-            JSONArray result = search_read(mDatabase.getModelName(),fields.get(), domain, 0, 100, null, null);
+            JSONArray result = search_read(mDatabase.getModelName(), fields.get(), domain, 0, 100, null, null);
             for (int i = 0; i < result.length(); i++) {
                 JSONObject record = result.getJSONObject(i);
                 LmisDataRow row = new LmisDataRow();

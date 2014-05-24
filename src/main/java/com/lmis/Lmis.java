@@ -29,7 +29,6 @@ public class Lmis {
     public String _base_url;
     public final String DESC = "DESC";
     public final String ASC = "ASC";
-    private String kwargs;
     private static SharedPreferences pref;
     protected String _base_location;
     protected String _port;
@@ -44,7 +43,6 @@ public class Lmis {
     public Lmis(SharedPreferences pref) {
         debugMode = false;
         _base_url = null;
-        kwargs = null;
         _base_location = null;
         _port = null;
         _base_url = stripURL(pref.getString("base_url", null));
@@ -54,7 +52,6 @@ public class Lmis {
             throws JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        kwargs = null;
         _base_location = null;
         _port = null;
         _port = String.valueOf(port);
@@ -65,7 +62,6 @@ public class Lmis {
             throws JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        kwargs = null;
         _base_location = null;
         _port = null;
         _base_url = stripURL(base_url);
@@ -75,7 +71,6 @@ public class Lmis {
             throws JSONException, IOException, LmisVersionException {
         debugMode = false;
         _base_url = null;
-        kwargs = null;
         _base_location = null;
         _port = null;
         _base_url = stripURL(base_url);
