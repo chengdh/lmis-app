@@ -62,7 +62,7 @@ public class ORM  {
 //			user_name = mUser.getAndroidName();
 //		}
 //		if (oe_obj == null) {
-//			oe_obj = getOEInstance();
+//			oe_obj = getLmisInstance();
 //		}
 //	}
 //
@@ -71,7 +71,7 @@ public class ORM  {
 //	 * 
 //	 * @return the oE instance
 //	 */
-//	public LmisHelper getOEInstance() {
+//	public LmisHelper getLmisInstance() {
 //
 //		LmisHelper openerp = null;
 //		try {

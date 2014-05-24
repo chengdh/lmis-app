@@ -337,7 +337,7 @@ public class ExpenseDetail extends BaseFragment {
 
         public WorkflowOperation(String signal) {
             mSignal = signal;
-            mOE = db().getOEInstance();
+            mOE = db().getLmisInstance();
             if (mOE == null)
                 isConnection = false;
 

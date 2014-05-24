@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_test_connection"
+        android:title="test_connection">
+    </item>
+    <item
+        android:id="@+id/menu_test_login"
+        android:title="test_login"
+        >
+    </item>
+    <item
+        android:id="@+id/menu_test_search_read"
+        android:title="test_search_read"
+        >
+    </item>
+    <item
+        android:id="@+id/menu_test_call_kw"
+        android:title="test_call_kw"
+        >
+    </item>
+</menu>

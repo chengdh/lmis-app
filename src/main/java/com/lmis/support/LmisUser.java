@@ -135,6 +135,7 @@ public class LmisUser {
         this.setHost(accMgr.getUserData(account, "host"));
         this.setAndroidName(accMgr.getUserData(account, "android_name"));
         this.setPassword(accMgr.getUserData(account, "password"));
+        this.setAuthentication_token(accMgr.getUserData(account, "authentication_token"));
     }
 
     /**

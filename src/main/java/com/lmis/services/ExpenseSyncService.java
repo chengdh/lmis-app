@@ -130,7 +130,7 @@ public class ExpenseSyncService extends Service {
         try {
             ExpenseDBHelper expense_db = new ExpenseDBHelper(context);
             expense_db.setAccountUser(user);
-            LmisHelper oe = expense_db.getOEInstance();
+            LmisHelper oe = expense_db.getLmisInstance();
             if (oe == null) {
                 return;
             }
@@ -205,11 +205,11 @@ public class ExpenseSyncService extends Service {
 
             LmisDomain domain = new LmisDomain();
             domain.add("id", "in", ids_array);
-            JSONObject result = oe.search_read("hr.expense.expense", fields, domain.get());
+            JSONArray result = oe.search_read("hr.expense.expense", fields, domain.get());
 
             Log.d(TAG, "ExpenseSyncService#updateOldExpenses" + result);
-            for (int j = 0; j < result.getJSONArray("records").length(); j++) {
-                JSONObject objRes = result.getJSONArray("records").getJSONObject(j);
+            for (int j = 0; j < result.length(); j++) {
+                JSONObject objRes = result.getJSONObject(j);
                 int expense_id = objRes.getInt("id");
                 String state = objRes.getString("state");
                 LmisValues values = new LmisValues();

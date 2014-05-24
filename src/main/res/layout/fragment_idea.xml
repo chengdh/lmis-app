@@ -5,9 +5,14 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Idea Fragment"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_http_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="json test result" />
+ </LinearLayout>

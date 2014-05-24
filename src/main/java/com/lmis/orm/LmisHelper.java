@@ -52,6 +52,14 @@ public class LmisHelper extends Lmis {
     List<Long> mResultIds = new ArrayList<Long>();
     List<LmisDataRow> mRemovedRecordss = new ArrayList<LmisDataRow>();
 
+    @Override
+    protected String getAuthToken() {
+        if(mUser == null)
+            return null;
+
+        return mUser.getAuthentication_token();
+    }
+
     public LmisHelper(SharedPreferences pref) {
         super(pref);
         init();
@@ -66,11 +74,11 @@ public class LmisHelper extends Lmis {
     }
 
     public LmisHelper(Context context, LmisUser data, LmisDatabase lmisDatabase)
-            throws ClientProtocolException, JSONException, IOException,
+            throws JSONException, IOException,
             LmisVersionException {
         super(data.getHost());
         Log.d(TAG, "LmisHelper->LmisHelper(Context, LmisUser, LmisDatabase)");
-        Log.d(TAG, "Called from LmisDatabase->getOEInstance()");
+        Log.d(TAG, "Called from LmisDatabase->getLmisInstance()");
         mContext = context;
         mDatabase = lmisDatabase;
         mUser = data;
@@ -104,6 +112,7 @@ public class LmisHelper extends Lmis {
                 userObj.setUsername(username);
                 userObj.setPassword(password);
                 userObj.setDefault_org_id(rs.getInt("default_org_id"));
+                userObj.setAuthentication_token(rs.getString("authentication_token"));
 
             }
         } catch (Exception e) {
@@ -179,8 +188,7 @@ public class LmisHelper extends Lmis {
         LmisFieldsHelper fields = new LmisFieldsHelper(
                 mDatabase.getDatabaseColumns());
         try {
-            JSONObject result = call_kw(mDatabase.getModelName(), method,
-                    args.getArray());
+            JSONObject result = callMethod(mDatabase.getModelName(), method, args.getArray(), null);
 
             Log.d(TAG, "result: " + result);
             if (result.getJSONArray("result").length() > 0)
@@ -218,10 +226,9 @@ public class LmisHelper extends Lmis {
             if (limits == -1) {
                 limits = 50;
             }
-            JSONObject result = search_read(mDatabase.getModelName(),
-                    fields.get(), domain.get(), 0, limits, null, null);
-            mAffectedRows = result.getJSONArray("records").length();
-            synced = handleResultArray(fields, result.getJSONArray("records"), removeLocalIfNotExists);
+            JSONArray result = search_read(mDatabase.getModelName(),fields.get(), domain.get(), 0, limits, null, null);
+            mAffectedRows = result.length();
+            synced = handleResultArray(fields, result, removeLocalIfNotExists);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,7 +246,7 @@ public class LmisHelper extends Lmis {
             // 通过id从服务器端获取many2many many2one one2many表的相关值
             List<OERelationData> rel_models = fields.getRelationData();
             for (OERelationData rel : rel_models) {
-                LmisHelper oe = rel.getDb().getOEInstance();
+                LmisHelper oe = rel.getDb().getLmisInstance();
                 oe.syncWithServer(false, null, rel.getIds(), false, 0, false);
             }
             List<Long> result_ids = mDatabase.createORReplace(fields.getValues(), removeLocalIfNotExists);
@@ -254,36 +261,6 @@ public class LmisHelper extends Lmis {
         return flag;
     }
 
-    public boolean isModelInstalled(String model) {
-        boolean installed = false;
-        Ir_model ir_model = new Ir_model(mContext);
-        try {
-            LmisFieldsHelper fields = new LmisFieldsHelper(new String[]{"model"});
-            LmisDomain domain = new LmisDomain();
-            domain.add("model", "=", model);
-            JSONObject result = search_read(ir_model.getModelName(),
-                    fields.get(), domain.get());
-            if (result.getInt("length") > 0) {
-                installed = true;
-                JSONObject record = result.getJSONArray("records")
-                        .getJSONObject(0);
-                LmisValues values = new LmisValues();
-                values.put("id", record.getInt("id"));
-                values.put("model", record.getString("model"));
-                values.put("is_installed", installed);
-                int count = ir_model.count("model = ?", new String[]{model});
-                if (count > 0)
-                    ir_model.update(values, "model = ?", new String[]{model});
-                else
-                    ir_model.create(values);
-            }
-
-        } catch (Exception e) {
-            Log.d(TAG, "LmisHelper->isModuleInstalled()");
-            Log.e(TAG, e.getMessage() + ". No connection with Lmis server");
-        }
-        return installed;
-    }
 
     public List<LmisDataRow> search_read_remain() {
         Log.d(TAG, "LmisHelper->search_read_remain()");
@@ -308,11 +285,9 @@ public class LmisHelper extends Lmis {
             JSONObject domain = null;
             if (getRemain)
                 domain = getLocalIdsDomain("not in").get();
-            JSONObject result = search_read(mDatabase.getModelName(),
-                    fields.get(), domain, 0, 100, null, null);
-            for (int i = 0; i < result.getJSONArray("records").length(); i++) {
-                JSONObject record = result.getJSONArray("records")
-                        .getJSONObject(i);
+            JSONArray result = search_read(mDatabase.getModelName(),fields.get(), domain, 0, 100, null, null);
+            for (int i = 0; i < result.length(); i++) {
+                JSONObject record = result.getJSONObject(i);
                 LmisDataRow row = new LmisDataRow();
                 row.put("id", record.getInt("id"));
                 for (LmisColumn col : mDatabase.getDatabaseServerColumns()) {
@@ -334,7 +309,7 @@ public class LmisHelper extends Lmis {
     public void delete(int id) {
         Log.d(TAG, "LmisHelper->delete()");
         try {
-            unlink(mDatabase.getModelName(), id);
+            destroy(mDatabase.getModelName(), id);
             mDatabase.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -350,15 +325,14 @@ public class LmisHelper extends Lmis {
         return call_kw(null, method, arguments, context);
     }
 
-    public Object call_kw(String model, String method, LmisArguments arguments,
-                          JSONObject context) {
+    public Object call_kw(String model, String method, LmisArguments arguments, JSONObject context) {
         Log.d(TAG, "LmisHelper->call_kw()");
         JSONObject result = null;
         if (model == null) {
             model = mDatabase.getModelName();
         }
         try {
-            result = call_kw(model, method, arguments.getArray());
+            result = callMethod(model, method, arguments.getArray(), null);
             return result.get("result");
         } catch (Exception e) {
             e.printStackTrace();
@@ -370,8 +344,7 @@ public class LmisHelper extends Lmis {
         Log.d(TAG, "LmisHelper->create()");
         Integer newId = null;
         try {
-            JSONObject result = createNew(mDatabase.getModelName(),
-                    generateArguments(values));
+            JSONObject result = createNew(mDatabase.getModelName(), generateArguments(values));
             newId = result.getInt("result");
             values.put("id", newId);
             mDatabase.create(values);
@@ -396,8 +369,9 @@ public class LmisHelper extends Lmis {
         return flag;
     }
 
-    private JSONObject generateArguments(LmisValues values) {
+    private JSONArray generateArguments(LmisValues values) {
         Log.d(TAG, "LmisHelper->generateArguments()");
+        JSONArray ret = null;
         JSONObject arguments = new JSONObject();
         try {
             for (String key : values.keys()) {
@@ -413,30 +387,13 @@ public class LmisHelper extends Lmis {
                     arguments.put(key, values.get(key));
                 }
             }
+            ret.put(arguments);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return arguments;
+        return ret;
     }
 
-    public boolean moduleExists(String name) {
-        Log.d(TAG, "LmisHelper->moduleExists()");
-        boolean flag = false;
-        try {
-            LmisDomain domain = new LmisDomain();
-            domain.add("name", "ilike", name);
-            LmisFieldsHelper fields = new LmisFieldsHelper(new String[]{"state"});
-            JSONObject result = search_read("ir.module.module", fields.get(),
-                    domain.get());
-            JSONArray records = result.getJSONArray("records");
-            if (records.length() > 0
-                    && records.getJSONObject(0).getString("state")
-                    .equalsIgnoreCase("installed")) {
-                flag = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return flag;
-    }
+
 }

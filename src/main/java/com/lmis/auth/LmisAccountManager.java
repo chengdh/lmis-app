@@ -40,7 +40,7 @@ public class LmisAccountManager {
      * The Constant PARAM_AUTHTOKEN_TYPE.
      */
     private static final String PARAM_AUTHTOKEN_TYPE = "com.lmis.auth";
-    public static LmisUser current_user = null;
+    private static LmisUser current_user = null;
 
     /**
      * Fetch all accounts.
@@ -110,8 +110,7 @@ public class LmisAccountManager {
         if (current_user != null) {
             flag = true;
         } else {
-            List<LmisUser> accounts = LmisAccountManager
-                    .fetchAllAccounts(context);
+            List<LmisUser> accounts = LmisAccountManager.fetchAllAccounts(context);
             if (accounts != null) {
                 for (LmisUser user : accounts) {
                     if (user.isIsactive()) {
@@ -136,8 +135,7 @@ public class LmisAccountManager {
             return current_user;
         } else {
             if (LmisAccountManager.isAnyUser(context)) {
-                List<LmisUser> accounts = LmisAccountManager
-                        .fetchAllAccounts(context);
+                List<LmisUser> accounts = LmisAccountManager.fetchAllAccounts(context);
                 for (LmisUser user : accounts) {
 
                     if (user.isIsactive()) {

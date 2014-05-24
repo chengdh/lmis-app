@@ -507,32 +507,17 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
 		return cols.toArray(new String[cols.size()]);
 	}
 
-	public LmisHelper getOEInstance() {
-		LmisHelper openerp = null;
+	public LmisHelper getLmisInstance() {
+		LmisHelper lmis = null;
 		try {
-			openerp = new LmisHelper(mContext, mUser, this);
+			lmis = new LmisHelper(mContext, mUser, this);
 		} catch (Exception e) {
-			Log.d(TAG, "LmisDatabase->getOEInstance()");
+			Log.d(TAG, "LmisDatabase->getLmisInstance()");
 			Log.e(TAG, e.getMessage() + ". No connection with Lmis server");
 		}
-		return openerp;
+		return lmis;
 	}
 
-	public boolean isInstalledOnServer() {
-		LmisHelper oe = getOEInstance();
-		boolean installed = false;
-		if (oe != null) {
-			installed = oe.isModelInstalled(getModelName());
-		} else {
-			Ir_model ir = new Ir_model(mContext);
-			List<LmisDataRow> rows = ir.select("model = ?",
-					new String[] { getModelName() });
-			if (rows.size() > 0) {
-				installed = rows.get(0).getBoolean("is_installed");
-			}
-		}
-		return installed;
-	}
 
 	public boolean truncateTable(String table) {
 		if (delete(table) > 0) {

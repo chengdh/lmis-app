@@ -98,22 +98,20 @@ public class LmisBinaryDownloadHelper {
         @Override
         protected Boolean doInBackground(Integer... arg) {
             this.attachment_id = arg[0];
-            LmisHelper oe = db.getOEInstance();
+            LmisHelper oe = db.getLmisInstance();
             try {
                 JSONObject fields = new JSONObject();
                 fields.accumulate("fields", "db_datas");
                 fields.accumulate("fields", "datas_fname");
-                JSONObject res = oe.search_read("ir.attachment", fields,
+                JSONArray res = oe.search_read("ir.attachment", fields,
                         new JSONObject().accumulate("domain",
                                 new JSONArray("[[\"id\", \"=\", "
                                         + this.attachment_id + "]]")
                         ), 0, 1,
                         null, null
                 );
-                String base64Data = res.getJSONArray("records")
-                        .getJSONObject(0).getString("db_datas");
-                String filename = res.getJSONArray("records").getJSONObject(0)
-                        .getString("datas_fname");
+                String base64Data = res.getJSONObject(0).getString("db_datas");
+                String filename = res.getJSONObject(0).getString("datas_fname");
                 int count;
 
                 byte[] fileAsBytes = Base64.decode(base64Data, 0);
