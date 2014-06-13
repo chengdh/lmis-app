@@ -18,12 +18,6 @@
  */
 package com.lmis.base.account;
 
-import java.util.List;
-
-import com.lmis.LmisVersionException;
-import com.lmis.support.LmisDialog;
-import com.lmis.support.LmisServerConnection;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,13 +37,18 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.lmis.LmisVersionException;
 import com.lmis.R;
 import com.lmis.base.login.Login;
 import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisDialog;
+import com.lmis.support.LmisServerConnection;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.util.controls.LmisEditText;
 import com.lmis.util.drawer.DrawerItem;
+
+import java.util.List;
 
 /**
  * The Class AccountFragment.

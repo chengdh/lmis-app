@@ -31,7 +31,7 @@ import android.util.Log;
 public class SyncFinishReceiver extends BroadcastReceiver {
 
 	/** The Constant SYNC_FINISH. */
-	public static final String SYNC_FINISH = "com.openerp.SYNC_FINISH";
+	public static final String SYNC_FINISH = "com.lmis.SYNC_FINISH";
 
 	/*
 	 * (non-Javadoc)

@@ -178,15 +178,13 @@ public class LmisHelper extends Lmis {
         return syncWithMethod(method, args, false);
     }
 
-    public boolean syncWithMethod(String method, LmisArguments args,
-                                  boolean removeLocalIfNotExists) {
+    public boolean syncWithMethod(String method, LmisArguments args,boolean removeLocalIfNotExists) {
         Log.d(TAG, "LmisHelper->syncWithMethod()");
         Log.d(TAG, "Model: " + mDatabase.getModelName());
         Log.d(TAG, "User: " + mUser.getAndroidName());
         Log.d(TAG, "Method: " + method);
         boolean synced = false;
-        LmisFieldsHelper fields = new LmisFieldsHelper(
-                mDatabase.getDatabaseColumns());
+        LmisFieldsHelper fields = new LmisFieldsHelper(mDatabase.getDatabaseColumns());
         try {
             JSONObject result = callMethod(mDatabase.getModelName(), method, args.getArray(), null);
 
@@ -367,6 +365,7 @@ public class LmisHelper extends Lmis {
         return flag;
     }
 
+    //TODO 此处需要修改
     private JSONArray generateArguments(LmisValues values) {
         Log.d(TAG, "LmisHelper->generateArguments()");
         JSONArray ret = null;

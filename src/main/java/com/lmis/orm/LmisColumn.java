@@ -77,8 +77,8 @@ public class LmisColumn {
 		this.mColumnDomain = columnDomain;
 	}
 
-	/**
-	 * Instantiates a new database column.
+    /**
+     * Instantiates a new database column.
 	 * 
 	 * @param mName
 	 *            the m name

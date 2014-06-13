@@ -527,10 +527,8 @@ public class MainActivity extends FragmentActivity implements
         Bundle extras = new Bundle();
         this.setAutoSync(authority, true);
         ContentResolver.setIsSyncable(account, authority, 1);
-        final long sync_interval = interval_in_minute * seconds_per_minute
-                * milliseconds_per_second;
-        ContentResolver.addPeriodicSync(account, authority, extras,
-                sync_interval);
+        final long sync_interval = interval_in_minute * seconds_per_minute * milliseconds_per_second;
+        ContentResolver.addPeriodicSync(account, authority, extras, sync_interval);
 
     }
 
@@ -540,8 +538,7 @@ public class MainActivity extends FragmentActivity implements
      * @param authority the authority
      */
     public void cancelSync(String authority) {
-        Account account = LmisAccountManager.getAccount(this, LmisUser
-                .current(mContext).getAndroidName());
+        Account account = LmisAccountManager.getAccount(this, LmisUser.current(mContext).getAndroidName());
         ContentResolver.cancelSync(account, authority);
     }
 

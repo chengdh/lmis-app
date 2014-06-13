@@ -1,21 +1,3 @@
-/*
- * OpenERP, Open Source Management Solution
- * Copyright (C) 2012-today OpenERP SA (<http://www.openerp.com>)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details
- * 
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- * 
- */
 package com.lmis.services;
 
 import android.accounts.Account;
@@ -33,13 +15,11 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.lmis.LmisArguments;
-import com.lmis.LmisDomain;
 import com.lmis.MainActivity;
 import com.lmis.R;
 import com.lmis.addons.expense.ExpenseDBHelper;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
-import com.lmis.orm.LmisValues;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.LmisUser;
 import com.lmis.util.LmisNotificationHelper;
@@ -47,47 +27,24 @@ import com.lmis.util.LmisNotificationHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.monoid.json.JSONArray;
 import us.monoid.json.JSONObject;
 
 /**
- * The Class ExpenseSyncService.
+ * Created by chengdh on 14-6-9.
  */
-public class ExpenseSyncService extends Service {
+public class OrgSyncService extends Service {
 
-    /**
-     * The Constant TAG.
-     */
-    public static final String TAG = "ExpenseSyncService";
+    public final String TAG = "OrgSyncService";
 
-    /**
-     * The s sync adapter.
-     */
     private static SyncAdapterImpl sSyncAdapter = null;
 
-    /**
-     * The i.
-     */
-    static int i = 0;
-
-    /**
-     * The context.
-     */
     Context mContext = null;
 
-    /**
-     * Instantiates a new message sync service.
-     */
-    public ExpenseSyncService() {
+    public OrgSyncService() {
         super();
         mContext = this;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see android.app.Service#onBind(android.content.Intent)
-     */
     @Override
     public IBinder onBind(Intent intent) {
         IBinder ret = null;
@@ -95,12 +52,8 @@ public class ExpenseSyncService extends Service {
         return ret;
     }
 
-    /**
-     * Gets the sync adapter.
-     *
-     * @return the sync adapter
-     */
     public SyncAdapterImpl getSyncAdapter() {
+
         if (sSyncAdapter == null) {
             sSyncAdapter = new SyncAdapterImpl(this);
         }
@@ -178,7 +131,7 @@ public class ExpenseSyncService extends Service {
                 intent.putIntegerArrayListExtra("new_ids", (ArrayList<Integer>) affected_ids);
             }
             //更新数据库中已存在的expense信息
-            List<Integer> updated_ids = updateOldExpenses(expense_db, oe, user, ids);
+            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, user, ids);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,39 +142,6 @@ public class ExpenseSyncService extends Service {
         }
     }
 
-    //更新数据库中已有的expense信息
-    private List<Integer> updateOldExpenses(ExpenseDBHelper db, LmisHelper oe, LmisUser user, List<Integer> ids) {
-        Log.d(TAG, "ExpenseSyncServide->updateOldExpenses()");
-        List<Integer> updated_ids = new ArrayList<Integer>();
-        try {
-            JSONArray ids_array = new JSONArray();
-            for (int id : ids)
-                ids_array.put(id);
-
-            JSONObject fields = new JSONObject();
-
-            fields.accumulate("fields", "id");
-            fields.accumulate("fields", "state");
-
-            LmisDomain domain = new LmisDomain();
-            domain.add("id_in", ids_array);
-            JSONArray result = oe.search_read("hr.expense.expense", fields, domain.get());
-
-            Log.d(TAG, "ExpenseSyncService#updateOldExpenses" + result);
-            for (int j = 0; j < result.length(); j++) {
-                JSONObject objRes = result.getJSONObject(j);
-                int expense_id = objRes.getInt("id");
-                String state = objRes.getString("state");
-                LmisValues values = new LmisValues();
-                values.put("state", state);
-                db.update(values, expense_id);
-                updated_ids.add(expense_id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return updated_ids;
-    }
 
     /**
      * The Class SyncAdapterImpl.
@@ -246,7 +166,7 @@ public class ExpenseSyncService extends Service {
         @Override
         public void onPerformSync(Account account, Bundle bundle, String str, ContentProviderClient providerClient, SyncResult syncResult) {
             if (account != null) {
-                new ExpenseSyncService().performSync(mContext, account, bundle, str, providerClient, syncResult);
+                new OrgSyncService().performSync(mContext, account, bundle, str, providerClient, syncResult);
             }
         }
     }

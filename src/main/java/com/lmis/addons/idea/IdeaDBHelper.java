@@ -30,99 +30,99 @@ import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 
 public class IdeaDBHelper extends LmisDatabase {
-	Context mContext = null;
+    Context mContext = null;
 
-	public IdeaDBHelper(Context context) {
-		super(context);
-		mContext = context;
-	}
+    public IdeaDBHelper(Context context) {
+        super(context);
+        mContext = context;
+    }
 
-	class IdeaCategory extends LmisDatabase implements LmisDBHelper {
-		Context mContext = null;
+    class IdeaCategory extends LmisDatabase implements LmisDBHelper {
+        Context mContext = null;
 
-		public IdeaCategory(Context context) {
-			super(context);
-			mContext = context;
+        public IdeaCategory(Context context) {
+            super(context);
+            mContext = context;
 
-		}
+        }
 
-		@Override
-		public String getModelName() {
-			return "idea.category";
-		}
+        @Override
+        public String getModelName() {
+            return "idea.category";
+        }
 
-		@Override
-		public List<LmisColumn> getModelColumns() {
-			List<LmisColumn> cols = new ArrayList<LmisColumn>();
-			cols.add(new LmisColumn("name", "Name", LmisFields.varchar(50)));
-			return cols;
-		}
+        @Override
+        public List<LmisColumn> getModelColumns() {
+            List<LmisColumn> cols = new ArrayList<LmisColumn>();
+            cols.add(new LmisColumn("name", "Name", LmisFields.varchar(50)));
+            return cols;
+        }
 
-	}
+    }
 
-	class IdeaUsers extends LmisDatabase implements LmisDBHelper {
-		Context mContext = null;
+    class IdeaUsers extends LmisDatabase implements LmisDBHelper {
+        Context mContext = null;
 
-		public IdeaUsers(Context context) {
-			super(context);
-			mContext = context;
-		}
+        public IdeaUsers(Context context) {
+            super(context);
+            mContext = context;
+        }
 
-		@Override
-		public String getModelName() {
-			return "idea.users";
-		}
+        @Override
+        public String getModelName() {
+            return "idea.users";
+        }
 
-		@Override
-		public List<LmisColumn> getModelColumns() {
-			List<LmisColumn> cols = new ArrayList<LmisColumn>();
-			cols.add(new LmisColumn("name", "Name", LmisFields.varchar(50)));
-			cols.add(new LmisColumn("city", "city", LmisFields.varchar(50)));
-			cols.add(new LmisColumn("user_type", "Type", LmisFields
-					.manyToOne(new IdeaUserType(mContext))));
-			return cols;
-		}
+        @Override
+        public List<LmisColumn> getModelColumns() {
+            List<LmisColumn> cols = new ArrayList<LmisColumn>();
+            cols.add(new LmisColumn("name", "Name", LmisFields.varchar(50)));
+            cols.add(new LmisColumn("city", "city", LmisFields.varchar(50)));
+            cols.add(new LmisColumn("user_type", "Type", LmisFields
+                    .manyToOne(new IdeaUserType(mContext))));
+            return cols;
+        }
 
-	}
+    }
 
-	class IdeaUserType extends LmisDatabase implements LmisDBHelper {
-		Context mContext = null;
+    class IdeaUserType extends LmisDatabase implements LmisDBHelper {
+        Context mContext = null;
 
-		public IdeaUserType(Context context) {
-			super(context);
-			mContext = context;
-		}
+        public IdeaUserType(Context context) {
+            super(context);
+            mContext = context;
+        }
 
-		@Override
-		public String getModelName() {
-			return "idea.user.type";
-		}
+        @Override
+        public String getModelName() {
+            return "idea.user.type";
+        }
 
-		@Override
-		public List<LmisColumn> getModelColumns() {
-			List<LmisColumn> cols = new ArrayList<LmisColumn>();
-			cols.add(new LmisColumn("type", "Name", LmisFields.varchar(50)));
-			return cols;
-		}
+        @Override
+        public List<LmisColumn> getModelColumns() {
+            List<LmisColumn> cols = new ArrayList<LmisColumn>();
+            cols.add(new LmisColumn("type", "Name", LmisFields.varchar(50)));
+            return cols;
+        }
 
-	}
+    }
 
-	@Override
-	public String getModelName() {
-		return "idea.idea";
-	}
+    @Override
+    public String getModelName() {
+        return "idea.idea";
+    }
 
-	@Override
-	public List<LmisColumn> getModelColumns() {
-		List<LmisColumn> columns = new ArrayList<LmisColumn>();
+    @Override
+    public List<LmisColumn> getModelColumns() {
+        List<LmisColumn> columns = new ArrayList<LmisColumn>();
 
-		columns.add(new LmisColumn("name", "Name", LmisFields.varchar(64)));
-		columns.add(new LmisColumn("description", "Description", LmisFields.text()));
-		columns.add(new LmisColumn("category_id", "Idea Category", LmisFields
-				.manyToOne(new IdeaCategory(mContext))));
-		columns.add(new LmisColumn("user_ids", "Idea Users", LmisFields
-				.manyToMany(new IdeaUsers(mContext))));
-		return columns;
-	}
+        columns.add(new LmisColumn("name", "Name", LmisFields.varchar(64)));
+        columns.add(new LmisColumn("description", "Description", LmisFields.text()));
+        columns.add(new LmisColumn("category_id", "Idea Category", LmisFields
+                .manyToOne(new IdeaCategory(mContext))));
+        columns.add(new LmisColumn("user_ids", "Idea Users", LmisFields
+                .manyToMany(new IdeaUsers(mContext))));
+        return columns;
+    }
 
 }

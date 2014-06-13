@@ -29,14 +29,12 @@ import com.lmis.orm.LmisDatabase;
  */
 public interface SyncHelper {
 
-	/**
-	 * Sync with server.
-	 * 
-	 * @param db
-	 *            the db
-	 * @param args
-	 *            the args
-	 * @return the hash map
-	 */
-	public HashMap<String, Object> syncWithServer(LmisDatabase db, JSONArray args);
+    /**
+     * Sync with server.
+     *
+     * @param db   the db
+     * @param args the args
+     * @return the hash map
+     */
+    public HashMap<String, Object> syncWithServer(LmisDatabase db, JSONArray args);
 }

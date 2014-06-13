@@ -31,7 +31,7 @@ import android.util.Log;
 public class DataSetChangeReceiver extends BroadcastReceiver {
 
 	/** The Constant DATA_CHANGED. */
-	public static final String DATA_CHANGED = "com.openerp.DATA_CHANGED";
+	public static final String DATA_CHANGED = "com.lmis.DATA_CHANGED";
 
 	/*
 	 * (non-Javadoc)
