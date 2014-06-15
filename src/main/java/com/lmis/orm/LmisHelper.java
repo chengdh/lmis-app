@@ -26,7 +26,6 @@ import com.lmis.Lmis;
 import com.lmis.LmisArguments;
 import com.lmis.LmisDomain;
 import com.lmis.LmisVersionException;
-import com.lmis.base.ir.Ir_model;
 import com.lmis.orm.LmisFieldsHelper.OERelationData;
 import com.lmis.support.LmisUser;
 import com.lmis.util.LmisDate;
@@ -74,8 +73,7 @@ public class LmisHelper extends Lmis {
     }
 
     public LmisHelper(Context context, LmisUser data, LmisDatabase lmisDatabase)
-            throws JSONException, IOException,
-            LmisVersionException {
+            throws JSONException, IOException, LmisVersionException {
         super(data.getHost());
         Log.d(TAG, "LmisHelper->LmisHelper(Context, LmisUser, LmisDatabase)");
         Log.d(TAG, "Called from LmisDatabase->getLmisInstance()");
@@ -86,8 +84,7 @@ public class LmisHelper extends Lmis {
         /*
          * Required to login with server.
 		 */
-        login(mUser.getUsername(), mUser.getPassword(),
-                mUser.getHost());
+        login(mUser.getUsername(), mUser.getPassword(),mUser.getHost());
     }
 
     private void init() {
@@ -178,7 +175,7 @@ public class LmisHelper extends Lmis {
         return syncWithMethod(method, args, false);
     }
 
-    public boolean syncWithMethod(String method, LmisArguments args,boolean removeLocalIfNotExists) {
+    public boolean syncWithMethod(String method, LmisArguments args, boolean removeLocalIfNotExists) {
         Log.d(TAG, "LmisHelper->syncWithMethod()");
         Log.d(TAG, "Model: " + mDatabase.getModelName());
         Log.d(TAG, "User: " + mUser.getAndroidName());

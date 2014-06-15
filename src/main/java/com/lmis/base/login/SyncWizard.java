@@ -34,9 +34,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.lmis.MainActivity;
+import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.config.SyncWizardValues;
-import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.SyncValue;
 import com.lmis.util.controls.LmisCheckBox;
@@ -47,10 +46,11 @@ import com.lmis.util.drawer.DrawerItem;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class SyncWizard extends BaseFragment {
 
     View rootView = null;
-    MainActivity context = null;
     LmisCheckBox checkbox[] = null;
     RadioGroup[] rdoGroups = null;
     HashMap<String, String> authorities = new HashMap<String, String>();
@@ -59,10 +59,7 @@ public class SyncWizard extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        context = (MainActivity) getActivity();
-        scope = new AppScope(this);
-        rootView = inflater.inflate(com.lmis.R.layout.fragment_sync_wizard, container,
-                false);
+        rootView = inflater.inflate(com.lmis.R.layout.fragment_sync_wizard, container, false);
         getActivity().setTitle("Configuration");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         getActivity().getActionBar().setHomeButtonEnabled(false);
@@ -80,8 +77,7 @@ public class SyncWizard extends BaseFragment {
 
     private void generateLayout() {
 
-        LinearLayout layout = (LinearLayout) rootView
-                .findViewById(com.lmis.R.id.layoutLoginConfig);
+        LinearLayout layout = (LinearLayout) rootView.findViewById(com.lmis.R.id.layoutLoginConfig);
         SyncWizardValues syncValues = new SyncWizardValues();
         List<SyncValue> syncValuesList = syncValues.syncValues();
         checkbox = new LmisCheckBox[syncValuesList.size()];
@@ -104,15 +100,14 @@ public class SyncWizard extends BaseFragment {
                 } else {
                     rdoGroups[i] = new RadioGroup(scope.context());
                     rdoGroups[i].setId(i + 50);
-                    LmisRadioButton[] rdoButtons = new LmisRadioButton[value
-                            .getRadioGroups().size()];
+                    LmisRadioButton[] rdoButtons = new LmisRadioButton[value.getRadioGroups().size()];
                     int mId = 1;
                     int j = 0;
                     for (SyncValue rdoVal : value.getRadioGroups()) {
 
                         String localeTitleRadio = getStringByName(rdoVal.getTitle());
                         rdoButtons[j] = new LmisRadioButton(scope.context());
-                        rdoButtons[j].setId(mId);
+                        //rdoButtons[j].setId(mId);
                         rdoButtons[j].setTag(rdoVal.getTitle());
                         rdoButtons[j].setText(localeTitleRadio);
                         rdoGroups[i].addView(rdoButtons[j]);
@@ -134,8 +129,7 @@ public class SyncWizard extends BaseFragment {
                 layout.addView(txvTitles[i]);
                 View lineView = new View(scope.context());
                 lineView.setBackgroundColor(Color.parseColor("#BEBEBE"));
-                lineView.setLayoutParams(new LayoutParams(
-                        LayoutParams.MATCH_PARENT, 1));
+                lineView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 1));
                 layout.addView(lineView);
             }
         }
@@ -178,19 +172,9 @@ public class SyncWizard extends BaseFragment {
                         for (int i = 0; i < rdoGrp.getChildCount(); i++) {
                             LmisRadioButton rdoBtn = (LmisRadioButton) rdoGrp
                                     .getChildAt(i);
-                            SharedPreferences settings = PreferenceManager
-                                    .getDefaultSharedPreferences(scope.context());
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(scope.context());
                             Editor editor = settings.edit();
-                            if (rdoBtn.getTag().equals("local_contact")
-                                    && rdoBtn.isChecked()) {
-                                editor.putBoolean("local_contact_sync", true);
-                                editor.putBoolean("server_contact_sync", false);
-                            }
-                            if (rdoBtn.getTag().equals("all_contacts")
-                                    && rdoBtn.isChecked()) {
-                                editor.putBoolean("server_contact_sync", true);
-                                editor.putBoolean("local_contact_sync", false);
-                            }
+                            //TODO 添加要同步色设置信息
                             editor.commit();
                             String authority = authorities.get(rdoBtn.getId() + "");
                             scope.main().setAutoSync(authority, rdoBtn.isChecked());

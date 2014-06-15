@@ -127,7 +127,7 @@ public class Expense extends BaseFragment implements OETouchListener.OnPullListe
             }
         };
         mListView.setAdapter(mListViewAdapter);
-        mTouchAttacher = scope.main().getTouchAttacher();
+        //mTouchAttacher = scope.main().getTouchAttacher();
         mTouchAttacher.setPullableView(mListView, this);
 
         initData();

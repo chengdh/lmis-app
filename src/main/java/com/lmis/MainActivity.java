@@ -18,10 +18,6 @@
  */
 package com.lmis;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.os.AsyncTask;
 import android.accounts.Account;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -36,7 +32,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -47,54 +42,74 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.app.ProgressDialog;
 
+import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
+import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
 import com.lmis.auth.LmisAccountManager;
+import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
 import com.lmis.base.account.UserProfile;
+import com.lmis.dagger_module.ActivityModule;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
+import com.lmis.util.OnBackButtonPressedListener;
 import com.lmis.util.PreferenceManager;
 import com.lmis.util.drawer.DrawerAdatper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 import com.lmis.widgets.WidgetHelper;
-import com.openerp.OETouchListener;
-import com.lmis.base.about.AboutFragment;
-import com.lmis.util.OnBackButtonPressedListener;
-import com.lmis.util.drawer.DrawerHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * The Class MainActivity.
  */
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends InjectingFragmentActivity implements
         DrawerItem.DrawerItemClickListener, FragmentListener, DrawerListener {
 
     public static final String TAG = "MainActivity";
     public static final int RESULT_SETTINGS = 1;
     public static boolean set_setting_menu = false;
-    public Context mContext = null;
 
-    DrawerLayout mDrawerLayout = null;
+    @Inject
+    @Activity
+    Context mContext;
+
+    @Inject
+    @Activity
+    FragmentManager mFragment;
+
+    @Inject
+    @Activity
+    List<DrawerItem> mDrawerListItems;
+
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    @InjectView(R.id.left_drawer)
+    ListView mDrawerListView;
+
     ActionBarDrawerToggle mDrawerToggle = null;
-    List<DrawerItem> mDrawerListItems = new ArrayList<DrawerItem>();
     DrawerAdatper mDrawerAdatper = null;
     String mAppTitle = "";
     String mDrawerTitle = "";
     String mDrawerSubtitle = "";
     int mDrawerItemSelectedPosition = -1;
-    ListView mDrawerListView = null;
 
-    FragmentManager mFragment = null;
 
     public enum SettingKeys {
         GLOBAL_SETTING, PROFILE, ACCOUNTS, ABOUT_US
     }
 
     private CharSequence mTitle;
-    private OETouchListener mTouchAttacher;
     private OnBackButtonPressedListener backPressed = null;
     private boolean mLandscape = false;
 
@@ -102,17 +117,23 @@ public class MainActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
         if (savedInstanceState != null) {
             mDrawerItemSelectedPosition = savedInstanceState.getInt("current_drawer_item");
         }
-        mContext = this;
-        mFragment = getSupportFragmentManager();
         if (findViewById(R.id.fragment_container) != null) {
             mLandscape = false;
         } else {
             mLandscape = true;
         }
         init();
+    }
+
+    @Override
+    protected List<Object> getModules() {
+        List<Object> ret = super.getModules();
+        ret.add(new ActivityModule(this, this));
+        return ret;
     }
 
     private void init() {
@@ -146,8 +167,6 @@ public class MainActivity extends FragmentActivity implements
 
     private void initDrawerControls() {
         Log.d(TAG, "MainActivity->initDrawerControls()");
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
         mDrawerAdatper = new DrawerAdatper(this, R.layout.drawer_item_layout,
                 R.layout.drawer_item_group_layout, mDrawerListItems);
@@ -177,8 +196,6 @@ public class MainActivity extends FragmentActivity implements
         Log.d(TAG, "MainActivity->setDrawerItems()");
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        mDrawerListItems.addAll(DrawerHelper.drawerItems(mContext));
-        mDrawerListItems.addAll(setSettingMenu());
         if (mDrawerItemSelectedPosition >= 0) {
             mDrawerListView.setItemChecked(mDrawerItemSelectedPosition, true);
         }
@@ -271,8 +288,7 @@ public class MainActivity extends FragmentActivity implements
                         new DialogInterface.OnClickListener() {
 
                             @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
+                            public void onClick(DialogInterface dialog,int which) {
                                 mAccount = accounts.get(which);
                             }
                         }
@@ -460,11 +476,6 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    // PullToRefresh
-    public OETouchListener getTouchAttacher() {
-        return mTouchAttacher;
-    }
-
     /**
      * Sets the auto sync.
      *
@@ -558,8 +569,7 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapter, View view, int position,
-                            long id) {
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
         DrawerItem item = mDrawerListItems.get(position);
         if (!item.isGroupTitle()) {
             if (!item.getKey().equals("com.lmis.settings")) {
@@ -602,49 +612,11 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    private List<DrawerItem> setSettingMenu() {
-        List<DrawerItem> sys = new ArrayList<DrawerItem>();
-        String key = "com.lmis.settings";
-
-        String settings_group_title = getResources().getString(R.string.settings_group_title);
-        String locale_profile = getResources().getString(R.string.settings_drawer_item_profile);
-        String locale_general_setting = getResources().getString(R.string.settings_drawer_item_general_setting);
-        String locale_account = getResources().getString(R.string.settings_drawer_item_account);
-        String locale_about_us = getResources().getString(R.string.settings_drawer_item_about_us);
-
-
-        sys.add(new DrawerItem(key, settings_group_title, true));
-        sys.add(new DrawerItem(key, locale_profile, 0, R.drawable.ic_action_user,
-                getFragBundle(new Fragment(), "settings", SettingKeys.PROFILE)));
-
-        sys.add(new DrawerItem(key, locale_general_setting, 0,
-                R.drawable.ic_action_settings, getFragBundle(new Fragment(),
-                "settings", SettingKeys.GLOBAL_SETTING)
-        ));
-
-        sys.add(new DrawerItem(key, locale_account, 0,
-                R.drawable.ic_action_accounts, getFragBundle(new Fragment(),
-                "settings", SettingKeys.ACCOUNTS)
-        ));
-        sys.add(new DrawerItem(key, locale_about_us, 0, R.drawable.ic_action_about,
-                getFragBundle(new Fragment(), "settings", SettingKeys.ABOUT_US)));
-        return sys;
-    }
-
-    private Fragment getFragBundle(Fragment fragment, String key,
-                                   SettingKeys val) {
-        Bundle bundle = new Bundle();
-        bundle.putString(key, val.toString());
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     private void lockDrawer(boolean flag) {
         if (!flag) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.STATE_IDLE);
         } else {
-            mDrawerLayout
-                    .setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
@@ -657,8 +629,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void startMainFragment(Fragment fragment, boolean addToBackState) {
         Log.d(TAG, "MainActivity->FragmentListener->startMainFragment()");
-        FragmentTransaction tran = mFragment.beginTransaction().replace(
-                R.id.fragment_container, fragment);
+        FragmentTransaction tran = mFragment.beginTransaction().replace(R.id.fragment_container, fragment);
         if (addToBackState) {
             tran.addToBackStack(null);
         }
@@ -683,35 +654,4 @@ public class MainActivity extends FragmentActivity implements
         init();
     }
 
-    public class DrawerItemsLoader extends AsyncTask<Void, Void, Boolean> {
-
-        ProgressDialog mProgressDialog = null;
-
-        public DrawerItemsLoader() {
-            String working_text = getString(R.string.working_text);
-            mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(working_text);
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... arg0) {
-            setDrawerItems();
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            Log.d(TAG, "initDrawer() finished");
-
-            //setDrawerItems();
-            mDrawerAdatper.notifiyDataChange(mDrawerListItems);
-            initDrawer();
-            mProgressDialog.dismiss();
-        }
-    }
-
-    private Context getContext() {
-        return this;
-    }
 }

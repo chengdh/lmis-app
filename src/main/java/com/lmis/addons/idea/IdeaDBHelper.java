@@ -48,7 +48,7 @@ public class IdeaDBHelper extends LmisDatabase {
 
         @Override
         public String getModelName() {
-            return "idea.category";
+            return "idea_category";
         }
 
         @Override
@@ -70,7 +70,7 @@ public class IdeaDBHelper extends LmisDatabase {
 
         @Override
         public String getModelName() {
-            return "idea.users";
+            return "idea_users";
         }
 
         @Override
@@ -95,7 +95,7 @@ public class IdeaDBHelper extends LmisDatabase {
 
         @Override
         public String getModelName() {
-            return "idea.user.type";
+            return "idea_user_type";
         }
 
         @Override
@@ -109,7 +109,7 @@ public class IdeaDBHelper extends LmisDatabase {
 
     @Override
     public String getModelName() {
-        return "idea.idea";
+        return "idea_idea";
     }
 
     @Override

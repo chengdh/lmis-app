@@ -37,10 +37,11 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.fizzbuzz.android.dagger.InjectingActivityModule;
+import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.LmisVersionException;
 import com.lmis.R;
 import com.lmis.base.login.Login;
-import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisServerConnection;
@@ -50,245 +51,268 @@ import com.lmis.util.drawer.DrawerItem;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * The Class AccountFragment.
  */
 public class AccountFragment extends BaseFragment {
 
-	/** The item arr. */
-	String[] itemArr = null;
+    /**
+     * The item arr.
+     */
+    String[] itemArr = null;
 
-	/** The context. */
-	Context context = null;
+    /**
+     * The context.
+     */
+    @Inject
+    @InjectingActivityModule.Activity
+    Context context;
 
-	/** The m action mode. */
-	ActionMode mActionMode;
+    /**
+     * The m action mode.
+     */
+    ActionMode mActionMode;
 
-	/** The open erp server url. */
-	String LmisServerURL = "";
+    /**
+     * The open erp server url.
+     */
+    String LmisServerURL = "";
 
-	/** The edt server url. */
-	LmisEditText edtServerUrl = null;
+    /**
+     * The edt server url.
+     */
+    @InjectView(R.id.edtServerURL)
+    LmisEditText edtServerUrl;
 
-	/** The server connect a sync. */
-	ConnectToServer serverConnectASync = null;
+    /**
+     * The server connect a sync.
+     */
+    ConnectToServer serverConnectASync = null;
 
-	/** The root view. */
-	View rootView = null;
+    /**
+     * The root view.
+     */
+    View rootView = null;
 
-	/** The checkbox secure connection. */
-	CheckBox chkSecureConnection = null;
+    /**
+     * The checkbox secure connection.
+     */
+    @InjectView(R.id.chkIsSecureConnection)
+    CheckBox chkSecureConnection;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
-	 * android.view.ViewGroup, android.os.Bundle)
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		setHasOptionsMenu(true);
-		this.context = getActivity();
-		// Inflate the layout for this fragment
-		rootView = inflater
-				.inflate(R.layout.fragment_account, container, false);
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
+     * android.view.ViewGroup, android.os.Bundle)
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.fragment_account, container, false);
+        ButterKnife.inject(this, rootView);
 
-		scope = new AppScope(this);
+        getActivity().setTitle("Setup Account");
 
-		rootView.findViewById(R.id.edtServerURL).requestFocus();
-		getActivity().setTitle("Setup Account");
-		chkSecureConnection = (CheckBox) rootView
-				.findViewById(R.id.chkIsSecureConnection);
-		edtServerUrl = (LmisEditText) rootView.findViewById(R.id.edtServerURL);
-		chkSecureConnection.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String serverUrl = edtServerUrl.getText().toString()
-						.toLowerCase();
-				if (chkSecureConnection.isChecked()) {
-					serverUrl = serverUrl.replace("http://", "");
-					serverUrl = serverUrl.replace("https://", "");
-					serverUrl = "https://" + serverUrl;
-				} else {
-					serverUrl = serverUrl.replace("https://", "");
-					serverUrl = serverUrl.replace("http://", "");
-				}
-				edtServerUrl.setText(serverUrl);
-				edtServerUrl.setSelection(edtServerUrl.length());
-			}
-		});
+        edtServerUrl.requestFocus();
 
-		edtServerUrl.setOnEditorActionListener(new OnEditorActionListener() {
+        chkSecureConnection.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String serverUrl = edtServerUrl.getText().toString()
+                        .toLowerCase();
+                if (chkSecureConnection.isChecked()) {
+                    serverUrl = serverUrl.replace("http://", "");
+                    serverUrl = serverUrl.replace("https://", "");
+                    serverUrl = "https://" + serverUrl;
+                } else {
+                    serverUrl = serverUrl.replace("https://", "");
+                    serverUrl = serverUrl.replace("http://", "");
+                }
+                edtServerUrl.setText(serverUrl);
+                edtServerUrl.setSelection(edtServerUrl.length());
+            }
+        });
 
-			@Override
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-						|| (actionId == EditorInfo.IME_ACTION_DONE)) {
-					goNext();
-				}
-				return false;
-			}
-		});
-		return rootView;
-	}
+        edtServerUrl.setOnEditorActionListener(new OnEditorActionListener() {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.support.v4.app.Fragment#onCreateOptionsMenu(android.view.Menu,
-	 * android.view.MenuInflater)
-	 */
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_fragment_account, menu);
-	}
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+                        || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    goNext();
+                }
+                return false;
+            }
+        });
+        return rootView;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.support.v4.app.Fragment#onOptionsItemSelected(android.view.MenuItem
-	 * )
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// handle item selection
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * android.support.v4.app.Fragment#onCreateOptionsMenu(android.view.Menu,
+     * android.view.MenuInflater)
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_account, menu);
+    }
 
-		switch (item.getItemId()) {
-		case R.id.menu_account_next:
-			goNext();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * android.support.v4.app.Fragment#onOptionsItemSelected(android.view.MenuItem
+     * )
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
 
-	private void goNext() {
-		StringBuffer serverURL = new StringBuffer();
-		edtServerUrl.setError(null);
-		if (TextUtils.isEmpty(edtServerUrl.getText())) {
-			edtServerUrl.setError("Provide Server URL");
-		} else {
+        switch (item.getItemId()) {
+            case R.id.menu_account_next:
+                goNext();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-			if (!edtServerUrl.getText().toString().contains("http://")
-					&& !edtServerUrl.getText().toString().contains("https://")) {
-				String http_https = "http://";
-				if (chkSecureConnection.isChecked()) {
-					http_https = "https://";
-				}
-				serverURL.append(http_https);
-			}
+    private void goNext() {
+        StringBuffer serverURL = new StringBuffer();
+        edtServerUrl.setError(null);
+        if (TextUtils.isEmpty(edtServerUrl.getText())) {
+            edtServerUrl.setError("Provide Server URL");
+        } else {
 
-			serverURL.append(edtServerUrl.getText());
-			this.LmisServerURL = serverURL.toString();
-			serverConnectASync = new ConnectToServer();
-			serverConnectASync.execute((Void) null);
+            if (!edtServerUrl.getText().toString().contains("http://")
+                    && !edtServerUrl.getText().toString().contains("https://")) {
+                String http_https = "http://";
+                if (chkSecureConnection.isChecked()) {
+                    http_https = "https://";
+                }
+                serverURL.append(http_https);
+            }
 
-		}
-	}
+            serverURL.append(edtServerUrl.getText());
+            this.LmisServerURL = serverURL.toString();
+            serverConnectASync = new ConnectToServer();
+            serverConnectASync.execute((Void) null);
 
-	/**
-	 * The Class ConnectToServer.
-	 */
-	public class ConnectToServer extends AsyncTask<Void, Void, Boolean> {
+        }
+    }
 
-		/** The pdialog. */
-		LmisDialog pdialog = null;
+    /**
+     * The Class ConnectToServer.
+     */
+    public class ConnectToServer extends AsyncTask<Void, Void, Boolean> {
 
-		/** The error msg. */
-		String errorMsg = "";
+        /**
+         * The pdialog.
+         */
+        LmisDialog pdialog = null;
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#onPreExecute()
-		 */
-		@Override
-		protected void onPreExecute() {
-			pdialog = new LmisDialog(scope.context(), false, "Connecting...");
-			pdialog.show();
-		}
+        /**
+         * The error msg.
+         */
+        String errorMsg = "";
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(Params[])
-		 */
-		@Override
-		protected Boolean doInBackground(Void... params) {
+        /*
+         * (non-Javadoc)
+         *
+         * @see android.os.AsyncTask#onPreExecute()
+         */
+        @Override
+        protected void onPreExecute() {
+            pdialog = new LmisDialog(scope.context(), false, "Connecting...");
+            pdialog.show();
+        }
 
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
+        /*
+         * (non-Javadoc)
+         *
+         * @see android.os.AsyncTask#doInBackground(Params[])
+         */
+        @Override
+        protected Boolean doInBackground(Void... params) {
 
-			LmisServerConnection oeConnect = new LmisServerConnection();
-			boolean flag = false;
-			try {
-				flag = oeConnect.testConnection(getActivity(), LmisServerURL);
-				if (!flag) {
-					errorMsg = "Unable to reach Lmis 7.0 Server.";
-				}
-			} catch (LmisVersionException e) {
-				flag = false;
-				errorMsg = e.getMessage();
-			}
+            try {
+                // Simulate network access.
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
 
-			return flag;
+            LmisServerConnection oeConnect = new LmisServerConnection();
+            boolean flag = false;
+            try {
+                flag = oeConnect.testConnection(getActivity(), LmisServerURL);
+                if (!flag) {
+                    errorMsg = "Unable to reach Lmis 7.0 Server.";
+                }
+            } catch (LmisVersionException e) {
+                flag = false;
+                errorMsg = e.getMessage();
+            }
 
-		}
+            return flag;
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			pdialog.hide();
-			if (success) {
-				// Start New Fragment for Login
-				Login loginFragment = new Login();
-				Bundle bundle = new Bundle();
-				bundle.putString("LmisServerURL", LmisServerURL);
-				loginFragment.setArguments(bundle);
-				FragmentListener fragment = (FragmentListener) getActivity();
-				fragment.startMainFragment(loginFragment, true);
-				serverConnectASync.cancel(true);
-				serverConnectASync = null;
+        }
 
-			} else {
-				Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG)
-						.show();
-				serverConnectASync.cancel(true);
-				serverConnectASync = null;
-			}
-		}
+        /*
+         * (non-Javadoc)
+         *
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            pdialog.hide();
+            if (success) {
+                // Start New Fragment for Login
+                Login loginFragment = new Login();
+                Bundle bundle = new Bundle();
+                bundle.putString("LmisServerURL", LmisServerURL);
+                loginFragment.setArguments(bundle);
+                FragmentListener fragment = (FragmentListener) getActivity();
+                fragment.startMainFragment(loginFragment, true);
+                serverConnectASync.cancel(true);
+                serverConnectASync = null;
 
-	}
+            } else {
+                Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG)
+                        .show();
+                serverConnectASync.cancel(true);
+                serverConnectASync = null;
+            }
+        }
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		scope.main().getActionBar().setDisplayHomeAsUpEnabled(true);
-		scope.main().getActionBar().setHomeButtonEnabled(true);
+    }
 
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        scope.main().getActionBar().setDisplayHomeAsUpEnabled(true);
+        scope.main().getActionBar().setHomeButtonEnabled(true);
 
-	@Override
-	public Object databaseHelper(Context context) {
-		return null;
-	}
+    }
 
-	@Override
-	public List<DrawerItem> drawerMenus(Context context) {
-		return null;
-	}
+    @Override
+    public Object databaseHelper(Context context) {
+        return null;
+    }
 
+    @Override
+    public List<DrawerItem> drawerMenus(Context context) {
+        return null;
+    }
 }

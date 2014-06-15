@@ -2,6 +2,8 @@ package com.lmis.orm;
 
 import android.util.Log;
 
+import com.lmis.util.Inflector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,6 +148,6 @@ public class SQLHelper {
     }
 
     public String modelToTable(String model) {
-        return model.replaceAll("\\.", "_");
+        return Inflector.tableize(model);
     }
 }

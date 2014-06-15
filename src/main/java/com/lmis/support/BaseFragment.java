@@ -18,22 +18,35 @@
  */
 package com.lmis.support;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView.OnQueryTextListener;
 
+import com.fizzbuzz.android.dagger.InjectingApplication;
+import com.fizzbuzz.android.dagger.InjectingFragment;
+import com.fizzbuzz.android.dagger.InjectingFragmentModule;
+import com.lmis.dagger_module.FragmentModule;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.support.fragment.FragmentHelper;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * The Class BaseFragment.
  */
-public abstract class BaseFragment extends Fragment implements FragmentHelper {
+public abstract class BaseFragment extends InjectingFragment implements FragmentHelper {
 
 	/** The scope. */
+    @Inject
+    @InjectingFragmentModule.Fragment
 	public AppScope scope;
-	private LmisDatabase mDb = null;
+
+    /** db */
+	private LmisDatabase mDb;
+
 	/** The list search adapter. */
 	private ArrayAdapter<Object> listSearchAdapter;
 
@@ -78,7 +91,13 @@ public abstract class BaseFragment extends Fragment implements FragmentHelper {
 	};
 
 	public LmisDatabase db() {
-		mDb = (LmisDatabase) databaseHelper(getActivity());
 		return mDb;
 	}
+
+    @Override
+    protected List<Object> getModules() {
+        List<Object> ret = super.getModules();
+        ret.add(new FragmentModule(this,this));
+        return ret;
+    }
 }

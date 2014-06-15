@@ -28,6 +28,9 @@
     <string name="syncwizard_description">Select your auto sync option so application will get up to-date automatically.</string>
     <string name="account_sync_wizard_button">Continue</string>
 
+    <!--各种label的定义-->
+    <string name="label_org">Orgs</string>
+
     <!-- Message Fragment -->
     <string name="message_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
 
@@ -193,11 +196,9 @@ When you process voucher in your inbox, you can mark some as todo. From this men
     <string name="label_groups">Groups</string>
 
     <!--format string -->
-    <string name="messages_sync_notify_title">%1$d New Messageses</string> 
-    <string name="messages_sync_notify_body">%1$d New Messages received (OpenERP)</string> 
 
-    <string name="expenses_sync_notify_title">%1$d New Expenses</string> 
-    <string name="expenses_sync_notify_body">%1$d New Expenses received (OpenERP)</string> 
+    <string name="orgs_sync_notify_title">%1$d New Orgs</string>
+    <string name="orgs_sync_notify_body">%1$d New Orgs received (Lmis)</string>
 
     <string name="vouchers_sync_notify_title">%1$d New Vouchers</string> 
     <string name="vouchers_sync_notify_body">%1$d New Vouchers received (OpenERP)</string> 

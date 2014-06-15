@@ -18,8 +18,6 @@
  */
 package com.lmis.base.login;
 
-import java.util.List;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,23 +32,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
+import com.fizzbuzz.android.dagger.InjectingActivityModule;
+import com.fizzbuzz.android.dagger.InjectingFragmentModule;
+import com.lmis.R;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
-import com.lmis.support.AppScope;
-import com.lmis.support.JSONDataHelper;
+import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
-import com.lmis.R;
-import com.lmis.support.BaseFragment;
 import com.lmis.util.controls.LmisEditText;
 import com.lmis.util.drawer.DrawerItem;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * The Class Login.
@@ -65,7 +68,9 @@ public class Login extends BaseFragment {
     /**
      * The context.
      */
-    Context context = null;
+    @Inject
+    @InjectingActivityModule.Activity
+    Context context;
 
     /**
      * The m action mode.
@@ -78,11 +83,6 @@ public class Login extends BaseFragment {
     String lmisServerURL = "";
 
     /**
-     * The edt server url.
-     */
-    LmisEditText edtServerUrl = null;
-
-    /**
      * The arguments.
      */
     Bundle arguments = null;
@@ -90,7 +90,8 @@ public class Login extends BaseFragment {
     /**
      * The db list spinner.
      */
-    Spinner dbListSpinner = null;
+    @InjectView(R.id.lstDatabases)
+    Spinner dbListSpinner;
 
     /**
      * The root view.
@@ -105,12 +106,14 @@ public class Login extends BaseFragment {
     /**
      * The edt username.
      */
-    LmisEditText edtUsername = null;
+    @InjectView(R.id.edtUsername)
+    LmisEditText edtUsername;
 
     /**
      * The edt password.
      */
-    LmisEditText edtPassword = null;
+    @InjectView(R.id.edtPassword)
+    LmisEditText edtPassword;
 
     /**
      * The Lmis Object
@@ -125,27 +128,21 @@ public class Login extends BaseFragment {
      * android.view.ViewGroup, android.os.Bundle)
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        this.context = getActivity();
-        scope = new AppScope(this);
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        dbListSpinner = (Spinner) rootView.findViewById(R.id.lstDatabases);
+
+        ButterKnife.inject(this, rootView);
+
         this.handleArguments((Bundle) getArguments());
         getActivity().setTitle("Login");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         getActivity().getActionBar().setHomeButtonEnabled(false);
-        edtUsername = (LmisEditText) rootView.findViewById(R.id.edtUsername);
-        edtPassword = (LmisEditText) rootView.findViewById(R.id.edtPassword);
         edtPassword.setOnEditorActionListener(new OnEditorActionListener() {
-
             @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-                        || (actionId == EditorInfo.IME_ACTION_DONE)) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     goNext();
                 }
                 return false;

@@ -16,8 +16,7 @@ public class LmisO2MRecord {
 
 	public List<LmisDataRow> browseEach() {
 		LmisOneToMany o2m = (LmisOneToMany) mCol.getType();
-		return mDatabase.selectO2M(o2m.getDBHelper(), mDatabase.simpTableName()
-				+ "_id = ?", new String[] { mId + "" });
+		return mDatabase.selectO2M(o2m.getDBHelper(), mDatabase.modelName().toLowerCase() + "_id = ?", new String[] { mId + "" });
 	}
 
 	public LmisDataRow browseAt(int index) {
