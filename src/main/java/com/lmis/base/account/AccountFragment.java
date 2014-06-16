@@ -38,7 +38,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
-import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.LmisVersionException;
 import com.lmis.R;
 import com.lmis.base.login.Login;
@@ -146,8 +145,7 @@ public class AccountFragment extends BaseFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId,
                                           KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-                        || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     goNext();
                 }
                 return false;

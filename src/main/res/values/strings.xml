@@ -30,6 +30,7 @@
 
     <!--各种label的定义-->
     <string name="label_org">Orgs</string>
+    <string name="label_user_org">User can access orgs</string>
 
     <!-- Message Fragment -->
     <string name="message_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n

@@ -7,7 +7,10 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.idea.Idea;
+import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
+import com.lmis.base.account.AccountsDetail;
+import com.lmis.base.account.UserProfile;
 import com.lmis.base.login.Login;
 import com.lmis.base.login.SyncWizard;
 import com.lmis.support.AppScope;
@@ -23,7 +26,11 @@ import dagger.Provides;
  * 为fragment提供组件
  */
 @Module(complete = false, library = true,
-        injects = {BaseFragment.class, AccountFragment.class, Login.class, SyncWizard.class,Idea.class})
+        injects = {
+                BaseFragment.class, AccountFragment.class,
+                Login.class, SyncWizard.class,Idea.class,
+                AccountsDetail.class, AboutFragment.class, UserProfile.class
+        })
 public class FragmentModule {
 
     private Fragment mFragment;

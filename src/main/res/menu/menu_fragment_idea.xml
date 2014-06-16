@@ -19,4 +19,9 @@
         android:title="test_call_kw"
         >
     </item>
+    <item
+        android:id="@+id/menu_test_sync_user_org"
+        android:title="test_call_kw"
+        >
+    </item>
 </menu>

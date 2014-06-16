@@ -6,6 +6,7 @@ import com.fizzbuzz.android.dagger.InjectingService;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.services.OrgSyncService;
 import com.lmis.services.SyncAdapterImpl;
+import com.lmis.services.UserOrgSyncService;
 
 import javax.inject.Singleton;
 
@@ -17,7 +18,7 @@ import dagger.Provides;
  */
 @Module(complete = false,
         library = true,
-        injects = {OrgSyncService.class})
+        injects = {OrgSyncService.class, UserOrgSyncService.class})
 
 public class ServiceModule {
 

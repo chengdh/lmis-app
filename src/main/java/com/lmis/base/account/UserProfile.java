@@ -40,7 +40,6 @@ import android.widget.Toast;
 import com.lmis.R;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
-import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.util.Base64Helper;
@@ -49,26 +48,43 @@ import com.lmis.util.drawer.DrawerItem;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class UserProfile extends BaseFragment {
 
     public static final String TAG = "UserProfile";
 
     View rootView = null;
-    EditText password = null;
-    LmisTextView txvUserLoginName, txvUsername, txvServerUrl, txvTimeZone,
-            txvDatabase;
+    @InjectView(R.id.txvUserLoginName)
+    LmisTextView txvUserLoginName;
+
+    @InjectView(R.id.txvUserName)
+    LmisTextView txvUsername;
+
+    @InjectView(R.id.txvServerUrl)
+    LmisTextView txvServerUrl;
+
+    @InjectView(R.id.txvTimeZone)
+    LmisTextView txvTimeZone;
+
+    @InjectView(R.id.txvDatabase)
+    LmisTextView txvDatabase;
+
+    @InjectView(R.id.imgUserProfilePic)
     ImageView imgUserPic;
+
+    EditText password;
     AlertDialog.Builder builder = null;
     Dialog dialog = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         rootView = inflater.inflate(R.layout.fragment_account_user_profile,
                 container, false);
-        scope = new AppScope(this);
         scope.main().setTitle("Lmis User Profile");
+        ButterKnife.inject(this, rootView);
 
         setupView();
         return rootView;
@@ -77,28 +93,20 @@ public class UserProfile extends BaseFragment {
     private void setupView() {
 
         imgUserPic = null;
-        imgUserPic = (ImageView) rootView.findViewById(R.id.imgUserProfilePic);
         String avatar = "false";
         if (!avatar.equals("false")) {
             Log.d(TAG, "user avata : " + avatar);
             imgUserPic.setImageBitmap(Base64Helper.getBitmapImage(scope.context(), avatar));
         }
-        txvUserLoginName = (LmisTextView) rootView
-                .findViewById(R.id.txvUserLoginName);
         txvUserLoginName.setText(scope.User().getAndroidName());
 
-        txvUsername = (LmisTextView) rootView.findViewById(R.id.txvUserName);
         txvUsername.setText(scope.User().getUsername());
 
-        txvServerUrl = (LmisTextView) rootView.findViewById(R.id.txvServerUrl);
         txvServerUrl.setText(scope.User().getHost());
 
-        txvDatabase = (LmisTextView) rootView.findViewById(R.id.txvDatabase);
         txvDatabase.setText("");
 
-        txvTimeZone = (LmisTextView) rootView.findViewById(R.id.txvTimeZone);
         txvTimeZone.setText("GMT");
-
     }
 
     @Override

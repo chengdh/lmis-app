@@ -19,6 +19,7 @@
 package com.lmis;
 
 import android.accounts.Account;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -39,8 +40,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
@@ -50,7 +55,9 @@ import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
 import com.lmis.base.account.UserProfile;
+import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.dagger_module.ActivityModule;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
@@ -75,38 +82,101 @@ import butterknife.InjectView;
 public class MainActivity extends InjectingFragmentActivity implements
         DrawerItem.DrawerItemClickListener, FragmentListener, DrawerListener {
 
+    /**
+     * The constant TAG.
+     */
     public static final String TAG = "MainActivity";
+    /**
+     * The constant RESULT_SETTINGS.
+     */
     public static final int RESULT_SETTINGS = 1;
+    /**
+     * The constant set_setting_menu.
+     */
     public static boolean set_setting_menu = false;
 
+    /**
+     * The M context.
+     */
     @Inject
     @Activity
     Context mContext;
 
+    /**
+     * The M fragment.
+     */
     @Inject
     @Activity
     FragmentManager mFragment;
 
+    /**
+     * The M drawer list items.
+     */
     @Inject
     @Activity
     List<DrawerItem> mDrawerListItems;
 
+    /**
+     * The M orgs.
+     */
+    @Inject
+    List<LmisDataRow> mOrgs;
+
+    /**
+     * The M drawer layout.
+     */
     @InjectView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    /**
+     * The M drawer list view.
+     */
     @InjectView(R.id.left_drawer)
     ListView mDrawerListView;
 
+    /**
+     * The M drawer toggle.
+     */
     ActionBarDrawerToggle mDrawerToggle = null;
+    /**
+     * The M drawer adatper.
+     */
     DrawerAdatper mDrawerAdatper = null;
+    /**
+     * The M app title.
+     */
     String mAppTitle = "";
+    /**
+     * The M drawer title.
+     */
     String mDrawerTitle = "";
+    /**
+     * The M drawer subtitle.
+     */
     String mDrawerSubtitle = "";
+    /**
+     * The M drawer item selected position.
+     */
     int mDrawerItemSelectedPosition = -1;
 
 
+    /**
+     * The enum Setting keys.
+     */
     public enum SettingKeys {
-        GLOBAL_SETTING, PROFILE, ACCOUNTS, ABOUT_US
+        /**
+         * The GLOBAL_SETTING.
+         */
+        GLOBAL_SETTING, /**
+         * The PROFILE.
+         */
+        PROFILE, /**
+         * The ACCOUNTS.
+         */
+        ACCOUNTS, /**
+         * The ABOUT_US.
+         */
+        ABOUT_US
     }
 
     private CharSequence mTitle;
@@ -118,6 +188,7 @@ public class MainActivity extends InjectingFragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
         if (savedInstanceState != null) {
             mDrawerItemSelectedPosition = savedInstanceState.getInt("current_drawer_item");
         }
@@ -158,9 +229,8 @@ public class MainActivity extends InjectingFragmentActivity implements
             if (!LmisAccountManager.isAnyUser(mContext)) {
                 accountSelectionDialog(LmisAccountManager.fetchAllAccounts(mContext)).show();
             } else {
-                //mTouchAttacher = new OETouchListener(this);
-                //new DrawerItemsLoader().execute();
                 initDrawer();
+                initSpinner();
             }
         }
     }
@@ -267,6 +337,31 @@ public class MainActivity extends InjectingFragmentActivity implements
         Log.d(TAG, "MainActivity->initDrawer() finish");
     }
 
+    /**
+     * Init actionbar spinner.
+     */
+    private void initSpinner() {
+        SpinnerAdapter spinnerAdapter = new ArrayAdapter<LmisDataRow>(mContext, android.R.layout.simple_spinner_dropdown_item, mOrgs);
+
+        ActionBar.OnNavigationListener navigationListener = new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int i, long l) {
+                return false;
+            }
+        };
+
+        ActionBar ab = getActionBar();
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        ab.setListNavigationCallbacks(spinnerAdapter, navigationListener);
+    }
+
+    /**
+     * Account list.
+     *
+     * @param accounts the accounts
+     * @return the string [ ]
+     */
     private String[] accountList(List<LmisUser> accounts) {
         String[] account_list = new String[accounts.size()];
         int i = 0;
@@ -277,8 +372,17 @@ public class MainActivity extends InjectingFragmentActivity implements
         return account_list;
     }
 
+    /**
+     * The M account.
+     */
     LmisUser mAccount = null;
 
+    /**
+     * Account selection dialog.
+     *
+     * @param accounts the accounts
+     * @return the dialog
+     */
     public Dialog accountSelectionDialog(final List<LmisUser> accounts) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -288,7 +392,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                         new DialogInterface.OnClickListener() {
 
                             @Override
-                            public void onClick(DialogInterface dialog,int which) {
+                            public void onClick(DialogInterface dialog, int which) {
                                 mAccount = accounts.get(which);
                             }
                         }
@@ -361,6 +465,12 @@ public class MainActivity extends InjectingFragmentActivity implements
         getActionBar().setTitle(mTitle);
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title    the title
+     * @param subtitle the subtitle
+     */
     public void setTitle(CharSequence title, CharSequence subtitle) {
         mTitle = title;
         this.setTitle(mTitle);
@@ -375,6 +485,12 @@ public class MainActivity extends InjectingFragmentActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * On setting item selected.
+     *
+     * @param key the key
+     * @return the boolean
+     */
     public boolean onSettingItemSelected(SettingKeys key) {
         switch (key) {
             case GLOBAL_SETTING:
@@ -564,6 +680,11 @@ public class MainActivity extends InjectingFragmentActivity implements
         }
     }
 
+    /**
+     * Sets on back pressed.
+     *
+     * @param callback the callback
+     */
     public void setOnBackPressed(OnBackButtonPressedListener callback) {
         backPressed = callback;
     }
@@ -600,13 +721,10 @@ public class MainActivity extends InjectingFragmentActivity implements
             startActivity((Intent) instance);
         } else {
             Fragment fragment = (Fragment) instance;
-            if (fragment.getArguments() != null
-                    && fragment.getArguments().containsKey("settings")) {
-                onSettingItemSelected(SettingKeys.valueOf(fragment
-                        .getArguments().get("settings").toString()));
+            if (fragment.getArguments() != null && fragment.getArguments().containsKey("settings")) {
+                onSettingItemSelected(SettingKeys.valueOf(fragment.getArguments().get("settings").toString()));
             }
-            if (fragment != null
-                    && !fragment.getArguments().containsKey("settings")) {
+            if (fragment != null && !fragment.getArguments().containsKey("settings")) {
                 startMainFragment(fragment, false);
             }
         }
@@ -653,5 +771,4 @@ public class MainActivity extends InjectingFragmentActivity implements
         getIntent().putExtra("create_new_account", false);
         init();
     }
-
 }

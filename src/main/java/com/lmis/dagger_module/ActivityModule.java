@@ -1,5 +1,6 @@
 package com.lmis.dagger_module;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,10 +9,13 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.MainActivity;
 import com.lmis.R;
+import com.lmis.base.user_org.UserOrgDB;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import dagger.Module;
@@ -45,6 +49,22 @@ public class ActivityModule {
         ret.addAll(getSysMenuItems());
         return ret;
 
+    }
+
+    /**
+     * Provide acces orgs.
+     * 获取当前登录用户可访问的组织机构列表
+     *
+     * @return the list
+     */
+    @Provides
+    public List<LmisDataRow> provideAccessOrgs(@Activity Context context ){
+        List<LmisDataRow> orgList = new UserOrgDB(context).select();
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        for(Iterator<LmisDataRow> i = orgList.iterator();i.hasNext();){
+           ret.add(i.next().getM2ORecord("org_id").browse());
+        }
+        return ret;
     }
 
     private List<DrawerItem> getSysMenuItems() {

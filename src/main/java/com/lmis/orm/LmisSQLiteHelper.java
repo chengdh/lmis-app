@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.lmis.base.org.OrgDB;
+import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.config.ModulesConfig;
 import com.lmis.support.Module;
 import com.lmis.support.fragment.FragmentHelper;
@@ -36,6 +37,7 @@ public class LmisSQLiteHelper extends SQLiteOpenHelper {
     public List<LmisDBHelper> baseModels() {
         List<LmisDBHelper> baseModels = new ArrayList<LmisDBHelper>();
         baseModels.add(new OrgDB(mContext));
+        baseModels.add(new UserOrgDB(mContext));
         return baseModels;
     }
 

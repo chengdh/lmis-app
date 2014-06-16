@@ -129,8 +129,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return createORReplace(listValues, false);
     }
 
-    public List<Long> createORReplace(List<LmisValues> listValues,
-                                      boolean canDeleteLocalIfNotExists) {
+    public List<Long> createORReplace(List<LmisValues> listValues, boolean canDeleteLocalIfNotExists) {
         List<Long> ids = new ArrayList<Long>();
         for (LmisValues values : listValues) {
             long id = values.getInt("id");
@@ -364,8 +363,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
     }
 
     public LmisDataRow select(int id) {
-        List<LmisDataRow> rows = select("id = ?", new String[]{id + ""}, null,
-                null, null);
+        List<LmisDataRow> rows = select("id = ?", new String[]{id + ""}, null, null, null);
         if (rows.size() > 0) {
             return rows.get(0);
         }
@@ -384,8 +382,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return ids;
     }
 
-    public List<LmisDataRow> select(String where, String[] whereArgs,
-                                    String groupBy, String having, String orderBy) {
+    public List<LmisDataRow> select(String where, String[] whereArgs, String groupBy, String having, String orderBy) {
         if (where == null) {
             where = "oea_name = ?";
             whereArgs = new String[]{mUser.getAndroidName()};

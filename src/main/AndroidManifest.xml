@@ -37,7 +37,7 @@
         <!-- Android Account Authentication Service -->
         <service android:name="com.lmis.auth.LmisAuthenticateService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"></action>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
 
             <meta-data
@@ -78,6 +78,25 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/label_org"
+            android:syncable="true" />
+
+        <!--user_org sync-->
+        <service android:name="com.lmis.services.UserOrgSyncService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_user_org" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.user_org.UserOrgProvider"
+            android:authorities="com.lmis.providers.user_org"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_user_org"
             android:syncable="true" />
     </application>
 </manifest>

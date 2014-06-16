@@ -30,14 +30,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.lmis.LmisArguments;
 import com.lmis.R;
+import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import us.monoid.json.JSONArray;
@@ -101,9 +103,33 @@ public class Idea extends BaseFragment {
                 Log.d(TAG, "Idea#onOptionsItemSelected#test_call_kw");
                 testCallMethod();
                 return true;
+            //测试同步user_orgs
+            case R.id.menu_test_sync_user_org:
+                Log.d(TAG, "Idea#onOptionsItemSelected#test_sync_user_org");
+                test_sync_user_org();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    //测试user_org同步
+    private JSONArray test_sync_user_org(){
+
+        try {
+            LmisUser user = LmisAccountManager.currentUser(mContext);
+            LmisArguments args = new LmisArguments();
+            JSONObject conditionWraper = new JSONObject();
+            JSONObject conditions = new JSONObject();
+            conditions.put("user_id", user.getUser_id());
+            conditions.put("is_select", true);
+            conditionWraper.put("conditions", conditions);
+            args.add(conditionWraper);
+            JSONObject ret = mLmisHelper.callMethod("UserOrg", "all", args.getArray(), null);
+            TextView tv_result = (TextView) mView.findViewById(R.id.tv_http_test);
+            tv_result.setText(ret.getJSONArray("result").toString());
+            return ret.getJSONArray("result");
+        }
+        catch(Exception ex){}
+        return null;
     }
     //测试search_read
     private JSONArray test_search_read(){

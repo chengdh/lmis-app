@@ -25,6 +25,7 @@ import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 
 import com.lmis.providers.org.OrgProvider;
+import com.lmis.providers.user_org.UserOrgProvider;
 import com.lmis.support.SyncValue;
 import com.lmis.support.SyncWizardHelper;
 import com.lmis.providers.expense.ExpenseProvider;
@@ -36,8 +37,9 @@ public class SyncWizardValues implements SyncWizardHelper {
 		List<SyncValue> list = new ArrayList<SyncValue>();
 
         //单据信息
-        list.add(new SyncValue("bills"));
+        list.add(new SyncValue("basic"));
 		list.add(new SyncValue("orgs", OrgProvider.AUTHORITY,SyncValue.Type.CHECKBOX));
+        list.add(new SyncValue("user_orgs", UserOrgProvider.AUTHORITY,SyncValue.Type.CHECKBOX));
 
 		return list;
 	}
