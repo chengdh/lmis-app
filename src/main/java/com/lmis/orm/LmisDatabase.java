@@ -19,11 +19,11 @@ import java.util.List;
 public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHelper {
     public static final String TAG = "LmisDatabase";
 
-    Context mContext;
+    protected Context mContext;
 
-    LmisUser mUser;
+    protected LmisUser mUser;
 
-    LmisDBHelper mDBHelper = null;
+    protected LmisDBHelper mDBHelper = null;
     List<LmisDataRow> mRemovedRecords = new ArrayList<LmisDataRow>();
 
     public LmisDatabase(Context context) {
@@ -217,8 +217,8 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
     private void manageMany2ManyRecords(LmisDBHelper relDb, LmisM2MIds.Operation operation,
                                         long id, Object idsObj) {
         String first_table = tableName();
-        String second_table = relDb.getModelName().replaceAll("\\.", "_");
-        String rel_table = first_table + "_" + second_table + "_rel";
+        String second_table = Inflector.tableize(relDb.getModelName());
+        String rel_table = first_table + "_" + second_table;
         List<Integer> ids = new ArrayList<Integer>();
         if (idsObj instanceof LmisM2MIds) {
             LmisM2MIds idsObject = (LmisM2MIds) idsObj;
@@ -229,8 +229,8 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
             ids = (List<Integer>) idsObj;
         }
         SQLiteDatabase db = null;
-        String col_first = first_table + "_id";
-        String col_second = second_table + "_id";
+        String col_first = Inflector.getIdName(first_table);
+        String col_second = Inflector.getIdName(second_table);
         if (operation == LmisM2MIds.Operation.REPLACE) {
             db = getWritableDatabase();
             db.delete(rel_table, col_first + " = ? AND oea_name = ?",
@@ -414,8 +414,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return rows;
     }
 
-    public List<LmisDataRow> selectM2M(LmisDBHelper rel_db, String where,
-                                       String[] whereArgs) {
+    public List<LmisDataRow> selectM2M(LmisDBHelper rel_db, String where, String[] whereArgs) {
         if (where == null) {
             where = "oea_name = ?";
             whereArgs = new String[]{mUser.getAndroidName()};
@@ -439,7 +438,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
                 cols.toArray(new String[cols.size()]), where, whereArgs, null,
                 null, null);
         LmisDatabase rel_db_obj = (LmisDatabase) rel_db;
-        String rel_col_name = rel_db_obj.tableName() + "_id";
+        String rel_col_name = Inflector.getIdNameByCamel(rel_db_obj.getModelName());
         if (cr.moveToFirst()) {
             do {
                 int id = cr.getInt(cr.getColumnIndex(rel_col_name));
@@ -451,9 +450,15 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return rows;
     }
 
-    //获取o2m字段的值
-    public List<LmisDataRow> selectO2M(LmisDBHelper rel_db, String where,
-                                       String[] whereArgs) {
+    /**
+     * 获取o2m字段的值
+     *
+     * @param rel_db    the rel _ db
+     * @param where     the where
+     * @param whereArgs the where args
+     * @return the list
+     */
+    public List<LmisDataRow> selectO2M(LmisDBHelper rel_db, String where, String[] whereArgs) {
         if (where == null) {
             where = "oea_name = ?";
             whereArgs = new String[]{mUser.getAndroidName()};
@@ -539,12 +544,11 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         List<LmisColumn> mCols = new ArrayList<LmisColumn>();
         HashMap<String, Object> res = new HashMap<String, Object>();
         String main_table = tableName();
-        String ref_table = relDB.getModelName().replaceAll("\\.", "_");
-        String rel_table = main_table + "_" + ref_table + "_rel";
+        String ref_table = Inflector.tableize(relDB.getModelName());
+        String rel_table = main_table + "_" + ref_table;
         res.put("rel_table", rel_table);
-        mCols.add(new LmisColumn(main_table + "_id", "Main ID", LmisFields
-                .integer()));
-        mCols.add(new LmisColumn(ref_table + "_id", "Ref ID", LmisFields.integer()));
+        mCols.add(new LmisColumn(Inflector.getIdName(main_table), "Main ID", LmisFields.integer()));
+        mCols.add(new LmisColumn(Inflector.getIdName(ref_table), "Ref ID", LmisFields.integer()));
         mCols.add(new LmisColumn("oea_name", "Android name", LmisFields.text()));
         res.put("columns", mCols);
         return res;

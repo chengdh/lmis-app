@@ -154,8 +154,7 @@ public class AccountsDetail extends BaseFragment {
 
     private List<Object> getAccounts() {
         List<Object> list = new ArrayList<Object>();
-        for (LmisUser account : LmisAccountManager.fetchAllAccounts(scope
-                .context())) {
+        for (LmisUser account : LmisAccountManager.fetchAllAccounts(scope.context())) {
             LmisDataRow row_data = new LmisDataRow();
 
             row_data.put("name", account.getAndroidName());

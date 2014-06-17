@@ -98,5 +98,4 @@ public class LmisO2MIds {
 		mIds.clear();
 		mIds.addAll(ids);
 	}
-
 }

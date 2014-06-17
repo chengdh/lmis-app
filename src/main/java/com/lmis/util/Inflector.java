@@ -224,6 +224,20 @@ public class Inflector {
     }
 
     /**
+     * Get id name by camel.
+     * 根据类名获取外键名称
+     *
+     * @param className the class name
+     * @return the string
+     */
+    public static String getIdNameByCamel(String className){
+        String  tableName = Inflector.tableize(className);
+        String foreignColName = Inflector.getIdName(tableName);
+        return foreignColName;
+    }
+
+
+    /**
      * If a table name is made of two other table names (as is typical for many to many relationships),
      * this method retrieves a name of "another" table from a join table name.
      * For instance, if a source table is "payer" and the target is "player_game", then the returned value

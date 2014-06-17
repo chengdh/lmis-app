@@ -1,5 +1,7 @@
 package com.lmis.orm;
 
+import com.lmis.util.Inflector;
+
 import java.util.List;
 
 public class LmisM2MRecord {
@@ -14,9 +16,10 @@ public class LmisM2MRecord {
     }
 
     public List<LmisDataRow> browseEach() {
-        LmisManyToMany m2o = (LmisManyToMany) mCol.getType();
-        return mDatabase.selectM2M(m2o.getDBHelper(), mDatabase.tableName()
-                + "_id = ?", new String[]{mId + ""});
+        LmisManyToMany m2m = (LmisManyToMany) mCol.getType();
+
+        String foreignColName = Inflector.getIdNameByCamel(mDatabase.modelName());
+        return mDatabase.selectM2M(m2m.getDBHelper(), foreignColName + " = ?" , new String[]{mId + ""});
     }
 
     public LmisDataRow browseAt(int index) {
@@ -26,5 +29,4 @@ public class LmisM2MRecord {
         }
         return list.get(index);
     }
-
 }

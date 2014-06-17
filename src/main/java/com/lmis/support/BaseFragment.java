@@ -18,12 +18,10 @@
  */
 package com.lmis.support;
 
-import android.content.Context;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView.OnQueryTextListener;
 
-import com.fizzbuzz.android.dagger.InjectingApplication;
 import com.fizzbuzz.android.dagger.InjectingFragment;
 import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.dagger_module.FragmentModule;
@@ -39,65 +37,72 @@ import javax.inject.Inject;
  */
 public abstract class BaseFragment extends InjectingFragment implements FragmentHelper {
 
-	/** The scope. */
+    /**
+     * The scope.
+     */
     @Inject
     @InjectingFragmentModule.Fragment
-	public AppScope scope;
+    public AppScope scope;
 
-    /** db */
-	private LmisDatabase mDb;
+    /**
+     * db
+     */
+    private LmisDatabase mDb;
 
-	/** The list search adapter. */
-	private ArrayAdapter<Object> listSearchAdapter;
+    /**
+     * The list search adapter.
+     */
+    private ArrayAdapter<Object> listSearchAdapter;
 
-	/**
-	 * Gets the query listener.
-	 * 
-	 * @param listAdapter
-	 *            the list adapter
-	 * @return the query listener
-	 */
-	public OnQueryTextListener getQueryListener(ArrayAdapter<Object> listAdapter) {
-		listSearchAdapter = listAdapter;
-		return queryListener;
-	}
+    /**
+     * Gets the query listener.
+     *
+     * @param listAdapter the list adapter
+     * @return the query listener
+     */
+    public OnQueryTextListener getQueryListener(ArrayAdapter<Object> listAdapter) {
+        listSearchAdapter = listAdapter;
+        return queryListener;
+    }
 
-	/** The query listener. */
-	final public OnQueryTextListener queryListener = new OnQueryTextListener() {
+    /**
+     * The query listener.
+     */
+    final public OnQueryTextListener queryListener = new OnQueryTextListener() {
 
-		private boolean isSearched = false;
+        private boolean isSearched = false;
 
-		@Override
-		public boolean onQueryTextChange(String newText) {
+        @Override
+        public boolean onQueryTextChange(String newText) {
 
-			if (TextUtils.isEmpty(newText)) {
-				newText = "";
-				if (isSearched && listSearchAdapter != null) {
-					listSearchAdapter.getFilter().filter(null);
-				}
+            if (TextUtils.isEmpty(newText)) {
+                newText = "";
+                if (isSearched && listSearchAdapter != null) {
+                    listSearchAdapter.getFilter().filter(null);
+                }
 
-			} else {
-				isSearched = true;
-				listSearchAdapter.getFilter().filter(newText);
-			}
+            } else {
+                isSearched = true;
+                listSearchAdapter.getFilter().filter(newText);
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		@Override
-		public boolean onQueryTextSubmit(String query) {
-			return false;
-		}
-	};
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
 
-	public LmisDatabase db() {
-		return mDb;
-	}
+    public LmisDatabase db() {
+        return (LmisDatabase) databaseHelper(scope.context());
+    }
 
     @Override
     protected List<Object> getModules() {
         List<Object> ret = super.getModules();
-        ret.add(new FragmentModule(this,this));
+        ret.add(new FragmentModule(this, this));
         return ret;
     }
 }

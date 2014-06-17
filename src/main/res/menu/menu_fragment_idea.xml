@@ -21,7 +21,7 @@
     </item>
     <item
         android:id="@+id/menu_test_sync_user_org"
-        android:title="test_call_kw"
+        android:title="test_get_user_org"
         >
     </item>
 </menu>

@@ -1,7 +1,12 @@
 package com.lmis.orm;
+import com.lmis.util.Inflector;
+
 import java.util.List;
 
-//one to many record
+/**
+ * The type Lmis o 2 m record.
+ * 1对多数据结构
+ */
 public class LmisO2MRecord {
 	private LmisColumn mCol = null;
 	private String mValue = null;
@@ -15,8 +20,11 @@ public class LmisO2MRecord {
 	}
 
 	public List<LmisDataRow> browseEach() {
+
 		LmisOneToMany o2m = (LmisOneToMany) mCol.getType();
-		return mDatabase.selectO2M(o2m.getDBHelper(), mDatabase.modelName().toLowerCase() + "_id = ?", new String[] { mId + "" });
+        String foreignColName = Inflector.getIdNameByCamel(mDatabase.modelName());
+
+		return mDatabase.selectO2M(o2m.getDBHelper(), foreignColName + " = ?", new String[] { mId + "" });
 	}
 
 	public LmisDataRow browseAt(int index) {
@@ -26,4 +34,5 @@ public class LmisO2MRecord {
 		}
 		return list.get(index);
 	}
+
 }

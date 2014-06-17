@@ -32,6 +32,14 @@
     <string name="label_org">Orgs</string>
     <string name="label_user_org">User can access orgs</string>
 
+    <!--inventory out 相关定义-->
+    <string name="inventory_out_blank">The inventory out is blank!</string>
+    <string name="inventory_out_group_title">Inventory Outs</string>
+    <string name="inventory_out_draw_item_draft">Draft</string>
+    <string name="inventory_out_draw_item_processed">Processed</string>
+    <string name="inventory_out_list_search">Search</string>
+    <string name="inventory_out_list_new">New</string>
+
     <!-- Message Fragment -->
     <string name="message_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
 

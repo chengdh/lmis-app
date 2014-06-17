@@ -11,6 +11,7 @@ import com.lmis.MainActivity;
 import com.lmis.R;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
 
@@ -45,8 +46,12 @@ public class ActivityModule {
     @Activity
     public List<DrawerItem> provideDrawItems() {
         List<DrawerItem> ret = new ArrayList<DrawerItem>();
-        ret.addAll(DrawerHelper.drawerItems(mActivity));
-        ret.addAll(getSysMenuItems());
+        //未登录时,不显示菜单
+        if(LmisUser.current(mActivity) != null) {
+
+            ret.addAll(DrawerHelper.drawerItems(mActivity));
+            ret.addAll(getSysMenuItems());
+        }
         return ret;
 
     }
@@ -59,10 +64,13 @@ public class ActivityModule {
      */
     @Provides
     public List<LmisDataRow> provideAccessOrgs(@Activity Context context ){
-        List<LmisDataRow> orgList = new UserOrgDB(context).select();
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
-        for(Iterator<LmisDataRow> i = orgList.iterator();i.hasNext();){
-           ret.add(i.next().getM2ORecord("org_id").browse());
+        //未登录时,不显示菜单
+        if(LmisUser.current(mActivity) != null) {
+            List<LmisDataRow> orgList = new UserOrgDB(context).select();
+            for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
+                ret.add(i.next().getM2ORecord("org_id").browse());
+            }
         }
         return ret;
     }

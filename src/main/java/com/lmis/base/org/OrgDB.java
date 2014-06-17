@@ -15,11 +15,8 @@ import java.util.List;
  */
 public class OrgDB extends LmisDatabase {
 
-    Context mContext;
-
     public OrgDB(Context context) {
         super(context);
-        mContext = context;
     }
 
     @Override

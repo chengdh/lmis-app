@@ -304,7 +304,7 @@ public class Login extends BaseFragment {
                 edtPassword.setError(errorMsg);
             }
             loginUserASync.cancel(true);
-            pdialog.hide();
+            pdialog.dismiss();
         }
 
         /*

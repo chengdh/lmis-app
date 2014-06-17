@@ -45,7 +45,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 
 import com.openerp.OETouchListener;
@@ -326,6 +326,7 @@ public class Expense extends BaseFragment implements OETouchListener.OnPullListe
      */
     @Override
     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+        /*
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mExpenseObjects.get(position);
         ExpenseDetail detail = new ExpenseDetail();
@@ -335,6 +336,7 @@ public class Expense extends BaseFragment implements OETouchListener.OnPullListe
         detail.setArguments(bundle);
         FragmentListener listener = (FragmentListener) getActivity();
         listener.startDetailFragment(detail);
+        */
     }
 
     /**
