@@ -57,6 +57,7 @@ import com.lmis.base.account.AccountsDetail;
 import com.lmis.base.account.UserProfile;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.dagger_module.ActivityModule;
+import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
@@ -120,6 +121,7 @@ public class MainActivity extends InjectingFragmentActivity implements
      * The M orgs.
      */
     @Inject
+    @OrgModule.AccessOrgs
     List<LmisDataRow> mOrgs;
 
     /**

@@ -79,15 +79,13 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return ret;
     }
 
-    public void updateManyToManyRecords(String column, LmisM2MIds.Operation operation,
-                                        int id, int rel_id) {
+    public void updateManyToManyRecords(String column, LmisM2MIds.Operation operation, int id, int rel_id) {
         List<Integer> ids = new ArrayList<Integer>();
         ids.add(rel_id);
         updateManyToManyRecords(column, operation, id, ids);
     }
 
-    public void updateManyToManyRecords(String column, LmisM2MIds.Operation operation,
-                                        int id, List<Integer> ids) {
+    public void updateManyToManyRecords(String column, LmisM2MIds.Operation operation, int id, List<Integer> ids) {
         LmisDBHelper m2mObj = findFieldModel(column);
         manageMany2ManyRecords(m2mObj, operation, (long) id, ids);
     }

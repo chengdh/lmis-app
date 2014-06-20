@@ -66,7 +66,7 @@ public class SQLHelper {
     public String createMany2ManyRel(String model_first, String model_second) {
         String column_first = modelToTable(model_first);
         String column_second = modelToTable(model_second);
-        String rel_table = column_first + "_" + column_second + "_rel";
+        String rel_table = column_first + "_" + column_second ;
         StringBuffer sql = new StringBuffer();
         sql.append("CREATE TABLE IF NOT EXISTS ");
         sql.append(rel_table);
@@ -85,7 +85,7 @@ public class SQLHelper {
     public String dropMany2ManyRel(String model_first, String model_second) {
         String column_first = modelToTable(model_first);
         String column_second = modelToTable(model_second);
-        String rel_table = column_first + "_" + column_second + "_rel";
+        String rel_table = column_first + "_" + column_second ;
         StringBuffer sql = new StringBuffer();
         sql.append("DROP TABLE IF EXISTS ");
         sql.append(rel_table + ";");

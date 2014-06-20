@@ -19,6 +19,9 @@ import com.fizzbuzz.android.dagger.InjectingApplication.InjectingApplicationModu
 import com.lmis.LmisApp;
 import com.lmis.config.ModulesConfig;
 import com.lmis.support.LmisUser;
+import com.squareup.otto.Bus;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -88,4 +91,16 @@ public class AndroidModule {
     public LmisUser proviceCurrentUser(@Application final Context context){
         return LmisUser.current(context);
     }
+
+    /**
+     * Provide 事件bus对象.
+     *
+     * @return the bus
+     */
+    @Provides
+    @Singleton
+    public Bus provideBus(){
+        return new Bus();
+    }
+
 }

@@ -3,6 +3,7 @@ package com.lmis.addons.inventory;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -280,10 +281,12 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case (R.id.menu_fragment_inventory_out_list_new):
+            case (R.id.menu_inventory_out_new):
                 Log.d(TAG, "New Menu select");
+                Fragment inventoryOut = new InventoryOut();
+                scope.main().startDetailFragment(inventoryOut);
                 return true;
-            case (R.id.menu_fragment_inventory_out_list_search):
+            case (R.id.menu_inventory_out_list_search):
                 Log.d(TAG, "Search menu select");
                 return true;
             default:

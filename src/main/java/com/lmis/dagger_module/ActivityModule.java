@@ -1,6 +1,5 @@
 package com.lmis.dagger_module;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,14 +8,15 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.MainActivity;
 import com.lmis.R;
-import com.lmis.base.user_org.UserOrgDB;
-import com.lmis.orm.LmisDataRow;
 import com.lmis.support.LmisUser;
+import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.GoodsInfo;
+import com.lmis.util.controls.AccessOrgSpinner;
+import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import dagger.Module;
@@ -25,7 +25,10 @@ import dagger.Provides;
 /**
  * Created by chengdh on 14-6-13.
  */
-@Module(complete = false, library = true, injects = MainActivity.class)
+@Module(complete = false, library = true,
+        includes = {OrgModule.class},
+        injects = {MainActivity.class, AccessOrgSpinner.class, AllOrgSpinner.class,
+                BarcodeParser.class, GoodsInfo.class})
 public class ActivityModule {
     private MainActivity mActivity;
     private Injector mInjector;
@@ -56,24 +59,7 @@ public class ActivityModule {
 
     }
 
-    /**
-     * Provide acces orgs.
-     * 获取当前登录用户可访问的组织机构列表
-     *
-     * @return the list
-     */
-    @Provides
-    public List<LmisDataRow> provideAccessOrgs(@Activity Context context ){
-        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
-        //未登录时,不显示菜单
-        if(LmisUser.current(mActivity) != null) {
-            List<LmisDataRow> orgList = new UserOrgDB(context).select();
-            for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
-                ret.add(i.next().getM2ORecord("org_id").browse());
-            }
-        }
-        return ret;
-    }
+
 
     private List<DrawerItem> getSysMenuItems() {
         List<DrawerItem> sys = new ArrayList<DrawerItem>();
