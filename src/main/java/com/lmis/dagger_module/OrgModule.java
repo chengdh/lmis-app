@@ -1,10 +1,8 @@
 package com.lmis.dagger_module;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
-import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.base.org.OrgDB;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.orm.LmisDataRow;

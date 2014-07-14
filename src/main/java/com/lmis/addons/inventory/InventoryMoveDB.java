@@ -29,6 +29,7 @@ public class InventoryMoveDB extends LmisDatabase {
     public List<LmisColumn> getModelColumns() {
 
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
+
         //发货地
         cols.add(new LmisColumn("from_org_id", "From Org", LmisFields.manyToOne(new OrgDB(mContext)), false));
         //到货地
@@ -48,25 +49,5 @@ public class InventoryMoveDB extends LmisDatabase {
         cols.add(new LmisColumn("sum_bills_count","bills count", LmisFields.integer(),false));
 
         return cols;
-    }
-
-    /**
-     * Get sum count.
-     * 获取货物总数量
-     *
-     * @return the integer
-     */
-    public static Integer getSumCount(){
-        return 100;
-    }
-
-    /**
-     * Get sum bills.
-     * 获取装车总票数
-     *
-     * @return the integer
-     */
-    public static Integer getSumBills(){
-        return 23;
     }
 }

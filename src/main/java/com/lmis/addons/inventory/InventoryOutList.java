@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.controls.LmisTextView;
 import com.lmis.util.drawer.DrawerItem;
@@ -74,17 +75,14 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      */
     static class ViewHolder {
         //发货地
-        @InjectView(R.id.txvInventoryOutFromOrgName)
-        TextView txvFromOrgName;
-        //到货地
-        @InjectView(R.id.txvInventoryOutToOrgName)
-        TextView txvToOrgName;
+        @InjectView(R.id.txvInventoryOutFromTo)
+        TextView txvFromTo;
         //描述信息
         @InjectView(R.id.txvInventoryOutDescribe)
         TextView txvDescribe;
         //创建日期
         @InjectView(R.id.txvInventoryOutBillDate)
-        LmisTextView txvBillDate;
+        TextView txvBillDate;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);
@@ -99,6 +97,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_out_list, container, false);
         ButterKnife.inject(this, mView);
+        mListView.setOnItemClickListener(this);
         init();
         return mView;
     }
@@ -153,7 +152,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
                 View mView = convertView;
                 ViewHolder holder;
                 if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(getResource(), parent, false);
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_listview_items, parent, false);
                     holder = new ViewHolder(mView);
                     mView.setTag(holder);
                 } else {
@@ -163,12 +162,12 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
                 String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
                 String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
 
-                Integer goodsCount = row_data.getInt("goods_count");
-                Integer billsCount = row_data.getInt("bills_count");
-                String describe = String.format("共%1件,%2票", goodsCount, billsCount);
+                Integer goodsCount = row_data.getInt("sum_goods_count");
+                Integer billsCount = row_data.getInt("sum_bills_count");
+                String describe = String.format("共%d件,%d票", goodsCount, billsCount);
                 String billDate = row_data.getString("bill_date");
-                holder.txvFromOrgName.setText(fromOrgName);
-                holder.txvToOrgName.setText(toOrgName);
+                String fromTo = String.format("%s 至 %s",fromOrgName,toOrgName);
+                holder.txvFromTo.setText(fromTo);
                 holder.txvBillDate.setText(billDate);
                 holder.txvDescribe.setText(describe);
                 return mView;
@@ -252,9 +251,25 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         return new InventoryMoveDB(context);
     }
 
+    /**
+     * list item click event.
+     *
+     * @param adapterView the adapter view
+     * @param view the view
+     * @param i the i
+     * @param l the l
+     */
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        mSelectedItemPosition = position;
+        LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
+        InventoryOut detail = new InventoryOut();
+        Bundle bundle = new Bundle();
+        bundle.putInt("inventory_out_id", row.getInt("id"));
+        bundle.putInt("position", position);
+        detail.setArguments(bundle);
+        FragmentListener listener = (FragmentListener) getActivity();
+        listener.startDetailFragment(detail);
     }
 
     /**

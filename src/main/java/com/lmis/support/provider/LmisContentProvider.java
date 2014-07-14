@@ -30,7 +30,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import com.lmis.addons.expense.Expense;
 import com.lmis.orm.LmisSQLiteHelper;
 import com.lmis.providers.expense.ExpenseProvider;
 

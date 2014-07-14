@@ -41,6 +41,7 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.LmisVersionException;
 import com.lmis.R;
 import com.lmis.base.login.Login;
+import com.lmis.providers.org.OrgProvider;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisServerConnection;
@@ -141,10 +142,8 @@ public class AccountFragment extends BaseFragment {
         });
 
         edtServerUrl.setOnEditorActionListener(new OnEditorActionListener() {
-
             @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     goNext();
                 }
@@ -256,7 +255,7 @@ public class AccountFragment extends BaseFragment {
             try {
                 flag = oeConnect.testConnection(getActivity(), LmisServerURL);
                 if (!flag) {
-                    errorMsg = "Unable to reach Lmis 7.0 Server.";
+                    errorMsg = "Unable to reach Lmis Server.";
                 }
             } catch (LmisVersionException e) {
                 flag = false;
@@ -287,8 +286,7 @@ public class AccountFragment extends BaseFragment {
                 serverConnectASync = null;
 
             } else {
-                Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
                 serverConnectASync.cancel(true);
                 serverConnectASync = null;
             }

@@ -19,6 +19,8 @@
 package com.lmis.base.login;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -37,10 +39,12 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
-import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.R;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
+import com.lmis.providers.org.OrgProvider;
+import com.lmis.providers.user_org.UserOrgProvider;
+import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
@@ -120,6 +124,8 @@ public class Login extends BaseFragment {
      */
     LmisHelper lmis = null;
 
+    LmisDialog mSyncDialog = null;
+
     /*
      * (non-Javadoc)
      *
@@ -133,6 +139,7 @@ public class Login extends BaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
+        mSyncDialog = new LmisDialog(getActivity(), false, "sync data...");
         ButterKnife.inject(this, rootView);
 
         this.handleArguments((Bundle) getArguments());
@@ -218,6 +225,43 @@ public class Login extends BaseFragment {
         }
     }
 
+
+
+    public SyncFinishReceiver orgSyncFinish = new SyncFinishReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            scope.main().requestSync(UserOrgProvider.AUTHORITY);
+        }
+    };
+    public SyncFinishReceiver userOrgSyncFinish = new SyncFinishReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mSyncDialog.dismiss();
+            startSyncWizard();
+        }
+    };
+
+    private void startSyncWizard() {
+        SyncWizard syncWizard = new SyncWizard();
+        FragmentListener mFragment = (FragmentListener) getActivity();
+            mFragment.startMainFragment(syncWizard, false);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        context.registerReceiver(orgSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
+        context.registerReceiver(userOrgSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        context.unregisterReceiver(orgSyncFinish);
+        context.unregisterReceiver(userOrgSyncFinish);
+    }
+
     /**
      * The Class LoginUser.
      */
@@ -238,11 +282,13 @@ public class Login extends BaseFragment {
          */
         LmisUser userData = null;
 
+
         /*
          * (non-Javadoc)
          *
          * @see android.os.AsyncTask#onPreExecute()
          */
+
         @Override
         protected void onPreExecute() {
             pdialog = new LmisDialog(getActivity(), false, "Logging in...");
@@ -293,12 +339,8 @@ public class Login extends BaseFragment {
                     }
                 }
                 if (LmisAccountManager.createAccount(getActivity(), userData)) {
-                    loginUserASync.cancel(true);
-                    pdialog.hide();
-                    SyncWizard syncWizard = new SyncWizard();
-                    FragmentListener mFragment = (FragmentListener) getActivity();
-                    mFragment.startMainFragment(syncWizard, false);
-
+                    mSyncDialog.show();
+                    scope.main().requestSync(OrgProvider.AUTHORITY);
                 }
             } else {
                 edtPassword.setError(errorMsg);

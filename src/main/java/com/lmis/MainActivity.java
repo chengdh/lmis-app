@@ -40,12 +40,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
@@ -55,7 +53,6 @@ import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
 import com.lmis.base.account.UserProfile;
-import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.dagger_module.ActivityModule;
 import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
@@ -619,10 +616,7 @@ public class MainActivity extends InjectingFragmentActivity implements
      * @param bundle    the extra data
      */
     public void requestSync(String authority, Bundle bundle) {
-        Account account = LmisAccountManager.getAccount(
-                getApplicationContext(), LmisUser
-                        .current(getApplicationContext()).getAndroidName()
-        );
+        Account account = LmisAccountManager.getAccount(getApplicationContext(), LmisUser.current(getApplicationContext()).getAndroidName());
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);

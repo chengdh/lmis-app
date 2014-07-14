@@ -84,7 +84,7 @@ public class LmisHelper extends Lmis {
         /*
          * Required to login with server.
 		 */
-        login(mUser.getUsername(), mUser.getPassword(),mUser.getHost());
+        login(mUser.getUsername(), mUser.getPassword(), mUser.getHost());
     }
 
     private void init() {
@@ -230,8 +230,7 @@ public class LmisHelper extends Lmis {
         return synced;
     }
 
-    private boolean handleResultArray(LmisFieldsHelper fields, JSONArray results,
-                                      boolean removeLocalIfNotExists) {
+    private boolean handleResultArray(LmisFieldsHelper fields, JSONArray results, boolean removeLocalIfNotExists) {
         boolean flag = false;
         try {
             fields.addAll(results);

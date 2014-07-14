@@ -132,6 +132,7 @@ public class SQLHelper {
         StringBuffer defaultCols = new StringBuffer();
         defaultCols.append("id ");
         defaultCols.append(LmisFields.integer());
+        defaultCols.append(" PRIMARY KEY");
         defaultCols.append(", ");
         defaultCols.append("oea_name ");
         defaultCols.append(LmisFields.varchar(50));

@@ -166,8 +166,13 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         SQLiteDatabase db = getWritableDatabase();
         HashMap<String, Object> res = getContentValues(values);
         ContentValues cValues = (ContentValues) res.get("cValues");
-        db.insert(tableName(), null, cValues);
-        newId = cValues.getAsInteger("id");
+        newId = db.insert(tableName(), null, cValues);
+        try {
+            newId = cValues.getAsInteger("id");
+        }
+        catch(Exception ex){
+            Log.d(TAG,"cValues not give a id");
+        }
         broadcastInfo(newId);
         db.close();
         //插入many2many表的值

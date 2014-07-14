@@ -82,8 +82,8 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
 
             if (lmis.syncWithMethod("all", arguments)) {
                 int affected_rows = lmis.getAffectedRows();
-                Log.d(TAG, "OrgSyncService[arguments]:" + arguments.toString());
-                Log.d(TAG, "OrgSyncService->affected_rows:" + affected_rows);
+                Log.d(TAG, "UserOrgSyncService[arguments]:" + arguments.toString());
+                Log.d(TAG, "UserOrgSyncService->affected_rows:" + affected_rows);
             }
             //更新数据库中已存在的expense信息
             //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, user, ids);

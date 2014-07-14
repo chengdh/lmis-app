@@ -4,9 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -16,9 +23,11 @@ import android.widget.TextView;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisUser;
 import com.lmis.util.barcode.BarcodeDuplicateException;
 import com.lmis.util.barcode.BarcodeParseSuccessEvent;
 import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.DBException;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
@@ -69,15 +78,12 @@ public class InventoryOut extends BaseFragment {
     @InjectView(R.id.btn_all_scaned)
     ImageButton mBtnAllScaned;
 
-    @InjectView(R.id.txv_sum_goods_num)
-    TextView mTxvSumGoodsNum;
+    @InjectView(R.id.btn_sum_goods_num)
+    Button mBtnSumGoodsNum;
 
 
-    @InjectView(R.id.txv_sum_bills_count)
-    TextView mTxvSumBillsCount;
-
-    @InjectView(R.id.txv_scan_message)
-    TextView mTxvScanMessage;
+    @InjectView(R.id.btn_sum_bills_count)
+    Button mBtnSumBillsCount;
 
     View mView = null;
     Integer mInventoryOutId = null;
@@ -95,16 +101,53 @@ public class InventoryOut extends BaseFragment {
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_out, container, false);
         ButterKnife.inject(this, mView);
-        mBarcodeParser = new BarcodeParser(scope.context(), null, false, null);
         mBus.register(this);
         initControls();
+        initData();
         return mView;
+    }
+
+    /**
+     * 初始化数据.
+     */
+    private void initData(){
+        Log.d(TAG, "inventory_out#initData");
+        LmisUser currentUser = scope.User();
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            mInventoryOutId = bundle.getInt("inventory_out_id");
+            LmisDataRow inventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
+            LmisDataRow fromOrg = inventoryOut.getM2ORecord("from_org_id").browse();
+            LmisDataRow toOrg = inventoryOut.getM2ORecord("to_org_id").browse();
+            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"),toOrg.getInt("id"), false);
+            ArrayAdapter adapter = (ArrayAdapter)mSpinnerYardsSelect.getAdapter();
+            int pos = adapter.getPosition(toOrg);
+            mSpinnerYardsSelect.setSelection(pos);
+            mBtnSumGoodsNum.setText(inventoryOut.getInt("sum_goods_count") + "");
+            mBtnSumBillsCount.setText(inventoryOut.getInt("sum_bills_count")+ "");
+            mStartPage.setVisibility(View.GONE);
+        }
+        else
+            mBarcodeParser = new BarcodeParser(scope.context(), -1, currentUser.getDefault_org_id(), -1, false);
+
     }
 
     /**
      * 初始化控件.
      */
     private void initControls() {
+        mSpinnerYardsSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                LmisDataRow toOrg = (LmisDataRow)mSpinnerYardsSelect.getSelectedItem();
+                mBarcodeParser.setmToOrgID(toOrg.getInt("id"));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mEdtScanBarcode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int i, int i2, int i3) {
@@ -119,12 +162,14 @@ public class InventoryOut extends BaseFragment {
                     try {
                         mBarcodeParser.addBarcode(s.toString());
                     } catch (InvalidBarcodeException ex) {
-                        mTxvScanMessage.setText("条码格式不正确");
+                        // mTxvScanMessage.setText("条码格式不正确");
 
                     } catch (InvalidToOrgException ex) {
-                        mTxvScanMessage.setText("到货地不匹配");
+                        //mTxvScanMessage.setText("到货地不匹配");
                     } catch (BarcodeDuplicateException ex) {
-                        mTxvScanMessage.setText("重复扫描货物");
+                        //mTxvScanMessage.setText("重复扫描货物");
+                    } catch (DBException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -134,6 +179,7 @@ public class InventoryOut extends BaseFragment {
 
             }
         });
+        mEdtScanBarcode.requestFocus();
     }
 
     @Override
@@ -144,6 +190,23 @@ public class InventoryOut extends BaseFragment {
     @Override
     public List<DrawerItem> drawerMenus(Context context) {
         return null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_inventory_out, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_inventory_out_upload:
+                return true;
+            case R.id.menu_inventory_out_delete:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -158,7 +221,7 @@ public class InventoryOut extends BaseFragment {
         mTxvToOrgName.setText(gs.getmToOrgName());
         mTxvGoodsNum.setText(gs.getmGoodsNum() + "");
         mTxvSeq.setText(gs.getmSeq() + "");
-        mTxvScanMessage.setText("");
+        //mTxvScanMessage.setText("");
     }
 
     /**
@@ -168,12 +231,12 @@ public class InventoryOut extends BaseFragment {
      */
     @Subscribe
     public void onGoodsInfoAddSuccessEvent(GoodsInfoAddSuccessEvent evt) {
-        mTxvScanMessage.setText("barcode is added!");
+        //mTxvScanMessage.setText("barcode is added!");
     }
 
     @Subscribe
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
-        mTxvSumGoodsNum.setText(evt.getmSumGoodsNum() + "");
-        mTxvSumBillsCount.setText(evt.getmSumBillsCount() + "");
+        mBtnSumGoodsNum.setText(evt.getmSumGoodsNum() + "");
+        mBtnSumBillsCount.setText(evt.getmSumBillsCount() + "");
     }
 }

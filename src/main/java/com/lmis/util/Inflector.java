@@ -46,7 +46,7 @@ public class Inflector {
         addSingular("([ti])a$", "$1um");
         addSingular("((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$", "$1sis");
         addSingular("(^analy)ses$", "$1sis");
-        addSingular("([^f])ves$", "$1fe");
+        //addSingular("([^f])ves$", "$1fe");
         addSingular("(hive)s$", "$1");
         addSingular("(tive)s$", "$1");
         addSingular("([lr])ves$", "$1f");
@@ -232,8 +232,7 @@ public class Inflector {
      */
     public static String getIdNameByCamel(String className){
         String  tableName = Inflector.tableize(className);
-        String foreignColName = Inflector.getIdName(tableName);
-        return foreignColName;
+        return getIdName(tableName);
     }
 
 
