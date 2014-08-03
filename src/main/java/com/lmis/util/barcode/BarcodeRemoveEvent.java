@@ -1,12 +1,10 @@
 package com.lmis.util.barcode;
 
 /**
- * Created by chengdh on 14-6-19.
- * 条码解析正确事件
+ * Created by chengdh on 14-7-30.
  */
-public class BarcodeParseSuccessEvent {
+public class BarcodeRemoveEvent {
     public GoodsInfo getmGoodsInfo() {
-
         return mGoodsInfo;
     }
 
@@ -17,7 +15,7 @@ public class BarcodeParseSuccessEvent {
      *
      * @param gs the gs
      */
-    public BarcodeParseSuccessEvent(GoodsInfo gs) {
+    public BarcodeRemoveEvent(GoodsInfo gs) {
         mGoodsInfo = gs;
     }
 }

@@ -98,7 +98,7 @@ public class LmisUser {
         bundle.putString("password", this.getPassword());
         bundle.putString("default_org_id", this.getDefault_org_id() + "");
         bundle.putString("real_name", this.getReal_name());
-        bundle.putString("authentication_token",this.getAuthentication_token());
+        bundle.putString("authentication_token", this.getAuthentication_token());
         return bundle;
     }
 
@@ -130,8 +130,8 @@ public class LmisUser {
         this.setUsername(accMgr.getUserData(account, "username"));
         this.setReal_name(accMgr.getUserData(account, "real_name"));
         this.setUser_id(Integer.parseInt(accMgr.getUserData(account, "user_id")));
-        this.setDefault_org_id(Integer.parseInt(accMgr.getUserData(account,"default_org_id")));
-        this.setIsactive(Boolean.parseBoolean(accMgr.getUserData(account,"isactive")));
+        this.setDefault_org_id(Integer.parseInt(accMgr.getUserData(account, "default_org_id")));
+        this.setIsactive(Boolean.parseBoolean(accMgr.getUserData(account, "isactive")));
         this.setHost(accMgr.getUserData(account, "host"));
         this.setAndroidName(accMgr.getUserData(account, "android_name"));
         this.setPassword(accMgr.getUserData(account, "password"));

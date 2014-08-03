@@ -57,18 +57,10 @@
             android:layout_below="@id/txvsubTitle"
             android:padding="20dp" >
 
-            <Spinner
-                android:id="@+id/lstDatabases"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:prompt="@string/login_select_database" />
-
             <com.lmis.util.controls.LmisEditText
                 android:id="@+id/edtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lstDatabases"
                 android:layout_marginBottom="20dp"
                 android:hint="@string/login_edit_username"
                 android:inputType="textUri"

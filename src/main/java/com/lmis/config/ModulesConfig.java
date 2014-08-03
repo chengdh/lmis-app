@@ -33,7 +33,7 @@ public class ModulesConfig extends ModulesConfigHelper {
      */
     public ModulesConfig() {
         /* application modules */
-        add(new Module("module_idea", "Idea", new Idea(), 0), true);
+        //add(new Module("module_idea", "Idea", new Idea(), 0), true);
         add(new Module("module_inventory_out", "Inventory Out", new InventoryOutList(), 0), true);
         //add(new Module("module_expense", "Expense", new Expense(), 0), true);
         //add(new Module("module_mail_groups", "Mail Groups", new MailGroup()));

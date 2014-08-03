@@ -92,12 +92,6 @@ public class Login extends BaseFragment {
     Bundle arguments = null;
 
     /**
-     * The db list spinner.
-     */
-    @InjectView(R.id.lstDatabases)
-    Spinner dbListSpinner;
-
-    /**
      * The root view.
      */
     View rootView = null;

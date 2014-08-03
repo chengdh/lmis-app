@@ -21,7 +21,6 @@ import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
-import com.lmis.util.controls.LmisTextView;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.util.ArrayList;
@@ -64,6 +63,9 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
     @InjectView(R.id.listInventoryOuts)
     ListView mListView;
+
+    @InjectView(R.id.txvInventoryOutBlank)
+    TextView mTxvBlank;
 
     List<Object> mInventoryObjects = new ArrayList<Object>();
 
@@ -116,9 +118,6 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         Log.d(TAG, "InventoryOutList->initData()");
         String title = "Draft";
         MType type = MType.DRAFT;
-        if (mSelectedItemPosition > -1) {
-            return;
-        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -140,6 +139,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
             mInventoryLoader.execute((Void) null);
         }
     }
+
 
     /**
      * Sets list view.
@@ -164,9 +164,9 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
                 Integer goodsCount = row_data.getInt("sum_goods_count");
                 Integer billsCount = row_data.getInt("sum_bills_count");
-                String describe = String.format("共%d件,%d票", goodsCount, billsCount);
+                String describe = String.format("共%d票%d件", billsCount, goodsCount);
                 String billDate = row_data.getString("bill_date");
-                String fromTo = String.format("%s 至 %s",fromOrgName,toOrgName);
+                String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
                 holder.txvFromTo.setText(fromTo);
                 holder.txvBillDate.setText(billDate);
                 holder.txvDescribe.setText(describe);
@@ -227,10 +227,8 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         String inventory_out_processed = context.getResources().getString(R.string.inventory_out_draw_item_processed);
 
         drawerItems.add(new DrawerItem(TAG, inventory_out_title, true));
-        drawerItems.add(new DrawerItem(TAG, inventory_out_draft, count(MType.DRAFT, context),
-                R.drawable.ic_action_inbox,
-                getFragment("draft")));
-        drawerItems.add(new DrawerItem(TAG, inventory_out_processed, 0, R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, inventory_out_draft, count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
+        drawerItems.add(new DrawerItem(TAG, inventory_out_processed, count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
         return drawerItems;
     }
 
@@ -255,9 +253,9 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * list item click event.
      *
      * @param adapterView the adapter view
-     * @param view the view
-     * @param i the i
-     * @param l the l
+     * @param view        the view
+     * @param position    the position
+     * @param id          the l
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -335,7 +333,30 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         protected void onPostExecute(final Boolean success) {
             //mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
             mListViewAdapter.notifiyDataChange(mInventoryObjects);
+            checkInventoryListStatus();
             mInventoryLoader = null;
         }
+    }
+
+    /**
+     * 设置空记录指示控件是否可见.
+     */
+    private void checkInventoryListStatus() {
+        mTxvBlank.setVisibility(mInventoryObjects.size() > 0 ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Bundle outState = new Bundle();
+        outState.putInt("mSelectedItemPosition", mSelectedItemPosition);
+        onSaveInstanceState(outState);
+
     }
 }

@@ -18,11 +18,15 @@
  */
 package com.lmis.orm;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import us.monoid.json.JSONArray;
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
 
 public class LmisDataRow {
     HashMap<String, Object> _data = new HashMap<String, Object>();
@@ -95,7 +99,7 @@ public class LmisDataRow {
 
     @Override
     public String toString() {
-        if(_data.containsKey("name"))
+        if (_data.containsKey("name"))
             return _data.get("name").toString();
 
         return _data.toString();
@@ -129,4 +133,44 @@ public class LmisDataRow {
 
     }
 
+    /**
+     * 将数据转换为json
+     *
+     * @param includeId 导出数据时是否包含id
+     * @return the jSON object
+     * @throws JSONException the jSON exception
+     */
+    public JSONObject exportAsJSON(Boolean includeId) throws JSONException {
+        JSONObject ret = new JSONObject();
+        for (Map.Entry<String, Object> o : _data.entrySet()) {
+            Object value = o.getValue();
+            String key = o.getKey();
+            if (key == "id" || key == "oea_name")
+                continue;
+
+            if (value instanceof LmisM2ORecord) {
+                ret.put(key, ((LmisM2ORecord) value).browse().getInt("id"));
+            } else if (value instanceof LmisO2MRecord) {
+                //对O2M循环处理
+                int i = 0;
+                for (LmisDataRow line : ((LmisO2MRecord) value).browseEach()) {
+                    JSONObject jsonLine = line.exportAsJSON(includeId);
+                    ret.append(key + "_attributes", jsonLine);
+
+                }
+
+            } else if (value instanceof LmisM2MRecord) {
+                int i = 0;
+                //对M2M循环处理
+                for (LmisDataRow line : ((LmisM2MRecord) value).browseEach()) {
+                    JSONObject jsonLine = line.exportAsJSON(includeId);
+                    ret.append(key + "_attributes", jsonLine);
+                }
+            } else {
+                ret.put(key, value);
+            }
+
+        }
+        return ret;
+    }
 }

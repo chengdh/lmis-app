@@ -137,7 +137,6 @@ public class LmisAccountManager {
             if (LmisAccountManager.isAnyUser(context)) {
                 List<LmisUser> accounts = LmisAccountManager.fetchAllAccounts(context);
                 for (LmisUser user : accounts) {
-
                     if (user.isIsactive()) {
                         return user;
                     }
@@ -156,8 +155,7 @@ public class LmisAccountManager {
      */
     public static LmisUser getAccountDetail(Context context, String username) {
 
-        List<LmisUser> allAccounts = LmisAccountManager
-                .fetchAllAccounts(context);
+        List<LmisUser> allAccounts = LmisAccountManager.fetchAllAccounts(context);
         for (LmisUser user : allAccounts) {
             if (user.getAndroidName().equals(username)) {
                 return user;
@@ -203,8 +201,7 @@ public class LmisAccountManager {
     public static boolean logoutUser(Context context, String username) {
         boolean flag = false;
         LmisUser user = LmisAccountManager.getAccountDetail(context, username);
-        Account account = LmisAccountManager.getAccount(context,
-                user.getAndroidName());
+        Account account = LmisAccountManager.getAccount(context, user.getAndroidName());
         if (user != null) {
             if (cancelAllSync(account)) {
                 AccountManager accMgr = AccountManager.get(context);
@@ -217,6 +214,19 @@ public class LmisAccountManager {
         }
         return flag;
 
+    }
+
+    public static boolean changeDefaultOrgId(Context context, String username, int newOrgId) {
+        boolean flag = false;
+        LmisUser user = LmisAccountManager.getAccountDetail(context, username);
+        Account account = LmisAccountManager.getAccount(context, user.getAndroidName());
+        if (user != null) {
+            AccountManager accMgr = AccountManager.get(context);
+            user.setDefault_org_id(newOrgId);
+            accMgr.setUserData(account, "default_org_id", newOrgId + "");
+            return true;
+        }
+        return false;
     }
 
     private static boolean cancelAllSync(Account account) {

@@ -7,272 +7,43 @@
     android:baselineAligned="true"
     android:background="#efefef">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edt_scan_barcode"
-        android:hint="扫描条码"
-        android:textAlignment="center"
-        android:textSize="30dp"
-        android:layout_margin="8dp"
-        android:gravity="center_horizontal" />
-
-    <com.lmis.util.controls.YardsOrgSpinner
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_yards_select"
-        android:spinnerMode="dropdown"
-        android:layout_margin="5dp" />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/start_page">
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
-            android:src="@drawable/barcode" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="bottom">
-
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#fff"
-                android:measureWithLargestChild="true"
-                android:padding="2dp"
-                android:layout_marginTop="2dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="票    号:"
-                    android:id="@+id/textView"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/txv_bill_no"
-                    android:layout_weight="3"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/tableRow2"
-                android:background="#fff"
-                android:padding="2dp"
-                android:layout_marginTop="2dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="到货地:"
-                    android:id="@+id/textView2"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/txv_to_org_name"
-                    android:textAlignment="gravity"
-                    android:layout_weight="3"
-                    android:phoneNumber="true" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/tableRow3"
-                android:layout_marginTop="2dp"
-                android:background="#fff"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="序    号:"
-                    android:id="@+id/textView4"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/txv_seq"
-                    android:layout_weight="3" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/tableRow5"
-                android:layout_marginTop="2dp"
-                android:background="#fff"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="总件数:"
-                    android:id="@+id/textView5"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/txv_goods_num"
-                    android:layout_weight="3" />
-            </TableRow>
-        </TableLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
+    <TabHost
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:gravity="bottom">
-
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="true"
-            android:gravity="center_vertical"
-            android:layout_margin="8dp">
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:clickable="true"
-                android:baselineAligned="false"
-                android:gravity="center_vertical"
-                android:background="#fff"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="共"
-                    android:id="@+id/textView10"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical|center_horizontal" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/btn_sum_goods_num"
-                    android:layout_weight="4"
-                    android:textSize="40dp"
-                    android:background="#fff" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="件"
-                    android:id="@+id/textView3"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical|center_horizontal" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/tableRow"
-                android:gravity="center_vertical"
-                android:background="#fff"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="共"
-                    android:id="@+id/textView12"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical|center_horizontal" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/btn_sum_bills_count"
-                    android:layout_weight="4"
-                    android:textSize="40dp"
-                    android:background="#fff" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="票"
-                    android:id="@+id/textView6"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical|center_horizontal" />
-
-            </TableRow>
-
-        </TableLayout>
+        android:id="@+id/tabHost">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/btn_all_scaned"
-                android:src="@android:drawable/ic_menu_add"
-                android:contentDescription="设为全部入库"
-                android:layout_weight="1" />
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"></TabWidget>
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton"
-                android:src="@android:drawable/ic_input_delete"
-                android:contentDescription="设为全部入库"
-                android:layout_weight="1"
-                android:adjustViewBounds="false" />
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_inventory_out_scan_barcode" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_inventory_out_bill_list" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_inventory_out_barcode_list" />
+            </FrameLayout>
         </LinearLayout>
+    </TabHost>
 
-
-    </LinearLayout>
 
 </LinearLayout>

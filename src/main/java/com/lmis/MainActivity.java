@@ -48,6 +48,7 @@ import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
+import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -56,6 +57,7 @@ import com.lmis.base.account.UserProfile;
 import com.lmis.dagger_module.ActivityModule;
 import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
@@ -78,7 +80,7 @@ import butterknife.InjectView;
  * The Class MainActivity.
  */
 public class MainActivity extends InjectingFragmentActivity implements
-        DrawerItem.DrawerItemClickListener, FragmentListener, DrawerListener {
+        DrawerItem.DrawerItemClickListener, FragmentListener, DrawerListener, ActionBar.OnNavigationListener {
 
     /**
      * The constant TAG.
@@ -342,17 +344,30 @@ public class MainActivity extends InjectingFragmentActivity implements
     private void initSpinner() {
         SpinnerAdapter spinnerAdapter = new ArrayAdapter<LmisDataRow>(mContext, android.R.layout.simple_spinner_dropdown_item, mOrgs);
 
-        ActionBar.OnNavigationListener navigationListener = new ActionBar.OnNavigationListener() {
-            @Override
-            public boolean onNavigationItemSelected(int i, long l) {
-                return false;
-            }
-        };
-
         ActionBar ab = getActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        ab.setListNavigationCallbacks(spinnerAdapter, navigationListener);
+        ab.setListNavigationCallbacks(spinnerAdapter, this);
+
+        LmisUser curUser = LmisAccountManager.currentUser(this);
+        int orgId = curUser.getDefault_org_id();
+        int position = 0;
+        for (int i = 0; i <  mOrgs.size(); i++){
+            if(mOrgs.get(i).getInt("id").equals(orgId))
+                position = i;
+        }
+
+        ab.setSelectedNavigationItem(position);
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int position, long l) {
+        //修改当前的org_id
+        LmisUser curUser = LmisAccountManager.currentUser(this);
+        LmisDataRow curOrg = mOrgs.get(position);
+        LmisAccountManager.changeDefaultOrgId(this, curUser.getAndroidName(), curOrg.getInt("id"));
+        return true;
     }
 
     /**

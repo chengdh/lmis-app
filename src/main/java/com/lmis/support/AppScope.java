@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.lmis.MainActivity;
+import com.lmis.orm.LmisDataRow;
 
 /**
  * The Class AppScope.
@@ -35,19 +36,21 @@ public class AppScope {
 	/** The context. */
 	private Context mContext = null;
 
+    /**
+     * 当前机构.
+     */
+    private LmisDataRow mCurOrg = null;
+
 	public AppScope(Fragment fragment) {
 		mContext = (Context) fragment.getActivity();
 		mUser = LmisUser.current(mContext);
 	}
 
-	/**
-	 * Instantiates a new app scope.
-	 * 
-	 * @param user
-	 *            the user
-	 * @param context
-	 *            the context
-	 */
+    /**
+     * Instantiates a new app scope.
+     *
+     * @param context             the context
+     */
 	public AppScope(Context context) {
 		mContext = context;
 		mUser = LmisUser.current(mContext);

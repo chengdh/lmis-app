@@ -25,6 +25,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
     //Android view 注入框架
     compile 'com.jakewharton:butterknife:5.1.0'
+
     //event bus
     compile 'com.squareup:otto:1.3.4'
     compile files('libs/fb-android-dagger-1.0.3.jar','libs/pull_swipe_library.jar')

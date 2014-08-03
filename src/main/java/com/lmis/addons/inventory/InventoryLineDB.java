@@ -21,7 +21,7 @@ public class InventoryLineDB extends LmisDatabase {
 
     @Override
     public String getModelName() {
-        return "InventoryLine";
+        return "LoadListWithBarcodeLine";
     }
 
     @Override
@@ -29,9 +29,10 @@ public class InventoryLineDB extends LmisDatabase {
 
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
         //主表id
-        cols.add(new LmisColumn("inventory_move_id","Master Inventory", LmisFields.integer(),false));
+        cols.add(new LmisColumn("load_list_with_barcode_id","Master Inventory", LmisFields.integer(20)));
         //扫描的barcode
-        cols.add(new LmisColumn("barcode","barcode", LmisFields.varchar(20),false));
+        cols.add(new LmisColumn("barcode","barcode", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
         //手动全部出入库标记,用于标明用户是否手动将该条码关联的运单货物全部入库
         cols.add(new LmisColumn("manual_set_all","manual_set_all", LmisFields.integer(),false));
 
