@@ -18,7 +18,7 @@
  */
 package com.lmis.support;
 
-import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 

@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -34,17 +36,20 @@ import com.lmis.util.barcode.BarcodeDuplicateException;
 import com.lmis.util.barcode.BarcodeNotExistsException;
 import com.lmis.util.barcode.BarcodeParseSuccessEvent;
 import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.BarcodeQueryListener;
 import com.lmis.util.barcode.BarcodeRemoveEvent;
 import com.lmis.util.barcode.DBException;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
 import com.lmis.util.barcode.InvalidToOrgException;
+import com.lmis.util.barcode.MultiChoiceBarcodeListener;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +62,7 @@ import butterknife.InjectView;
  * Created by chengdh on 14-6-17.
  * 调拨出库单新增或修改界面
  */
-public class InventoryOut extends BaseFragment {
+public class InventoryOut extends BaseFragment implements AdapterView.OnItemLongClickListener{
 
     public static final String TAG = "InventoryOut";
     @Inject
@@ -106,10 +111,16 @@ public class InventoryOut extends BaseFragment {
 
     LmisListAdapter mBillsAdapter = null;
 
+    //已扫描的票据列表
+    List<Object> mBillsObjects = null;
+
+
     //已扫描的条码列表
     @InjectView(R.id.lst_view_barcodes)
     ListView mListBarcodes;
     LmisListAdapter mBarcodesAdapter = null;
+    List<Object> mBarcodesObjects = null;
+
 
     View.OnClickListener mRemoveBarcodeListener = null;
     View.OnClickListener mAddBillListener = null;
@@ -123,6 +134,13 @@ public class InventoryOut extends BaseFragment {
 
     //上传到服务器处理
     Upload uploadSync = null;
+
+    //search view
+    @InjectView(R.id.search_view_bill_list)
+    SearchView mSearchViewBillList;
+
+    @InjectView(R.id.search_view_list_barcodes)
+    SearchView mSearchViewBarcodeList;
 
     /**
      * @param savedInstanceState If non-null, this fragment is being re-constructed
@@ -172,6 +190,7 @@ public class InventoryOut extends BaseFragment {
         initTabs();
         initScanTab();
         initBillsListTab();
+        initBarcodesListTab();
     }
 
     /**
@@ -179,9 +198,10 @@ public class InventoryOut extends BaseFragment {
      */
     private void initTabs() {
         mTabHost.setup();
-        mTabHost.addTab(mTabHost.newTabSpec("扫描条码").setIndicator("扫描条码").setContent(R.id.scan_tab));
-        mTabHost.addTab(mTabHost.newTabSpec("票据列表").setIndicator("票据列表").setContent(R.id.lst_bills));
-        mTabHost.addTab(mTabHost.newTabSpec("条码列表").setIndicator("条码列表").setContent(R.id.lst_barcodes));
+        //TODO 此处加上tab图标
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_SCAN_BARCODE").setIndicator("扫描条码").setContent(R.id.scan_tab));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_BILLS_LIST").setIndicator("票据明细").setContent(R.id.lst_bills));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_BARCODES_LIST").setIndicator("条码明细").setContent(R.id.lst_barcodes));
     }
 
     /**
@@ -219,8 +239,7 @@ public class InventoryOut extends BaseFragment {
                         }
                         mEdtScanBarcode.selectAll();
 
-                        //通知billListTab数据变化
-                        mBillsAdapter.notifiyDataChange(mBarcodeParser.getBillsList());
+
                     } catch (InvalidBarcodeException ex) {
                         Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
                     } catch (InvalidToOrgException ex) {
@@ -250,6 +269,8 @@ public class InventoryOut extends BaseFragment {
         mBtnRemoveBarcode.setOnClickListener(mRemoveBarcodeListener);
     }
 
+
+
     /**
      * The type View holder.
      * butterKnife viewholder
@@ -272,29 +293,91 @@ public class InventoryOut extends BaseFragment {
      * 初始化票据列表tab.
      */
     private void initBillsListTab() {
-        mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_out_list_bills_item, mBarcodeParser.getBillsList()) {
+        mBillsObjects = new ArrayList<Object>(mBarcodeParser.getBillsList());
+        mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_out_list_bills_item, mBillsObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
                 ViewHolderForBillsList holder;
                 if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_out_list_bills_item, parent, false);
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_list_bills_item, parent, false);
                     holder = new ViewHolderForBillsList(mView);
                     mView.setTag(holder);
                 } else {
                     holder = (ViewHolderForBillsList) mView.getTag();
                 }
-                List<Object> billsList = mBarcodeParser.getBillsList();
-                Map.Entry billHash = (Map.Entry) billsList.get(position);
+                Map.Entry billHash = (Map.Entry) mBillsObjects.get(position);
                 String billNo = billHash.getKey().toString();
                 String count = billHash.getValue().toString();
                 holder.txvBillNo.setText(billNo);
-                holder.txvBarcodeCount.setText("已扫"+count + "件");
+                holder.txvBarcodeCount.setText("已扫" + count + "件");
                 return mView;
             }
 
         };
         mLstBills.setAdapter(mBillsAdapter);
+        mSearchViewBillList.setIconifiedByDefault(false);
+        mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
+        mLstBills.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mLstBills.setOnItemLongClickListener(this);
+        //mLstBills.setMultiChoiceModeListener(new MultiChoiceBarcodeListener(scope.context(),mBarcodesObjects,mBarcodeParser));
+    }
+
+    /**
+     * The type View holder.
+     * butterKnife viewholder
+     */
+    static class ViewHolderForBarcodesList {
+        //发货地
+        @InjectView(R.id.txv_bill_no)
+        TextView txvBillNo;
+        //描述信息
+        @InjectView(R.id.txv_barcode)
+        TextView txvBarcode;
+
+        public ViewHolderForBarcodesList(View view) {
+            ButterKnife.inject(this, view);
+        }
+    }
+
+    /**
+     * 初始化条码列表.
+     */
+    private void initBarcodesListTab() {
+
+        mBarcodesObjects = new ArrayList<Object>(mBarcodeParser.getmScanedBarcode());
+        mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_out_list_barcodes_item, mBarcodesObjects) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View mView = convertView;
+                ViewHolderForBarcodesList holder;
+                if (mView == null) {
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_list_barcodes_item, parent, false);
+                    holder = new ViewHolderForBarcodesList(mView);
+                    mView.setTag(holder);
+                } else {
+                    holder = (ViewHolderForBarcodesList) mView.getTag();
+                }
+                GoodsInfo gs = (GoodsInfo) mBarcodesObjects.get(position);
+                String billNo = gs.getmBillNo();
+                String barcode = gs.getmBarcode();
+                holder.txvBillNo.setText(billNo);
+                holder.txvBarcode.setText(barcode);
+                if (position > 0) {
+                    GoodsInfo prevGs = (GoodsInfo) mBarcodesObjects.get(position - 1);
+                    if (prevGs.getmBillNo().equals(billNo))
+                        holder.txvBillNo.setText("");
+                }
+                return mView;
+            }
+
+        };
+        mListBarcodes.setAdapter(mBarcodesAdapter);
+        mSearchViewBarcodeList.setIconifiedByDefault(false);
+        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
+        mListBarcodes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListBarcodes.setOnItemLongClickListener(this);
+        mListBarcodes.setMultiChoiceModeListener(new MultiChoiceBarcodeListener(scope.context(),mBarcodesObjects,mBarcodeParser));
     }
 
 
@@ -383,11 +466,24 @@ public class InventoryOut extends BaseFragment {
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
         mBtnSumGoodsNum.setText(evt.getmSumGoodsNum() + "");
         mBtnSumBillsCount.setText(evt.getmSumBillsCount() + "");
+        //通知billListTab数据变化
+        mBillsObjects.clear();
+        mBillsObjects.addAll(mBarcodeParser.getBillsList());
+        mBillsAdapter.notifiyDataChange(mBillsObjects);
+        //通知barcodesListTab数据变化
+        mBarcodesObjects.clear();
+        mBarcodesObjects.addAll(mBarcodeParser.getmScanedBarcode());
+        mBarcodesAdapter.notifiyDataChange(mBarcodesObjects);
+
+        //清除选中状态
+        mListBarcodes.clearChoices();
+        mLstBills.clearChoices();
     }
 
     @Subscribe
     public void onBarcodeRemoveEvent(BarcodeRemoveEvent evt) {
         Toast.makeText(scope.context(), "货物已删除!", Toast.LENGTH_SHORT).show();
+        clearUI();
     }
 
     /**
@@ -431,5 +527,10 @@ public class InventoryOut extends BaseFragment {
 
             pdialog.dismiss();
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
     }
 }

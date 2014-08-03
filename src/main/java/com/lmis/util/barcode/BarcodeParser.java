@@ -13,6 +13,8 @@ import com.squareup.otto.Bus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -294,10 +296,12 @@ public class BarcodeParser {
      */
     public List<Object> getBillsList(){
         List<Object> billsList = new ArrayList<Object>(getBillsHash().entrySet());
+        Collections.sort(billsList,new ComparatorBillNo());
         return billsList;
     }
 
     public List<GoodsInfo> getmScanedBarcode() {
+        Collections.sort(mScanedBarcode,new ComparatorGoodsInfo());
         return mScanedBarcode;
     }
 
@@ -322,4 +326,21 @@ public class BarcodeParser {
         this.mToOrgID = mToOrgID;
     }
 
+    /**
+     * 运单号比较器，用于比较运单号
+     * 传入的对象是k,v样式,k为条码,v为扫描数量
+     */
+    public class ComparatorBillNo implements Comparator<Object>{
+        @Override
+        public int compare(Object barcode_1, Object barcode_2) {
+            return ((Map.Entry)barcode_1).getKey().toString().compareTo(((Map.Entry)barcode_2).getKey().toString());
+        }
+    }
+
+    public class ComparatorGoodsInfo implements Comparator<GoodsInfo>{
+        @Override
+        public int compare(GoodsInfo gs_1, GoodsInfo gs_2) {
+            return gs_1.getmBarcode().compareTo(gs_2.getmBarcode());
+        }
+    }
 }

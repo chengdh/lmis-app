@@ -5,8 +5,14 @@
     android:layout_height="match_parent"
     android:id="@+id/lst_barcodes">
 
-    <ListView
-        android:layout_width="wrap_content"
+    <SearchView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lst_view_barcodes" />
+        android:id="@+id/search_view_list_barcodes" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lst_view_barcodes"
+        android:choiceMode="multipleChoiceModal" />
+
 </LinearLayout>

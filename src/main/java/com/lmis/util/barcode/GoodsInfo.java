@@ -107,4 +107,9 @@ public class GoodsInfo {
         }
         return mToOrgName;
     }
+
+    @Override
+    public String toString() {
+        return getmBarcode();
+    }
 }

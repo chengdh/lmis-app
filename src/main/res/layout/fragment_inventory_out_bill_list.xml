@@ -5,8 +5,17 @@
     android:layout_height="match_parent"
     android:id="@+id/lst_bills">
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_view_bill_list"
+        android:iconifiedByDefault="false" />
+
     <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lst_view_bills" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lst_view_bills"
+        android:choiceMode="multipleChoiceModal" />
+
+
 </LinearLayout>
