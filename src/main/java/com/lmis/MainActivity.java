@@ -352,8 +352,8 @@ public class MainActivity extends InjectingFragmentActivity implements
         LmisUser curUser = LmisAccountManager.currentUser(this);
         int orgId = curUser.getDefault_org_id();
         int position = 0;
-        for (int i = 0; i <  mOrgs.size(); i++){
-            if(mOrgs.get(i).getInt("id").equals(orgId))
+        for (int i = 0; i < mOrgs.size(); i++) {
+            if (mOrgs.get(i).getInt("id").equals(orgId))
                 position = i;
         }
 
@@ -460,8 +460,7 @@ public class MainActivity extends InjectingFragmentActivity implements
             if (item.getKey().equals(tag_key) && !item.isGroupTitle()) {
                 if (start_index < 0) {
                     start_index = i - 1;
-                    BaseFragment instance = (BaseFragment) item
-                            .getFragmentInstace();
+                    BaseFragment instance = (BaseFragment) item.getFragmentInstace();
                     updated_menus.addAll(instance.drawerMenus(mContext));
                     break;
                 }

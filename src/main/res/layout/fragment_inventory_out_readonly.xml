@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/txv_title"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:text="test"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txv_bill_date"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txv_sub_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_inventory_out_barcode_list" />
+
+</LinearLayout>

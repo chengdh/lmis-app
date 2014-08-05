@@ -44,8 +44,10 @@ import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
 import com.lmis.util.barcode.InvalidToOrgException;
 import com.lmis.util.barcode.MultiChoiceBarcodeListener;
+import com.lmis.util.barcode.MultiChoiceBillListener;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
 import com.lmis.util.drawer.DrawerItem;
+import com.lmis.util.drawer.DrawerListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -83,17 +85,9 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     @InjectView(R.id.txv_to_org_name)
     TextView mTxvToOrgName;
 
-    @InjectView(R.id.txv_seq)
-    TextView mTxvSeq;
-
     @InjectView(R.id.txv_goods_num)
     TextView mTxvGoodsNum;
 
-    @InjectView(R.id.btn_all_scaned)
-    ImageButton mBtnAllScaned;
-
-    @InjectView(R.id.btn_remove_barcode)
-    ImageButton mBtnRemoveBarcode;
 
     @InjectView(R.id.btn_sum_goods_num)
     Button mBtnSumGoodsNum;
@@ -120,10 +114,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     ListView mListBarcodes;
     LmisListAdapter mBarcodesAdapter = null;
     List<Object> mBarcodesObjects = null;
-
-
-    View.OnClickListener mRemoveBarcodeListener = null;
-    View.OnClickListener mAddBillListener = null;
 
     View mView = null;
     Integer mInventoryOutId = null;
@@ -259,14 +249,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         });
         mEdtScanBarcode.requestFocus();
 
-        //删除条形码
-        mRemoveBarcodeListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeBarcode();
-            }
-        };
-        mBtnRemoveBarcode.setOnClickListener(mRemoveBarcodeListener);
     }
 
 
@@ -320,7 +302,7 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
         mLstBills.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mLstBills.setOnItemLongClickListener(this);
-        //mLstBills.setMultiChoiceModeListener(new MultiChoiceBarcodeListener(scope.context(),mBarcodesObjects,mBarcodeParser));
+        mLstBills.setMultiChoiceModeListener(new MultiChoiceBillListener(scope.context(),mBillsObjects,mBarcodeParser));
     }
 
     /**
@@ -404,7 +386,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         mTxvBillNo.setText("");
         mTxvToOrgName.setText("");
         mTxvGoodsNum.setText("");
-        mTxvSeq.setText("");
         mEdtScanBarcode.requestFocus();
     }
 
@@ -448,7 +429,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         mTxvBillNo.setText(gs.getmBillNo());
         mTxvToOrgName.setText(gs.getmToOrgName());
         mTxvGoodsNum.setText(gs.getmGoodsNum() + "");
-        mTxvSeq.setText(gs.getmSeq() + "");
         //mTxvScanMessage.setText("");
     }
 
@@ -503,6 +483,8 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         protected Boolean doInBackground(Void... voids) {
             try {
                 ((InventoryMoveDB) db()).save2server(mInventoryOutId);
+                DrawerListener drawer = scope.main();
+                drawer.refreshDrawer(InventoryOutList.TAG);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 return false;

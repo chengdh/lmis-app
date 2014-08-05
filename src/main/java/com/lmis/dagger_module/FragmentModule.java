@@ -9,6 +9,7 @@ import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.InventoryOut;
 import com.lmis.addons.inventory.InventoryOutList;
+import com.lmis.addons.inventory.InventoryOutReadonly;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
@@ -33,7 +34,8 @@ import dagger.Provides;
                 Login.class, SyncWizard.class,Idea.class,
                 AccountsDetail.class, AboutFragment.class,
                 InventoryOutList.class,UserProfile.class,
-                InventoryOut.class
+                InventoryOut.class,
+                InventoryOutReadonly.class
         })
 public class FragmentModule {
 

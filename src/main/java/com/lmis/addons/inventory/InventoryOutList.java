@@ -1,27 +1,35 @@
 package com.lmis.addons.inventory;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
+import com.lmis.util.drawer.DrawerListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +42,10 @@ import butterknife.InjectView;
  * Created by chengdh on 14-6-16.
  * 出库单列表
  */
-public class InventoryOutList extends BaseFragment implements AdapterView.OnItemClickListener {
+public class InventoryOutList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     public static final String TAG = "InventoryOutList";
+
 
     /**
      * The enum M type.
@@ -71,6 +80,12 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
     InventoryLoader mInventoryLoader = null;
 
+
+    HashMap<Integer, Boolean> mMultiSelectedRows = new HashMap<Integer, Boolean>();
+
+    Integer mSelectedCounter = 0;
+
+
     /**
      * The type View holder.
      * butterKnife viewholder
@@ -99,8 +114,6 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_out_list, container, false);
         ButterKnife.inject(this, mView);
-        mListView.setOnItemClickListener(this);
-        init();
         return mView;
     }
 
@@ -146,6 +159,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * 设置单条信息显示界面
      */
     private void handleRowView() {
+        mListView.setOnItemClickListener(this);
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_out_listview_items, mInventoryObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -175,7 +189,57 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
         };
         mListView.setAdapter(mListViewAdapter);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setOnItemLongClickListener(this);
+        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
     }
+
+    AbsListView.MultiChoiceModeListener mMultiChoiceListener = new AbsListView.MultiChoiceModeListener() {
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            mMultiSelectedRows.put(position, checked);
+            if (checked) {
+                mSelectedCounter++;
+            } else {
+                mSelectedCounter--;
+            }
+            if (mSelectedCounter != 0) {
+                mode.setTitle(mSelectedCounter + "");
+            }
+        }
+
+        @SuppressLint("UseSparseArrays")
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_inventory_out_list_choice_delete:
+                    deleteSelected();
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_fragment_inventory_out_list_context, menu);
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mSelectedCounter = 0;
+            mListView.clearChoices();
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+    };
+
 
     /**
      * Gets where.
@@ -261,11 +325,17 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
-        InventoryOut detail = new InventoryOut();
+        BaseFragment detail;
+        if (row.getBoolean("processed")) {
+            detail = new InventoryOutReadonly();
+        } else {
+            detail = new InventoryOut();
+        }
         Bundle bundle = new Bundle();
         bundle.putInt("inventory_out_id", row.getInt("id"));
         bundle.putInt("position", position);
         detail.setArguments(bundle);
+
         FragmentListener listener = (FragmentListener) getActivity();
         listener.startDetailFragment(detail);
     }
@@ -280,7 +350,8 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_inventory_out_list, menu);
-        //mSearchView = (SearchView) menu.findItem(R.id.menu_fragment_inventory_out_list_search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.menu_inventory_out_list_search).getActionView();
+        init();
     }
 
     /**
@@ -331,8 +402,8 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            //mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
             mListViewAdapter.notifiyDataChange(mInventoryObjects);
+            mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
             checkInventoryListStatus();
             mInventoryLoader = null;
         }
@@ -348,15 +419,71 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onResume() {
         super.onResume();
-        initData();
+        scope.context().registerReceiver(datasetChangeReceiver, new IntentFilter(DataSetChangeReceiver.DATA_CHANGED));
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        scope.context().unregisterReceiver(datasetChangeReceiver);
         Bundle outState = new Bundle();
         outState.putInt("mSelectedItemPosition", mSelectedItemPosition);
         onSaveInstanceState(outState);
 
+    }
+
+    private DataSetChangeReceiver datasetChangeReceiver = new DataSetChangeReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+
+                Log.d(TAG, "InventoryOutList->datasetChangeReceiver@onReceive");
+
+                String id = intent.getExtras().getString("id");
+                String model = intent.getExtras().getString("model");
+                if (model.equals("LoadListWithBarcode")) {
+                    LmisDataRow row = db().select(Integer.parseInt(id));
+                    mInventoryObjects.add(0, row);
+                    mListViewAdapter.notifiyDataChange(mInventoryObjects);
+                }
+
+            } catch (Exception e) {
+            }
+
+        }
+    };
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+    }
+
+    /**
+     * 删除选中单据.
+     *
+     * @return the int
+     */
+    private int deleteSelected() {
+        int ret = 0;
+        List<Object> delObjs = new ArrayList<Object>();
+        for (int position : mMultiSelectedRows.keySet()) {
+            LmisDataRow inventoryOut = (LmisDataRow)mInventoryObjects.get(position);
+            delObjs.add(inventoryOut);
+            int id = inventoryOut.getInt("id");
+            db().delete(id);
+            InventoryLineDB ldb = new InventoryLineDB(scope.context());
+            String where = "load_list_with_barcode_id = ?";
+            String[] whereArgs = new String[] {id + ""};
+            ldb.delete(where, whereArgs);
+            ret++;
+        }
+        mInventoryObjects.removeAll(delObjs);
+        mListViewAdapter.notifiyDataChange(mInventoryObjects);
+
+        DrawerListener drawer = scope.main();
+        drawer.refreshDrawer(TAG);
+
+        Toast.makeText(scope.context(), "单据已删除!", Toast.LENGTH_LONG).show();
+        return ret;
     }
 }

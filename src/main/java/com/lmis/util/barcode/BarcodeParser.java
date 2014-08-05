@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -201,27 +202,71 @@ public class BarcodeParser {
      *
      * @param barcode the barcode
      */
-    public void removeBarcode(String barcode) throws InvalidBarcodeException,BarcodeNotExistsException {
-        GoodsInfo gs = new GoodsInfo(mContext,barcode);
-        if(!containsBarcode(barcode))
+    public void removeBarcode(String barcode) throws InvalidBarcodeException, BarcodeNotExistsException {
+        GoodsInfo gs = new GoodsInfo(mContext, barcode);
+        if (!containsBarcode(barcode))
             throw new BarcodeNotExistsException("条码不存在!");
 
+        int idx = barcodeIndex(barcode);
+
+        mScanedBarcode.remove(idx);
         String where = "load_list_with_barcode_id = ? AND barcode = ?";
-        String[] whereArgs = new String[]{mMoveId + "",barcode};
-        mInventoryLineDB.delete(where,whereArgs);
+        String[] whereArgs = new String[]{mMoveId + "", barcode};
+        mInventoryLineDB.delete(where, whereArgs);
 
         //更新合计数量
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
-        mInventoryOutDB.update(row,mMoveId);
+        mInventoryOutDB.update(row, mMoveId);
 
-        int idx = barcodeIndex(barcode);
 
-        mScanedBarcode.remove(idx);
         mBus.post(new BarcodeRemoveEvent(gs));
         mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));
     }
+
+    /**
+     * 批量删除条码.
+     *
+     * @param gsList the gs list
+     * @return the int
+     */
+    public int removeBarcodeAll(List<GoodsInfo> gsList){
+        mScanedBarcode.removeAll(gsList);
+        String barcodeStr = "-1";
+        for(GoodsInfo gs : gsList){
+            barcodeStr = "," + gs.getmBarcode();
+        }
+        String where = "load_list_with_barcode_id = ? AND barcode in (?)";
+        String[] whereArgs = new String[]{mMoveId + "", barcodeStr};
+        mInventoryLineDB.delete(where, whereArgs);
+
+        //更新合计数量
+        LmisValues row = new LmisValues();
+        row.put("sum_goods_count", sumGoodsCount());
+        row.put("sum_bills_count", sumBillsCount());
+        mInventoryOutDB.update(row, mMoveId);
+
+        mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));
+        return gsList.size();
+    }
+
+    /**
+     * 删除给定的运单(该运单关联的所有条码记录将被删除).
+     *
+     * @param billNo the bill no
+     * @return the int
+     */
+    public int removeBill(String billNo) throws BarcodeNotExistsException, InvalidBarcodeException {
+        List<GoodsInfo> delList = new ArrayList<GoodsInfo>();
+        for(GoodsInfo gs : mScanedBarcode){
+            if(gs.getmBillNo().equals(billNo)){
+                delList.add(gs);
+            }
+        }
+        return removeBarcodeAll(delList);
+    }
+
 
     /**
      * 判断已扫描的条码中是否包含给定的条码.
@@ -229,10 +274,10 @@ public class BarcodeParser {
      * @param barcode the barcode
      * @return the boolean
      */
-    private Boolean containsBarcode(String barcode){
-        for(GoodsInfo gs : mScanedBarcode){
-           if(gs.getmBarcode().equals(barcode))
-               return true;
+    private Boolean containsBarcode(String barcode) {
+        for (GoodsInfo gs : mScanedBarcode) {
+            if (gs.getmBarcode().equals(barcode))
+                return true;
         }
         return false;
     }
@@ -243,10 +288,10 @@ public class BarcodeParser {
      * @param barcode the barcode
      * @return the int
      */
-    private int barcodeIndex(String barcode){
-        for(int i=0;i < mScanedBarcode.size();i++){
-           if(mScanedBarcode.get(i).getmBarcode().equals(barcode))
-               return i;
+    private int barcodeIndex(String barcode) {
+        for (int i = 0; i < mScanedBarcode.size(); i++) {
+            if (mScanedBarcode.get(i).getmBarcode().equals(barcode))
+                return i;
         }
         return -1;
     }
@@ -261,7 +306,6 @@ public class BarcodeParser {
     }
 
     /**
-     *
      * 获取已扫描的运单数量.
      *
      * @return the integer
@@ -294,14 +338,14 @@ public class BarcodeParser {
      *
      * @return the list
      */
-    public List<Object> getBillsList(){
+    public List<Object> getBillsList() {
         List<Object> billsList = new ArrayList<Object>(getBillsHash().entrySet());
-        Collections.sort(billsList,new ComparatorBillNo());
+        Collections.sort(billsList, new ComparatorBillNo());
         return billsList;
     }
 
     public List<GoodsInfo> getmScanedBarcode() {
-        Collections.sort(mScanedBarcode,new ComparatorGoodsInfo());
+        Collections.sort(mScanedBarcode, new ComparatorGoodsInfo());
         return mScanedBarcode;
     }
 
@@ -330,14 +374,14 @@ public class BarcodeParser {
      * 运单号比较器，用于比较运单号
      * 传入的对象是k,v样式,k为条码,v为扫描数量
      */
-    public class ComparatorBillNo implements Comparator<Object>{
+    public class ComparatorBillNo implements Comparator<Object> {
         @Override
         public int compare(Object barcode_1, Object barcode_2) {
-            return ((Map.Entry)barcode_1).getKey().toString().compareTo(((Map.Entry)barcode_2).getKey().toString());
+            return ((Map.Entry) barcode_1).getKey().toString().compareTo(((Map.Entry) barcode_2).getKey().toString());
         }
     }
 
-    public class ComparatorGoodsInfo implements Comparator<GoodsInfo>{
+    public class ComparatorGoodsInfo implements Comparator<GoodsInfo> {
         @Override
         public int compare(GoodsInfo gs_1, GoodsInfo gs_2) {
             return gs_1.getmBarcode().compareTo(gs_2.getmBarcode());
