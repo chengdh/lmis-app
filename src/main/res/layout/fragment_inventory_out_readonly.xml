@@ -22,16 +22,25 @@
         android:id="@+id/txv_bill_date"
         android:gravity="center_vertical|center_horizontal" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txv_sub_title"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center_vertical|center_horizontal" />
-
     <include
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         layout="@layout/fragment_inventory_out_barcode_list" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="bottom">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txv_sub_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center_vertical|center_horizontal|bottom"
+            android:text="test"
+            android:phoneNumber="false" />
+    </LinearLayout>
 
 </LinearLayout>

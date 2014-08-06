@@ -94,6 +94,7 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
                 Toast.makeText(mContext, "条码不存在!", Toast.LENGTH_LONG).show();
             }
         }
+        mMultiSelectedRows.clear();
         return ret;
     }
 }

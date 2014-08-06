@@ -94,6 +94,7 @@ public class MultiChoiceBarcodeListener implements AbsListView.MultiChoiceModeLi
                 Toast.makeText(mContext, "该条码不存在!", Toast.LENGTH_LONG).show();
             }
         }
+        mMultiSelectedRows.clear();
         return ret;
     }
 }

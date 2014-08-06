@@ -114,6 +114,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_out_list, container, false);
         ButterKnife.inject(this, mView);
+        init();
         return mView;
     }
 
@@ -122,7 +123,27 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * 初始化界面及数据
      */
     private void init() {
-        handleRowView();
+        mListView.setOnItemClickListener(this);
+        mListView.setAdapter(mListViewAdapter);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setOnItemLongClickListener(this);
+        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
+        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_out_listview_items, mInventoryObjects) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View mView = convertView;
+                ViewHolder viewHolder = null;
+                if (mView == null) {
+                    mView = getActivity().getLayoutInflater().inflate(getResource(), parent, false);
+                    mView.setTag(new ViewHolder(mView));
+                }
+                mView = handleRowView(mView, position);
+                return mView;
+            }
+
+        };
+        mListView.setAdapter(mListViewAdapter);
+
         initData();
 
     }
@@ -131,6 +152,9 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         Log.d(TAG, "InventoryOutList->initData()");
         String title = "Draft";
         MType type = MType.DRAFT;
+//        if(mSelectedItemPosition > -1) {
+//            return;
+//        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -153,46 +177,24 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         }
     }
 
+    private View handleRowView(View mView, final int position) {
+        ViewHolder holder = (ViewHolder) mView.getTag();
+        if (mInventoryObjects.size() > 0) {
+            LmisDataRow row_data = (LmisDataRow) mInventoryObjects.get(position);
+            String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
+            String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
 
-    /**
-     * Sets list view.
-     * 设置单条信息显示界面
-     */
-    private void handleRowView() {
-        mListView.setOnItemClickListener(this);
-        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_out_listview_items, mInventoryObjects) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View mView = convertView;
-                ViewHolder holder;
-                if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_listview_items, parent, false);
-                    holder = new ViewHolder(mView);
-                    mView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) mView.getTag();
-                }
-                LmisDataRow row_data = (LmisDataRow) mInventoryObjects.get(position);
-                String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
-                String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
+            Integer goodsCount = row_data.getInt("sum_goods_count");
+            Integer billsCount = row_data.getInt("sum_bills_count");
+            String describe = String.format("共%d票%d件", billsCount, goodsCount);
+            String billDate = row_data.getString("bill_date");
+            String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
+            holder.txvFromTo.setText(fromTo);
+            holder.txvBillDate.setText(billDate);
+            holder.txvDescribe.setText(describe);
+        }
 
-                Integer goodsCount = row_data.getInt("sum_goods_count");
-                Integer billsCount = row_data.getInt("sum_bills_count");
-                String describe = String.format("共%d票%d件", billsCount, goodsCount);
-                String billDate = row_data.getString("bill_date");
-                String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
-                holder.txvFromTo.setText(fromTo);
-                holder.txvBillDate.setText(billDate);
-                holder.txvDescribe.setText(describe);
-                return mView;
-            }
-
-        };
-        mListView.setAdapter(mListViewAdapter);
-        mListViewAdapter.notifiyDataChange(mInventoryObjects);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setOnItemLongClickListener(this);
-        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
+        return mView;
     }
 
     AbsListView.MultiChoiceModeListener mMultiChoiceListener = new AbsListView.MultiChoiceModeListener() {
@@ -352,7 +354,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_inventory_out_list, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_inventory_out_list_search).getActionView();
-        init();
+        mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
     }
 
     /**
@@ -388,26 +390,24 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
+            Log.d(TAG, "InventoryLoader#doInBackground");
             HashMap<String, Object> map = getWhere(mType);
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "bill_date DESC");
             mInventoryObjects.clear();
-            if (result.size() > 0) {
-                for (LmisDataRow row : result) {
-                    mInventoryObjects.add(row);
-                }
-            }
+            mInventoryObjects.addAll(result);
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            Log.d(TAG, "InventoryLoader#onPostExecute");
             mListViewAdapter.notifiyDataChange(mInventoryObjects);
-            mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
             checkInventoryListStatus();
             mInventoryLoader = null;
         }
+
     }
 
     /**
@@ -468,16 +468,17 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
         for (int position : mMultiSelectedRows.keySet()) {
-            LmisDataRow inventoryOut = (LmisDataRow)mInventoryObjects.get(position);
+            LmisDataRow inventoryOut = (LmisDataRow) mInventoryObjects.get(position);
             delObjs.add(inventoryOut);
             int id = inventoryOut.getInt("id");
             db().delete(id);
             InventoryLineDB ldb = new InventoryLineDB(scope.context());
             String where = "load_list_with_barcode_id = ?";
-            String[] whereArgs = new String[] {id + ""};
+            String[] whereArgs = new String[]{id + ""};
             ldb.delete(where, whereArgs);
             ret++;
         }
+        mMultiSelectedRows.clear();
         mInventoryObjects.removeAll(delObjs);
         mListViewAdapter.notifiyDataChange(mInventoryObjects);
 

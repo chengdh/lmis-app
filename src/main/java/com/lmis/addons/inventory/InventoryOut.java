@@ -496,14 +496,15 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
             if (success) {
                 mUploadAsync.cancel(true);
                 Toast.makeText(scope.context(), "上传数据成功!", Toast.LENGTH_SHORT).show();
+                DrawerListener drawer = scope.main();
+                drawer.refreshDrawer(InventoryOutList.TAG);
                 //返回已处理界面
                 InventoryOutList list = new InventoryOutList();
                 Bundle arg = new Bundle();
-                arg.putString("type", "processed");
+                arg.putString("type", "draft");
                 list.setArguments(arg);
-                scope.main().startMainFragment(list, true);
-                DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(InventoryOutList.TAG);
+                scope.main().startMainFragment(list,true);
+
             } else {
                 Toast.makeText(scope.context(), "上传数据失败!", Toast.LENGTH_SHORT).show();
             }
