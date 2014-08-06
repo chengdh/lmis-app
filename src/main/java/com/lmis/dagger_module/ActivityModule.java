@@ -56,7 +56,6 @@ public class ActivityModule {
         List<DrawerItem> ret = new ArrayList<DrawerItem>();
         //未登录时,不显示菜单
         if(LmisUser.current(mActivity) != null) {
-
             ret.addAll(DrawerHelper.drawerItems(mActivity));
             ret.addAll(getSysMenuItems());
         }

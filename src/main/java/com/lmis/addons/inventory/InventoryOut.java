@@ -122,8 +122,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     //条码解析器
     BarcodeParser mBarcodeParser;
 
-    //上传到服务器处理
-    Upload uploadSync = null;
 
     //search view
     @InjectView(R.id.search_view_bill_list)
@@ -131,6 +129,10 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
 
     @InjectView(R.id.search_view_list_barcodes)
     SearchView mSearchViewBarcodeList;
+
+    Upload mUploadAsync = null;
+
+
 
     /**
      * @param savedInstanceState If non-null, this fragment is being re-constructed
@@ -228,7 +230,8 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
                             mInventoryOutId = mBarcodeParser.getmMoveId();
                         }
                         mEdtScanBarcode.selectAll();
-
+                        DrawerListener drawer = scope.main();
+                        drawer.refreshDrawer(InventoryOutList.TAG);
 
                     } catch (InvalidBarcodeException ex) {
                         Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
@@ -408,10 +411,8 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_inventory_out_upload:
-                uploadSync = new Upload();
-                uploadSync.execute((Void) null);
-                return true;
-            case R.id.menu_inventory_out_delete:
+                mUploadAsync = new Upload();
+                mUploadAsync.execute((Void) null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -483,8 +484,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         protected Boolean doInBackground(Void... voids) {
             try {
                 ((InventoryMoveDB) db()).save2server(mInventoryOutId);
-                DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(InventoryOutList.TAG);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 return false;
@@ -495,7 +494,7 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                uploadSync.cancel(true);
+                mUploadAsync.cancel(true);
                 Toast.makeText(scope.context(), "上传数据成功!", Toast.LENGTH_SHORT).show();
                 //返回已处理界面
                 InventoryOutList list = new InventoryOutList();
@@ -503,6 +502,8 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
                 arg.putString("type", "processed");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
+                DrawerListener drawer = scope.main();
+                drawer.refreshDrawer(InventoryOutList.TAG);
             } else {
                 Toast.makeText(scope.context(), "上传数据失败!", Toast.LENGTH_SHORT).show();
             }

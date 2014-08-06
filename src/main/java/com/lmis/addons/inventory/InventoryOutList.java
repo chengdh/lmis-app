@@ -189,6 +189,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
         };
         mListView.setAdapter(mListViewAdapter);
+        mListViewAdapter.notifiyDataChange(mInventoryObjects);
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setOnItemLongClickListener(this);
         mListView.setMultiChoiceModeListener(mMultiChoiceListener);

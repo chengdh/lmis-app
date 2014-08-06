@@ -7,10 +7,4 @@
         android:showAsAction="always"
         android:title="上传至服务器">
     </item>
-    <item
-        android:id="@+id/menu_inventory_out_delete"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"
-        android:title="删除">
-    </item>
 </menu>

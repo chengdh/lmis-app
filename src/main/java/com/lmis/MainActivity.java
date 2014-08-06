@@ -239,13 +239,11 @@ public class MainActivity extends InjectingFragmentActivity implements
     private void initDrawerControls() {
         Log.d(TAG, "MainActivity->initDrawerControls()");
 
-        mDrawerAdatper = new DrawerAdatper(this, R.layout.drawer_item_layout,
-                R.layout.drawer_item_group_layout, mDrawerListItems);
+        mDrawerAdatper = new DrawerAdatper(this, R.layout.drawer_item_layout, R.layout.drawer_item_group_layout, mDrawerListItems);
 
         mDrawerListView.setAdapter(mDrawerAdatper);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.app_name) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.app_name) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -717,8 +715,7 @@ public class MainActivity extends InjectingFragmentActivity implements
     private void loadFragment(DrawerItem item) {
 
         Fragment fragment = (Fragment) item.getFragmentInstace();
-        if (item.getTagColor() != null
-                && !fragment.getArguments().containsKey("tag_color")) {
+        if (item.getTagColor() != null && !fragment.getArguments().containsKey("tag_color")) {
             Bundle tagcolor = fragment.getArguments();
             tagcolor.putInt("tag_color", Color.parseColor(item.getTagColor()));
             fragment.setArguments(tagcolor);
