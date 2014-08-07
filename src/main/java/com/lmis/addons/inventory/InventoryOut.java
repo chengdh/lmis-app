@@ -64,7 +64,7 @@ import butterknife.InjectView;
  * Created by chengdh on 14-6-17.
  * 调拨出库单新增或修改界面
  */
-public class InventoryOut extends BaseFragment implements AdapterView.OnItemLongClickListener{
+public class InventoryOut extends BaseFragment implements AdapterView.OnItemLongClickListener, TabHost.OnTabChangeListener {
 
     public static final String TAG = "InventoryOut";
     @Inject
@@ -122,16 +122,14 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     //条码解析器
     BarcodeParser mBarcodeParser;
 
+    MenuItem mSearchViewBillIcon;
+    MenuItem mSearchViewBarcodeIcon;
 
-    //search view
-    @InjectView(R.id.search_view_bill_list)
     SearchView mSearchViewBillList;
 
-    @InjectView(R.id.search_view_list_barcodes)
     SearchView mSearchViewBarcodeList;
 
     Upload mUploadAsync = null;
-
 
 
     /**
@@ -194,6 +192,7 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         mTabHost.addTab(mTabHost.newTabSpec("TAB_SCAN_BARCODE").setIndicator("扫描条码").setContent(R.id.scan_tab));
         mTabHost.addTab(mTabHost.newTabSpec("TAB_BILLS_LIST").setIndicator("票据明细").setContent(R.id.lst_bills));
         mTabHost.addTab(mTabHost.newTabSpec("TAB_BARCODES_LIST").setIndicator("条码明细").setContent(R.id.lst_barcodes));
+        mTabHost.setOnTabChangedListener(this);
     }
 
     /**
@@ -254,6 +253,28 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
 
     }
 
+    /**
+     * On tab changed.
+     *
+     * @param s the s
+     */
+    @Override
+    public void onTabChanged(String s) {
+        mSearchViewBillIcon.collapseActionView();
+        mSearchViewBarcodeIcon.collapseActionView();
+
+        if (s.equals("TAB_SCAN_BARCODE")) {
+            mSearchViewBillIcon.setVisible(false);
+            mSearchViewBarcodeIcon.setVisible(false);
+
+        } else if (s.equals("TAB_BILLS_LIST")) {
+            mSearchViewBillIcon.setVisible(true);
+            mSearchViewBarcodeIcon.setVisible(false);
+        } else if (s.equals("TAB_BARCODES_LIST")) {
+            mSearchViewBillIcon.setVisible(false);
+            mSearchViewBarcodeIcon.setVisible(true);
+        }
+    }
 
 
     /**
@@ -301,11 +322,9 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
 
         };
         mLstBills.setAdapter(mBillsAdapter);
-        mSearchViewBillList.setIconifiedByDefault(false);
-        mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
         mLstBills.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mLstBills.setOnItemLongClickListener(this);
-        mLstBills.setMultiChoiceModeListener(new MultiChoiceBillListener(scope.context(),mBillsObjects,mBarcodeParser));
+        mLstBills.setMultiChoiceModeListener(new MultiChoiceBillListener(scope.context(), mBillsObjects, mBarcodeParser));
     }
 
     /**
@@ -358,11 +377,9 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
 
         };
         mListBarcodes.setAdapter(mBarcodesAdapter);
-        mSearchViewBarcodeList.setIconifiedByDefault(false);
-        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
         mListBarcodes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListBarcodes.setOnItemLongClickListener(this);
-        mListBarcodes.setMultiChoiceModeListener(new MultiChoiceBarcodeListener(scope.context(),mBarcodesObjects,mBarcodeParser));
+        mListBarcodes.setMultiChoiceModeListener(new MultiChoiceBarcodeListener(scope.context(), mBarcodesObjects, mBarcodeParser));
     }
 
 
@@ -405,6 +422,17 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_inventory_out, menu);
+        mSearchViewBarcodeIcon = menu.findItem(R.id.menu_inventory_out_barcode_list_search);
+        mSearchViewBillIcon = menu.findItem(R.id.menu_inventory_out_bill_list_search);
+
+        mSearchViewBarcodeIcon.setVisible(false);
+        mSearchViewBillIcon.setVisible(false);
+
+        mSearchViewBillList = (SearchView) menu.findItem(R.id.menu_inventory_out_bill_list_search).getActionView();
+        mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
+
+        mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_inventory_out_barcode_list_search).getActionView();
+        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
     }
 
     @Override
@@ -503,7 +531,7 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
                 Bundle arg = new Bundle();
                 arg.putString("type", "draft");
                 list.setArguments(arg);
-                scope.main().startMainFragment(list,true);
+                scope.main().startMainFragment(list, true);
 
             } else {
                 Toast.makeText(scope.context(), "上传数据失败!", Toast.LENGTH_SHORT).show();

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -51,7 +53,6 @@ public class InventoryOutReadonly extends BaseFragment {
     Integer mInventoryOutId = null;
     LmisDataRow mInventoryOut = null;
 
-    @InjectView(R.id.search_view_list_barcodes)
     SearchView mSearchViewBarcodeList;
 
     //条码解析器
@@ -72,6 +73,13 @@ public class InventoryOutReadonly extends BaseFragment {
         initData();
         initBarcodesList();
         return mView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_inventory_out_readonly, menu);
+        mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_inventory_out_readonly_search).getActionView();
+        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
     }
 
     /**
@@ -148,8 +156,6 @@ public class InventoryOutReadonly extends BaseFragment {
         };
         mListBarcodes.setAdapter(mBarcodesAdapter);
         mListBarcodes.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-        mSearchViewBarcodeList.setIconifiedByDefault(false);
-        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
     }
 
     @Override
