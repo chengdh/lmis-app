@@ -3,29 +3,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E5E5E5">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/txv_title"
-        android:textStyle="bold"
-        android:padding="5dp"
-        android:textAlignment="center"
-        android:text="test"
-        android:gravity="center_vertical|center_horizontal" />
+        android:layout_marginBottom="5dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txv_bill_date"
-        android:gravity="center_vertical|center_horizontal" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/txv_title"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="test"
+            android:gravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txv_bill_date"
+            android:gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="?android:attr/listDivider" />
+
 
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/fragment_inventory_out_barcode_list" />
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -33,14 +48,19 @@
         android:layout_height="fill_parent"
         android:gravity="bottom">
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="?android:attr/listDivider" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txv_sub_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:gravity="center_vertical|center_horizontal|bottom"
             android:text="test"
-            android:phoneNumber="false" />
+            android:phoneNumber="false"
+            android:padding="5dp" />
     </LinearLayout>
 
 </LinearLayout>
