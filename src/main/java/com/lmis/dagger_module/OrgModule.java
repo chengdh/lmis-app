@@ -46,6 +46,16 @@ public class OrgModule {
     @Provides
     @AccessOrgs
     public List<LmisDataRow> provideAccessOrgs(@InjectingActivityModule.Activity Context context) {
+        return getAccessOrgs(context);
+    }
+
+    /**
+     * 获取当前用户可访问的org列表.
+     *
+     * @param context the context
+     * @return the list
+     */
+    private List<LmisDataRow> getAccessOrgs(Context context){
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录用户不返回任何数据
         if (LmisUser.current(context) != null) {
@@ -66,6 +76,19 @@ public class OrgModule {
             return new OrgDB(ctx).select();
         }
         return ret;
+    }
+
+    @Provides
+    @OrgModule.ExcludeAccessOrgs
+    public List<LmisDataRow> providesExcludeAccessOrgs(@InjectingActivityModule.Activity Context ctx) {
+        //未登录时
+        if (LmisUser.current(ctx) != null) {
+            List<LmisDataRow> accessOrgs = getAccessOrgs(ctx);
+            List<LmisDataRow> allOrgs = providesAllOrgs(ctx);
+            allOrgs.removeAll(accessOrgs);
+            return allOrgs;
+        }
+        return null;
     }
 
     @Provides
@@ -95,6 +118,14 @@ public class OrgModule {
     @Documented
     @Retention(RUNTIME)
     public @interface AccessOrgs {
+    }
+
+    //当前用户可访问机构以外的机构
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface ExcludeAccessOrgs {
     }
 
     //货场

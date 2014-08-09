@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.lmis.util.controls.LmisTextView
+        android:id="@+id/txvCarryingBillBlank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal"
+        android:padding="10dp"
+        android:text="当前没有运单!"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#77778f"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/listCarryingBills"
+        android:smoothScrollbar="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+</LinearLayout>

@@ -18,7 +18,7 @@
  */
 package com.lmis.config;
 
-import com.lmis.addons.idea.Idea;
+import com.lmis.addons.carrying_bill.FragmentCarryingBillList;
 import com.lmis.addons.inventory.InventoryOutList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
@@ -35,9 +35,6 @@ public class ModulesConfig extends ModulesConfigHelper {
         /* application modules */
         //add(new Module("module_idea", "Idea", new Idea(), 0), true);
         add(new Module("module_inventory_out", "Inventory Out", new InventoryOutList(), 0), true);
-        //add(new Module("module_expense", "Expense", new Expense(), 0), true);
-        //add(new Module("module_mail_groups", "Mail Groups", new MailGroup()));
-        //add(new Module("module_note", "Note", new Note()));
-        //add(new Module("module_meeting", "Meeting/Calendar Event",new Meeting()));
+        add(new Module("module_carrying_bill", "Carrying Bill", new FragmentCarryingBillList(), 0), true);
     }
 }

@@ -13,6 +13,8 @@ import com.lmis.util.barcode.BarcodeParser;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
+import com.lmis.util.controls.ExcludeAccessOrgSpinner;
+import com.lmis.util.controls.PayTypeSpinner;
 import com.lmis.util.controls.YardsOrgSpinner;
 import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
@@ -27,13 +29,16 @@ import dagger.Provides;
  * Created by chengdh on 14-6-13.
  */
 @Module(complete = false, library = true,
-        includes = {OrgModule.class,DbModule.class},
+        includes = {OrgModule.class, DbModule.class},
         injects = {MainActivity.class,
                 AccessOrgSpinner.class,
+                ExcludeAccessOrgSpinner.class,
+                PayTypeSpinner.class,
                 AllOrgSpinner.class,
                 YardsOrgSpinner.class,
                 BarcodeParser.class,
-                GoodsInfo.class})
+                GoodsInfo.class,
+        })
 public class ActivityModule {
     private MainActivity mActivity;
     private Injector mInjector;
@@ -55,14 +60,13 @@ public class ActivityModule {
     public List<DrawerItem> provideDrawItems() {
         List<DrawerItem> ret = new ArrayList<DrawerItem>();
         //未登录时,不显示菜单
-        if(LmisUser.current(mActivity) != null) {
+        if (LmisUser.current(mActivity) != null) {
             ret.addAll(DrawerHelper.drawerItems(mActivity));
             ret.addAll(getSysMenuItems());
         }
         return ret;
 
     }
-
 
 
     private List<DrawerItem> getSysMenuItems() {
