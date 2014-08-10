@@ -35,6 +35,7 @@ public class PayTypeSpinner extends Spinner {
                 TextView textView = (TextView) View.inflate(context, android.R.layout.simple_spinner_dropdown_item, null);
                 Map.Entry theEntry = mPayTypes.get(position);
                 textView.setText(theEntry.getValue().toString());
+                textView.setPadding(12,12,12,12);
                 return textView;
             }
 

@@ -20,6 +20,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.1.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'us.monoid.web:resty:0.3.2'
+    compile 'com.edmodo:rangebar:1.0.0'
     //DI 框架
     compile 'com.squareup.dagger:dagger:1.2.1'
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
