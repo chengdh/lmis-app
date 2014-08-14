@@ -7,7 +7,7 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
-import com.lmis.addons.carrying_bill.FragmentCarryingBillList;
+import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.InventoryOut;
 import com.lmis.addons.inventory.InventoryOutList;
@@ -38,7 +38,7 @@ import dagger.Provides;
                 InventoryOutList.class,UserProfile.class,
                 InventoryOut.class,
                 InventoryOutReadonly.class,
-                FragmentCarryingBillList.class,
+                CarryingBillList.class,
                 CarryingBillNew.class
         })
 public class FragmentModule {

@@ -1,142 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tab_bill_form"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/container_drop_shadow">
-
-    <com.lmis.util.controls.ExcludeAccessOrgSpinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_to_org" />
-
-    <com.lmis.util.controls.PayTypeSpinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spin_pay_type" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/edt_from_customer_name"
-        android:hint="发货人" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/edt_from_customer_mobile"
-        android:hint="手机" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/edt_to_customer_name"
-        android:hint="收货人" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/edt_to_customer_mobile"
-        android:hint="手机" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edt_goods_info"
-        android:hint="货物名称" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/container_drop_shadow">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.lmis.util.controls.ExcludeAccessOrgSpinner
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="运费"
-            android:padding="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginRight="8dp" />
+            android:id="@+id/spinner_to_org" />
 
-        <SeekBar
-            android:layout_width="wrap_content"
+        <com.lmis.util.controls.PayTypeSpinner
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seek_bar_carrying_fee"
-            android:layout_weight="2"
-            android:max="9999"
-            android:progress="1" />
+            android:id="@+id/spin_pay_type" />
 
-        <TextView
-            android:layout_width="50dp"
+        <EditText
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/txv_carrying_fee_disp"
-            android:text="0" />
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/edt_from_customer_name"
+            android:hint="发货人" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/edt_from_customer_mobile"
+            android:hint="手机" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/edt_to_customer_name"
+            android:hint="收货人" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/edt_to_customer_mobile"
+            android:hint="手机" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:id="@+id/edt_goods_info"
+            android:hint="货物名称" />
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="件数"
+                android:layout_margin="8dp" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_bar_goods_num"
+                android:layout_weight="2" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/txv_goods_num_disp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:weightSum="8"
+            android:gravity="center_vertical"
+            android:id="@+id/linearLayout2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="运费"
+                android:layout_weight="1" />
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/num_carrying_fee"
+                android:measureWithLargestChild="false"
+                android:layout_weight="3"
+                android:orientation="vertical" >
+
+            </NumberPicker>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="货款"
+                android:layout_weight="1" />
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/num_goods_fee"
+                android:measureWithLargestChild="false"
+                android:layout_weight="3">
+
+            </NumberPicker>
+
+        </LinearLayout>
 
     </LinearLayout>
+</ScrollView>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="货款"
-            android:padding="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginRight="8dp" />
-
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seek_bar_goods_fee"
-            android:layout_weight="2" />
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/txv_goods_fee_disp"
-            android:text="0" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:gravity="center_vertical"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="件数"
-            android:padding="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginRight="8dp" />
-
-        <NumberPicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/number_picker_goods_num"
-            android:measureWithLargestChild="false" />
-
-    </LinearLayout>
-
-</LinearLayout>

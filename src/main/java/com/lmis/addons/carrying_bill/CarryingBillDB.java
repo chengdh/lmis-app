@@ -2,13 +2,21 @@ package com.lmis.addons.carrying_bill;
 
 import android.content.Context;
 
+import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
+import com.lmis.orm.LmisValues;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import us.monoid.json.JSONArray;
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
 
 /**
  * 运单对象
@@ -120,5 +128,35 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
 
         return cols;
+    }
+    /**
+     * 保存单条数据到服务器.
+     *
+     * @param id the id
+     */
+    public void save2server(int id) throws JSONException, IOException {
+        JSONObject json = select(id).exportAsJSON(false);
+        delUnusedAttr(json);
+
+        JSONArray args = new JSONArray();
+        args.put(json);
+        Lmis instance = getLmisInstance();
+        JSONObject response = instance.callMethod("ComputerBill", "create", args, null).getJSONObject("result");
+        LmisValues v = new LmisValues();
+        v.put("processed",true);
+        v.put("process_datetime",new Date());
+        v.put("bill_no",response.getString("bill_no"));
+        v.put("goods_no",response.getString("goods_no"));
+        update(v,id);
+    }
+
+    /**
+     * 删除不需要的属性.
+     *
+     * @param json the json
+     */
+    private void delUnusedAttr(JSONObject json) throws JSONException {
+        json.remove("processed");
+        json.remove("process_datetime");
     }
 }
