@@ -18,12 +18,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
+import com.lmis.util.drawer.DrawerListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,8 +83,8 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_inventory_out_list_choice_delete:
-                    //TODO deleteSelected();
+                case R.id.menu_carrying_bill_choice_delete:
+                    deleteSelected();
                     mode.finish();
                     return true;
                 default:
@@ -93,7 +95,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.menu_fragment_inventory_out_list_context, menu);
+            inflater.inflate(R.menu.menu_fragment_carrying_bill_list_context, menu);
             return true;
         }
 
@@ -348,5 +350,33 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         return false;
+    }
+
+    /**
+     * 删除选定的运单信息.
+     *
+     * @return the int
+     * FIXME 已删除时界面未更新
+     */
+    private int deleteSelected() {
+        int ret = 0;
+        List<Object> delObjs = new ArrayList<Object>();
+        for (int position : mMultiSelectedRows.keySet()) {
+            LmisDataRow bill = (LmisDataRow) mCarryingBillObjects.get(position);
+            delObjs.add(mCarryingBillObjects);
+            int id = bill.getInt("id");
+            db().delete(id);
+        }
+
+        mMultiSelectedRows.clear();
+        mCarryingBillObjects.removeAll(delObjs);
+        mListViewAdapter.notifiyDataChange(mCarryingBillObjects);
+
+
+        DrawerListener drawer = scope.main();
+        drawer.refreshDrawer(TAG);
+
+        Toast.makeText(scope.context(), "单据已删除!", Toast.LENGTH_LONG).show();
+        return ret;
     }
 }
