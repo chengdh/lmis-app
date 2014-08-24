@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
@@ -246,9 +247,8 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
-        drawerItems.add(new DrawerItem(TAG, "运单管理", true));
-        drawerItems.add(new DrawerItem(TAG, "待处理", count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem(TAG, "已处理", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "运单", true));
+        drawerItems.add(new DrawerItem(TAG, "运单列表", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
         return drawerItems;
     }
 
@@ -314,6 +314,13 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         }
     }
 
+    /**
+     * 设置空记录指示控件是否可见.
+     */
+    private void checkListStatus() {
+        mTxvBlank.setVisibility(mCarryingBillObjects.size() > 0 ? View.GONE : View.VISIBLE);
+    }
+
     public class BillLoader extends AsyncTask<Void, Void, Boolean> {
         MType mType = null;
 
@@ -337,14 +344,25 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         protected void onPostExecute(final Boolean success) {
             Log.d(TAG, "BillLoader#onPostExecute");
             mListViewAdapter.notifiyDataChange(mCarryingBillObjects);
+            checkListStatus();
             mCarryingBillLoader = null;
         }
 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        mSelectedItemPosition = position;
+        LmisDataRow row = (LmisDataRow) mCarryingBillObjects.get(position);
+        BaseFragment detail;
+        detail = new CarryingBillView();
+        Bundle bundle = new Bundle();
+        bundle.putInt("carrying_bill_id", row.getInt("id"));
+        bundle.putInt("position", position);
+        detail.setArguments(bundle);
 
+        FragmentListener listener = (FragmentListener) getActivity();
+        listener.startDetailFragment(detail);
     }
 
     @Override

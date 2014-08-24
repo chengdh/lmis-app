@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -154,7 +153,7 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
      */
     private void initData() {
         Log.d(TAG, "inventory_out#initData");
-        LmisUser currentUser = scope.User();
+        LmisUser currentUser = scope.currentUser();
         Bundle bundle = getArguments();
         if (bundle != null) {
             mInventoryOutId = bundle.getInt("inventory_out_id");

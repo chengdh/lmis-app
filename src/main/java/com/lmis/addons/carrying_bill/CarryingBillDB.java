@@ -147,6 +147,7 @@ public class CarryingBillDB extends LmisDatabase {
         v.put("process_datetime",new Date());
         v.put("bill_no",response.getString("bill_no"));
         v.put("goods_no",response.getString("goods_no"));
+        v.put("bill_date",response.getString("bill_date"));
         update(v,id);
     }
 

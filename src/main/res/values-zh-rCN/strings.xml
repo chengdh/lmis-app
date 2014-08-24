@@ -187,7 +187,7 @@
   <string name="widget_compose_notes">写笔记</string>
   <string name="widget_compose_messages">发消息</string>
 
-  <!--fragment account user profile resources -->
+  <!--fragment account currentUser profile resources -->
   <string name="label_user_login">登录名</string>
   <string name="label_user_name">姓名</string>
   <string name="label_server_url">服务器</string>

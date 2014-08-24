@@ -68,7 +68,7 @@ public abstract class MultiTagsTextView extends MultiAutoCompleteTextView
 		ToString // ...replace the token with toString of the token object
 	}
 
-	// When the user clicks on a token...
+	// When the currentUser clicks on a token...
 	public enum TokenClickStyle {
 		None, // ...do nothing, but make sure the cursor is not in the token
 		Delete, // ...delete the token
@@ -221,7 +221,7 @@ public abstract class MultiTagsTextView extends MultiAutoCompleteTextView
 	}
 
 	/**
-	 * Sets whether to allow duplicate objects. If false, when the user selects
+	 * Sets whether to allow duplicate objects. If false, when the currentUser selects
 	 * an object that's already in the view, the current text is just cleared.
 	 * 
 	 * Defaults to true. Requires that the objects implement equals() correctly.
@@ -235,18 +235,18 @@ public abstract class MultiTagsTextView extends MultiAutoCompleteTextView
 	 * A token view for the object
 	 * 
 	 * @param object
-	 *            the object selected by the user from the list
+	 *            the object selected by the currentUser from the list
 	 * @return a view to display a token in the text field for the object
 	 */
 	abstract protected View getViewForObject(Object object);
 
 	/**
-	 * Provides a default completion when the user hits , and there is no item
+	 * Provides a default completion when the currentUser hits , and there is no item
 	 * in the completion list
 	 * 
 	 * @param completionText
 	 *            the current text we are completing against
-	 * @return a best guess for what the user meant to complete
+	 * @return a best guess for what the currentUser meant to complete
 	 */
 	abstract protected Object defaultObject(String completionText);
 
@@ -600,7 +600,7 @@ public abstract class MultiTagsTextView extends MultiAutoCompleteTextView
 	}
 
 	private SpannableStringBuilder buildSpannableForText(CharSequence text) {
-		// Add a sentinel , at the beginning so the user can remove an inner
+		// Add a sentinel , at the beginning so the currentUser can remove an inner
 		// token and keep auto-completing
 		// This is a hack to work around the fact that the tokenizer cannot
 		// directly detect spans

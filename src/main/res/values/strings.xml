@@ -150,7 +150,7 @@ When you process voucher in your inbox, you can mark some as todo. From this men
     <string name="widget_compose_notes">OpenComposeNotes</string>
     <string name="widget_compose_messages">OpenComposeMessages</string>
 
-    <!--fragment account user profile resources -->
+    <!--fragment account currentUser profile resources -->
     <string name="label_user_login">USER LOGIN</string>
     <string name="label_user_name">USER NAME</string>
     <string name="label_server_url">SERVER URL</string>

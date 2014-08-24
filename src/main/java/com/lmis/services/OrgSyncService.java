@@ -114,7 +114,7 @@ public class OrgSyncService extends InjectingService implements PerformSync {
                 intent.putIntegerArrayListExtra("new_ids", (ArrayList<Integer>) affected_ids);
             }
             //更新数据库中已存在的expense信息
-            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, user, ids);
+            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, currentUser, ids);
 
         } catch (Exception e) {
             e.printStackTrace();

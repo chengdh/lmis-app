@@ -86,7 +86,7 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
                 Log.d(TAG, "UserOrgSyncService->affected_rows:" + affected_rows);
             }
             //更新数据库中已存在的expense信息
-            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, user, ids);
+            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, currentUser, ids);
 
         } catch (Exception e) {
             e.printStackTrace();

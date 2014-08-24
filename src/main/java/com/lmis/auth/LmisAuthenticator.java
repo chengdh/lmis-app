@@ -165,7 +165,7 @@ public class LmisAuthenticator extends AbstractAccountAuthenticator {
 				LmisSQLiteHelper sqlite = new LmisSQLiteHelper(mContext);
 				if (sqlite.cleanUserRecords(account.name)) {
 					// TODO: next task after cleaning all record reletated to
-					// user.
+					// currentUser.
 				}
 			}
 		}

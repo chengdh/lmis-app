@@ -100,10 +100,10 @@ public class LmisAccountManager {
     }
 
     /**
-     * Checks if is any user.
+     * Checks if is any currentUser.
      *
      * @param context the context
-     * @return true, if is any user
+     * @return true, if is any currentUser
      */
     public static boolean isAnyUser(Context context) {
         boolean flag = false;
@@ -125,10 +125,10 @@ public class LmisAccountManager {
     }
 
     /**
-     * Current user.
+     * Current currentUser.
      *
      * @param context the context
-     * @return the user object
+     * @return the currentUser object
      */
     public static LmisUser currentUser(Context context) {
         if (current_user != null) {
@@ -192,7 +192,7 @@ public class LmisAccountManager {
     }
 
     /**
-     * Logout user.
+     * Logout currentUser.
      *
      * @param context  the context
      * @param username the username
@@ -240,11 +240,11 @@ public class LmisAccountManager {
     }
 
     /**
-     * Login user.
+     * Login currentUser.
      *
      * @param context  the context
      * @param username the username
-     * @return the user object
+     * @return the currentUser object
      */
     public static LmisUser loginUser(Context context, String username) {
         LmisUser userData = null;

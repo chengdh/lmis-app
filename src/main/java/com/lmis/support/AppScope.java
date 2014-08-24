@@ -30,7 +30,7 @@ import com.lmis.orm.LmisDataRow;
  */
 public class AppScope {
 
-	/** The user. */
+	/** The currentUser. */
 	private LmisUser mUser = new LmisUser();
 
 	/** The context. */
@@ -53,16 +53,16 @@ public class AppScope {
      */
 	public AppScope(Context context) {
 		mContext = context;
-		mUser = LmisUser.current(mContext);
+        mUser = LmisUser.current(mContext);
 	}
 
 	/**
-	 * User.
+	 * currentUser.
 	 * 
-	 * @return the user object
+	 * @return the currentUser object
 	 */
-	public LmisUser User() {
-		return mUser;
+	public LmisUser currentUser() {
+        return mUser;
 	}
 
 	/**

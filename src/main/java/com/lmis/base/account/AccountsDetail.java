@@ -198,11 +198,11 @@ public class AccountsDetail extends BaseFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK, so save the result somewhere
+                                // currentUser clicked OK, so save the result somewhere
                                 // or return them to the component that opened
                                 // the dialog
                                 LmisAccountManager.logoutUser(scope
-                                        .context(), scope.User()
+                                        .context(), scope.currentUser()
                                         .getAndroidName());
                                 scope.main().finish();
                             }
@@ -235,7 +235,7 @@ public class AccountsDetail extends BaseFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK, so save the result somewhere
+                                // currentUser clicked OK, so save the result somewhere
                                 // or return them to the component that opened
                                 // the dialog
                                 LmisAccountManager.removeAccount(

@@ -224,7 +224,7 @@ public class MainActivity extends InjectingFragmentActivity implements
         } else {
             lockDrawer(false);
             /**
-             * User found but not logged in. Requesting for login with available
+             * currentUser found but not logged in. Requesting for login with available
              * accounts.
              */
             if (!LmisAccountManager.isAnyUser(mContext)) {
@@ -327,7 +327,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                         WidgetHelper.EXTRA_WIDGET_ITEM_KEY);
             }
         } else {
-            if (position > 0) {
+            if (position >= 0) {
                 if (position != mDrawerItemSelectedPosition) {
                     loadFragment(mDrawerListItems.get(position));
                 }

@@ -1007,7 +1007,7 @@ public class ORM  {
 //	}
 //
 //	/**
-//	 * Execute sql query as per user requirement.
+//	 * Execute sql query as per currentUser requirement.
 //	 * 
 //	 * @param model
 //	 *            the model
@@ -1459,7 +1459,7 @@ public class ORM  {
 //	}
 //
 //	/**
-//	 * Clean user records.
+//	 * Clean currentUser records.
 //	 * 
 //	 * @param user_name
 //	 *            the user_name

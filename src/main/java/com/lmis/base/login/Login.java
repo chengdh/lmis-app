@@ -97,7 +97,7 @@ public class Login extends BaseFragment {
     View rootView = null;
 
     /**
-     * The login user a sync.
+     * The login currentUser a sync.
      */
     LoginUser loginUserASync = null;
 
@@ -272,7 +272,7 @@ public class Login extends BaseFragment {
         String errorMsg = "";
 
         /**
-         * The user data.
+         * The currentUser data.
          */
         LmisUser userData = null;
 

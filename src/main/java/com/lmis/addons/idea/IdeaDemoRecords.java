@@ -38,7 +38,7 @@ public class IdeaDemoRecords {
 			values.put("type", "Type " + i);
 			long newId = userType.create(values);
 			Log.d("IdeaDemoRecords", newId
-					+ " Record created for idea.user.type");
+					+ " Record created for idea.currentUser.type");
 		}
 	}
 
@@ -48,7 +48,7 @@ public class IdeaDemoRecords {
 		for (int i = 1; i <= 5; i++) {
 			LmisValues values = new LmisValues();
 			values.put("id", i);
-			values.put("name", "User " + i);
+			values.put("name", "currentUser " + i);
 			values.put("city", "City " + i);
 			values.put("user_type", i); // many to one field
 			long newId = ideaUsers.create(values);

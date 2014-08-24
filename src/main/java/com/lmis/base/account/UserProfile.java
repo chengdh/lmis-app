@@ -83,7 +83,7 @@ public class UserProfile extends BaseFragment {
         setHasOptionsMenu(true);
         rootView = inflater.inflate(R.layout.fragment_account_user_profile,
                 container, false);
-        scope.main().setTitle("Lmis User Profile");
+        scope.main().setTitle("Lmis currentUser Profile");
         ButterKnife.inject(this, rootView);
 
         setupView();
@@ -95,14 +95,14 @@ public class UserProfile extends BaseFragment {
         imgUserPic = null;
         String avatar = "false";
         if (!avatar.equals("false")) {
-            Log.d(TAG, "user avata : " + avatar);
+            Log.d(TAG, "currentUser avata : " + avatar);
             imgUserPic.setImageBitmap(Base64Helper.getBitmapImage(scope.context(), avatar));
         }
-        txvUserLoginName.setText(scope.User().getAndroidName());
+        txvUserLoginName.setText(scope.currentUser().getAndroidName());
 
-        txvUsername.setText(scope.User().getUsername());
+        txvUsername.setText(scope.currentUser().getUsername());
 
-        txvServerUrl.setText(scope.User().getHost());
+        txvServerUrl.setText(scope.currentUser().getHost());
 
         txvDatabase.setText("");
 
@@ -139,10 +139,10 @@ public class UserProfile extends BaseFragment {
                 LmisUser userData = null;
                 try {
                     LmisHelper openerp = new LmisHelper(scope.context(), scope
-                            .User().getHost());
+                            .currentUser().getHost());
 
-                    userData = openerp.login(scope.User().getUsername(),
-                            password.getText().toString(), scope.User().getHost());
+                    userData = openerp.login(scope.currentUser().getUsername(),
+                            password.getText().toString(), scope.currentUser().getHost());
                 } catch (Exception e) {
                 }
                 if (userData != null) {

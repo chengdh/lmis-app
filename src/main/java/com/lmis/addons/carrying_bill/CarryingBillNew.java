@@ -285,13 +285,13 @@ public class CarryingBillNew extends BaseFragment {
         int carryingFee = mNumCarryingFee.getValue();
         if (carryingFee <= 0) {
             mNumCarryingFee.setValue(10);
-            ret = false;
+            mEdtGoodsInfo.setError("运费不可为0!");
         }
 
         int goodsFee = mNumGoodsFee.getValue();
-        if (goodsFee <= 0) {
+        if (goodsFee < 0) {
             mNumGoodsFee.setValue(10);
-            ret = false;
+            mEdtGoodsInfo.setError("货款不可小于0!");
         }
         return ret;
 
@@ -299,7 +299,7 @@ public class CarryingBillNew extends BaseFragment {
 
     private Boolean save2DB() {
         LmisValues vals = new LmisValues();
-        LmisUser currentUser = scope.User();
+        LmisUser currentUser = scope.currentUser();
         vals.put("from_org_id", currentUser.getDefault_org_id());
         LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
         vals.put("to_org_id", toOrg.getInt("id"));
@@ -399,6 +399,12 @@ public class CarryingBillNew extends BaseFragment {
                 Toast.makeText(scope.context(), "上传运单数据成功!", Toast.LENGTH_SHORT).show();
                 DrawerListener drawer = scope.main();
                 drawer.refreshDrawer(CarryingBillList.TAG);
+                //返回已处理界面
+                CarryingBillList list = new CarryingBillList();
+                Bundle arg = new Bundle();
+                arg.putString("type", "processed");
+                list.setArguments(arg);
+                scope.main().startMainFragment(list, true);
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();
