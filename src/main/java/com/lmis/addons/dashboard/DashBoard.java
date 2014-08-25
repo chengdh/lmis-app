@@ -26,7 +26,7 @@ import butterknife.InjectView;
  */
 public class DashBoard extends BaseFragment {
     public final static String TAG = "Dashbaord";
-    public final static String SERVER_URL = "http://192.168.1.99:3030";
+    public final static String SERVER_URL = "http://192.168.0.216:3030/sample";
     @InjectView(R.id.web_view_dashboard)
     WebView mWebView;
 

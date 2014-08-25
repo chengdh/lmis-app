@@ -26,23 +26,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/start_page"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
-            android:src="@drawable/barcode" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/container_drop_shadow">
+        android:background="@drawable/container_drop_shadow"
+        android:padding="8dp">
 
         <TextView
             android:layout_width="fill_parent"
@@ -124,7 +110,7 @@
                     android:text="0"
                     android:id="@+id/btn_sum_goods_num"
                     android:layout_weight="4"
-                    android:textSize="40dp"
+                    android:textSize="30dp"
                     android:background="#fff" />
 
                 <TextView
@@ -160,7 +146,7 @@
                     android:text="0"
                     android:id="@+id/btn_sum_bills_count"
                     android:layout_weight="4"
-                    android:textSize="40dp"
+                    android:textSize="30dp"
                     android:background="#fff" />
 
                 <TextView

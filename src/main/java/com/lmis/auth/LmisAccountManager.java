@@ -216,9 +216,9 @@ public class LmisAccountManager {
 
     }
 
-    public static boolean changeDefaultOrgId(Context context, String username, int newOrgId) {
+    public static boolean changeDefaultOrgId(Context context, int newOrgId) {
         boolean flag = false;
-        LmisUser user = LmisAccountManager.getAccountDetail(context, username);
+        LmisUser user = currentUser(context);
         Account account = LmisAccountManager.getAccount(context, user.getAndroidName());
         if (user != null) {
             AccountManager accMgr = AccountManager.get(context);

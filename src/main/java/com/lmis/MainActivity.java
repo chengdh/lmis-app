@@ -48,7 +48,6 @@ import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
-import com.fizzbuzz.android.dagger.InjectingFragmentModule;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -57,7 +56,6 @@ import com.lmis.base.account.UserProfile;
 import com.lmis.dagger_module.ActivityModule;
 import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
-import com.lmis.support.AppScope;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
@@ -362,9 +360,8 @@ public class MainActivity extends InjectingFragmentActivity implements
     @Override
     public boolean onNavigationItemSelected(int position, long l) {
         //修改当前的org_id
-        LmisUser curUser = LmisAccountManager.currentUser(this);
         LmisDataRow curOrg = mOrgs.get(position);
-        LmisAccountManager.changeDefaultOrgId(this, curUser.getAndroidName(), curOrg.getInt("id"));
+        LmisAccountManager.changeDefaultOrgId(this, curOrg.getInt("id"));
         return true;
     }
 

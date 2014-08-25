@@ -30,9 +30,6 @@ import com.lmis.orm.LmisDataRow;
  */
 public class AppScope {
 
-	/** The currentUser. */
-	private LmisUser mUser = new LmisUser();
-
 	/** The context. */
 	private Context mContext = null;
 
@@ -43,7 +40,6 @@ public class AppScope {
 
 	public AppScope(Fragment fragment) {
 		mContext = (Context) fragment.getActivity();
-		mUser = LmisUser.current(mContext);
 	}
 
     /**
@@ -53,7 +49,6 @@ public class AppScope {
      */
 	public AppScope(Context context) {
 		mContext = context;
-        mUser = LmisUser.current(mContext);
 	}
 
 	/**
@@ -62,7 +57,7 @@ public class AppScope {
 	 * @return the currentUser object
 	 */
 	public LmisUser currentUser() {
-        return mUser;
+        return LmisUser.current(mContext);
 	}
 
 	/**

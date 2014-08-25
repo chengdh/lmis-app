@@ -69,9 +69,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
     @Inject
     Bus mBus;
 
-    @InjectView(R.id.start_page)
-    LinearLayout mStartPage;
-
     @InjectView(R.id.edt_scan_barcode)
     EditText mEdtScanBarcode;
 
@@ -166,7 +163,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
             mSpinnerYardsSelect.setSelection(pos);
             mBtnSumGoodsNum.setText(mInventoryOut.getInt("sum_goods_count") + "");
             mBtnSumBillsCount.setText(mInventoryOut.getInt("sum_bills_count") + "");
-            mStartPage.setVisibility(View.GONE);
         } else
             mBarcodeParser = new BarcodeParser(scope.context(), -1, currentUser.getDefault_org_id(), -1, false);
 
@@ -214,7 +210,6 @@ public class InventoryOut extends BaseFragment implements AdapterView.OnItemLong
         mEdtScanBarcode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int i, int i2, int i3) {
-                mStartPage.setVisibility(View.GONE);
             }
 
             @Override
