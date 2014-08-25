@@ -14,6 +14,7 @@ import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.InventoryOut;
 import com.lmis.addons.inventory.InventoryOutList;
 import com.lmis.addons.inventory.InventoryOutReadonly;
+import com.lmis.addons.search_bill.SearchBill;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
@@ -43,7 +44,8 @@ import dagger.Provides;
                 CarryingBillList.class,
                 CarryingBillNew.class,
                 CarryingBillView.class,
-                DashBoard.class
+                DashBoard.class,
+                SearchBill.class
         })
 public class FragmentModule {
 
