@@ -98,5 +98,25 @@
             android:exported="true"
             android:label="@string/label_user_org"
             android:syncable="true" />
+
+        <!--message sync service-->
+        <service android:name="com.lmis.services.MessageSyncService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_message" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.message.MessageProvider"
+            android:authorities="com.lmis.providers.message"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_message"
+            android:syncable="true" />
+
     </application>
 </manifest>

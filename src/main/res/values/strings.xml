@@ -31,6 +31,7 @@
     <!--各种label的定义-->
     <string name="label_org">Orgs</string>
     <string name="label_user_org">User can access orgs</string>
+    <string name="label_message">Message</string>
 
     <!--inventory out 相关定义-->
     <string name="inventory_out_blank">The inventory out is blank!</string>
@@ -184,18 +185,10 @@ When you process voucher in your inbox, you can mark some as todo. From this men
     <string name="label_use_secure">Secure Connection</string>
 
     <!-- sync wizard -->
-    <string name="sync_wizard_social">Social</string>
     <string name="sync_wizard_messages">Messages</string>
-    <string name="sync_wizard_groups">Groups</string>
-    <string name="sync_wizard_contacts">Contacts</string>
-    <string name="sync_wizard_all_contacts">All Contacts</string>
-    <string name="sync_wizard_local_contacts">Local Contacts</string>
-    <string name="sync_wizard_notes">Notes</string>
-    <string name="sync_wizard_calendar">Calendar</string>
-    <string name="sync_wizard_meetings">Metings</string>
     <string name="sync_wizard_bills">Bills</string>
-    <string name="sync_wizard_expenses">Expenses</string>
-    <string name="sync_wizard_vouchers">Vouchers</string>
+    <string name="sync_wizard_orgs">Orgs</string>
+    <string name="sync_wizard_user_orgs">User Orgs</string>
 
     <!-- provider label-->
     <string name="label_messages">Messages</string>
@@ -209,6 +202,10 @@ When you process voucher in your inbox, you can mark some as todo. From this men
     <string name="orgs_sync_notify_title">%1$d New Orgs</string>
     <string name="orgs_sync_notify_body">%1$d New Orgs received (Lmis)</string>
 
+    <string name="messages_sync_notify_title">%1$d New Messages</string>
+    <string name="messages_sync_notify_body">%1$d New Messages received (Lmis)</string>
+
+
     <string name="vouchers_sync_notify_title">%1$d New Vouchers</string> 
     <string name="vouchers_sync_notify_body">%1$d New Vouchers received (OpenERP)</string> 
 
@@ -217,23 +214,5 @@ When you process voucher in your inbox, you can mark some as todo. From this men
     <string name="expense_processed_text">The Expense is processed.</string>
 
     <string name="working_text">Working...</string>
-
-    <!-- state description resources -->
-    <string name="state_dept_manager_approved">Dept Manager Approved</string>
-    <string name="state_shop_manager_approved">Shop Manager Approved</string>
-    <string name="state_vice_general_manager_approved">Vice General Manager Approved</string>
-    <string name="state_ceo_approved">CEO Approved</string>
-    <string name="state_stock_manager_approved">Stock Manager Approved</string>
-    <string name="state_hr_manager_approved">HR Manager Approved</string>
-    <string name="state_subed_1">分支流程1</string>
-    <string name="state_subed_2">分支流程2</string>
-    <string name="state_subed_3">分支流程3</string>
-    <string name="state_defat">草稿</string>
-    <string name="state_canceled">已取消</string>
-    <string name="state_cancel">已取消</string>
-    <string name="state_done">已完成</string>
-    <string name="state_paid">已支付</string>
-    <string name="state_post">已过账</string>
-    <string name="state_proforma">已确认</string>
 
 </resources>

@@ -9,12 +9,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lmis.Lmis;
 import com.lmis.R;
 import com.lmis.addons.carrying_bill.CarryingBillDB;
+import com.lmis.addons.carrying_bill.PayType;
+import com.lmis.base.org.OrgDB;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.util.drawer.DrawerItem;
@@ -37,6 +42,8 @@ public class SearchBill extends BaseFragment {
     public final static String TAG = "SearchBill";
 
 
+    @InjectView(R.id.layout_blank)
+    LinearLayout mLayoutBlank;
     @InjectView(R.id.txv_from_org)
     TextView mTxvFromOrg;
 
@@ -123,6 +130,56 @@ public class SearchBill extends BaseFragment {
     private void init() {
     }
 
+    /**
+     * 显示运单信息.
+     */
+    private void handleView(JSONObject jsonBill) throws JSONException {
+        OrgDB orgDB = new OrgDB(scope.context());
+        int fromOrgId = jsonBill.getInt("from_org_id");
+        int toOrgId = jsonBill.getInt("to_org_id");
+        LmisDataRow fromOrg = orgDB.select(fromOrgId);
+        mTxvFromOrg.setText(fromOrg.getString("name"));
+
+        LmisDataRow toOrg = orgDB.select(toOrgId);
+        mTxvToOrg.setText(toOrg.getString("name"));
+
+        String billNo = jsonBill.getString("bill_no");
+        mTxvBillNo.setText(billNo);
+        String goodsNo = jsonBill.getString("goods_no");
+        mTxvGoodsNo.setText(goodsNo);
+        String billDate = jsonBill.getString("bill_date");
+        mTxvBillDate.setText(billDate);
+        String fromCustomerName = jsonBill.getString("from_customer_name");
+        mTxvFromCustomerName.setText(fromCustomerName);
+        String fromCustomerMobile = jsonBill.getString("from_customer_mobile");
+        mTxvFromCustomerMobile.setText(fromCustomerMobile);
+        String toCustomerName = jsonBill.getString("to_customer_name");
+        mTxvToCustomerName.setText(toCustomerName);
+        String toCustomerMobile = jsonBill.getString("to_customer_mobile");
+        mTxvToCustomerMobile.setText(toCustomerMobile);
+
+        String payType = jsonBill.getString("pay_type");
+        String payTypeDes = PayType.payTypes().get(payType);
+        mTxvPayType.setText(payTypeDes);
+
+        String carryingFee = jsonBill.getString("carrying_fee");
+        mTxvCarryingFee.setText(carryingFee);
+        String goodsFee = jsonBill.getString("goods_fee");
+        mTxvGoodsFee.setText(goodsFee);
+        String goodsNum = jsonBill.getString("goods_num");
+        mTxvGoodsNum.setText(goodsNum);
+        String insuredFee = jsonBill.getString("insured_fee");
+        mTxvInsuredFee.setText(insuredFee);
+        String fromShortCarryingFee = jsonBill.getString("from_short_carrying_fee");
+        mTxvFromShortCarryingFee.setText(fromShortCarryingFee);
+        String toShortCarryingFee = jsonBill.getString("to_short_carrying_fee");
+        mTxvToShortCarryingFee.setText(toShortCarryingFee + "");
+        String goodsInfo = jsonBill.getString("goods_info");
+        mTxvGoodsInfo.setText(goodsInfo);
+        String note = jsonBill.getString("note");
+        mTxvNote.setText(note);
+    }
+
     @Override
     public Object databaseHelper(Context context) {
         return new CarryingBillDB(context);
@@ -144,12 +201,11 @@ public class SearchBill extends BaseFragment {
 
         @Override
         public boolean onQueryTextSubmit(String s) {
-            if(s != null && s.length() > 0) {
+            if (s != null && s.length() > 0) {
                 mSearcher = new BillSearcher(s);
                 mSearcher.execute((Void) null);
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
@@ -198,6 +254,18 @@ public class SearchBill extends BaseFragment {
         protected void onPostExecute(Boolean success) {
             if (success) {
                 mSearcher.cancel(true);
+                try {
+                    if (ret.get("result").toString() == "null") {
+                        Toast.makeText(scope.context(), "未查到符合条件的运单!", Toast.LENGTH_SHORT).show();
+                        mLayoutBlank.setVisibility(View.VISIBLE);
+                    } else {
+                        JSONObject jsonBill = ret.getJSONObject("result");
+                        mLayoutBlank.setVisibility(View.GONE);
+                        handleView(jsonBill);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             pdialog.dismiss();
         }

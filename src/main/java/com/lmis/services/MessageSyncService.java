@@ -2,7 +2,6 @@ package com.lmis.services;
 
 import android.accounts.Account;
 import android.app.ActivityManager;
-import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.ContentProviderClient;
 import android.content.Context;
@@ -16,11 +15,10 @@ import com.fizzbuzz.android.dagger.InjectingService;
 import com.lmis.LmisArguments;
 import com.lmis.MainActivity;
 import com.lmis.R;
+import com.lmis.addons.message.MessageDB;
 import com.lmis.auth.LmisAccountManager;
-import com.lmis.base.org.OrgDB;
 import com.lmis.dagger_module.ServiceModule;
 import com.lmis.orm.LmisHelper;
-import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.LmisUser;
 import com.lmis.util.LmisNotificationHelper;
 
@@ -30,65 +28,39 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Created by chengdh on 14-6-9.
+ * Created by chengdh on 14-8-26.
  */
-public class OrgSyncService extends InjectingService implements PerformSync {
+public class MessageSyncService extends InjectingService implements PerformSync {
 
-    public final String TAG = "OrgSyncService";
+    public final String TAG = "MessagerSyncService";
+
 
     @Inject
     @InjectingServiceModule.Service
     SyncAdapterImpl mSyncAdapter;
 
-
     @Override
-    public IBinder onBind(Intent intent) {
-
-        IBinder ret = getSyncAdapter().getSyncAdapterBinder();
-        return ret;
-    }
-
-    public SyncAdapterImpl getSyncAdapter() {
-
-        return mSyncAdapter;
-    }
-
-    /**
-     * Perform sync.
-     *
-     * @param context    the context
-     * @param account    the account
-     * @param extras     the extras
-     * @param authority  the authority
-     * @param provider   the provider
-     * @param syncResult the sync result
-     */
-    public void performSync(Context context, Account account, Bundle extras,
-                            String authority, ContentProviderClient provider,
-                            SyncResult syncResult) {
-
-        Log.d(TAG, "OrgSyncService->performSync()");
+    public void performSync(Context context, Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        Log.d(TAG, "MessageSyncService->performSync()");
         Intent intent = new Intent();
-        Intent updateWidgetIntent = new Intent();
-        updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.setAction(SyncFinishReceiver.SYNC_FINISH);
         LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
         try {
-            OrgDB orgDB = new OrgDB(context);
-            orgDB.setAccountUser(user);
-            LmisHelper lmis = orgDB.getLmisInstance();
+            MessageDB messageDB = new MessageDB(context);
+            messageDB.setAccountUser(user);
+            LmisHelper lmis = messageDB.getLmisInstance();
             if (lmis == null) {
                 return;
             }
 
             LmisArguments arguments = new LmisArguments();
+            arguments.add(user.getUser_id());
 
             //数据库中原有的数据也需要更新
-            List<Integer> ids = orgDB.ids();
-            if (lmis.syncWithMethod("all", arguments)) {
+            List<Integer> ids = messageDB.ids();
+            if (lmis.syncWithMethod("unread", arguments)) {
                 int affected_rows = lmis.getAffectedRows();
-                Log.d(TAG, "OrgSyncService[arguments]:" + arguments.toString());
-                Log.d(TAG, "OrgSyncService->affected_rows:" + affected_rows);
+                Log.d(TAG, "MessageSyncService[arguments]:" + arguments.toString());
+                Log.d(TAG, "MessageSyncService->affected_rows:" + affected_rows);
                 List<Integer> affected_ids = lmis.getAffectedIds();
                 boolean notification = true;
                 ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
@@ -102,20 +74,16 @@ public class OrgSyncService extends InjectingService implements PerformSync {
                     Intent mainActiivty = new Intent(context, MainActivity.class);
                     mNotification.setResultIntent(mainActiivty, context);
 
-                    String notify_title = context.getResources().getString(R.string.orgs_sync_notify_title);
+                    String notify_title = context.getResources().getString(R.string.messages_sync_notify_title);
                     notify_title = String.format(notify_title, affected_rows);
 
-                    String notify_body = context.getResources().getString(R.string.orgs_sync_notify_body);
+                    String notify_body = context.getResources().getString(R.string.messages_sync_notify_body);
                     notify_body = String.format(notify_body, affected_rows);
 
-                    mNotification.showNotification(context, notify_title, notify_body, authority,
-                            R.drawable.ic_oe_notification);
+                    mNotification.showNotification(context, notify_title, notify_body, authority, R.drawable.ic_oe_notification);
                 }
                 intent.putIntegerArrayListExtra("new_ids", (ArrayList<Integer>) affected_ids);
             }
-            // TODO 更新数据库中已存在的org信息
-
-            //List<Integer> updated_ids = updateOldExpenses(expense_db, oe, currentUser, ids);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,9 +94,21 @@ public class OrgSyncService extends InjectingService implements PerformSync {
     }
 
     @Override
+    public IBinder onBind(Intent intent) {
+        IBinder ret = getSyncAdapter().getSyncAdapterBinder();
+        return ret;
+    }
+
+    public SyncAdapterImpl getSyncAdapter() {
+
+        return mSyncAdapter;
+    }
+
+    @Override
     protected List<Object> getModules() {
         List<Object> ret = super.getModules();
         ret.add(new ServiceModule(this, this));
         return ret;
     }
+
 }
