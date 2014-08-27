@@ -41,63 +41,19 @@
     <string name="inventory_out_list_search">Search</string>
     <string name="inventory_out_list_new">New</string>
 
-    <!-- Message Fragment -->
+    <!--message 相关字段-->
     <string name="message_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
 
 Your inbox contains private messages or emails sent to you as well as information related to documents or people you follow.</string>
-    <string name="message_tome_all_read"><b>No private message.</b>\n\nThis list contains messages sent to you.</string>
-    <string name="message_todo_all_read"><b>No todo.</b>\n\n
 
-When you process messages in your inbox, you can mark some as todo. From this menu, you can process all your todo.</string>
-    <string name="message_no_group_message">No message in this group.</string>
-    <string name="message_waiting_for_sync_to_start">Waiting for Sync to Start</string>
+    <string name="messsage_waiting_for_sync_to_start">Waiting for Sync to Start</string>
     <string name="message_your_message_will_appear_shortly">Your messages will appear shortly</string>
-    <string name="message_group_title">MESSAGES</string>
-    <string name="read_all_messages">Woohoo! You\&apos;ve read all the messages in your inbox.</string>
-
-    <string name="message_drawer_item_inbox">Inbox</string>
-    <string name="message_drawer_item_tome">to: me</string>
-    <string name="message_drawer_item_todo">To do</string>
-    <string name="message_drawer_item_archives">Archives</string>
-    <!-- Compose Note Fragment Strings -->
-    <string name="compose_note_tags">Tags</string>
-    <string name="compose_note_stages">Stages</string>
-    <string name="compose_note_description">Note</string>
-    <string name="imgview_note_add_tags">This will open the dailogbox to select tags</string>
-
-    <!-- Detail Note Fragment Strings -->
-    <string name="detail_note_name">Note Name</string>
-    <string name="detail_note_memo">Note Memo</string>
-
-    <!--expense 相关字段-->
-    <string name="expense_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
-
-Your inbox contains private messages or emails sent to you as well as information related to documents or people you follow.</string>
-    <string name="expense_todo_all_read"><b>No todo.</b>\n\n
-
-When you process messages in your inbox, you can mark some as todo. From this menu, you can process all your todo.</string>
-    <string name="expense_waiting_for_sync_to_start">Waiting for Sync to Start</string>
-    <string name="expense_your_expense_will_appear_shortly">Your messages will appear shortly</string>
-    <string name="expense_group_title">EXPENSES</string>
-    <string name="expense">expense</string>
-    <string name="read_all_expenses">Woohoo! You\&apos;ve read all the expenses in your inbox.</string>
-    <string name="expense_draw_item_inbox">Inbox</string>
-    <string name="expense_draw_item_archives">Archives</string>
-
-    <!--voucher 相关字段-->
-    <string name="voucher_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
-
-Your inbox contains private vouchers or emails sent to you as well as information related to documents or people you follow.</string>
-    <string name="voucher_todo_all_read"><b>No todo.</b>\n\n
-
-When you process voucher in your inbox, you can mark some as todo. From this menu, you can process all your todo.</string>
-    <string name="voucher_waiting_for_sync_to_start">Waiting for Sync to Start</string>
-    <string name="voucher_your_voucher_will_appear_shortly">Your messages will appear shortly</string>
-    <string name="voucher_group_title">Vouchers</string>
-    <string name="voucher">voucher</string>
-    <string name="read_all_vouchers">Woohoo! You\&apos;ve read all the vouchers in your inbox.</string>
-    <string name="voucher_draw_item_inbox">Inbox</string>
-    <string name="voucher_draw_item_archives">Archives</string>
+    <string name="message_group_title">Messages</string>
+    <string name="message">message</string>
+    <string name="read_all_message">Woohoo! You\&apos;ve read all the messages in your inbox.</string>
+    <string name="message_draw_item_inbox">Inbox</string>
+    <string name="message_draw_item_archives">Archives</string>
+    <string name="message_blank">No Message To Read</string>
 
     <!--setting drawer items-->
     <string name="settings_group_title">Settings</string>

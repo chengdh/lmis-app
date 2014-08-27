@@ -53,9 +53,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      */
     private enum MType {
         DRAFT, PROCESSED
-    }
-
-    ;
+    };
 
     /**
      * 当前选定的数据索引.
