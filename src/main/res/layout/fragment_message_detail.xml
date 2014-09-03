@@ -56,8 +56,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_margin="8dp"
-        android:background="@drawable/container_drop_shadow">
+        android:background="@drawable/container_drop_shadow"
+        android:layout_marginTop="8dp">
 
         <WebView
             android:layout_width="match_parent"

@@ -21,8 +21,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.providers.message.MessageProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
@@ -56,7 +59,7 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
     LmisListAdapter mListViewAdapter = null;
 
     @InjectView(R.id.list_messages)
-    ListView mListView;
+    PullToRefreshListView mListView;
 
     @InjectView(R.id.txv_message_blank)
     TextView mTxvBlank;
@@ -137,7 +140,7 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mSelectedCounter = 0;
-            mListView.clearChoices();
+            mListView.getRefreshableView().clearChoices();
         }
 
         @Override
@@ -164,10 +167,10 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
      * 初始化界面及数据
      */
     private void init() {
-        mListView.setOnItemClickListener(this);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setOnItemLongClickListener(this);
-        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
+        mListView.getRefreshableView().setOnItemClickListener(this);
+        mListView.getRefreshableView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.getRefreshableView().setOnItemLongClickListener(this);
+        mListView.getRefreshableView().setMultiChoiceModeListener(mMultiChoiceListener);
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_message_list_item, mMessageObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -181,7 +184,18 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
             }
 
         };
-        mListView.setAdapter(mListViewAdapter);
+        mListView.getRefreshableView().setAdapter(mListViewAdapter);
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+                scope.main().requestSync(MessageProvider.AUTHORITY);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+
+            }
+        });
 
         initData();
 
@@ -377,7 +391,6 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
     private SyncFinishReceiver messageSyncFinish = new SyncFinishReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //mTouchAttacher.setPullComplete();
             scope.main().refreshDrawer(TAG);
             mListViewAdapter.clear();
             mMessageObjects.clear();
