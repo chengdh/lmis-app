@@ -45,11 +45,6 @@ public abstract class BaseFragment extends InjectingFragment implements Fragment
     public AppScope scope;
 
     /**
-     * db
-     */
-    private LmisDatabase mDb;
-
-    /**
      * The list search adapter.
      */
     private ArrayAdapter<Object> listSearchAdapter;

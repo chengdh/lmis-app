@@ -15,6 +15,7 @@ import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.dagger_module.ServiceModule;
 import com.lmis.orm.LmisHelper;
+import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.LmisUser;
 
 import java.util.List;
@@ -62,6 +63,9 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
                             SyncResult syncResult) {
 
         Log.d(TAG, "UserOrgSyncService->performSync()");
+        Intent intent = new Intent();
+        intent.setAction(SyncFinishReceiver.SYNC_FINISH);
+
         LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
         try {
             UserOrgDB orgDB = new UserOrgDB(context);
@@ -90,6 +94,9 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (user.getAndroidName().equals(account.name)) {
+            context.sendBroadcast(intent);
         }
     }
 

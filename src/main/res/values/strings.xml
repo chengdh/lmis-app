@@ -55,6 +55,21 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="message_draw_item_archives">Archives</string>
     <string name="message_blank">No Message To Read</string>
 
+    <!--goods exception 相关字段-->
+    <string name="goods_exception_inbox_all_read"><b>Good Job!</b> Your inbox is empty.\n \n
+
+Your inbox contains private messages or emails sent to you as well as information related to documents or people you follow.</string>
+
+    <string name="goods_exception_group_title">Goods Exception</string>
+    <string name="goods_exception">Goods Exception</string>
+    <string name="read_all_goods_exception">Woohoo! You\&apos;ve read all the goods exception in your inbox.</string>
+    <string name="goods_exception_draw_item_inbox">Inbox</string>
+    <string name="goods_exception_draw_item_archives">Archives</string>
+    <string name="goods_exception_blank">No Goods Exception To Read</string>
+    <string name="goods_exception_list_search">search</string>
+    <string name="goods_exception_new">new</string>
+
+
     <!--setting drawer items-->
     <string name="settings_group_title">Settings</string>
     <string name="settings_drawer_item_profile">Profile</string>

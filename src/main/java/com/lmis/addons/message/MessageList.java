@@ -174,13 +174,13 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_message_list_item, mMessageObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View mView = convertView;
-                if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(getResource(), parent, false);
-                    mView.setTag(new ViewHolder(mView));
+                View view = convertView;
+                if (view == null) {
+                    view = getActivity().getLayoutInflater().inflate(getResource(), parent, false);
+                    view.setTag(new ViewHolder(view));
                 }
-                mView = handleRowView(mView, position);
-                return mView;
+                view = handleRowView(view, position);
+                return view;
             }
 
         };
@@ -322,6 +322,11 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if(position == 0)
+            return ;
+
+        position -= mListView.getRefreshableView().getHeaderViewsCount();
+
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mMessageObjects.get(position);
         BaseFragment detail;
@@ -389,9 +394,13 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
     }
 
     private SyncFinishReceiver messageSyncFinish = new SyncFinishReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            Log.d(TAG, "MessageList->SyncFinishReceiverReceiver@onReceive");
             scope.main().refreshDrawer(TAG);
+            mListView.onRefreshComplete();
             mListViewAdapter.clear();
             mMessageObjects.clear();
             mListViewAdapter.notifiyDataChange(mMessageObjects);

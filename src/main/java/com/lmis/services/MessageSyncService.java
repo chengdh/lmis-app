@@ -19,6 +19,7 @@ import com.lmis.addons.message.MessageDB;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.dagger_module.ServiceModule;
 import com.lmis.orm.LmisHelper;
+import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.LmisUser;
 import com.lmis.util.LmisNotificationHelper;
 
@@ -43,6 +44,7 @@ public class MessageSyncService extends InjectingService implements PerformSync 
     public void performSync(Context context, Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(TAG, "MessageSyncService->performSync()");
         Intent intent = new Intent();
+        intent.setAction(SyncFinishReceiver.SYNC_FINISH);
         LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
         try {
             MessageDB messageDB = new MessageDB(context);

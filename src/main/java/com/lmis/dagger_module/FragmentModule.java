@@ -10,6 +10,8 @@ import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
 import com.lmis.addons.dashboard.DashBoard;
+import com.lmis.addons.goods_exception.GoodsExceptionList;
+import com.lmis.addons.goods_exception.GoodsExceptionNew;
 import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.InventoryOut;
 import com.lmis.addons.inventory.InventoryOutList;
@@ -49,7 +51,10 @@ import dagger.Provides;
                 DashBoard.class,
                 SearchBill.class,
                 MessageList.class,
-                MessageDetail.class
+                MessageDetail.class,
+                GoodsExceptionList.class,
+                GoodsExceptionNew.class
+
         })
 public class FragmentModule {
 

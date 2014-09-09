@@ -55,7 +55,7 @@ public class OrgModule {
      * @param context the context
      * @return the list
      */
-    private List<LmisDataRow> getAccessOrgs(Context context){
+    private List<LmisDataRow> getAccessOrgs(Context context) {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录用户不返回任何数据
         if (LmisUser.current(context) != null) {
@@ -104,6 +104,36 @@ public class OrgModule {
         return ret;
     }
 
+
+    //总部机构列表
+    @Provides
+    @SummaryChildrenOrgs
+    public List<LmisDataRow> providesSummaryOrgs(@InjectingActivityModule.Activity Context ctx) {
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        //未登录时
+        if (LmisUser.current(ctx) != null) {
+            String where = "is_summary = ?";
+            String[] whereArgs = new String[]{"true"};
+            OrgDB db = new OrgDB(ctx);
+            List<LmisDataRow> summaryOrgs = db.select(where, whereArgs);
+            if (summaryOrgs.size() > 0) {
+                ret.addAll(summaryOrgs);
+            }
+
+            //获取总部子机构
+            for (LmisDataRow o : summaryOrgs) {
+                String w = "parent_id = ?";
+                String[] wa = new String[]{o.getInt("id") + ""};
+                List<LmisDataRow> children = db.select(w, wa);
+                if (children.size() > 0) {
+                    ret.addAll(children);
+                }
+            }
+
+        }
+        return ret;
+    }
+
     //所有机构
     @Qualifier
     @Target({FIELD, PARAMETER, METHOD})
@@ -134,5 +164,12 @@ public class OrgModule {
     @Documented
     @Retention(RUNTIME)
     public @interface YardsOrgs {
+    }
+
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface SummaryChildrenOrgs {
     }
 }

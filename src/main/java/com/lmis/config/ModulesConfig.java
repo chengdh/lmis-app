@@ -20,6 +20,7 @@ package com.lmis.config;
 
 import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.dashboard.DashBoard;
+import com.lmis.addons.goods_exception.GoodsExceptionList;
 import com.lmis.addons.inventory.InventoryOutList;
 import com.lmis.addons.message.MessageList;
 import com.lmis.addons.search_bill.SearchBill;
@@ -42,5 +43,6 @@ public class ModulesConfig extends ModulesConfigHelper {
         add(new Module("module_message", "Message", new MessageList(), 0), true);
         add(new Module("module_inventory_out", "Inventory Out", new InventoryOutList(), 0), true);
         add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
+        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
     }
 }

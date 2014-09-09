@@ -70,7 +70,6 @@ public class OrgSyncService extends InjectingService implements PerformSync {
         Log.d(TAG, "OrgSyncService->performSync()");
         Intent intent = new Intent();
         Intent updateWidgetIntent = new Intent();
-        updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.setAction(SyncFinishReceiver.SYNC_FINISH);
         LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
         try {

@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.lmis.R;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import butterknife.InjectView;
  */
 public class DashBoard extends BaseFragment {
     public final static String TAG = "Dashbaord";
-    public final static String SERVER_URL = "http://192.168.0.216:3030/sample";
     @InjectView(R.id.web_view_dashboard)
     WebView mWebView;
 
@@ -51,8 +51,10 @@ public class DashBoard extends BaseFragment {
 
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
-        int curOrgId = scope.currentUser().getDefault_org_id();
-        mWebView.loadUrl(SERVER_URL + "?from_org_id=" + curOrgId + "");
+        LmisUser user = scope.currentUser();
+        String serverURL = user.getHost();
+        int curOrgId = user.getDefault_org_id();
+        mWebView.loadUrl(serverURL + "?from_org_id=" + curOrgId + "");
     }
 
     @Override

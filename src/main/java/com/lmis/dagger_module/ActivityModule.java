@@ -15,6 +15,7 @@ import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
 import com.lmis.util.controls.PayTypeSpinner;
+import com.lmis.util.controls.SummaryChidrenSpinner;
 import com.lmis.util.controls.YardsOrgSpinner;
 import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
@@ -36,6 +37,7 @@ import dagger.Provides;
                 PayTypeSpinner.class,
                 AllOrgSpinner.class,
                 YardsOrgSpinner.class,
+                SummaryChidrenSpinner.class,
                 BarcodeParser.class,
                 GoodsInfo.class,
         })
@@ -53,6 +55,7 @@ public class ActivityModule {
     public FragmentManager provideFragmentManager() {
         return mActivity.getSupportFragmentManager();
     }
+
 
     //提供MainActivity中要使用的List<DrawerItem>
     @Provides

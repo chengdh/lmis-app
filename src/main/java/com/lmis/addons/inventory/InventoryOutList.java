@@ -286,9 +286,9 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
-        String inventory_out_title = context.getResources().getString(R.string.inventory_out_group_title);
-        String inventory_out_draft = context.getResources().getString(R.string.inventory_out_draw_item_draft);
-        String inventory_out_processed = context.getResources().getString(R.string.inventory_out_draw_item_processed);
+        String inventory_out_title = "分理处盘货";
+        String inventory_out_draft = "草稿";
+        String inventory_out_processed = "已上传";
 
         drawerItems.add(new DrawerItem(TAG, inventory_out_title, true));
         drawerItems.add(new DrawerItem(TAG, inventory_out_draft, count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));

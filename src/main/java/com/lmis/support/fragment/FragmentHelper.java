@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.lmis.util.drawer.DrawerItem;
 
 public interface FragmentHelper {
+
 	public Object databaseHelper(Context context);
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

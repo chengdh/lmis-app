@@ -30,7 +30,7 @@ public class OrgDB extends LmisDatabase {
 
         cols.add(new LmisColumn("name", "Name", LmisFields.varchar(128)));
         cols.add(new LmisColumn("simp_name", "Simple Name", LmisFields.varchar(128)));
-        //cols.add(new LmisColumn("parent_id", "Parent Org", LmisFields.manyToOne(new OrgDB(mContext))));
+        cols.add(new LmisColumn("parent_id", "Parent Org", LmisFields.integer()));
         cols.add(new LmisColumn("phone", "Phone", LmisFields.varchar(20)));
         cols.add(new LmisColumn("manager", "Manager", LmisFields.varchar(40)));
         cols.add(new LmisColumn("location", "Location", LmisFields.varchar(60)));
