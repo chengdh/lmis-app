@@ -8,6 +8,7 @@ import com.lmis.orm.LmisColumn;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 import com.lmis.orm.LmisValues;
+import com.lmis.util.controls.ExceptionTypeSpinner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class GoodsExceptionDB extends LmisDatabase {
         cols.add(new LmisColumn("exception_type", "Exception type", LmisFields.varchar(20)));
         cols.add(new LmisColumn("exception_num", "Exception Num", LmisFields.integer()));
         cols.add(new LmisColumn("note", "Note", LmisFields.text()));
+        cols.add(new LmisColumn("image", "Image", LmisFields.blob()));
 
         //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
@@ -68,5 +70,16 @@ public class GoodsExceptionDB extends LmisDatabase {
         v.put("processed", true);
         v.put("process_datetime", new Date());
         update(v, id);
+    }
+
+    public static String getExceptionTypeDes(String ex_type) {
+        List types = ExceptionTypeSpinner.exceptionTypes();
+        for (Object t : types) {
+            String[] el = (String[])t;
+
+            if (el[0].equals(ex_type))
+                return el[1];
+        }
+        return null;
     }
 }

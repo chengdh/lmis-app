@@ -181,6 +181,13 @@ public class LmisDate {
         gmtFormat.setTimeZone(gmtTime);
         return gmtFormat.format(new Date());
     }
+    public static String getDateWithoutTime() {
+        SimpleDateFormat gmtFormat = new SimpleDateFormat();
+        gmtFormat.applyPattern("yyyy-MM-dd");
+        TimeZone gmtTime = TimeZone.getTimeZone("GMT");
+        gmtFormat.setTimeZone(gmtTime);
+        return gmtFormat.format(new Date());
+    }
 
     public static String getDateBefore(int days) {
         Date today = new Date();

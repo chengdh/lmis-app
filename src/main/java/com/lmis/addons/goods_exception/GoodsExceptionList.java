@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
@@ -253,11 +254,15 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
             String billDate = row_data.getString("bill_date");
             LmisDataRow org = row_data.getM2ORecord("org_id").browse();
             String orgName = org.getString("name");
+            String exceptType = row_data.getString("exception_type");
+            String exceptDes = GoodsExceptionDB.getExceptionTypeDes(exceptType);
+            int  exceptNum = row_data.getInt("exception_num");
+            String formatNote = String.format("%s %d件 %s",exceptDes,exceptNum,note);
 
             holder.txvBillNo.setText(billNo + "/" + goodsNo);
             holder.txvBillDate.setText(billDate);
             holder.txvOrgName.setText(orgName);
-            holder.txvNote.setText(note);
+            holder.txvNote.setText(formatNote);
         }
 
         return mView;
@@ -347,7 +352,18 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        mSelectedItemPosition = position;
+        LmisDataRow row = (LmisDataRow) mGoodsExceptionObjects.get(position);
+        BaseFragment detail;
+        detail = new GoodsExceptionNew();
+        Bundle bundle = new Bundle();
+        bundle.putInt("goods_exception_id", row.getInt("id"));
+        bundle.putInt("position", position);
+        detail.setArguments(bundle);
+
+        FragmentListener listener = (FragmentListener) getActivity();
+        listener.startDetailFragment(detail);
 
     }
 

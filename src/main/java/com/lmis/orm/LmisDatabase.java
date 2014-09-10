@@ -208,7 +208,12 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
                 if (values.get(key) instanceof LmisO2MIds) {
                     continue;
                 }
-                cValues.put(key, values.get(key).toString());
+                //处理blob字段
+                Object val = values.get(key);
+                if(val instanceof byte[])
+                    cValues.put(key, (byte[])val);
+                else
+                    cValues.put(key, values.get(key).toString());
             }
         }
         result.put("m2mObjects", m2mObjectList);
@@ -478,7 +483,10 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
 
     private Object createRowData(LmisColumn col, Cursor cr) {
         if (col.getType() instanceof String) {
-            return cr.getString(cr.getColumnIndex(col.getName()));
+            if(col.getType().equals(LmisFields.blob()))
+                return cr.getBlob(cr.getColumnIndex(col.getName()));
+            else
+                return cr.getString(cr.getColumnIndex(col.getName()));
         }
         if (col.getType() instanceof LmisManyToOne) {
             return new LmisM2ORecord(col, cr.getString(cr.getColumnIndex(col

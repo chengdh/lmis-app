@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,7 +30,9 @@ import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
+import com.lmis.util.ImageUtil;
 import com.lmis.util.LmisDate;
+import com.lmis.util.controls.ExceptionTypeSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 
@@ -83,6 +86,7 @@ public class GoodsExceptionNew extends BaseFragment {
     int mCarryingBillID = -1;
     String mBillNo = null;
     String mGoodsNo = null;
+    Bitmap mImg = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +94,40 @@ public class GoodsExceptionNew extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_goods_exception_new, container, false);
         ButterKnife.inject(this, mView);
         initControls();
+        init();
         return mView;
+    }
+
+    private void init() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mGoodsExceptonID = bundle.getInt("goods_exception_id");
+            LmisDataRow goodsException = db().select(mGoodsExceptonID);
+            String exceptionType = goodsException.getString("exception_type");
+            int exceptionNum = goodsException.getInt("exception_num");
+            String note = goodsException.getString("note");
+            mCarryingBillID =  goodsException.getInt("carrying_bill_id");
+            mBillNo = goodsException.getString("bill_no");
+            mGoodsNo = goodsException.getString("goods_no");
+
+
+            byte[] image = (byte[])goodsException.get("image");
+            if (image != null) {
+                mImg = ImageUtil.getImage(image);
+                mImgView.setImageBitmap(mImg);
+            }
+            int i = 0;
+            for (Object t : ExceptionTypeSpinner.exceptionTypes()) {
+                i++;
+                String[] el = (String[]) t;
+                if (el[0] == exceptionType)
+                    mSpinnerExceptionType.setSelection(i);
+            }
+            mEdtExcepNum.setText(exceptionNum + "");
+            mEdtNote.setText(note);
+            mTxvBillNo.setText(mBillNo + "/" + mGoodsNo);
+        }
+
     }
 
     @Override
@@ -180,13 +217,19 @@ public class GoodsExceptionNew extends BaseFragment {
         vals.put("org_id", currentUser.getDefault_org_id());
         LmisDataRow toOrg = (LmisDataRow) mSpinnerOpOrg.getSelectedItem();
         vals.put("op_org_id", toOrg.getInt("id"));
-        vals.put("bill_no",mBillNo);
-        vals.put("goods_no",mGoodsNo);
-        vals.put("bill_date", LmisDate.getDate());
+        vals.put("carrying_bill_id", mCarryingBillID);
+        vals.put("bill_no", mBillNo);
+        vals.put("goods_no", mGoodsNo);
+        vals.put("bill_date", LmisDate.getDateWithoutTime());
         String[] exceptType = (String[]) mSpinnerExceptionType.getSelectedItem();
         vals.put("exception_type", exceptType[0]);
         vals.put("exception_num", Integer.parseInt(mEdtExcepNum.getText().toString()));
         vals.put("note", mEdtNote.getText());
+        if (mImg != null) {
+            byte[] b = ImageUtil.getBytes(mImg);
+            //byte[] c = ImageUtil.getBytes(BitmapFactory.decodeResource(getResources(), R.drawable.openerp_logo));
+            vals.put("image", b);
+        }
         GoodsExceptionDB db = (GoodsExceptionDB) databaseHelper(scope.context());
         if (mGoodsExceptonID == -1) {
             mGoodsExceptonID = (int) db.create(vals);
@@ -194,7 +237,6 @@ public class GoodsExceptionNew extends BaseFragment {
             db.update(vals, mGoodsExceptonID);
         }
         return true;
-
     }
 
     @Override
@@ -204,6 +246,7 @@ public class GoodsExceptionNew extends BaseFragment {
                 // Image captured and saved to fileUri specified in the Intent
                 if (data.hasExtra("data")) {
                     Bitmap thumbnail = data.getParcelableExtra("data");
+                    mImg = thumbnail;
                     mImgView.setImageBitmap(thumbnail);
 
                 }
