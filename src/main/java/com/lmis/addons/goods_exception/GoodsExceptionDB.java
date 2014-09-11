@@ -43,9 +43,9 @@ public class GoodsExceptionDB extends LmisDatabase {
         cols.add(new LmisColumn("goods_no", "goods no", LmisFields.varchar(20)));
         cols.add(new LmisColumn("bill_date", "Bill Date", LmisFields.varchar(20)));
         cols.add(new LmisColumn("exception_type", "Exception type", LmisFields.varchar(20)));
-        cols.add(new LmisColumn("exception_num", "Exception Num", LmisFields.integer()));
+        cols.add(new LmisColumn("except_num", "Exception Num", LmisFields.integer()));
         cols.add(new LmisColumn("note", "Note", LmisFields.text()));
-        cols.add(new LmisColumn("image", "Image", LmisFields.blob()));
+        cols.add(new LmisColumn("photo", "Photo", LmisFields.blob()));
 
         //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
@@ -57,11 +57,11 @@ public class GoodsExceptionDB extends LmisDatabase {
 
     public void save2server(int id) throws JSONException, IOException {
         JSONObject json = select(id).exportAsJSON(false);
+        json.put("photo_file_name","goods_exception_" + json.getString("bill_no") + ".png");
         json.remove("bill_no");
         json.remove("goods_no");
         json.remove("processed");
         json.remove("process_datetime");
-
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();

@@ -256,7 +256,7 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
             String orgName = org.getString("name");
             String exceptType = row_data.getString("exception_type");
             String exceptDes = GoodsExceptionDB.getExceptionTypeDes(exceptType);
-            int  exceptNum = row_data.getInt("exception_num");
+            int  exceptNum = row_data.getInt("except_num");
             String formatNote = String.format("%s %d件 %s",exceptDes,exceptNum,note);
 
             holder.txvBillNo.setText(billNo + "/" + goodsNo);

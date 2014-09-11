@@ -104,14 +104,14 @@ public class GoodsExceptionNew extends BaseFragment {
             mGoodsExceptonID = bundle.getInt("goods_exception_id");
             LmisDataRow goodsException = db().select(mGoodsExceptonID);
             String exceptionType = goodsException.getString("exception_type");
-            int exceptionNum = goodsException.getInt("exception_num");
+            int exceptionNum = goodsException.getInt("except_num");
             String note = goodsException.getString("note");
             mCarryingBillID =  goodsException.getInt("carrying_bill_id");
             mBillNo = goodsException.getString("bill_no");
             mGoodsNo = goodsException.getString("goods_no");
 
 
-            byte[] image = (byte[])goodsException.get("image");
+            byte[] image = (byte[])goodsException.get("photo");
             if (image != null) {
                 mImg = ImageUtil.getImage(image);
                 mImgView.setImageBitmap(mImg);
@@ -223,12 +223,12 @@ public class GoodsExceptionNew extends BaseFragment {
         vals.put("bill_date", LmisDate.getDateWithoutTime());
         String[] exceptType = (String[]) mSpinnerExceptionType.getSelectedItem();
         vals.put("exception_type", exceptType[0]);
-        vals.put("exception_num", Integer.parseInt(mEdtExcepNum.getText().toString()));
+        vals.put("except_num", Integer.parseInt(mEdtExcepNum.getText().toString()));
         vals.put("note", mEdtNote.getText());
         if (mImg != null) {
             byte[] b = ImageUtil.getBytes(mImg);
             //byte[] c = ImageUtil.getBytes(BitmapFactory.decodeResource(getResources(), R.drawable.openerp_logo));
-            vals.put("image", b);
+            vals.put("photo", b);
         }
         GoodsExceptionDB db = (GoodsExceptionDB) databaseHelper(scope.context());
         if (mGoodsExceptonID == -1) {
