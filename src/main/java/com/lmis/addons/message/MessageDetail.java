@@ -17,6 +17,7 @@ import com.lmis.orm.LmisHelper;
 import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.drawer.DrawerItem;
+import com.lmis.util.drawer.DrawerListener;
 
 import java.util.Date;
 import java.util.List;
@@ -126,6 +127,8 @@ public class MessageDetail extends BaseFragment {
         @Override
         protected void onPostExecute(final Boolean success) {
             Log.d(TAG, "MessageViewCountUpdater#onPostExecute");
+            DrawerListener drawer = scope.main();
+            drawer.refreshDrawer(MessageList.TAG);
             mUpdater = null;
         }
 

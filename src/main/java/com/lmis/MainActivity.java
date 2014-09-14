@@ -73,6 +73,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import dagger.Lazy;
 
 /**
  * The Class MainActivity.
@@ -141,6 +142,8 @@ public class MainActivity extends InjectingFragmentActivity implements
      * The M drawer adatper.
      */
     DrawerAdatper mDrawerAdatper = null;
+
+    ArrayAdapter<LmisDataRow> mOrgSpinnerAdapter = null;
     /**
      * The M app title.
      */
@@ -338,12 +341,12 @@ public class MainActivity extends InjectingFragmentActivity implements
      * Init actionbar spinner.
      */
     private void initSpinner() {
-        SpinnerAdapter spinnerAdapter = new ArrayAdapter<LmisDataRow>(mContext, android.R.layout.simple_spinner_dropdown_item, mOrgs);
+        mOrgSpinnerAdapter = new ArrayAdapter<LmisDataRow>(mContext, android.R.layout.simple_spinner_dropdown_item, mOrgs);
 
         ActionBar ab = getActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        ab.setListNavigationCallbacks(spinnerAdapter, this);
+        ab.setListNavigationCallbacks(mOrgSpinnerAdapter, this);
 
         LmisUser curUser = LmisAccountManager.currentUser(this);
         int orgId = curUser.getDefault_org_id();

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lmis.R;
+import com.lmis.addons.search_bill.SearchBill;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.fragment.FragmentListener;
@@ -248,7 +249,12 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
         drawerItems.add(new DrawerItem(TAG, "运单", true));
-        drawerItems.add(new DrawerItem(TAG, "运单列表", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "运单录入", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        Bundle args = new Bundle();
+        args.putInt("no_use", 1);
+        SearchBill fragment = new SearchBill();
+        fragment.setArguments(args);
+        drawerItems.add(new DrawerItem(TAG, "运单查询", 0, R.drawable.ic_action_archive, fragment));
         return drawerItems;
     }
 

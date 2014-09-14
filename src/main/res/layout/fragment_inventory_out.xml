@@ -7,9 +7,10 @@
     android:baselineAligned="true"
     android:background="#efefef">
 
+
     <TabHost
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/tabHost">
 
         <LinearLayout
@@ -24,8 +25,9 @@
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!--
 
                 <include
                     android:layout_width="match_parent"
@@ -41,9 +43,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     layout="@layout/fragment_inventory_out_barcode_list" />
+                    -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/tab_blank"
+                    android:background="#000000"
+                    android:visibility="gone">
+                </LinearLayout>
             </FrameLayout>
+
         </LinearLayout>
     </TabHost>
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

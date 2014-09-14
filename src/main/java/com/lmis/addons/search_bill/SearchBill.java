@@ -187,14 +187,15 @@ public class SearchBill extends BaseFragment {
 
     @Override
     public List<DrawerItem> drawerMenus(Context context) {
-        List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
-
-        Bundle args = new Bundle();
-        args.putInt("no_use", 1);
-        SearchBill fragment = new SearchBill();
-        fragment.setArguments(args);
-        drawerItems.add(new DrawerItem(TAG, "运单查询", 0, R.drawable.ic_action_archive, fragment));
-        return drawerItems;
+////        List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
+//
+//        Bundle args = new Bundle();
+//        args.putInt("no_use", 1);
+//        SearchBill fragment = new SearchBill();
+//        fragment.setArguments(args);
+//        drawerItems.add(new DrawerItem(TAG, "运单查询", 0, R.drawable.ic_action_archive, fragment));
+//        return drawerItems;
+        return null;
     }
 
     private class MyQueryTextLisener implements SearchView.OnQueryTextListener {

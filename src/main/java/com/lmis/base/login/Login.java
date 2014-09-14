@@ -230,6 +230,8 @@ public class Login extends BaseFragment {
     public SyncFinishReceiver userOrgSyncFinish = new SyncFinishReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //reinject MainActivity
+            inject(scope.main());
             mSyncDialog.dismiss();
             startSyncWizard();
         }

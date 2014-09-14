@@ -39,10 +39,9 @@ public class ModulesConfig extends ModulesConfigHelper {
         /* application modules */
         //add(new Module("module_idea", "Idea", new Idea(), 0), true);
         add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
-        add(new Module("module_search_bill", "SearchBill", new SearchBill(), 0), true);
         add(new Module("module_message", "Message", new MessageList(), 0), true);
-        add(new Module("module_inventory_out", "Inventory Out", new InventoryOutList(), 0), true);
         add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
+        add(new Module("module_inventory_out", "Inventory Out", new InventoryOutList(), 0), true);
         add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
     }
 }

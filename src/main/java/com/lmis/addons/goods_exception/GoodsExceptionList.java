@@ -256,8 +256,8 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
             String orgName = org.getString("name");
             String exceptType = row_data.getString("exception_type");
             String exceptDes = GoodsExceptionDB.getExceptionTypeDes(exceptType);
-            int  exceptNum = row_data.getInt("except_num");
-            String formatNote = String.format("%s %d件 %s",exceptDes,exceptNum,note);
+            int exceptNum = row_data.getInt("except_num");
+            String formatNote = String.format("%s %d件 %s", exceptDes, exceptNum, note);
 
             holder.txvBillNo.setText(billNo + "/" + goodsNo);
             holder.txvBillDate.setText(billDate);
@@ -356,7 +356,11 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mGoodsExceptionObjects.get(position);
         BaseFragment detail;
-        detail = new GoodsExceptionNew();
+        if (row.getBoolean("processed")) {
+            detail = new GoodsExceptionView();
+        } else {
+            detail = new GoodsExceptionNew();
+        }
         Bundle bundle = new Bundle();
         bundle.putInt("goods_exception_id", row.getInt("id"));
         bundle.putInt("position", position);
@@ -364,7 +368,6 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
 
         FragmentListener listener = (FragmentListener) getActivity();
         listener.startDetailFragment(detail);
-
     }
 
     @Override

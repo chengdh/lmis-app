@@ -204,9 +204,6 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
     private void initData() {
         Log.d(TAG, "MessageList->initData()");
         String title = "Draft";
-        if (mSelectedItemPosition > -1) {
-            return;
-        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
