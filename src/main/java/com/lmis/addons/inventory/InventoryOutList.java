@@ -22,10 +22,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
+import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.providers.inventory_move.InventoryMoveProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
+import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
@@ -48,19 +54,33 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
 
 
     /**
-     * The enum M type.
+     * The enum state.
      * 数据分为草稿及已处理
      */
-    private enum MType {
+    private enum MState {
         DRAFT, PROCESSED
-    };
+    }
+
+    MState mState = MState.DRAFT;
+
+    /**
+     * 单据类型.
+     * 分理处盘货单/货场确认单/货场发货单/分公司确认单
+     */
+    private enum MType {
+        BRANCH_OUT, YARD_CONFIRM, YARD_OUT, BRANCH_CONFIRM
+    }
+
+    MType mType = MType.BRANCH_OUT;
 
     /**
      * 当前选定的数据索引.
      */
     Integer mSelectedItemPosition = -1;
 
-    String mCurrentType = "draft";
+    String mCurrentState = "draft";
+
+    String mCurrentType = "branch_out";
 
     View mView = null;
 
@@ -69,7 +89,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     LmisListAdapter mListViewAdapter = null;
 
     @InjectView(R.id.listInventoryOuts)
-    ListView mListView;
+    PullToRefreshListView mListView;
 
     @InjectView(R.id.txvInventoryOutBlank)
     TextView mTxvBlank;
@@ -121,10 +141,11 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * 初始化界面及数据
      */
     private void init() {
-        mListView.setOnItemClickListener(this);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setOnItemLongClickListener(this);
-        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
+        ListView listView = mListView.getRefreshableView();
+        listView.setOnItemClickListener(this);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setOnItemLongClickListener(this);
+        listView.setMultiChoiceModeListener(mMultiChoiceListener);
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_out_listview_items, mInventoryObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -139,7 +160,19 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
             }
 
         };
-        mListView.setAdapter(mListViewAdapter);
+        listView.setAdapter(mListViewAdapter);
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+                scope.main().requestSync(InventoryMoveProvider.AUTHORITY);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+
+            }
+        });
+
 
         initData();
 
@@ -148,7 +181,6 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     private void initData() {
         Log.d(TAG, "InventoryOutList->initData()");
         String title = "Draft";
-        MType type = MType.DRAFT;
 //        if(mSelectedItemPosition > -1) {
 //            return;
 //        }
@@ -159,17 +191,30 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
                 mInventoryLoader.cancel(true);
                 mInventoryLoader = null;
             }
-            if (bundle.containsKey("type")) {
-                mCurrentType = bundle.getString("type");
-                if (mCurrentType.equals("draft")) {
-                    type = MType.DRAFT;
-                } else if (mCurrentType.equals("processed")) {
-                    type = MType.PROCESSED;
+            if (bundle.containsKey("state")) {
+                mCurrentState = bundle.getString("state");
+                if (mCurrentState.equals("draft")) {
+                    mState = MState.DRAFT;
+                } else if (mCurrentState.equals("processed")) {
+                    mState = MState.PROCESSED;
                     title = "Processed";
                 }
             }
+            if (bundle.containsKey("type")) {
+                mCurrentType = bundle.getString("type");
+                if (mCurrentType.equals("branch_out")) {
+                    mType = MType.BRANCH_OUT;
+                } else if (mCurrentType.equals("yard_confirm")) {
+                    mType = MType.YARD_CONFIRM;
+                } else if (mCurrentType.equals("yard_out")) {
+                    mType = MType.YARD_OUT;
+                } else if (mCurrentType.equals("branch_confirm")) {
+                    mType = MType.BRANCH_CONFIRM;
+                }
+
+            }
             scope.main().setTitle(title);
-            mInventoryLoader = new InventoryLoader(type);
+            mInventoryLoader = new InventoryLoader(mType, mState);
             mInventoryLoader.execute((Void) null);
         }
     }
@@ -231,7 +276,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mSelectedCounter = 0;
-            mListView.clearChoices();
+            mListView.getRefreshableView().clearChoices();
         }
 
         @Override
@@ -248,18 +293,36 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * @param type the type
      * @return the where
      */
-    public HashMap<String, Object> getWhere(MType type) {
+    public HashMap<String, Object> getWhere(MType type, MState state) {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        String where = null;
-        String[] whereArgs = null;
+        String[] whereArgs = new String[2];
+        String where = "op_type = ?";
         switch (type) {
-            case DRAFT:
-                where = "processed = ? ";
-                whereArgs = new String[]{"false"};
+            case BRANCH_OUT:
+                whereArgs[0] = "branch_out";
+                break;
+            case YARD_CONFIRM:
+                whereArgs[0] = "yard_confirm";
+                break;
+            case YARD_OUT:
+                whereArgs[0] = "yard_out";
+                break;
+            case BRANCH_CONFIRM:
+                whereArgs[0] = "branch_confirm";
                 break;
             default:
-                where = "processed = ? ";
-                whereArgs = new String[]{"true"};
+                whereArgs[0] = "branch_out";
+                break;
+        }
+
+        switch (state) {
+            case DRAFT:
+                where += " AND (processed = ? or processed IS NULL)";
+                whereArgs[1] = "false";
+                break;
+            default:
+                where += "AND processed = ? ";
+                whereArgs[1] = "true";
                 break;
         }
         map.put("where", where);
@@ -271,13 +334,15 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * Gets fragment.
      * 根据查看数据类型构造显示界面
      *
-     * @param value the value
+     * @param type  the type
+     * @param state the state
      * @return the fragment
      */
-    private BaseFragment getFragment(String value) {
+    private BaseFragment getFragment(String type, String state) {
         InventoryOutList inventory = new InventoryOutList();
         Bundle bundle = new Bundle();
-        bundle.putString("type", value);
+        bundle.putString("type", type);
+        bundle.putString("state", state);
         inventory.setArguments(bundle);
         return inventory;
     }
@@ -285,23 +350,59 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     @Override
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
+        LmisUser user = LmisUser.current(getActivity());
 
-        String inventory_out_title = "分理处盘货";
-        String inventory_out_draft = "草稿";
-        String inventory_out_processed = "已上传";
+        OrgDB db = new OrgDB(context);
+        LmisDataRow currentOrg =  db.select(user.getDefault_org_id());
 
-        drawerItems.add(new DrawerItem(TAG, inventory_out_title, true));
-        drawerItems.add(new DrawerItem(TAG, inventory_out_draft, count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem(TAG, inventory_out_processed, count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        //分理处出库
+        String branchOutTitle = "出库扫码";
+        String branchOutDraft = "草稿";
+        String branchOutProcessed = "已上传";
+
+        drawerItems.add(new DrawerItem(TAG, branchOutTitle, true));
+        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("branch_out", "draft")));
+        drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("branch_out", "processed")));
+
+        if(currentOrg.getBoolean("is_yard")) {
+
+            //货场收货
+            String yardConfirmTitle = "货场入库";
+            String yardConfirmDraft = "待处理";
+            String yardConfirmProcessed = "已处理";
+
+            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("yard_confirm", "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("yard_confirm", "processed")));
+
+            //货场出库
+            String yardOutTitle = "货场出库";
+            String yardOutDraft = "待处理";
+            String yardOutProcessed = "已处理";
+
+            drawerItems.add(new DrawerItem(TAG, yardOutTitle, true));
+            drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("yard_out", "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("yard_out", "processed")));
+        }
+
+        //分理处/分公司入库
+        String branchConfirmTitle = "入库扫码";
+        String branchConfirmDraft = "待处理";
+        String branchConfirmProcessed = "已处理";
+
+        drawerItems.add(new DrawerItem(TAG, branchConfirmTitle, true));
+        drawerItems.add(new DrawerItem(TAG, branchConfirmDraft, count(MType.BRANCH_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("branch_confirm", "draft")));
+        drawerItems.add(new DrawerItem(TAG, branchConfirmProcessed, count(MType.BRANCH_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("branch_confirm", "processed")));
+
         return drawerItems;
     }
 
-    private int count(MType type, Context context) {
+    private int count(MType type, MState state, Context context) {
         int count = 0;
         InventoryMoveDB db = new InventoryMoveDB(context);
         String where = null;
         String whereArgs[] = null;
-        HashMap<String, Object> obj = getWhere(type);
+        HashMap<String, Object> obj = getWhere(type, state);
         where = (String) obj.get("where");
         whereArgs = (String[]) obj.get("whereArgs");
         count = db.count(where, whereArgs);
@@ -323,10 +424,15 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (position == 0)
+            return;
+
+        position -= mListView.getRefreshableView().getHeaderViewsCount();
+
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
         BaseFragment detail;
-        if (row.getBoolean("processed")) {
+        if (row.get("processed") != null && row.getBoolean("processed")) {
             detail = new InventoryOutReadonly();
         } else {
             detail = new InventoryOut();
@@ -379,16 +485,18 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     }
 
     public class InventoryLoader extends AsyncTask<Void, Void, Boolean> {
+        MState mState = null;
         MType mType = null;
 
-        public InventoryLoader(MType type) {
+        public InventoryLoader(MType type, MState state) {
+            mState = state;
             mType = type;
         }
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
             Log.d(TAG, "InventoryLoader#doInBackground");
-            HashMap<String, Object> map = getWhere(mType);
+            HashMap<String, Object> map = getWhere(mType, mState);
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "bill_date DESC");
@@ -418,12 +526,14 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
     public void onResume() {
         super.onResume();
         scope.context().registerReceiver(datasetChangeReceiver, new IntentFilter(DataSetChangeReceiver.DATA_CHANGED));
+        scope.context().registerReceiver(inventoryMoveSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         scope.context().unregisterReceiver(datasetChangeReceiver);
+        scope.context().unregisterReceiver(inventoryMoveSyncFinish);
         Bundle outState = new Bundle();
         outState.putInt("mSelectedItemPosition", mSelectedItemPosition);
         onSaveInstanceState(outState);
@@ -449,7 +559,23 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
             }
 
         }
+
     };
+    private SyncFinishReceiver inventoryMoveSyncFinish = new SyncFinishReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.d(TAG, "InventoryOutList->SyncFinishReceiverReceiver@onReceive");
+            scope.main().refreshDrawer(TAG);
+            mListView.onRefreshComplete();
+            mListViewAdapter.clear();
+            mInventoryObjects.clear();
+            mListViewAdapter.notifiyDataChange(mInventoryObjects);
+            new InventoryLoader(mType, mState).execute();
+        }
+    };
+
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {

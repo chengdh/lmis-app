@@ -40,32 +40,32 @@ public class LmisFieldsHelper {
                 for (LmisColumn col : mColumns) {
                     if (col.canSync()) {
                         String key = col.getName();
-                        Object value = false;
+                        Object colValue = false;
                         if (record.has(key)) {
-                            value = record.get(key);
+                            colValue  = record.get(key);
                         }
                         if (col.getmValueWatcher() != null) {
-                            LmisValues values = col.getmValueWatcher().getValue(col, value);
+                            LmisValues values = col.getmValueWatcher().getValue(col, colValue);
                             cValue.setAll(values);
                         }
                         if (col.getType() instanceof LmisManyToOne) {
-                            if (value instanceof JSONArray) {
-                                JSONArray m2oRec = new JSONArray(value.toString());
-                                value = m2oRec.get(0);
-                                if ((Integer) value != 0) {
+                            if (colValue instanceof JSONArray) {
+                                JSONArray m2oRec = new JSONArray(colValue.toString());
+                                colValue = m2oRec.get(0);
+                                if ((Integer) colValue != 0) {
                                     LmisManyToOne m2o = (LmisManyToOne) col.getType();
                                     LmisDatabase db = (LmisDatabase) m2o.getDBHelper();
-                                    mRelRecord.add(db, value);
+                                    mRelRecord.add(db, colValue);
                                 } else {
-                                    value = false;
+                                    colValue = false;
                                 }
                             }
                         } else if (col.getType() instanceof LmisManyToMany) {
-                            if (value instanceof JSONArray) {
-                                JSONArray m2mRec = new JSONArray(value.toString());
+                            if (colValue instanceof JSONArray) {
+                                JSONArray m2mRec = new JSONArray(colValue.toString());
                                 List<Integer> ids = getIdsList(m2mRec);
                                 LmisM2MIds mIds = new LmisM2MIds(LmisM2MIds.Operation.REPLACE, ids);
-                                value = mIds;
+                                colValue = mIds;
                                 LmisManyToMany m2m = (LmisManyToMany) col.getType();
                                 LmisDatabase db = (LmisDatabase) m2m.getDBHelper();
                                 mRelRecord.add(db, ids);
@@ -73,22 +73,18 @@ public class LmisFieldsHelper {
                         }
                         //处理one to many字段
                         else if (col.getType() instanceof LmisOneToMany) {
-                            if (value instanceof JSONArray) {
-                                JSONArray o2mRec = new JSONArray(value.toString());
+                            if (colValue instanceof JSONArray) {
+                                JSONArray o2mRec = new JSONArray(colValue.toString());
                                 List<Integer> ids = getIdsList(o2mRec);
                                 LmisO2MIds mIds = new LmisO2MIds(LmisO2MIds.Operation.REPLACE, ids);
-                                value = mIds;
+                                colValue = mIds;
                                 LmisOneToMany o2m = (LmisOneToMany) col.getType();
                                 LmisDatabase db = (LmisDatabase) o2m.getDBHelper();
                                 mRelRecord.add(db, ids);
                             }
+                            continue;
                         }
-                        //处理外联的integer字段
-                        else if (value instanceof JSONArray) {
-                            JSONArray m2oRec = new JSONArray(value.toString());
-                            value = m2oRec.get(0);
-                        }
-                        cValue.put(key, value);
+                        cValue.put(key, colValue);
                     }
                 }
                 mValues.add(cValue);
@@ -105,8 +101,7 @@ public class LmisFieldsHelper {
         try {
             int length = array.length();
             if (length > 50) {
-                Log.i(TAG,
-                        "Many2Many or One2Many records more than 50... - Limiting to 50 records only");
+                Log.i(TAG,"Many2Many or One2Many records more than 50... - Limiting to 50 records only");
                 length = 50;
             }
             for (int i = 0; i < length; i++) {

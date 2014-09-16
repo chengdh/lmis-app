@@ -44,7 +44,7 @@
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator"/>
+                android:resource="@xml/authenticator" />
         </service>
 
         <activity
@@ -64,7 +64,9 @@
         </activity>
 
         <!--org sync service-->
-        <service android:name="com.lmis.services.OrgSyncService" android:exported="true">
+        <service
+            android:name="com.lmis.services.OrgSyncService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -83,7 +85,9 @@
             android:syncable="true" />
 
         <!--user_org sync-->
-        <service android:name="com.lmis.services.UserOrgSyncService" android:exported="true">
+        <service
+            android:name="com.lmis.services.UserOrgSyncService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -102,7 +106,9 @@
             android:syncable="true" />
 
         <!--message sync service-->
-        <service android:name="com.lmis.services.MessageSyncService" android:exported="true">
+        <service
+            android:name="com.lmis.services.MessageSyncService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -120,5 +126,23 @@
             android:label="@string/label_message"
             android:syncable="true" />
 
+        <!--inventoryMove sync-->
+        <service
+            android:name="com.lmis.services.InventoryOutSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_inventory_move" />
+        </service>
+        <provider
+            android:name="com.lmis.providers.inventory_move.InventoryMoveProvider"
+            android:authorities="com.lmis.providers.inventory_move"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_inventory_move"
+            android:syncable="true" />
     </application>
 </manifest>

@@ -32,8 +32,10 @@
     <string name="label_org">Orgs</string>
     <string name="label_user_org">User can access orgs</string>
     <string name="label_message">Message</string>
+    <string name="label_inventory_move">Inventory Move</string>
 
     <!--inventory out 相关定义-->
+
     <string name="inventory_out_blank">The inventory out is blank!</string>
     <string name="inventory_out_group_title">Inventory Outs</string>
     <string name="inventory_out_draw_item_draft">Draft</string>
@@ -68,6 +70,7 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="goods_exception_blank">No Goods Exception To Read</string>
     <string name="goods_exception_list_search">search</string>
     <string name="goods_exception_new">new</string>
+
 
 
     <!--setting drawer items-->
@@ -177,8 +180,8 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="messages_sync_notify_body">%1$d New Messages received (Lmis)</string>
 
 
-    <string name="vouchers_sync_notify_title">%1$d New Vouchers</string> 
-    <string name="vouchers_sync_notify_body">%1$d New Vouchers received (OpenERP)</string> 
+    <string name="inventory_move_sync_notify_title">%1$d New Inventory moves</string>
+    <string name="inventory_move_sync_notify_body">%1$d New inventory move received (Lmis)</string>
 
     <!--Toast text-->
     <string name="voucher_processed_text">The Voucher is processed.</string>

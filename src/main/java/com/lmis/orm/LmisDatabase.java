@@ -389,6 +389,13 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         }
         return ids;
     }
+    public List<Integer> ids(String where,String[] whereArgs){
+         List<Integer> ids = new ArrayList<Integer>();
+        for (LmisDataRow row : select(where,whereArgs)) {
+            ids.add(row.getInt("id"));
+        }
+        return ids;
+    }
 
     public List<LmisDataRow> select(String where, String[] whereArgs, String groupBy, String having, String orderBy) {
         if (where == null) {

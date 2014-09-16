@@ -47,7 +47,7 @@ public class InventoryMoveDB extends LmisDatabase {
 
         cols.add(new LmisColumn("bill_date", "bill_date", LmisFields.varchar(20)));
 
-        cols.add(new LmisColumn("note", "note", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("note", "note", LmisFields.varchar(20)));
         cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
 
@@ -58,13 +58,13 @@ public class InventoryMoveDB extends LmisDatabase {
         //上传时间
         cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
         //出入库类别
-        cols.add(new LmisColumn("type", "type", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("op_type", "operate type", LmisFields.varchar(20)));
         //明细
-        cols.add(new LmisColumn("load_list_with_barcode_lines", "Move Lines", LmisFields.oneToMany(new InventoryLineDB(mContext)), false));
+        cols.add(new LmisColumn("load_list_with_barcode_lines", "Move Lines", LmisFields.oneToMany(new InventoryLineDB(mContext))));
         //货物件数
-        cols.add(new LmisColumn("sum_goods_count", "sum goods count", LmisFields.integer(), false));
+        cols.add(new LmisColumn("sum_goods_count", "sum goods count", LmisFields.integer()));
         //运单数量
-        cols.add(new LmisColumn("sum_bills_count", "bills count", LmisFields.integer(), false));
+        cols.add(new LmisColumn("sum_bills_count", "bills count", LmisFields.integer()));
 
         return cols;
     }
@@ -96,8 +96,7 @@ public class InventoryMoveDB extends LmisDatabase {
     private void delUnusedAttr(JSONObject json) throws JSONException {
         json.remove("processed");
         json.remove("process_datetime");
-        json.remove("sum_goods_count");
-        json.remove("sum_bills_count");
+        json.remove("op_type");
         JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
