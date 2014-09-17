@@ -81,15 +81,19 @@ public class BarcodeParser {
      */
     int mMoveId = -1;
 
+    String mOpType = null;
+
     /**
      * Instantiates a new Barcode parser.
      *
-     * @param context    the context
-     * @param move_id    传入的已保存的出库单id
+     * @param context the context
+     * @param move_id 传入的已保存的出库单id
+     * @param fromOrgId the from org id
+     * @param toOrgId 要判定的到货地id
      * @param checkToOrg 是否在扫描时判定到货地是否符合
-     * @param toOrgId    要判定的到货地id
+     * @param opType the op type
      */
-    public BarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId, boolean checkToOrg) {
+    public BarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId, boolean checkToOrg,String opType) {
         mContext = context;
 
         ((Injector) mContext).inject(this);
@@ -99,6 +103,7 @@ public class BarcodeParser {
         mFromOrgID = fromOrgId;
         mToOrgID = toOrgId;
         mMoveId = move_id;
+        mOpType = opType;
         initData();
     }
 
@@ -133,7 +138,8 @@ public class BarcodeParser {
         if (mMoveId == -1) {
             row.put("from_org_id", mFromOrgID);
             row.put("to_org_id", mToOrgID);
-            row.put("processed", "false");
+            row.put("processed", false);
+            row.put("op_type",mOpType);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date now = new Date();
             row.put("bill_date", sdf.format(now));

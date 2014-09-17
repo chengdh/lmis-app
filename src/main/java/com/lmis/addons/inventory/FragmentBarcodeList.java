@@ -92,7 +92,7 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_inventory_out_barcode_list, menu);
+        inflater.inflate(R.menu.menu_fragment_inventory_move_barcode_list, menu);
         mSearch = (SearchView) menu.findItem(R.id.menu_inventory_out_barcode_list_search).getActionView();
         mSearch.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
 
@@ -105,13 +105,13 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
     private void initBarcodesListTab() {
         Log.d(TAG,"FragmentBarcodeList#initBarcodesListTab");
         mBarcodesObjects = new ArrayList<Object>(mBarcodeParser.getmScanedBarcode());
-        mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_out_list_barcodes_item, mBarcodesObjects) {
+        mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_move_list_barcodes_item, mBarcodesObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
                 ViewHolderForBarcodesList holder;
                 if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_list_barcodes_item, parent, false);
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_move_list_barcodes_item, parent, false);
                     holder = new ViewHolderForBarcodesList(mView);
                     mView.setTag(holder);
                 } else {

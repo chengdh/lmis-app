@@ -27,23 +27,6 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <!--
-
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    layout="@layout/fragment_inventory_out_scan_barcode" />
-
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    layout="@layout/fragment_inventory_out_bill_list" />
-
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    layout="@layout/fragment_inventory_out_barcode_list" />
-                    -->
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"

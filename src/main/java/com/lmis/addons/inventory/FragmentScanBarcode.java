@@ -2,7 +2,6 @@ package com.lmis.addons.inventory;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,7 +20,6 @@ import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.support.BaseFragment;
-import com.lmis.support.LmisUser;
 import com.lmis.util.barcode.BarcodeDuplicateException;
 import com.lmis.util.barcode.BarcodeNotExistsException;
 import com.lmis.util.barcode.BarcodeParseSuccessEvent;
@@ -37,8 +35,6 @@ import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -112,7 +108,7 @@ public class FragmentScanBarcode extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_inventory_out_scan_barcode, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move_scan_barcode, container, false);
         ButterKnife.inject(this, mView);
         mBus.register(this);
         initData();
@@ -171,7 +167,7 @@ public class FragmentScanBarcode extends BaseFragment {
                         }
                         mEdtScanBarcode.setText("");
                         DrawerListener drawer = scope.main();
-                        drawer.refreshDrawer(InventoryOutList.TAG);
+                        drawer.refreshDrawer(InventoryMoveList.TAG);
 
                     } catch (InvalidBarcodeException ex) {
                         Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();

@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -34,7 +32,7 @@ import butterknife.InjectView;
  * Created by chengdh on 14-6-17.
  * 调拨出库单新增或修改界面
  */
-public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeListener {
+public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeListener {
 
     public static final String TAG = "InventoryOut";
 
@@ -46,21 +44,18 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
     ViewPager mPager;
 
 
-    InventoryOutPagerAdapter mPageAdapter = null;
+    /**
+     * 出入库类型,具体参照 InventoryOutList#MType.
+     */
+    String mOpType = null;
+
+    InventoryMovePagerAdapter mPageAdapter = null;
 
     View mView = null;
     Integer mInventoryOutId = null;
     LmisDataRow mInventoryOut = null;
 
     BarcodeParser mBarcodeParser = null;
-
-
-    MenuItem mSearchViewBillIcon;
-    MenuItem mSearchViewBarcodeIcon;
-
-    SearchView mSearchViewBillList;
-
-    SearchView mSearchViewBarcodeList;
 
     Upload mUploadAsync = null;
 
@@ -73,7 +68,7 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_inventory_out, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move, container, false);
 
         ButterKnife.inject(this, mView);
         initData();
@@ -83,16 +78,21 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
 
     private void initData() {
         Log.d(TAG, "inventory_out#initData");
+
         LmisUser currentUser = scope.currentUser();
         Bundle bundle = getArguments();
         if (bundle != null) {
+            mOpType = bundle.getString("type");
             mInventoryOutId = bundle.getInt("inventory_out_id");
+        }
+        if (mInventoryOutId != null && mInventoryOutId > 0) {
             mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
             LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
-            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false);
-        } else
-            mBarcodeParser = new BarcodeParser(scope.context(), -1, currentUser.getDefault_org_id(), -1, false);
+            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false, mOpType);
+        } else {
+            mBarcodeParser = new BarcodeParser(scope.context(), -1, currentUser.getDefault_org_id(), -1, false, mOpType);
+        }
     }
 
     /**
@@ -105,7 +105,7 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
     }
 
     private void initPager() {
-        mPageAdapter = new InventoryOutPagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryOut);
+        mPageAdapter = new InventoryMovePagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryOut);
         mPager.setAdapter(mPageAdapter);
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -153,7 +153,7 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
             mPager.setCurrentItem(0);
         } else if (s.equals("TAB_BILLS_LIST")) {
             //mSearchViewBillIcon.setVisible(true);
-           // mSearchViewBarcodeIcon.setVisible(false);
+            // mSearchViewBarcodeIcon.setVisible(false);
             mPager.setCurrentItem(1);
         } else if (s.equals("TAB_BARCODES_LIST")) {
             //mSearchViewBillIcon.setVisible(false);
@@ -174,7 +174,7 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_inventory_out, menu);
+        inflater.inflate(R.menu.menu_fragment_inventory_move, menu);
     }
 
     @Override
@@ -219,9 +219,9 @@ public class InventoryOut extends BaseFragment implements TabHost.OnTabChangeLis
                 mUploadAsync.cancel(true);
                 Toast.makeText(scope.context(), "上传数据成功!", Toast.LENGTH_SHORT).show();
                 DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(InventoryOutList.TAG);
+                drawer.refreshDrawer(InventoryMoveList.TAG);
                 //返回已处理界面
-                InventoryOutList list = new InventoryOutList();
+                InventoryMoveList list = new InventoryMoveList();
                 Bundle arg = new Bundle();
                 arg.putString("type", "draft");
                 list.setArguments(arg);

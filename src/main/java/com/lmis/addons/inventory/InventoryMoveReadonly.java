@@ -31,7 +31,7 @@ import butterknife.InjectView;
 /**
  * Created by chengdh on 14-8-4.
  */
-public class InventoryOutReadonly extends BaseFragment {
+public class InventoryMoveReadonly extends BaseFragment {
     public static final String TAG = "InventoryOutReadonly";
 
     @InjectView(R.id.txv_title)
@@ -55,6 +55,7 @@ public class InventoryOutReadonly extends BaseFragment {
 
     SearchView mSearchViewBarcodeList;
 
+    String mOpType = null;
     //条码解析器
     BarcodeParser mBarcodeParser;
 
@@ -67,7 +68,7 @@ public class InventoryOutReadonly extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_inventory_out_readonly, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move_readonly, container, false);
 
         ButterKnife.inject(this, mView);
         initData();
@@ -77,7 +78,7 @@ public class InventoryOutReadonly extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_inventory_out_readonly, menu);
+        inflater.inflate(R.menu.menu_fragment_inventory_move_readonly, menu);
         mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_inventory_out_readonly_search).getActionView();
         mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));
     }
@@ -89,11 +90,12 @@ public class InventoryOutReadonly extends BaseFragment {
         Log.d(TAG, "inventory_out#initData");
         Bundle bundle = getArguments();
         if (bundle != null) {
+            mOpType = bundle.getString("type");
             mInventoryOutId = bundle.getInt("inventory_out_id");
             mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
             LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
-            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false);
+            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false,mOpType);
         }
 
     }
@@ -128,13 +130,13 @@ public class InventoryOutReadonly extends BaseFragment {
         mTxvSubTitle.setText(describe);
 
         mBarcodesObjects = new ArrayList<Object>(mBarcodeParser.getmScanedBarcode());
-        mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_out_list_barcodes_item, mBarcodesObjects) {
+        mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_move_list_barcodes_item, mBarcodesObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
                 ViewHolderForBarcodesList holder;
                 if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_list_barcodes_item, parent, false);
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_move_list_barcodes_item, parent, false);
                     holder = new ViewHolderForBarcodesList(mView);
                     mView.setTag(holder);
                 } else {

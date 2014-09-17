@@ -17,9 +17,9 @@ import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.FragmentBarcodeList;
 import com.lmis.addons.inventory.FragmentBillList;
 import com.lmis.addons.inventory.FragmentScanBarcode;
-import com.lmis.addons.inventory.InventoryOut;
-import com.lmis.addons.inventory.InventoryOutList;
-import com.lmis.addons.inventory.InventoryOutReadonly;
+import com.lmis.addons.inventory.InventoryMove;
+import com.lmis.addons.inventory.InventoryMoveList;
+import com.lmis.addons.inventory.InventoryMoveReadonly;
 import com.lmis.addons.message.MessageDetail;
 import com.lmis.addons.message.MessageList;
 import com.lmis.addons.search_bill.SearchBill;
@@ -46,12 +46,12 @@ import dagger.Provides;
                 BaseFragment.class, AccountFragment.class,
                 Login.class, SyncWizard.class, Idea.class,
                 AccountsDetail.class, AboutFragment.class,
-                InventoryOutList.class, UserProfile.class,
-                InventoryOut.class,
+                InventoryMoveList.class, UserProfile.class,
+                InventoryMove.class,
                 FragmentScanBarcode.class,
                 FragmentBarcodeList.class,
                 FragmentBillList.class,
-                InventoryOutReadonly.class,
+                InventoryMoveReadonly.class,
                 CarryingBillList.class,
                 CarryingBillNew.class,
                 CarryingBillView.class,

@@ -70,7 +70,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_inventory_out_bill_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move_bill_list, container, false);
         ButterKnife.inject(this, mView);
         mBus.register(this);
         initBillsListTab();
@@ -79,7 +79,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_inventory_out_bill_list, menu);
+        inflater.inflate(R.menu.menu_fragment_inventory_move_bill_list, menu);
         mSearchViewBillList = (SearchView) menu.findItem(R.id.menu_inventory_out_bill_list_search).getActionView();
         mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
     }
@@ -113,13 +113,13 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
     private void initBillsListTab() {
         Log.d(TAG, "FragmentBillList#initBillListTab");
         mBillsObjects = new ArrayList<Object>(mBarcodeParser.getBillsList());
-        mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_out_list_bills_item, mBillsObjects) {
+        mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_move_list_bills_item, mBillsObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
                 ViewHolderForBillsList holder;
                 if (mView == null) {
-                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_out_list_bills_item, parent, false);
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_inventory_move_list_bills_item, parent, false);
                     holder = new ViewHolderForBillsList(mView);
                     mView.setTag(holder);
                 } else {

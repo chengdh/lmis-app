@@ -10,13 +10,13 @@ import com.lmis.util.barcode.BarcodeParser;
 /**
  * Created by chengdh on 14-9-14.
  */
-public class InventoryOutPagerAdapter extends FragmentStatePagerAdapter {
+public class InventoryMovePagerAdapter extends FragmentStatePagerAdapter {
     public static final String TAG = "InventoryOutPagerAdapter";
 
     BarcodeParser mBarcodeParser = null;
     LmisDataRow mInventoryOut = null;
 
-    public InventoryOutPagerAdapter(FragmentManager fm, BarcodeParser parser, LmisDataRow inventoryOut) {
+    public InventoryMovePagerAdapter(FragmentManager fm, BarcodeParser parser, LmisDataRow inventoryOut) {
         super(fm);
         mBarcodeParser = parser;
         mInventoryOut = inventoryOut;

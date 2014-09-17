@@ -49,7 +49,7 @@ public class MultiChoiceBarcodeListener implements AbsListView.MultiChoiceModeLi
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.menu_fragment_inventory_out_barcode_list_context, menu);
+        inflater.inflate(R.menu.menu_fragment_inventory_move_barcode_list_context, menu);
         return true;
     }
 

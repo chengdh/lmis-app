@@ -48,7 +48,7 @@ import butterknife.InjectView;
  * Created by chengdh on 14-6-16.
  * 出库单列表
  */
-public class InventoryOutList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class InventoryMoveList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     public static final String TAG = "InventoryOutList";
 
@@ -130,7 +130,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
             mSelectedItemPosition = savedInstanceState.getInt("mSelectedItemPosition", -1);
         }
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_inventory_out_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move_list, container, false);
         ButterKnife.inject(this, mView);
         init();
         return mView;
@@ -146,7 +146,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setOnItemLongClickListener(this);
         listView.setMultiChoiceModeListener(mMultiChoiceListener);
-        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_out_listview_items, mInventoryObjects) {
+        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_move_listview_items, mInventoryObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
@@ -269,7 +269,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.menu_fragment_inventory_out_list_context, menu);
+            inflater.inflate(R.menu.menu_fragment_inventory_move_list_context, menu);
             return true;
         }
 
@@ -339,7 +339,7 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      * @return the fragment
      */
     private BaseFragment getFragment(String type, String state) {
-        InventoryOutList inventory = new InventoryOutList();
+        InventoryMoveList inventory = new InventoryMoveList();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
         bundle.putString("state", state);
@@ -432,14 +432,16 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
         BaseFragment detail;
-        if (row.get("processed") != null && row.getBoolean("processed")) {
-            detail = new InventoryOutReadonly();
-        } else {
-            detail = new InventoryOut();
-        }
         Bundle bundle = new Bundle();
         bundle.putInt("inventory_out_id", row.getInt("id"));
         bundle.putInt("position", position);
+        if (row.get("processed") != null && row.getBoolean("processed")) {
+            detail = new InventoryMoveReadonly();
+        } else {
+            bundle.putString("type", mCurrentType);
+            detail = new InventoryMove();
+        }
+
         detail.setArguments(bundle);
 
         FragmentListener listener = (FragmentListener) getActivity();
@@ -455,7 +457,8 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_inventory_out_list, menu);
+        menu.clear();
+        inflater.inflate(R.menu.menu_fragment_inventory_move_list, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_inventory_out_list_search).getActionView();
         mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
     }
@@ -473,7 +476,10 @@ public class InventoryOutList extends BaseFragment implements AdapterView.OnItem
         switch (item.getItemId()) {
             case (R.id.menu_inventory_out_new):
                 Log.d(TAG, "New Menu select");
-                Fragment inventoryOut = new InventoryOut();
+                Bundle args = new Bundle();
+                args.putString("type",mCurrentType);
+                Fragment inventoryOut = new InventoryMove();
+                inventoryOut.setArguments(args);
                 scope.main().startDetailFragment(inventoryOut);
                 return true;
             case (R.id.menu_inventory_out_list_search):
