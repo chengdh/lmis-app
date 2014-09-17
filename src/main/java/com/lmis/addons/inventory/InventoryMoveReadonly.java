@@ -95,7 +95,7 @@ public class InventoryMoveReadonly extends BaseFragment {
             mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
             LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
-            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false,mOpType);
+            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false, mOpType);
         }
 
     }
@@ -116,6 +116,7 @@ public class InventoryMoveReadonly extends BaseFragment {
             ButterKnife.inject(this, view);
         }
     }
+
     private void initBarcodesList() {
         String fromOrgName = mInventoryOut.getM2ORecord("from_org_id").browse().getString("name");
         String toOrgName = mInventoryOut.getM2ORecord("to_org_id").browse().getString("name");

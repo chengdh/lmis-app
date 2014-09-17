@@ -3,13 +3,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_goods_exception_list_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_action_search"
         android:showAsAction="always|collapseActionView"
         android:actionViewClass="android.widget.SearchView"
         android:title="@string/goods_exception_list_search"></item>
     <item
         android:id="@+id/menu_goods_exception_new"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_action_new"
         android:showAsAction="always"
         android:title="@string/goods_exception_new"></item>
 

@@ -118,10 +118,10 @@ public class FragmentScanBarcode extends BaseFragment {
 
     private void initData() {
         Log.d(TAG, "FragmentScanBarcode#initData");
-        if(mInventoryOut != null) {
+        if(mBarcodeParser.getmMoveId() > 0) {
             //refresh mInventoryOut
             LmisDatabase db = new InventoryMoveDB(scope.context());
-            mInventoryOut = db.select(mInventoryOut.getInt("id"));
+            mInventoryOut = db.select(mBarcodeParser.getmMoveId());
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
             ArrayAdapter adapter = (ArrayAdapter) mSpinnerYardsSelect.getAdapter();
             int pos = adapter.getPosition(toOrg);

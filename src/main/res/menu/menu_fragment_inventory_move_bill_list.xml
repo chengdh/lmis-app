@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_inventory_out_bill_list_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_action_search"
         android:showAsAction="always|collapseActionView"
         android:actionViewClass="android.widget.SearchView"
         android:title="@string/inventory_out_list_search"></item>
