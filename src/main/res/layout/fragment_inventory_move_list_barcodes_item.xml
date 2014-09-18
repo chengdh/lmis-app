@@ -6,7 +6,15 @@
     android:background="@drawable/oe_listview_background_selector"
     android:orientation="horizontal"
     android:weightSum="4"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_state"
+        android:src="@drawable/ic_action_done"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,4 +32,5 @@
         android:layout_weight="1"
         android:layout_gravity="right"
         android:gravity="right" />
+
 </LinearLayout>

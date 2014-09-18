@@ -8,7 +8,6 @@ import com.lmis.addons.inventory.InventoryLineDB;
 import com.lmis.addons.inventory.InventoryMoveDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisValues;
-import com.lmis.util.SoundPlayer;
 import com.squareup.otto.Bus;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,15 +26,15 @@ import javax.inject.Inject;
  * 条码处理器,前端扫描条码时,对条码进行解析
  * 同时判断条码是否正确
  */
-public class BarcodeParser {
+public abstract class BarcodeParser {
 
-    public final static String TAG = "com.lmis.util.barcode.BarcodeParser";
+    public final static String TAG = "BarcodeParser";
 
     /**
      * event bus.
      */
     @Inject
-    Bus mBus;
+    protected Bus mBus;
 
     /**
      * The M context.
@@ -44,61 +42,54 @@ public class BarcodeParser {
     Context mContext;
 
     @Inject
-    InventoryMoveDB mInventoryOutDB;
+    protected InventoryMoveDB mInventoryOutDB;
     @Inject
-    InventoryLineDB mInventoryLineDB;
+    protected InventoryLineDB mInventoryLineDB;
     /**
      * 已扫描的条码列表.
      */
-    List<GoodsInfo> mScanedBarcode;
+    protected List<GoodsInfo> mScanedBarcode;
 
-    public int getmFromOrgID() {
-        return mFromOrgID;
-    }
 
-    public void setmFromOrgID(int mFromOrgID) {
-        this.mFromOrgID = mFromOrgID;
-    }
-
-    boolean mCheckToOrg = false;
+    protected boolean mCheckFromOrg = false;
+    protected boolean mCheckToOrg = false;
 
     /**
      * 发出机构id.
      */
-    int mFromOrgID = -1;
+    protected int mFromOrgID = -1;
 
     /**
      * 到达机构id.
      */
-    int mToOrgID = -1;
+    protected int mToOrgID = -1;
 
-    public int getmMoveId() {
-        return mMoveId;
-    }
 
     /**
      * 数据库id.
      */
-    int mMoveId = -1;
+    protected int mMoveId = -1;
 
-    String mOpType = null;
+    protected String mOpType = null;
 
     /**
      * Instantiates a new Barcode parser.
      *
-     * @param context the context
-     * @param move_id 传入的已保存的出库单id
-     * @param fromOrgId the from org id
-     * @param toOrgId 要判定的到货地id
-     * @param checkToOrg 是否在扫描时判定到货地是否符合
-     * @param opType the op type
+     * @param context      the context
+     * @param move_id      传入的已保存的出库单id
+     * @param fromOrgId    the from org id
+     * @param toOrgId      要判定的到货地id
+     * @param checkFromOrg
+     * @param checkToOrg   是否在扫描时判定到货地是否符合
+     * @param opType       the op type
      */
-    public BarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId, boolean checkToOrg,String opType) {
+    public BarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId, Boolean checkFromOrg, boolean checkToOrg, String opType) {
         mContext = context;
 
         ((Injector) mContext).inject(this);
 
         mScanedBarcode = new ArrayList<GoodsInfo>();
+        mCheckFromOrg = checkFromOrg;
         mCheckToOrg = checkToOrg;
         mFromOrgID = fromOrgId;
         mToOrgID = toOrgId;
@@ -117,9 +108,12 @@ public class BarcodeParser {
             for (LmisDataRow line : record.getO2MRecord("load_list_with_barcode_lines").browseEach()) {
                 try {
                     GoodsInfo gs = new GoodsInfo(mContext, line.getString("barcode"));
+                    gs.setmState(line.getString("state"));
+                    gs.setmID(line.getInt("id"));
                     mScanedBarcode.add(gs);
                 } catch (InvalidBarcodeException ex) {
                     Log.e(TAG, ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         }
@@ -130,7 +124,7 @@ public class BarcodeParser {
      * Save dB.
      * 将扫码数据保存奥数据库
      */
-    private long save2DB(String barcode) {
+    protected long save2DB(String barcode) {
         //需要新建数据库
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
@@ -139,10 +133,11 @@ public class BarcodeParser {
             row.put("from_org_id", mFromOrgID);
             row.put("to_org_id", mToOrgID);
             row.put("processed", false);
-            row.put("op_type",mOpType);
+            row.put("op_type", mOpType);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
+            row.put("state","draft");
             mMoveId = (int) mInventoryOutDB.create(row);
         } else {
             //更新数据库
@@ -158,50 +153,25 @@ public class BarcodeParser {
     }
 
     /**
+     * 将条码确认信息保存到数据库.
+     *
+     * @param gs the gs
+     * @return the boolean
+     */
+    protected boolean confirm2DB(GoodsInfo gs) {
+        LmisValues vals = new LmisValues();
+        vals.put("state", "confirmed");
+        int ret = mInventoryLineDB.update(vals, gs.getmID());
+        return ret > 0;
+    }
+
+    /**
      * 添加将扫描的条码.
      *
      * @param barcode the barcode
      */
-    public void addBarcode(String barcode)
-            throws InvalidBarcodeException, InvalidToOrgException, DBException, BarcodeDuplicateException {
-        GoodsInfo gs = new GoodsInfo(mContext, barcode);
-
-        //条码已解析事件
-        mBus.post(new BarcodeParseSuccessEvent(gs));
-
-        //判断是否重复扫描
-        for (GoodsInfo f : mScanedBarcode) {
-            if (f.getmBarcode().equals(barcode)) {
-                SoundPlayer.playBarcodeScanErrorSound(mContext);
-                throw new BarcodeDuplicateException("重复扫描条码!");
-            }
-        }
-
-        for (GoodsInfo f : mScanedBarcode) {
-            if (f.getmBarcode().equals(barcode)) {
-                SoundPlayer.playBarcodeScanErrorSound(mContext);
-                throw new BarcodeDuplicateException("重复扫描条码!");
-            }
-        }
-
-        //判断到货地是否正确
-        if (mCheckToOrg && gs.getmToOrgId() != mToOrgID) {
-            SoundPlayer.playBarcodeScanErrorSound(mContext);
-            throw new InvalidToOrgException("到货地不正确");
-
-        }
-        mScanedBarcode.add(gs);
-        SoundPlayer.playBarcodeScanSuccessSound(mContext);
-        if (save2DB(barcode) > 0) {
-            //publish相关事件
-            mBus.post(new GoodsInfoAddSuccessEvent(gs));
-            mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));
-        } else {
-            SoundPlayer.playBarcodeScanErrorSound(mContext);
-            throw new DBException("保存条码信息时出现错误!");
-        }
-
-    }
+    public abstract void addBarcode(String barcode)
+            throws InvalidBarcodeException, InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException;
 
     /**
      * 从已扫描的记录中删除给定的条码数据.
@@ -237,10 +207,10 @@ public class BarcodeParser {
      * @param gsList the gs list
      * @return the int
      */
-    public int removeBarcodeAll(List<GoodsInfo> gsList){
+    public int removeBarcodeAll(List<GoodsInfo> gsList) {
         mScanedBarcode.removeAll(gsList);
         String barcodeStr = "-1";
-        for(GoodsInfo gs : gsList){
+        for (GoodsInfo gs : gsList) {
             barcodeStr = "," + gs.getmBarcode();
         }
         String where = "load_list_with_barcode_id = ? AND barcode in (?)";
@@ -265,8 +235,8 @@ public class BarcodeParser {
      */
     public int removeBill(String billNo) throws BarcodeNotExistsException, InvalidBarcodeException {
         List<GoodsInfo> delList = new ArrayList<GoodsInfo>();
-        for(GoodsInfo gs : mScanedBarcode){
-            if(gs.getmBillNo().equals(billNo)){
+        for (GoodsInfo gs : mScanedBarcode) {
+            if (gs.getmBillNo().equals(billNo)) {
                 delList.add(gs);
             }
         }
@@ -309,6 +279,16 @@ public class BarcodeParser {
      */
     public Integer sumGoodsCount() {
         return mScanedBarcode.size();
+    }
+
+    public Integer sumConfirmedGoodsCount() {
+        int ret = 0;
+        for (GoodsInfo gs : mScanedBarcode) {
+            if (gs.getmState().equals("confirmed")) {
+                ret++;
+            }
+        }
+        return ret;
     }
 
     /**
@@ -393,4 +373,18 @@ public class BarcodeParser {
             return gs_1.getmBarcode().compareTo(gs_2.getmBarcode());
         }
     }
+
+    public int getmFromOrgID() {
+        return mFromOrgID;
+    }
+
+    public void setmFromOrgID(int mFromOrgID) {
+        this.mFromOrgID = mFromOrgID;
+    }
+
+    public int getmMoveId() {
+        return mMoveId;
+    }
+
+
 }

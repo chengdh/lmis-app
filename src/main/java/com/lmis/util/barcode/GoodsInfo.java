@@ -42,11 +42,26 @@ public class GoodsInfo {
      */
     Integer mSeq = 0;
 
+    String mState = "draft";
+
+    /**
+     * 如果是更新数据时,对应的明细id.
+     */
+    Integer mID = -1;
+
     public GoodsInfo(Context context, String barcode) throws InvalidBarcodeException{
         mContext = context;
         mBarcode = barcode;
         ((Injector) context).inject(this);
         parseBarcode();
+    }
+
+    public Integer getmID() {
+        return mID;
+    }
+
+    public void setmID(Integer mID) {
+        this.mID = mID;
     }
 
     public String getmBarcode() {
@@ -71,6 +86,14 @@ public class GoodsInfo {
 
     public Integer getmSeq() {
         return mSeq;
+    }
+
+    public String getmState() {
+        return mState;
+    }
+
+    public void setmState(String mState) {
+        this.mState = mState;
     }
 
     /**

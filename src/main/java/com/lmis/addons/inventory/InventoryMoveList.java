@@ -257,7 +257,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_inventory_out_list_choice_delete:
+                case R.id.menu_inventory_move_list_choice_delete:
                     deleteSelected();
                     mode.finish();
                     return true;
@@ -433,7 +433,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
         BaseFragment detail;
         Bundle bundle = new Bundle();
-        bundle.putInt("inventory_out_id", row.getInt("id"));
+        bundle.putInt("inventory_move_id", row.getInt("id"));
         bundle.putInt("position", position);
         if (row.get("processed") != null && row.getBoolean("processed")) {
             detail = new InventoryMoveReadonly();

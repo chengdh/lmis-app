@@ -122,7 +122,7 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_inventory_out_list_choice_delete:
+                case R.id.menu_inventory_move_list_choice_delete:
                     mode.finish();
                     return true;
                 default:

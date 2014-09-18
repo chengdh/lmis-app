@@ -18,6 +18,7 @@ import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.BarcodeParserFactory;
 import com.lmis.util.barcode.BarcodeQueryListener;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.drawer.DrawerItem;
@@ -95,7 +96,7 @@ public class InventoryMoveReadonly extends BaseFragment {
             mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
             LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
-            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false, mOpType);
+            mBarcodeParser = BarcodeParserFactory.getParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), mOpType);
         }
 
     }

@@ -10,7 +10,11 @@ import com.lmis.MainActivity;
 import com.lmis.R;
 import com.lmis.support.LmisUser;
 import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.BranchConfirmBarcodeParser;
+import com.lmis.util.barcode.BranchOutBarcodeParser;
 import com.lmis.util.barcode.GoodsInfo;
+import com.lmis.util.barcode.YardConfirmBarcodeParser;
+import com.lmis.util.barcode.YardOutBarcodeParser;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
@@ -31,7 +35,8 @@ import dagger.Provides;
  */
 @Module(complete = false, library = true,
         includes = {OrgModule.class, DbModule.class},
-        injects = {MainActivity.class,
+        injects = {
+                MainActivity.class,
                 AccessOrgSpinner.class,
                 ExcludeAccessOrgSpinner.class,
                 PayTypeSpinner.class,
@@ -39,6 +44,10 @@ import dagger.Provides;
                 YardsOrgSpinner.class,
                 SummaryChidrenSpinner.class,
                 BarcodeParser.class,
+                BranchOutBarcodeParser.class,
+                YardConfirmBarcodeParser.class,
+                YardOutBarcodeParser.class,
+                BranchConfirmBarcodeParser.class,
                 GoodsInfo.class,
         })
 public class ActivityModule {

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -20,8 +21,10 @@ import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode.BarcodeParser;
 import com.lmis.util.barcode.BarcodeQueryListener;
 import com.lmis.util.barcode.GoodsInfo;
+import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.MultiChoiceBarcodeListener;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
+import com.lmis.util.barcode.ScandedBarcodeConfirmChangeEvent;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -75,6 +78,9 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
         @InjectView(R.id.txv_barcode)
         TextView txvBarcode;
 
+        @InjectView(R.id.img_state)
+        ImageView imgState;
+
         public ViewHolderForBarcodesList(View view) {
             ButterKnife.inject(this, view);
         }
@@ -103,7 +109,7 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
      * 初始化条码列表.
      */
     private void initBarcodesListTab() {
-        Log.d(TAG,"FragmentBarcodeList#initBarcodesListTab");
+        Log.d(TAG, "FragmentBarcodeList#initBarcodesListTab");
         mBarcodesObjects = new ArrayList<Object>(mBarcodeParser.getmScanedBarcode());
         mBarcodesAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_inventory_move_list_barcodes_item, mBarcodesObjects) {
             @Override
@@ -122,6 +128,13 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
                 String barcode = gs.getmBarcode();
                 holder.txvBillNo.setText(billNo);
                 holder.txvBarcode.setText(barcode);
+                if(gs.getmState().equals("draft")){
+                    holder.imgState.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.imgState.setVisibility(View.VISIBLE);
+                }
                 if (position > 0) {
                     GoodsInfo prevGs = (GoodsInfo) mBarcodesObjects.get(position - 1);
                     if (prevGs.getmBillNo().equals(billNo))
@@ -146,6 +159,23 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
         //清除选中状态
         mListBarcodes.clearChoices();
     }
+
+    @Subscribe
+    public void onScanedConfirmBarcodeChangedEvent(ScandedBarcodeConfirmChangeEvent evt) {
+        //通知barcodesListTab数据变化
+        mBarcodesObjects.clear();
+        mBarcodesObjects.addAll(mBarcodeParser.getmScanedBarcode());
+        mBarcodesAdapter.notifiyDataChange(mBarcodesObjects);
+        //清除选中状态
+        mListBarcodes.clearChoices();
+    }
+
+
+    @Subscribe
+    public void onGoodsInfoConfirmSuccessEvent(GoodsInfoAddSuccessEvent evt){
+
+    }
+
     @Override
     public List<DrawerItem> drawerMenus(Context context) {
         return null;
@@ -155,7 +185,8 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
     public Object databaseHelper(Context context) {
         return null;
     }
-        @Override
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         return false;
     }

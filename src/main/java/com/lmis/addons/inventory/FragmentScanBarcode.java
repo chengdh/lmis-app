@@ -31,6 +31,7 @@ import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
 import com.lmis.util.barcode.InvalidToOrgException;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
+import com.lmis.util.barcode.ScandedBarcodeConfirmChangeEvent;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 import com.squareup.otto.Bus;
@@ -119,7 +120,7 @@ public class FragmentScanBarcode extends BaseFragment {
     private void initData() {
         Log.d(TAG, "FragmentScanBarcode#initData");
         if(mBarcodeParser.getmMoveId() > 0) {
-            //refresh mInventoryOut
+            //refresh mInventoryMove
             LmisDatabase db = new InventoryMoveDB(scope.context());
             mInventoryOut = db.select(mBarcodeParser.getmMoveId());
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
@@ -177,6 +178,8 @@ public class FragmentScanBarcode extends BaseFragment {
                         Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
                     } catch (DBException e) {
                         e.printStackTrace();
+                    } catch (BarcodeNotExistsException e) {
+                        Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -233,11 +236,25 @@ public class FragmentScanBarcode extends BaseFragment {
         mTxvBarcode.setText(gs.getmBarcode());
     }
 
+    /**
+     * On scaned barcode changed event.
+     *
+     * @param evt the evt
+     */
     @Subscribe
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
         mBtnSumGoodsNum.setText(evt.getmSumGoodsNum() + "");
         mBtnSumBillsCount.setText(evt.getmSumBillsCount() + "");
     }
+
+    /**
+     * 条码确认发生变化.
+     *
+     * @param evt the evt
+     */
+    public void onScanedBarcodeConfirmChangedEvent(ScandedBarcodeConfirmChangeEvent evt){
+        mBtnSumGoodsNum.setText(evt.getmConfirmGoodsCount() + "/" +evt.getmGoodsCount());
+     }
 
     /**
      * 货物信息正确添加.

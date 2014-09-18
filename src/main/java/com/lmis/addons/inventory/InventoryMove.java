@@ -20,6 +20,7 @@ import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
 import com.lmis.util.barcode.BarcodeParser;
+import com.lmis.util.barcode.BarcodeParserFactory;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 
@@ -52,8 +53,8 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     InventoryMovePagerAdapter mPageAdapter = null;
 
     View mView = null;
-    Integer mInventoryOutId = null;
-    LmisDataRow mInventoryOut = null;
+    Integer mInventoryMoveId = -1;
+    LmisDataRow mInventoryMove = null;
 
     BarcodeParser mBarcodeParser = null;
 
@@ -77,22 +78,30 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     }
 
     private void initData() {
-        Log.d(TAG, "inventory_out#initData");
+        Log.d(TAG, "inventory_move#initData");
 
         LmisUser currentUser = scope.currentUser();
         Bundle bundle = getArguments();
         if (bundle != null) {
             mOpType = bundle.getString("type");
-            mInventoryOutId = bundle.getInt("inventory_out_id");
+            if(bundle.containsKey("inventory_move_id")) {
+                mInventoryMoveId = bundle.getInt("inventory_move_id");
+            }
         }
-        if (mInventoryOutId != null && mInventoryOutId > 0) {
-            mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
-            LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
-            LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
-            mBarcodeParser = new BarcodeParser(scope.context(), mInventoryOutId, fromOrg.getInt("id"), toOrg.getInt("id"), false, mOpType);
+
+        int fromOrgID = -1;
+        int toOrgID = -1;
+        if (mInventoryMoveId > 0) {
+            mInventoryMove = new InventoryMoveDB(scope.context()).select(mInventoryMoveId);
+            LmisDataRow fromOrg = mInventoryMove.getM2ORecord("from_org_id").browse();
+            LmisDataRow toOrg = mInventoryMove.getM2ORecord("to_org_id").browse();
+
+            fromOrgID = fromOrg.getInt("id");
+            toOrgID = toOrg.getInt("id");
         } else {
-            mBarcodeParser = new BarcodeParser(scope.context(), -1, currentUser.getDefault_org_id(), -1, false, mOpType);
+            fromOrgID = currentUser.getDefault_org_id();
         }
+        mBarcodeParser = BarcodeParserFactory.getParser(scope.context(), mInventoryMoveId, fromOrgID, toOrgID, mOpType);
     }
 
     /**
@@ -105,7 +114,7 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     }
 
     private void initPager() {
-        mPageAdapter = new InventoryMovePagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryOut);
+        mPageAdapter = new InventoryMovePagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryMove);
         mPager.setAdapter(mPageAdapter);
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -144,20 +153,11 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
      */
     @Override
     public void onTabChanged(String s) {
-        //mSearchViewBillIcon.collapseActionView();
-        //mSearchViewBarcodeIcon.collapseActionView();
-
         if (s.equals("TAB_SCAN_BARCODE")) {
-            //mSearchViewBillIcon.setVisible(false);
-            //mSearchViewBarcodeIcon.setVisible(false);
             mPager.setCurrentItem(0);
         } else if (s.equals("TAB_BILLS_LIST")) {
-            //mSearchViewBillIcon.setVisible(true);
-            // mSearchViewBarcodeIcon.setVisible(false);
             mPager.setCurrentItem(1);
         } else if (s.equals("TAB_BARCODES_LIST")) {
-            //mSearchViewBillIcon.setVisible(false);
-            //mSearchViewBarcodeIcon.setVisible(true);
             mPager.setCurrentItem(2);
         }
     }
