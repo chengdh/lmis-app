@@ -1,4 +1,4 @@
-package com.lmis.widgets;
+package com.lmis;
 
 import com.lmis.orm.LmisDataRow;
 

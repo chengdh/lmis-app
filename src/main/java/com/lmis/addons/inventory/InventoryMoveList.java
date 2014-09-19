@@ -37,7 +37,7 @@ import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode.InventoryMoveOpType;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
-import com.lmis.widgets.CurrentOrgChangeEvent;
+import com.lmis.CurrentOrgChangeEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

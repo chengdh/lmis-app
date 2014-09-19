@@ -63,7 +63,6 @@ import com.lmis.util.PreferenceManager;
 import com.lmis.util.drawer.DrawerAdatper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
-import com.lmis.widgets.CurrentOrgChangeEvent;
 import com.lmis.widgets.WidgetHelper;
 import com.squareup.otto.Bus;
 
