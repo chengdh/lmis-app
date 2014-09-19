@@ -43,7 +43,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
@@ -64,7 +63,9 @@ import com.lmis.util.PreferenceManager;
 import com.lmis.util.drawer.DrawerAdatper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.lmis.widgets.CurrentOrgChangeEvent;
 import com.lmis.widgets.WidgetHelper;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import dagger.Lazy;
 
 /**
  * The Class MainActivity.
@@ -100,6 +100,9 @@ public class MainActivity extends InjectingFragmentActivity implements
     @Inject
     @Activity
     Context mContext;
+
+    @Inject
+    Bus mBus;
 
     /**
      * The M fragment.
@@ -365,6 +368,7 @@ public class MainActivity extends InjectingFragmentActivity implements
         //修改当前的org_id
         LmisDataRow curOrg = mOrgs.get(position);
         LmisAccountManager.changeDefaultOrgId(this, curOrg.getInt("id"));
+        mBus.post(new CurrentOrgChangeEvent(curOrg));
         return true;
     }
 

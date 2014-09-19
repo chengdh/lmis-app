@@ -5,9 +5,12 @@ import android.content.Context;
 import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 import com.lmis.orm.LmisValues;
+import com.lmis.support.LmisUser;
+import com.lmis.util.barcode.InventoryMoveOpType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +54,7 @@ public class InventoryMoveDB extends LmisDatabase {
         cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
 
-        cols.add(new LmisColumn("confirm_id", "confirm_id", LmisFields.integer(20)));
+        cols.add(new LmisColumn("confirmer_id", "confirm_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("confirm_date", "confirm_date", LmisFields.varchar(20)));
         //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
@@ -75,13 +78,24 @@ public class InventoryMoveDB extends LmisDatabase {
      * @param id the id
      */
     public void save2server(int id) throws JSONException, IOException {
-        JSONObject json = select(id).exportAsJSON(false);
-        delUnusedAttr(json);
+        LmisDataRow row = select(id);
+        String opType = row.getString("op_type");
+        JSONObject json = row.exportAsJSON(true);
+        delUnusedAttrs(json);
 
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
-        instance.callMethod("LoadListWithBarcode", "create", args, null);
+        LmisUser user = LmisUser.current(mContext);
+        if(opType.equals(InventoryMoveOpType.YARD_CONFIRM) || opType.equals(InventoryMoveOpType.BRANCH_CONFIRM)){
+            json.put("confirmer_id",user.getUser_id());
+            instance.callMethod("LoadListWithBarcode", "update_attributes", args, id);
+            instance.callMethod("LoadListWithBarcode", "confirm", null, id);
+        }
+        else{
+            json.remove("id");
+            instance.callMethod("LoadListWithBarcode", "create", args, null);
+        }
         LmisValues v = new LmisValues();
         v.put("processed",true);
         v.put("process_datetime",new Date());
@@ -93,7 +107,7 @@ public class InventoryMoveDB extends LmisDatabase {
      *
      * @param json the json
      */
-    private void delUnusedAttr(JSONObject json) throws JSONException {
+    private void delUnusedAttrs(JSONObject json) throws JSONException {
         json.remove("processed");
         json.remove("process_datetime");
         json.remove("op_type");

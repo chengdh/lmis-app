@@ -182,6 +182,7 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_goods_exception_list, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_goods_exception_list_search).getActionView();
         mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));

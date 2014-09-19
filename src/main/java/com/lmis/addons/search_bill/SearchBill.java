@@ -117,6 +117,7 @@ public class SearchBill extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_bill_search, menu);
         mMenuSearch = menu.findItem(R.id.menu_bill_search_search);
         mSearchView = (SearchView) mMenuSearch.getActionView();

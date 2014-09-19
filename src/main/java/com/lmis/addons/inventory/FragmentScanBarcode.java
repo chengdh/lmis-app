@@ -127,8 +127,8 @@ public class FragmentScanBarcode extends BaseFragment {
             ArrayAdapter adapter = (ArrayAdapter) mSpinnerYardsSelect.getAdapter();
             int pos = adapter.getPosition(toOrg);
             mSpinnerYardsSelect.setSelection(pos);
-            mBtnSumGoodsNum.setText(mInventoryOut.getInt("sum_goods_count") + "");
-            mBtnSumBillsCount.setText(mInventoryOut.getInt("sum_bills_count") + "");
+            mBtnSumGoodsNum.setText(mBarcodeParser.sumConfirmedGoodsCount() + "" + "/" + mBarcodeParser.sumGoodsCount());
+            mBtnSumBillsCount.setText(mBarcodeParser.sumBillsCount() + "");
         }
 
     }
@@ -252,6 +252,8 @@ public class FragmentScanBarcode extends BaseFragment {
      *
      * @param evt the evt
      */
+
+    @Subscribe
     public void onScanedBarcodeConfirmChangedEvent(ScandedBarcodeConfirmChangeEvent evt){
         mBtnSumGoodsNum.setText(evt.getmConfirmGoodsCount() + "/" +evt.getmGoodsCount());
      }

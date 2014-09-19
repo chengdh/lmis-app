@@ -299,6 +299,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_carrying_bill_list, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_carrying_bill_list_search).getActionView();
         mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));

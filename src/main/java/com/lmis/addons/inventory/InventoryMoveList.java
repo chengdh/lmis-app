@@ -34,12 +34,18 @@ import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
+import com.lmis.util.barcode.InventoryMoveOpType;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.lmis.widgets.CurrentOrgChangeEvent;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -52,6 +58,9 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     public static final String TAG = "InventoryOutList";
 
+
+    @Inject
+    Bus mBus;
 
     /**
      * The enum state.
@@ -80,7 +89,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     String mCurrentState = "draft";
 
-    String mCurrentType = "branch_out";
+    String mCurrentType = InventoryMoveOpType.BRANCH_OUT;
 
     View mView = null;
 
@@ -132,6 +141,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_move_list, container, false);
         ButterKnife.inject(this, mView);
+        mBus.register(this);
         init();
         return mView;
     }
@@ -202,13 +212,13 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             }
             if (bundle.containsKey("type")) {
                 mCurrentType = bundle.getString("type");
-                if (mCurrentType.equals("branch_out")) {
+                if (mCurrentType.equals(InventoryMoveOpType.BRANCH_OUT)) {
                     mType = MType.BRANCH_OUT;
-                } else if (mCurrentType.equals("yard_confirm")) {
+                } else if (mCurrentType.equals(InventoryMoveOpType.YARD_CONFIRM)) {
                     mType = MType.YARD_CONFIRM;
-                } else if (mCurrentType.equals("yard_out")) {
+                } else if (mCurrentType.equals(InventoryMoveOpType.YARD_OUT)) {
                     mType = MType.YARD_OUT;
-                } else if (mCurrentType.equals("branch_confirm")) {
+                } else if (mCurrentType.equals(InventoryMoveOpType.BRANCH_CONFIRM)) {
                     mType = MType.BRANCH_CONFIRM;
                 }
 
@@ -295,34 +305,43 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
      */
     public HashMap<String, Object> getWhere(MType type, MState state) {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        String[] whereArgs = new String[2];
+        String[] whereArgs = new String[3];
         String where = "op_type = ?";
         switch (type) {
             case BRANCH_OUT:
-                whereArgs[0] = "branch_out";
+                where += " AND from_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.BRANCH_OUT;
                 break;
             case YARD_CONFIRM:
-                whereArgs[0] = "yard_confirm";
+                where += " AND to_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.YARD_CONFIRM;
                 break;
             case YARD_OUT:
-                whereArgs[0] = "yard_out";
+                where += " AND from_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.YARD_OUT;
                 break;
             case BRANCH_CONFIRM:
-                whereArgs[0] = "branch_confirm";
+                where += " AND to_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.BRANCH_CONFIRM;
                 break;
             default:
-                whereArgs[0] = "branch_out";
+                whereArgs[0] = InventoryMoveOpType.BRANCH_OUT;
                 break;
         }
+
+        //当前机构
+
+        LmisUser user = LmisUser.current(getActivity());
+        whereArgs[1] = user.getDefault_org_id() + "";
 
         switch (state) {
             case DRAFT:
                 where += " AND (processed = ? or processed IS NULL)";
-                whereArgs[1] = "false";
+                whereArgs[2] = "false";
                 break;
             default:
                 where += "AND processed = ? ";
-                whereArgs[1] = "true";
+                whereArgs[2] = "true";
                 break;
         }
         map.put("where", where);
@@ -353,7 +372,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         LmisUser user = LmisUser.current(getActivity());
 
         OrgDB db = new OrgDB(context);
-        LmisDataRow currentOrg =  db.select(user.getDefault_org_id());
+        LmisDataRow currentOrg = db.select(user.getDefault_org_id());
 
         //分理处出库
         String branchOutTitle = "出库扫码";
@@ -361,10 +380,10 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         String branchOutProcessed = "已上传";
 
         drawerItems.add(new DrawerItem(TAG, branchOutTitle, true));
-        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("branch_out", "draft")));
-        drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("branch_out", "processed")));
+        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.BRANCH_OUT, "draft")));
+        drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_OUT, "processed")));
 
-        if(currentOrg.getBoolean("is_yard")) {
+        if (currentOrg.getBoolean("is_yard")) {
 
             //货场收货
             String yardConfirmTitle = "货场入库";
@@ -372,8 +391,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             String yardConfirmProcessed = "已处理";
 
             drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("yard_confirm", "draft")));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("yard_confirm", "processed")));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
 
             //货场出库
             String yardOutTitle = "货场出库";
@@ -381,8 +400,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             String yardOutProcessed = "已处理";
 
             drawerItems.add(new DrawerItem(TAG, yardOutTitle, true));
-            drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("yard_out", "draft")));
-            drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("yard_out", "processed")));
+            drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_OUT, "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_OUT, "processed")));
         }
 
         //分理处/分公司入库
@@ -391,8 +410,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         String branchConfirmProcessed = "已处理";
 
         drawerItems.add(new DrawerItem(TAG, branchConfirmTitle, true));
-        drawerItems.add(new DrawerItem(TAG, branchConfirmDraft, count(MType.BRANCH_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("branch_confirm", "draft")));
-        drawerItems.add(new DrawerItem(TAG, branchConfirmProcessed, count(MType.BRANCH_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment("branch_confirm", "processed")));
+        drawerItems.add(new DrawerItem(TAG, branchConfirmDraft, count(MType.BRANCH_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.BRANCH_CONFIRM, "draft")));
+        drawerItems.add(new DrawerItem(TAG, branchConfirmProcessed, count(MType.BRANCH_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_CONFIRM, "processed")));
 
         return drawerItems;
     }
@@ -435,10 +454,10 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         Bundle bundle = new Bundle();
         bundle.putInt("inventory_move_id", row.getInt("id"));
         bundle.putInt("position", position);
+        bundle.putString("type", mCurrentType);
         if (row.get("processed") != null && row.getBoolean("processed")) {
             detail = new InventoryMoveReadonly();
         } else {
-            bundle.putString("type", mCurrentType);
             detail = new InventoryMove();
         }
 
@@ -477,7 +496,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             case (R.id.menu_inventory_out_new):
                 Log.d(TAG, "New Menu select");
                 Bundle args = new Bundle();
-                args.putString("type",mCurrentType);
+                args.putString("type", mCurrentType);
                 Fragment inventoryOut = new InventoryMove();
                 inventoryOut.setArguments(args);
                 scope.main().startDetailFragment(inventoryOut);
@@ -488,6 +507,16 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Subscribe
+    public void onCurrentOrgChangeEvent(CurrentOrgChangeEvent evt) {
+        if (mInventoryLoader != null) {
+            mInventoryLoader.cancel(true);
+
+        }
+        mInventoryLoader = new InventoryLoader(mType, mState);
+        mInventoryLoader.execute((Void) null);
     }
 
     public class InventoryLoader extends AsyncTask<Void, Void, Boolean> {

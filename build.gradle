@@ -15,7 +15,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url 'https://github.com/donnfelker/mvn-repo/raw/master/' }
-    maven { url "https://github.com/dahlgren/pulltorefresh-aar/raw/master"}
+    maven { url "https://github.com/dahlgren/pulltorefresh-aar/raw/master" }
 }
 
 dependencies {
@@ -26,7 +26,6 @@ dependencies {
     //DI 框架
     compile 'com.squareup.dagger:dagger:1.2.1'
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
-
 
     //Android view 注入框架
     compile 'com.jakewharton:butterknife:5.1.0'
@@ -59,14 +58,14 @@ android {
         // Error: Duplicate files during packaging of APK
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-    // signingConfigs {
-    // release {
-    // storeFile file(System.getenv('ANDROID_KEYSTORE_PATH'))
-    // storePassword System.getenv('ANDROID_STORE_PASS')
-    // keyAlias System.getenv('ANDROID_KEY_ALIAS')
-    // keyPassword System.getenv('ANDROID_KEY_PASS')
-    // }
-    // }
+    signingConfigs {
+        release {
+            storeFile file('my-android-app-key.keystore')
+            storePassword 'yesnoyesno'
+            keyAlias 'cheng-app'
+            keyPassword 'yesnoyesno'
+        }
+    }
     lintOptions {
         abortOnError false
     }
@@ -79,8 +78,8 @@ android {
         release {
             // runProguard true
             // proguardFile '..\proguard.cfg'
-            // signingConfig signingConfigs.release
-            // zipAlign true // this is default for release
+            signingConfig signingConfigs.release
+            zipAlign true // this is default for release
             //testPackageName 'com.lmis.app.mobile.core.core'
             //testInstrumentationRunner 'android.test.InstrumentationTestRunner' // this is the default
         }

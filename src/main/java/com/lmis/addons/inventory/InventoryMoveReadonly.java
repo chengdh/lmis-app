@@ -92,7 +92,7 @@ public class InventoryMoveReadonly extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mOpType = bundle.getString("type");
-            mInventoryOutId = bundle.getInt("inventory_out_id");
+            mInventoryOutId = bundle.getInt("inventory_move_id");
             mInventoryOut = new InventoryMoveDB(scope.context()).select(mInventoryOutId);
             LmisDataRow fromOrg = mInventoryOut.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
