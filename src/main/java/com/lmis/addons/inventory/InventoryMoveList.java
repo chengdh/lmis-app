@@ -383,7 +383,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.BRANCH_OUT, "draft")));
         drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_OUT, "processed")));
 
-        if (currentOrg.getBoolean("is_yard")) {
+        //if (currentOrg.getBoolean("is_yard")) {
 
             //货场收货
             String yardConfirmTitle = "货场入库";
@@ -402,7 +402,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             drawerItems.add(new DrawerItem(TAG, yardOutTitle, true));
             drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_OUT, "draft")));
             drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_OUT, "processed")));
-        }
+        //}
 
         //分理处/分公司入库
         String branchConfirmTitle = "入库扫码";
@@ -591,6 +591,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
