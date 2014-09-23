@@ -7,7 +7,7 @@
     <versionName>1.0 beta</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
-    <apkUrl>https://github.com/chengdh/openerp-mobile/raw/master/build/outputs/apk/openerp-mobile-release.apk</apkUrl>
+    <apkUrl>https://github.com/chengdh/lmis-app/raw/master/build/outputs/apk/lmis-app-release.apk</apkUrl>
     <updateTips>
         <default>update tips</default>
         <en>update tips</en>

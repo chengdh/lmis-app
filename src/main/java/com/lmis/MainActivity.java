@@ -239,7 +239,7 @@ public class MainActivity extends InjectingFragmentActivity implements
         UpdateManager manager = new UpdateManager(this);
 
         UpdateOptions options = new UpdateOptions.Builder(this)
-                .checkUrl("https://raw.githubusercontent.com/chengdh/openerp-mobile/master/update.xml")
+                .checkUrl("https://github.com/chengdh/lmis-app/raw/master/update.xml")
                 .updateFormat(UpdateFormat.XML)
                 .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
                 .checkPackageName(true)
