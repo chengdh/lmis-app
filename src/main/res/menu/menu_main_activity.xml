@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_check_upgrade"
+        android:showAsAction="never"
+        android:icon="@drawable/ic_action_sync"
+        android:title="检查更新">
+
+        </item>
+</menu>

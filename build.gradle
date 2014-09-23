@@ -11,6 +11,9 @@ buildscript {
 apply plugin: 'android'
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
 
     mavenLocal()
     mavenCentral()
@@ -36,6 +39,10 @@ dependencies {
     //pulltorefresh
     compile 'com.github.chrisbanes.pulltorefresh:library:2.1.2-SNAPSHOT@aar'
 
+    compile('com.github.snowdream.android.app:updater:1.0@aar') {
+        transitive = true
+    }
+
     compile files('libs/fb-android-dagger-1.0.3.jar')
 
     androidTestCompile 'junit:junit:4.11'
@@ -60,7 +67,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('my-android-app-key.keystore')
+            storeFile file('/Users/chengdh/.keystore/my-android-app-key.keystore')
             storePassword 'yesnoyesno'
             keyAlias 'cheng-app'
             keyPassword 'yesnoyesno'

@@ -38,6 +38,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,6 +48,10 @@ import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
+import com.github.snowdream.android.app.UpdateFormat;
+import com.github.snowdream.android.app.UpdateManager;
+import com.github.snowdream.android.app.UpdateOptions;
+import com.github.snowdream.android.app.UpdatePeriod;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -209,6 +214,38 @@ public class MainActivity extends InjectingFragmentActivity implements
         List<Object> ret = super.getModules();
         ret.add(new ActivityModule(this, this));
         return ret;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_check_upgrade:
+                checkUpgrade();
+                break;
+            default:
+                return super.onMenuItemSelected(featureId, item);
+        }
+        return true;
+    }
+
+    private void checkUpgrade() {
+        UpdateManager manager = new UpdateManager(this);
+
+        UpdateOptions options = new UpdateOptions.Builder(this)
+                .checkUrl("https://raw.githubusercontent.com/chengdh/openerp-mobile/master/update.xml")
+                .updateFormat(UpdateFormat.XML)
+                .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
+                .checkPackageName(true)
+                .build();
+
+        manager.check(this, options);
     }
 
     private void init() {

@@ -33,3 +33,4 @@ proguard/
 *.iws
 .idea/
 *.db
+!build/outputs/apk/lmis-app-release.apk
