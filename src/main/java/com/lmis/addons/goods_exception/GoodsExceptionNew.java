@@ -199,19 +199,26 @@ public class GoodsExceptionNew extends BaseFragment {
      * @return the boolean
      */
     private Boolean validate() {
+        Boolean ret = true;
         mEdtExcepNum.setError(null);
         mTxvBillNo.setText(null);
         if (mCarryingBillID == -1) {
             mTxvBillNo.setError("请先查询运单信息!");
+            ret = false;
 
         }
         if (Integer.parseInt(mEdtExcepNum.getText().toString()) <= 0) {
             mEdtExcepNum.setError("异常数量应大于0!");
+            ret = false;
+
         }
-        return true;
+        return ret;
     }
 
     private Boolean save2DB() {
+        if(!validate()) {
+            return false;
+        }
         LmisValues vals = new LmisValues();
         LmisUser currentUser = scope.currentUser();
         vals.put("org_id", currentUser.getDefault_org_id());
@@ -227,7 +234,6 @@ public class GoodsExceptionNew extends BaseFragment {
         vals.put("note", mEdtNote.getText());
         if (mImg != null) {
             byte[] b = ImageUtil.getBytes(mImg);
-            //byte[] c = ImageUtil.getBytes(BitmapFactory.decodeResource(getResources(), R.drawable.openerp_logo));
             vals.put("photo", b);
         }
         GoodsExceptionDB db = (GoodsExceptionDB) databaseHelper(scope.context());

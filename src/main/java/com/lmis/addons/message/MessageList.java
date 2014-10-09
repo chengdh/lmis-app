@@ -167,6 +167,7 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
      * 初始化界面及数据
      */
     private void init() {
+        mTxvBlank.setVisibility(View.GONE);
         mListView.getRefreshableView().setOnItemClickListener(this);
         mListView.getRefreshableView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.getRefreshableView().setOnItemLongClickListener(this);

@@ -164,6 +164,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
     }
 
     private void init() {
+        mTxvBlank.setVisibility(View.GONE);
         mListView.setOnItemClickListener(this);
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setOnItemLongClickListener(this);

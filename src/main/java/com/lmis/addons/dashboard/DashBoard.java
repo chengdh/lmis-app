@@ -27,6 +27,8 @@ import butterknife.InjectView;
  */
 public class DashBoard extends BaseFragment {
     public final static String TAG = "Dashbaord";
+    public final static String DASHBOARD_URL="http://122.0.76.160:3000/sample";
+
     @InjectView(R.id.web_view_dashboard)
     WebView mWebView;
 
@@ -52,9 +54,8 @@ public class DashBoard extends BaseFragment {
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
         LmisUser user = scope.currentUser();
-        String serverURL = user.getHost();
         int curOrgId = user.getDefault_org_id();
-        mWebView.loadUrl(serverURL + "?from_org_id=" + curOrgId + "");
+        mWebView.loadUrl(DASHBOARD_URL+ "?from_org_id=" + curOrgId + "");
     }
 
     @Override

@@ -151,6 +151,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
      * 初始化界面及数据
      */
     private void init() {
+        mTxvBlank.setVisibility(View.GONE);
         ListView listView = mListView.getRefreshableView();
         listView.setOnItemClickListener(this);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);

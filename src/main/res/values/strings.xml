@@ -7,16 +7,16 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Account Fragment Strings -->
-    <string name="logo_description">OpenERP</string>
-    <string name="account_title">Setup Your OpenERP Server</string>
-    <string name="account_description">Provide your OpenERP 7.0 Server URL and click on Continue button to test Connection and go next step.</string>
+    <string name="logo_description">lmis</string>
+    <string name="account_title">Setup Your lmis Server</string>
+    <string name="account_description">Provide your lmis 7.0 Server URL and click on Continue button to test Connection and go next step.</string>
     <string name="account_edit_server_url">Server URL</string>
     <string name="account_edit_server_port">Port Number (If any)</string>
     <string name="account_continue_button">Continue</string>
     <string name="account_login_button">Login</string>
 
     <!-- Login Fragment Strings -->
-    <string name="login_title">Config Your OpenERP Login Details</string>
+    <string name="login_title">Config Your lmis Login Details</string>
     <string name="login_description">Select your working database and provide your username and password to access.</string>
     <string name="login_select_database">Select Database</string>
     <string name="login_edit_username">Username</string>
@@ -109,15 +109,15 @@ Your inbox contains private messages or emails sent to you as well as informatio
     </string-array>
 
     <!-- Aboout Company Fragment Strings -->
-    <string name="about_Company_line1">Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.</string>
-    <string name="about_Company_line2">OpenERP is a trademark of the <a href="https://www.openerp.com/">OpenERP.com.</a></string>
+    <string name="about_Company_line1">Copyright © 2004-TODAY lmis SA. All Rights Reserved.</string>
+    <string name="about_Company_line2">lmis is a trademark of the <a href="https://www.lmis.com/">lmis.com.</a></string>
     <string name="about_Company_line3">Licenced under the terms of <a href="http://www.gnu.org/licenses/agpl.html/">GNU Affero General Public License</a></string>
-    <string name="about_Company_line4">For more information visit <a href="https://www.openerp.com/">OpenERP.com</a>.</string>
+    <string name="about_Company_line4">For more information visit <a href="https://www.lmis.com/">lmis.com</a>.</string>
     <string name="app_version_name">Version</string>
-    <string name="imgcontentDescription">OpenERP LOGO in upper portion of the screen</string>
+    <string name="imgcontentDescription">lmis LOGO in upper portion of the screen</string>
 
     <!-- Lmis Widget Strings -->
-    <string name="widget_company_logo">OpenERP logo</string>
+    <string name="widget_company_logo">lmis logo</string>
     <string name="widget_notes_label">Notes</string>
     <string name="widget_notes_notification">00</string>
     <string name="widget_messages_label">Messages</string>

@@ -40,8 +40,11 @@ dependencies {
     compile 'com.github.chrisbanes.pulltorefresh:library:2.1.2-SNAPSHOT@aar'
 
     compile('com.github.snowdream.android.app:updater:1.0@aar') {
+        exclude  group: 'com.android.support'
         transitive = true
     }
+    compile('com.android.support:support-v4:19.0.+')
+    compile('com.android.support:appcompat-v7:19.0.+')
 
     compile files('libs/fb-android-dagger-1.0.3.jar')
 

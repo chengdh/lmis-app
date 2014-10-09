@@ -193,6 +193,7 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
      * 初始化界面及数据
      */
     private void init() {
+        mTxvGoodsExceptionBlank.setVisibility(View.GONE);
         mListView.setOnItemClickListener(this);
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setOnItemLongClickListener(this);

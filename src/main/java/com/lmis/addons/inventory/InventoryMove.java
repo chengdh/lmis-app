@@ -204,6 +204,9 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
 
         @Override
         protected Boolean doInBackground(Void... voids) {
+            if(mBarcodeParser.getmMoveId() == -1){
+                return false;
+            }
             try {
                 ((InventoryMoveDB) db()).save2server(mBarcodeParser.getmMoveId());
             } catch (Exception ex) {
