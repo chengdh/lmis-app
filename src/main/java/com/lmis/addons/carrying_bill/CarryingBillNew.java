@@ -405,6 +405,10 @@ public class CarryingBillNew extends BaseFragment {
                 arg.putString("type", "processed");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
+                //打印小票
+                LmisDataRow bill = ((CarryingBillDB)db()).select(mCarryingBillID);
+                CarryingBillPrint.print(bill,false);
+
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();

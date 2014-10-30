@@ -24,6 +24,7 @@ public class PayTypeSpinner extends Spinner {
 
     List<Map.Entry> mPayTypes = null;
 
+
     public PayTypeSpinner(final Context context, AttributeSet attrs) {
         super(context, attrs);
         ((Injector) context).inject(this);

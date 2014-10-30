@@ -1,0 +1,8 @@
+SIZE 50 mm,30 mm 
+GAP 3 mm,0
+DIRECTION 1
+CLS
+TEXT 10,10,"Font001",0,4,4,"测试字体1"
+TEXT 10,40,"Font001",0,4,4,"测试字体2"
+TEXT 10,70,"Font001",0,4,4,"测试字体3"
+PRINT 1

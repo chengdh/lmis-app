@@ -794,22 +794,32 @@ public class MainActivity extends InjectingFragmentActivity implements
     @Override
     public void startMainFragment(Fragment fragment, boolean addToBackState) {
         Log.d(TAG, "MainActivity->FragmentListener->startMainFragment()");
-        FragmentTransaction tran = mFragment.beginTransaction().replace(R.id.fragment_container, fragment);
+
+        if(fragment.isAdded()) return;
+        Fragment f = mFragment.findFragmentById(R.id.fragment_container);
+        FragmentTransaction tran = mFragment.beginTransaction();
+        tran.remove(f);
+        tran.replace(R.id.fragment_container, fragment);
         if (addToBackState) {
             tran.addToBackStack(null);
         }
-        tran.commit();
+        tran.commitAllowingStateLoss();
     }
 
     @Override
     public void startDetailFragment(Fragment fragment) {
         Log.d(TAG, "MainActivity->FragmentListener->startDetailFragment()");
-        FragmentTransaction tran = mFragment.beginTransaction().replace(
-                R.id.fragment_container, fragment);
+        if(fragment.isAdded()) return;
+
+        Fragment f = mFragment.findFragmentById(R.id.fragment_container);
+        FragmentTransaction tran = mFragment.beginTransaction();
+        tran.remove(f);
+        tran.replace(R.id.fragment_container, fragment);
+        tran.remove(f);
         if (!mLandscape) {
             tran.addToBackStack(null);
         }
-        tran.commit();
+        tran.commitAllowingStateLoss();
     }
 
     @Override
