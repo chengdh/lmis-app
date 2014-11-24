@@ -12,6 +12,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.lmis.R;
+import com.lmis.base.org.OrgDB;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
@@ -55,7 +57,14 @@ public class DashBoard extends BaseFragment {
         mWebView.setWebChromeClient(new WebChromeClient());
         LmisUser user = scope.currentUser();
         int curOrgId = user.getDefault_org_id();
-        mWebView.loadUrl(DASHBOARD_URL+ "?from_org_id=" + curOrgId + "");
+        OrgDB orgDB = new OrgDB(scope.context());
+        List<LmisDataRow> children = orgDB.getChildrenOrgs(curOrgId);
+        String jsArray = "";
+        for(LmisDataRow r : children){
+            jsArray += "&children_org_ids[]=" + r.getInt("id") + "" ;
+        }
+        mWebView.loadUrl(DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray);
+
     }
 
     @Override

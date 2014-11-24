@@ -3,6 +3,7 @@ package com.lmis.base.org;
 import android.content.Context;
 
 import com.lmis.orm.LmisColumn;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 
@@ -38,5 +39,17 @@ public class OrgDB extends LmisDatabase {
         cols.add(new LmisColumn("is_summary", "Is Summary", LmisFields.varchar(20)));
         cols.add(new LmisColumn("is_yard", "Is Yard", LmisFields.varchar(20)));
         return cols;
+    }
+
+    /**
+     * 获取给定机构的子机构.
+     *
+     * @param parentID the parent iD
+     * @return the list
+     */
+    public List<LmisDataRow> getChildrenOrgs(int parentID){
+        String where = "parent_id = ?";
+        String[] wherArgs = {parentID+""};
+        return this.select(where,wherArgs);
     }
 }

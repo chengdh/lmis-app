@@ -3,6 +3,7 @@ package com.lmis.addons.search_bill;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,6 +121,7 @@ public class SearchBill extends BaseFragment {
         menu.clear();
         inflater.inflate(R.menu.menu_fragment_bill_search, menu);
         mMenuSearch = menu.findItem(R.id.menu_bill_search_search);
+        mSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
         mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setQueryHint("输入运单号或扫描条码");
         mQueryTextListener = new MyQueryTextLisener();

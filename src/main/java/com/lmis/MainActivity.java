@@ -772,7 +772,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                 onSettingItemSelected(SettingKeys.valueOf(fragment.getArguments().get("settings").toString()));
             }
             if (fragment != null && !fragment.getArguments().containsKey("settings")) {
-                startMainFragment(fragment, false);
+                startMainFragment(fragment, true);
             }
         }
     }
@@ -795,31 +795,24 @@ public class MainActivity extends InjectingFragmentActivity implements
     public void startMainFragment(Fragment fragment, boolean addToBackState) {
         Log.d(TAG, "MainActivity->FragmentListener->startMainFragment()");
 
-        if(fragment.isAdded()) return;
-        Fragment f = mFragment.findFragmentById(R.id.fragment_container);
         FragmentTransaction tran = mFragment.beginTransaction();
-        tran.remove(f);
         tran.replace(R.id.fragment_container, fragment);
         if (addToBackState) {
             tran.addToBackStack(null);
         }
-        tran.commitAllowingStateLoss();
+        tran.commit();
     }
 
     @Override
     public void startDetailFragment(Fragment fragment) {
         Log.d(TAG, "MainActivity->FragmentListener->startDetailFragment()");
-        if(fragment.isAdded()) return;
 
-        Fragment f = mFragment.findFragmentById(R.id.fragment_container);
         FragmentTransaction tran = mFragment.beginTransaction();
-        tran.remove(f);
         tran.replace(R.id.fragment_container, fragment);
-        tran.remove(f);
         if (!mLandscape) {
             tran.addToBackStack(null);
         }
-        tran.commitAllowingStateLoss();
+        tran.commit();
     }
 
     @Override

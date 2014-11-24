@@ -42,9 +42,6 @@ public class CarryingBillNew extends BaseFragment {
 
     View mView = null;
 
-    @InjectView(R.id.tabHost)
-    TabHost mTabHost;
-
     @InjectView(R.id.spinner_to_org)
     Spinner mSpinnerToOrg;
 
@@ -68,48 +65,28 @@ public class CarryingBillNew extends BaseFragment {
     @InjectView(R.id.spin_pay_type)
     Spinner mSpinnerPayType;
 
-    @InjectView(R.id.num_carrying_fee)
-    NumberPicker mNumCarryingFee;
+    @InjectView(R.id.edt_carrying_fee)
+    EditText mEdtCarryingFee;
 
 
-    @InjectView(R.id.num_goods_fee)
-    NumberPicker mNumGoodsFee;
+    @InjectView(R.id.edt_goods_fee)
+    EditText mEdtGoodsFee;
 
 
-    @InjectView(R.id.seek_bar_goods_num)
-    SeekBar mSeekBarGoodsNum;
+    @InjectView(R.id.edt_goods_num)
+    EditText mEdtGoodsNum;
 
 
-    @InjectView(R.id.txv_goods_num_disp)
-    TextView mTxvGoodsNumDisp;
-
-    @InjectView(R.id.seek_bar_insured_fee)
-    SeekBar mSeekBarInsuredFee;
+    @InjectView(R.id.edt_insured_fee)
+    EditText mEdtInsuredFee;
 
 
-    @InjectView(R.id.txv_insured_fee_disp)
-    TextView mTxvInsuredFeeDisp;
+    @InjectView(R.id.edt_from_short_carrying_fee)
+    EditText  mEdtFromShortCarryingFee;
 
 
-    @InjectView(R.id.txv_manage_fee_disp)
-    TextView mTxvManageFeeDisp;
-
-    @InjectView(R.id.seek_bar_manage_fee)
-    SeekBar mSeekBarManageFee;
-
-
-    @InjectView(R.id.seek_bar_from_short_carrying_fee)
-    SeekBar mSeekBarFromShortCarryingFee;
-
-    @InjectView(R.id.txv_from_short_carrying_fee_disp)
-    TextView mTxvFromShortCarryingFeeDisp;
-
-
-    @InjectView(R.id.seek_bar_to_short_carrying_fee)
-    SeekBar mSeekBarToShortCarryingFee;
-
-    @InjectView(R.id.txv_to_short_carrying_fee_disp)
-    TextView mTxvToShortCarryingFeeDisp;
+    @InjectView(R.id.edt_to_short_carrying_fee)
+    EditText mEdtToShortCarryingFee;
 
 
     @InjectView(R.id.edt_note)
@@ -126,81 +103,17 @@ public class CarryingBillNew extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_carrying_bill_form, container, false);
+        mView = inflater.inflate(R.layout.fragment_bill_form, container, false);
         ButterKnife.inject(this, mView);
         initControls();
         return mView;
     }
 
-    public class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
-
-        /**
-         * 用于显示seekBar当前值.
-         */
-        TextView mTxvDisp;
-
-        public SeekBarChangeListener(TextView txvDis) {
-            mTxvDisp = txvDis;
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-            mTxvDisp.setText(String.valueOf(i));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    }
 
     private void initControls() {
-        initTabs();
-
-        mNumCarryingFee.setMinValue(1);
-        mNumCarryingFee.setMaxValue(1000);
-        mNumCarryingFee.setValue(10);
-
-        mNumGoodsFee.setMinValue(0);
-        mNumGoodsFee.setMaxValue(10000);
-        mNumGoodsFee.setValue(0);
-
-        mSeekBarGoodsNum.setMax(1000);
-        mSeekBarGoodsNum.setOnSeekBarChangeListener(new SeekBarChangeListener(mTxvGoodsNumDisp));
-        mSeekBarGoodsNum.setProgress(1);
-
-        mSeekBarInsuredFee.setMax(30);
-        mSeekBarInsuredFee.setOnSeekBarChangeListener(new SeekBarChangeListener(mTxvInsuredFeeDisp));
-        mSeekBarInsuredFee.setProgress(2);
-        //insured fee
-        //管理费 manage_fee
-        mSeekBarManageFee.setMax(30);
-        mSeekBarManageFee.setOnSeekBarChangeListener(new SeekBarChangeListener(mTxvManageFeeDisp));
-        mSeekBarManageFee.setProgress(0);
-
-        //from_short_carrying_fee
-        mSeekBarFromShortCarryingFee.setMax(30);
-        mSeekBarFromShortCarryingFee.setOnSeekBarChangeListener(new SeekBarChangeListener(mTxvFromShortCarryingFeeDisp));
-        mSeekBarFromShortCarryingFee.setProgress(0);
-
-        mSeekBarToShortCarryingFee.setMax(30);
-        mSeekBarToShortCarryingFee.setOnSeekBarChangeListener(new SeekBarChangeListener(mTxvToShortCarryingFeeDisp));
-        mSeekBarToShortCarryingFee.setProgress(0);
 
     }
 
-    private void initTabs() {
-        mTabHost.setup();
-        //TODO 此处加上tab图标
-        mTabHost.addTab(mTabHost.newTabSpec("TAB_BILL_FORM").setIndicator("必填").setContent(R.id.tab_bill_form));
-        mTabHost.addTab(mTabHost.newTabSpec("TAB_BILLS_FORM_EX").setIndicator("可选").setContent(R.id.tab_bill_form_ex));
-    }
 
     @Override
     public Object databaseHelper(Context context) {
@@ -278,21 +191,6 @@ public class CarryingBillNew extends BaseFragment {
             ret = false;
         }
 
-        int goodsNum = mSeekBarGoodsNum.getProgress();
-        if (goodsNum <= 0) {
-            mSeekBarGoodsNum.setProgress(1);
-        }
-        int carryingFee = mNumCarryingFee.getValue();
-        if (carryingFee <= 0) {
-            mNumCarryingFee.setValue(10);
-            mEdtGoodsInfo.setError("运费不可为0!");
-        }
-
-        int goodsFee = mNumGoodsFee.getValue();
-        if (goodsFee < 0) {
-            mNumGoodsFee.setValue(10);
-            mEdtGoodsInfo.setError("货款不可小于0!");
-        }
         return ret;
 
     }
@@ -311,16 +209,15 @@ public class CarryingBillNew extends BaseFragment {
 
 
         vals.put("goods_info", mEdtGoodsInfo.getText());
-        vals.put("goods_num", mSeekBarGoodsNum.getProgress());
+        vals.put("goods_num", mEdtGoodsNum.getText());
 
-        vals.put("carrying_fee", mNumCarryingFee.getValue());
-        vals.put("goods_fee", mNumGoodsFee.getValue());
+        vals.put("carrying_fee", mEdtCarryingFee.getText());
+        vals.put("goods_fee", mEdtGoodsFee.getText());
 
-        vals.put("insured_fee", mSeekBarInsuredFee.getProgress());
-        vals.put("manage_fee", mSeekBarManageFee.getProgress());
+        vals.put("insured_fee", mEdtInsuredFee.getText());
 
-        vals.put("from_short_carrying_fee", mSeekBarFromShortCarryingFee.getProgress());
-        vals.put("to_short_carrying_fee", mSeekBarToShortCarryingFee.getProgress());
+        vals.put("from_short_carrying_fee", mEdtFromShortCarryingFee.getText());
+        vals.put("to_short_carrying_fee", mEdtToShortCarryingFee.getText());
 
         vals.put("note", mEdtNote.getText());
         Map.Entry<String, String> payType = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();

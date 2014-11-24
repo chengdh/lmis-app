@@ -122,9 +122,6 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         @InjectView(R.id.txv_bill_no)
         TextView txvBillNo;
 
-        @InjectView(R.id.txv_goods_no)
-        TextView txvGoodsNo;
-
         @InjectView(R.id.txv_bill_date)
         TextView txvBillDate;
 
@@ -228,8 +225,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
             int carryingFee = row_data.getInt("carrying_fee");
             int goodsFee = row_data.getInt("goods_fee");
             int goodsNum = row_data.getInt("goods_num");
-            holder.txvBillNo.setText(billNo);
-            holder.txvGoodsNo.setText(goodsNo);
+            holder.txvBillNo.setText(billNo + String.format("[%s]",goodsNo));
             holder.txvBillDate.setText(billDate);
             holder.txvCarryingFee.setText(carryingFee + "");
             holder.txvGoodsNum.setText(goodsNum + "");

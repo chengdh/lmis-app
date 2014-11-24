@@ -18,24 +18,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="4000001"
+            android:text="4000001[141013A邯4-11]"
             android:id="@+id/txv_bill_no"
-            android:layout_weight="2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="140814A邯20-99"
-            android:id="@+id/txv_goods_no"
-            android:layout_weight="3" />
+            android:layout_weight="4" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2014-08-14"
             android:id="@+id/txv_bill_date"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:textAlignment="textEnd"
             android:gravity="right"
             android:focusable="false" />

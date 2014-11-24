@@ -21,7 +21,8 @@
         android:textAlignment="center"
         android:textSize="20dp"
         android:layout_margin="8dp"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:inputType="number" />
 
 
     <LinearLayout
