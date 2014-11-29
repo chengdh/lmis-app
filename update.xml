@@ -2,8 +2,8 @@
 <updateInfo>
     <appName>LMIS Mobile</appName>
     <appDescription>LMIS手机端</appDescription>
-    <packageName>com.openerp</packageName>
-    <versionCode>19</versionCode>
+    <packageName>com.lmis</packageName>
+    <versionCode></versionCode>
     <versionName>1.1</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
