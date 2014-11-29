@@ -43,6 +43,5 @@ public class SyncFinishReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		Log.i("SyncFinish", "Sync finished");
-
 	}
 }

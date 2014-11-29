@@ -65,8 +65,7 @@
                 <action android:name="com.lmis.ACTION_ACCOUNT_CONFIG" />
             </intent-filter>
         </activity>
-
-        <!--org sync service-->
+                <!--org sync service-->
         <service
             android:name="com.lmis.services.OrgSyncService"
             android:exported="true">
@@ -107,6 +106,30 @@
             android:exported="true"
             android:label="@string/label_user_org"
             android:syncable="true" />
+
+
+        <!-- il_config sync service -->
+        <service
+            android:name="com.lmis.services.IlConfigSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_il_config" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.il_config.IlConfigProvider"
+            android:authorities="com.lmis.providers.il_config"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_il_config"
+            android:syncable="true" />
+
+
 
         <!--message sync service-->
         <service

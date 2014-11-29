@@ -22,7 +22,6 @@ import android.util.Base64;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -168,11 +167,10 @@ public class LmisDataRow {
                     JSONObject jsonLine = line.exportAsJSON(includeId);
                     ret.append(key + "_attributes", jsonLine);
                 }
-            } else if (value instanceof byte[]){
+            } else if (value instanceof byte[]) {
                 //使用data uri的方式标示base64 encode后的图片,在服务端paperclip会自动解析
-                ret.put(key,"data:image/png;base64," +  Base64.encodeToString((byte[])value,0));
-            }
-            else {
+                ret.put(key, "data:image/png;base64," + Base64.encodeToString((byte[]) value, 0));
+            } else {
                 ret.put(key, value);
             }
 

@@ -3,6 +3,7 @@ package com.lmis.dagger_module;
 import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
+import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.orm.LmisDataRow;
@@ -82,10 +83,41 @@ public class OrgModule {
     @OrgModule.ExcludeAccessOrgs
     public List<LmisDataRow> providesExcludeAccessOrgs(@InjectingActivityModule.Activity Context ctx) {
         //未登录时
-        if (LmisUser.current(ctx) != null) {
-            List<LmisDataRow> accessOrgs = getAccessOrgs(ctx);
+        LmisUser curUser = LmisUser.current(ctx);
+        if (curUser != null) {
+            OrgDB orgDB = new OrgDB(ctx);
             List<LmisDataRow> allOrgs = providesAllOrgs(ctx);
-            allOrgs.removeAll(accessOrgs);
+
+            List<LmisDataRow> excludeOrgs = new ArrayList<LmisDataRow>();
+            List<LmisDataRow> removeOrgs = new ArrayList<LmisDataRow>();
+
+            int defaultOrgID = curUser.getDefault_org_id();
+            LmisDataRow defaultOrg = orgDB.select(defaultOrgID);
+
+            excludeOrgs.add(defaultOrg);
+            //如果当前用户所属机构是顶级机构,则选择其他机构
+            Object parentOrgIdObj =   defaultOrg.get("parent_id");
+            if(parentOrgIdObj != null && !parentOrgIdObj.equals("null")) {
+                Integer parentOrgID = defaultOrg.getInt("parent_id");
+                LmisDataRow parentOrg = orgDB.select(parentOrgID);
+                excludeOrgs.add(parentOrg);
+                excludeOrgs.addAll(orgDB.getChildrenOrgs(parentOrgID));
+            }
+            else
+            {
+                excludeOrgs.addAll(orgDB.getChildrenOrgs(defaultOrgID));
+            }
+
+            for(LmisDataRow o : allOrgs){
+                for(LmisDataRow exOrg : excludeOrgs){
+                    if(o.getInt("id").equals(exOrg.getInt("id"))){
+                        removeOrgs.add(o);
+
+                    }
+                }
+
+            }
+            allOrgs.removeAll(removeOrgs);
             return allOrgs;
         }
         return null;

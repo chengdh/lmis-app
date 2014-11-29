@@ -196,9 +196,7 @@ public class LmisHelper extends Lmis {
         return synced;
     }
 
-    public boolean syncWithServer(boolean twoWay, LmisDomain domain,
-                                  List<Object> ids, boolean limitedData, int limits,
-                                  boolean removeLocalIfNotExists) {
+    public boolean syncWithServer(boolean twoWay, LmisDomain domain, List<Object> ids, boolean limitedData, int limits, boolean removeLocalIfNotExists) {
         boolean synced = false;
         Log.d(TAG, "LmisHelper->syncWithServer()");
         Log.d(TAG, "Model: " + mDatabase.getModelName());

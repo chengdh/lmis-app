@@ -19,50 +19,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="运单编号"
+                android:text="运单编号/货号"
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="4000001"
-                android:id="@+id/txv_bill_no"
-                android:padding="8dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="货号"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="4000001"
+                    android:id="@+id/txv_bill_no"
+                    android:padding="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="140814A邯21-999"
-                android:id="@+id/txv_goods_no"
-                android:padding="8dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="140814A邯21-999"
+                    android:id="@+id/txv_goods_no"
+                    android:padding="8dp" />
+            </LinearLayout>
 
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="运单日期"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="2014-08-14"
-                android:id="@+id/txv_bill_date"
-                android:padding="8dp" />
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
@@ -89,10 +71,10 @@
                     android:padding="8dp"
                     android:layout_weight="2" />
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="fill_parent"
-                    android:background="?android:attr/listDivider" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="~" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -102,7 +84,8 @@
                     android:id="@+id/txv_to_org"
                     android:padding="8dp"
                     android:phoneNumber="true"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:gravity="right" />
             </LinearLayout>
 
             <TextView
@@ -128,7 +111,7 @@
                     android:padding="8dp"
                     android:layout_weight="2" />
 
-                <View
+                <TextView
                     android:layout_width="1dip"
                     android:layout_height="fill_parent"
                     android:background="?android:attr/listDivider" />
@@ -398,6 +381,15 @@
                     android:text="件"
                     android:padding="8dp" />
             </LinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="备注"
+                android:textStyle="bold"
+                android:id="@+id/textView5" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -772,7 +772,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                 onSettingItemSelected(SettingKeys.valueOf(fragment.getArguments().get("settings").toString()));
             }
             if (fragment != null && !fragment.getArguments().containsKey("settings")) {
-                startMainFragment(fragment, true);
+                startMainFragment(fragment, false);
             }
         }
     }

@@ -30,6 +30,7 @@
 
     <!--各种label的定义-->
     <string name="label_org">Orgs</string>
+    <string name="label_il_config">Il Config</string>
     <string name="label_user_org">User can access orgs</string>
     <string name="label_message">Message</string>
     <string name="label_inventory_move">Inventory Move</string>
@@ -163,6 +164,8 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="sync_wizard_bills">Bills</string>
     <string name="sync_wizard_orgs">Orgs</string>
     <string name="sync_wizard_user_orgs">User Orgs</string>
+    <string name="sync_wizard_inventory_moves">Inventory Move</string>
+    <string name="sync_wizard_il_configs">Il Config</string>
 
     <!-- provider label-->
     <string name="label_messages">Messages</string>
@@ -182,6 +185,11 @@ Your inbox contains private messages or emails sent to you as well as informatio
 
     <string name="inventory_move_sync_notify_title">%1$d New Inventory moves</string>
     <string name="inventory_move_sync_notify_body">%1$d New inventory move received (Lmis)</string>
+
+    <!--il config -->
+    <string name="il_config_sync_notify_title">%1$d updated Configs</string>
+    <string name="il_config_sync_notify_body">%1$d updated Configs received (Lmis)</string>
+
 
     <!--Toast text-->
     <string name="voucher_processed_text">The Voucher is processed.</string>

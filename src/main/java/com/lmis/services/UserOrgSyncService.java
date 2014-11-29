@@ -65,6 +65,7 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
         Log.d(TAG, "UserOrgSyncService->performSync()");
         Intent intent = new Intent();
         intent.setAction(SyncFinishReceiver.SYNC_FINISH);
+        intent.putExtra("authority",authority);
 
         LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
         try {

@@ -24,15 +24,30 @@ import us.monoid.json.JSONObject;
  */
 public class CarryingBillDB extends LmisDatabase {
 
+    /**
+     * Instantiates a new Carrying bill dB.
+     *
+     * @param context the context
+     */
     public CarryingBillDB(Context context) {
         super(context);
     }
 
+    /**
+     * Gets model name.
+     *
+     * @return the model name
+     */
     @Override
     public String getModelName() {
         return "ComputerBill";
     }
 
+    /**
+     * Gets model columns.
+     *
+     * @return the model columns
+     */
     @Override
     public List<LmisColumn> getModelColumns() {
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
@@ -52,6 +67,9 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(new LmisColumn("from_org_id", "From Org", LmisFields.manyToOne(new OrgDB(mContext))));
         //到货地
         cols.add(new LmisColumn("to_org_id", "To Org", LmisFields.manyToOne(new OrgDB(mContext))));
+
+        LmisColumn colFromCustomerID = new LmisColumn("from_customer_id", "From Customer ID", LmisFields.integer());
+        cols.add(colFromCustomerID);
 
         //发货人
         LmisColumn colFromCustomerName = new LmisColumn("from_customer_name", "From Customer", LmisFields.varchar(20));
@@ -122,17 +140,23 @@ public class CarryingBillDB extends LmisDatabase {
         LmisColumn colNote = new LmisColumn("note", "Note", LmisFields.text());
         cols.add(colNote);
 
-        //是否已上传
+        //录入人员
+        LmisColumn colUser = new LmisColumn("user_id", "User", LmisFields.integer());
+        cols.add(colUser);
+         //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
         //上传时间
         cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
 
         return cols;
     }
+
     /**
      * 保存单条数据到服务器.
      *
      * @param id the id
+     * @throws JSONException the jSON exception
+     * @throws JSONException the jSON exception
      */
     public void save2server(int id) throws JSONException, IOException {
         JSONObject json = select(id).exportAsJSON(false);
@@ -155,9 +179,25 @@ public class CarryingBillDB extends LmisDatabase {
      * 删除不需要的属性.
      *
      * @param json the json
+     * @throws JSONException the jSON exception
      */
     private void delUnusedAttr(JSONObject json) throws JSONException {
         json.remove("processed");
         json.remove("process_datetime");
+    }
+
+    /**
+     * 获取保险费设置.
+     * 系统设置中 有保险费金额
+     * 另外 组织机构设置中 有关于保险费的运费的金额设置
+     *
+     * @param orgID the org iD
+     * @param carryingFee the carrying fee
+     * @return the int
+     */
+    public float getInsuredFee(int orgID,float carryingFee ){
+        Lmis instance = getLmisInstance();
+
+        return 2;
     }
 }

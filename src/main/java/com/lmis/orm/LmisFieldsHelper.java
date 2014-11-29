@@ -42,7 +42,7 @@ public class LmisFieldsHelper {
                         String key = col.getName();
                         Object colValue = false;
                         if (record.has(key)) {
-                            colValue  = record.get(key);
+                            colValue = record.get(key);
                         }
                         if (col.getmValueWatcher() != null) {
                             LmisValues values = col.getmValueWatcher().getValue(col, colValue);
@@ -101,7 +101,7 @@ public class LmisFieldsHelper {
         try {
             int length = array.length();
             if (length > 50) {
-                Log.i(TAG,"Many2Many or One2Many records more than 50... - Limiting to 50 records only");
+                Log.i(TAG, "Many2Many or One2Many records more than 50... - Limiting to 50 records only");
                 length = 50;
             }
             for (int i = 0; i < length; i++) {

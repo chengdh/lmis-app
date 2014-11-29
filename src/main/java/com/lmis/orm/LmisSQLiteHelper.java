@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.lmis.addons.il_config.IlConfigDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.config.ModulesConfig;
@@ -15,14 +16,12 @@ import com.lmis.support.fragment.FragmentHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class LmisSQLiteHelper extends SQLiteOpenHelper {
 
     public static final String TAG = LmisSQLiteHelper.class.getSimpleName();
 
     public static final String DATABASE_NAME = "LmisSQLite.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     //此处的mContext实际是MainActivity
     Context mContext;
@@ -38,6 +37,7 @@ public class LmisSQLiteHelper extends SQLiteOpenHelper {
         List<LmisDBHelper> baseModels = new ArrayList<LmisDBHelper>();
         baseModels.add(new OrgDB(mContext));
         baseModels.add(new UserOrgDB(mContext));
+        baseModels.add(new IlConfigDB(mContext));
         return baseModels;
     }
 

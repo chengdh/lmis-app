@@ -3,6 +3,8 @@ package com.lmis.addons.carrying_bill;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,15 +12,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.NumberPicker;
-import android.widget.SeekBar;
+import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lmis.CurrentOrgChangeEvent;
+import com.lmis.Lmis;
 import com.lmis.R;
+import com.lmis.addons.il_config.IlConfigDB;
+import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
@@ -26,110 +30,301 @@ import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import us.monoid.json.JSONArray;
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
 
 /**
  * Created by chengdh on 14-8-9.
  */
-public class CarryingBillNew extends BaseFragment {
+public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
+    /**
+     * The constant TAG.
+     */
     public static final String TAG = "CarryingBillNew";
 
+    /**
+     * The M bus.
+     */
+    @Inject
+    Bus mBus;
+    /**
+     * The M view.
+     */
     View mView = null;
 
+    /**
+     * The M spinner to org.
+     */
     @InjectView(R.id.spinner_to_org)
     Spinner mSpinnerToOrg;
 
+    /**
+     * The M edt from customer name.
+     */
     @InjectView(R.id.edt_from_customer_name)
     EditText mEdtFromCustomerName;
 
+    /**
+     * The M edt from customer mobile.
+     */
     @InjectView(R.id.edt_from_customer_mobile)
     EditText mEdtFromCustomerMobile;
 
+    /**
+     * The M edt to customer name.
+     */
     @InjectView(R.id.edt_to_customer_name)
     EditText mEdtToCustomerName;
 
 
+    /**
+     * The M edt to customer mobile.
+     */
     @InjectView(R.id.edt_to_customer_mobile)
     EditText mEdtToCustomerMobile;
 
+    /**
+     * The M edt goods info.
+     */
     @InjectView(R.id.edt_goods_info)
     EditText mEdtGoodsInfo;
 
 
+    /**
+     * The M spinner pay type.
+     */
     @InjectView(R.id.spin_pay_type)
     Spinner mSpinnerPayType;
 
+    /**
+     * The M edt carrying fee.
+     */
     @InjectView(R.id.edt_carrying_fee)
     EditText mEdtCarryingFee;
 
 
+    /**
+     * The M edt goods fee.
+     */
     @InjectView(R.id.edt_goods_fee)
     EditText mEdtGoodsFee;
 
 
+    /**
+     * The M edt goods num.
+     */
     @InjectView(R.id.edt_goods_num)
     EditText mEdtGoodsNum;
 
 
+    /**
+     * The M edt insured fee.
+     */
     @InjectView(R.id.edt_insured_fee)
     EditText mEdtInsuredFee;
 
 
+    /**
+     * The M edt from short carrying fee.
+     */
     @InjectView(R.id.edt_from_short_carrying_fee)
-    EditText  mEdtFromShortCarryingFee;
+    EditText mEdtFromShortCarryingFee;
 
 
+    /**
+     * The M edt to short carrying fee.
+     */
     @InjectView(R.id.edt_to_short_carrying_fee)
     EditText mEdtToShortCarryingFee;
 
 
+    /**
+     * The M edt note.
+     */
     @InjectView(R.id.edt_note)
     EditText mEdtNote;
 
+    /**
+     * The M edt customer no.
+     */
+    @InjectView(R.id.edt_customer_no)
+    EditText mEdtCustomerNo;
+
+    /**
+     * The M btn search customer.
+     */
+    @InjectView(R.id.btn_search_customer)
+    ImageButton mBtnSearchCustomer;
+
+    /**
+     * The M btn remove customer.
+     */
+    @InjectView(R.id.btn_remove_customer)
+    ImageButton mBtnRemoveCustomer;
+
+    /**
+     * The M edt customer iD.
+     */
+    @InjectView(R.id.edt_customer_id)
+    EditText mEdtCustomerID;
+
+    /**
+     * 数据保存处理.
+     */
     SaveTask mSaveTask = null;
+    /**
+     * 数据上传 task.
+     */
     UploadTask mUploadTask = null;
+
+    /**
+     * The M search customer task.
+     */
+    SearchCustomerTask mSearchCustomerTask = null;
 
     /**
      * 当前运单的id.
      */
     int mCarryingBillID = -1;
 
+    /**
+     * On create view.
+     *
+     * @param inflater the inflater
+     * @param container the container
+     * @param savedInstanceState the saved instance state
+     * @return the view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_bill_form, container, false);
         ButterKnife.inject(this, mView);
+        mBus.register(this);
         initControls();
         return mView;
     }
 
 
+    /**
+     * Init controls.
+     */
     private void initControls() {
+        mEdtInsuredFee.setEnabled(false);
+        mEdtCustomerID.setVisibility(View.GONE);
+        mSpinnerToOrg.setOnItemSelectedListener(this);
+        mEdtCarryingFee.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                reCalToShortCarryingFee();
+            }
+        });
+        mEdtToShortCarryingFee.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                reCalToShortCarryingFee();
+            }
+        });
+
+        mBtnSearchCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String customerCode = mEdtCustomerNo.getText().toString();
+                if (customerCode != null && customerCode.length() > 0) {
+                    mSearchCustomerTask = new SearchCustomerTask(customerCode);
+                    mSearchCustomerTask.execute((Void) null);
+                } else {
+                    Toast.makeText(scope.context(), "请输入客户编号!", Toast.LENGTH_SHORT).show();
+                    mEdtCustomerNo.requestFocus();
+                }
+
+            }
+        });
+        mBtnRemoveCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEdtCustomerNo.setText("");
+                mEdtFromCustomerName.setText("");
+                mEdtFromCustomerMobile.setText("");
+                mEdtCustomerID.setText("");
+                mEdtCustomerNo.setEnabled(true);
+                mEdtFromCustomerName.setEnabled(true);
+                mEdtFromCustomerMobile.setEnabled(true);
+                mEdtCustomerNo.requestFocus();
+            }
+        });
     }
 
 
+    /**
+     * Database helper.
+     *
+     * @param context the context
+     * @return the object
+     */
     @Override
     public Object databaseHelper(Context context) {
         return new CarryingBillDB(context);
     }
 
+    /**
+     * Drawer menus.
+     *
+     * @param context the context
+     * @return the list
+     */
     @Override
     public List<DrawerItem> drawerMenus(Context context) {
         return null;
     }
 
+    /**
+     * On create options menu.
+     *
+     * @param menu the menu
+     * @param inflater the inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_carrying_bill_new, menu);
     }
 
+    /**
+     * On options item selected.
+     *
+     * @param item the item
+     * @return the boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -184,17 +379,50 @@ public class CarryingBillNew extends BaseFragment {
             ret = false;
         }
 
+        String goodsNum = mEdtGoodsNum.getText().toString();
+        if (goodsNum != null && goodsNum.length() == 0) {
+            mEdtGoodsNum.setError("货物件数不可为空!");
+            mEdtGoodsNum.requestFocus();
+            ret = false;
+        }
         String goodsInfo = mEdtGoodsInfo.getText().toString();
         if (goodsInfo != null && goodsInfo.length() == 0) {
             mEdtGoodsInfo.setError("货物信息不可为空!");
             mEdtGoodsInfo.requestFocus();
             ret = false;
         }
+        String carryingFee = mEdtCarryingFee.getText().toString();
+        if (carryingFee != null && carryingFee.length() == 0) {
+            mEdtCarryingFee.setError("运费要大于0!");
+            mEdtToCustomerMobile.requestFocus();
+            ret = false;
+        }
+        String goodsFee = mEdtGoodsFee.getText().toString();
+        if (goodsFee != null && goodsFee.length() == 0) {
+            mEdtGoodsFee.setError("代收货款要输入数字!");
+            mEdtGoodsFee.setText("0");
+        }
 
+        String fromShortCarryingFee = mEdtFromShortCarryingFee.getText().toString();
+        if (fromShortCarryingFee != null && fromShortCarryingFee.length() == 0) {
+            mEdtFromShortCarryingFee.setError("接货费要输入数字!");
+            mEdtGoodsFee.setText("0");
+        }
+
+        String toShortCarryingFee = mEdtToShortCarryingFee.getText().toString();
+        if (toShortCarryingFee != null && toShortCarryingFee.length() == 0) {
+            mEdtToShortCarryingFee.setError("送货费要输入数字!");
+            mEdtToShortCarryingFee.setText("0");
+        }
         return ret;
 
     }
 
+    /**
+     * Save 2 dB.
+     *
+     * @return the boolean
+     */
     private Boolean save2DB() {
         LmisValues vals = new LmisValues();
         LmisUser currentUser = scope.currentUser();
@@ -219,9 +447,16 @@ public class CarryingBillNew extends BaseFragment {
         vals.put("from_short_carrying_fee", mEdtFromShortCarryingFee.getText());
         vals.put("to_short_carrying_fee", mEdtToShortCarryingFee.getText());
 
+        String fromCustomerID = mEdtCustomerID.getText().toString();
+        if (fromCustomerID != null && fromCustomerID.length() > 0) {
+            vals.put("from_customer_id", fromCustomerID);
+        }
+
         vals.put("note", mEdtNote.getText());
         Map.Entry<String, String> payType = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
         vals.put("pay_type", payType.getKey());
+
+        vals.put("user_id", scope.currentUser().getUser_id());
 
         CarryingBillDB db = (CarryingBillDB) databaseHelper(scope.context());
         if (mCarryingBillID == -1) {
@@ -232,21 +467,132 @@ public class CarryingBillNew extends BaseFragment {
         return true;
     }
 
+    /**
+     * On item selected.
+     * 自动计算到货短途
+     *
+     * @param parent the parent
+     * @param view the view
+     * @param position the position
+     * @param id the id
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        reCalToShortCarryingFee();
+
+    }
+
+    /**
+     * Parse fee.
+     *
+     * @param edt the edt
+     * @return the int
+     */
+    private int parseFee(EditText edt) {
+
+        String strFee = edt.getText().toString();
+        int fee = 0;
+        if (strFee != null && strFee.length() > 0) {
+            fee = Integer.parseInt(strFee);
+        }
+        return fee;
+    }
+
+    /**
+     * 根据系统设置计算到货短途.
+     *
+     * @return the int
+     */
+    private int reCalToShortCarryingFee() {
+        int carryingFee = parseFee(mEdtCarryingFee);
+        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+        OrgDB orgDB = new OrgDB(scope.context());
+        int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(toOrg.getInt("id"), carryingFee);
+        int oldToShortCarryingFee = parseFee(mEdtToShortCarryingFee);
+        if (toShortCarryingFee > oldToShortCarryingFee) {
+            mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
+        }
+        return toShortCarryingFee;
+    }
+
+    /**
+     * 发货地变化时,重新计算保险费.
+     *
+     * @return the int
+     */
+    private int reCalInsuredFee(LmisDataRow curOrg) {
+        //计算保险费和到货短途
+        OrgDB orgDB = new OrgDB(scope.context());
+        IlConfigDB configDB = new IlConfigDB(scope.context());
+        int setInsuredFee = 0;
+        int carryingFeeGetOnInsuredFee = orgDB.getCarryingFeeGteOnInsuredFee(curOrg.getInt("id"));
+        int configInsuredFee = configDB.getInsuredFee();
+        int carryingFee = parseFee(mEdtCarryingFee);
+        if (carryingFeeGetOnInsuredFee == 0 || carryingFee >= carryingFeeGetOnInsuredFee) {
+            setInsuredFee = configInsuredFee;
+        }
+        mEdtInsuredFee.setText(setInsuredFee + "");
+
+        return setInsuredFee;
+    }
+
+    /**
+     * 发货地变化时的，重新计算保价费.
+     *
+     * @param evt the evt
+     */
+    @Subscribe
+    public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt){
+        LmisDataRow curOrg =  evt.getmOrg();
+        reCalInsuredFee(curOrg);
+    }
+
+    /**
+     * On nothing selected.
+     *
+     * @param parent the parent
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    /**
+     * The type Save task.
+     */
     private class SaveTask extends AsyncTask<Void, Void, Boolean> {
 
+        /**
+         * The Pdialog.
+         */
         LmisDialog pdialog;
 
+        /**
+         * On pre execute.
+         */
         @Override
         protected void onPreExecute() {
             pdialog = new LmisDialog(getActivity(), false, "正在保存数据...");
             pdialog.show();
         }
 
+        /**
+         * Do in background.
+         *
+         * @param voids the voids
+         * @return the boolean
+         */
         @Override
         protected Boolean doInBackground(Void... voids) {
             return save2DB();
         }
 
+        /**
+         * On post execute.
+         *
+         * @param success the success
+         */
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
@@ -268,14 +614,26 @@ public class CarryingBillNew extends BaseFragment {
      */
     private class UploadTask extends AsyncTask<Void, Void, Boolean> {
 
+        /**
+         * The Pdialog.
+         */
         LmisDialog pdialog;
 
+        /**
+         * On pre execute.
+         */
         @Override
         protected void onPreExecute() {
             pdialog = new LmisDialog(getActivity(), false, "正在上传数据...");
             pdialog.show();
         }
 
+        /**
+         * Do in background.
+         *
+         * @param voids the voids
+         * @return the boolean
+         */
         @Override
         protected Boolean doInBackground(Void... voids) {
             Boolean ret = true;
@@ -289,6 +647,11 @@ public class CarryingBillNew extends BaseFragment {
             return ret;
         }
 
+        /**
+         * On post execute.
+         *
+         * @param success the success
+         */
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
@@ -303,15 +666,105 @@ public class CarryingBillNew extends BaseFragment {
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
                 //打印小票
-                LmisDataRow bill = ((CarryingBillDB)db()).select(mCarryingBillID);
-                CarryingBillPrint.print(bill,false);
+                LmisDataRow bill = db().select(mCarryingBillID);
+                CarryingBillPrint.print(bill, false);
 
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();
             }
             pdialog.dismiss();
-            mUploadTask= null;
+            mUploadTask = null;
+        }
+    }
+
+    /**
+     * 客户资料查询task.
+     */
+    private class SearchCustomerTask extends AsyncTask<Void, Void, Boolean> {
+
+        /**
+         * The Pdialog.
+         */
+        LmisDialog pdialog;
+        /**
+         * The M vip code.
+         */
+        String mVipCode = "";
+        /**
+         * The Result.
+         */
+        JSONObject result = null;
+
+        /**
+         * Instantiates a new Search customer task.
+         *
+         * @param vipCode the vip code
+         */
+        private SearchCustomerTask(String vipCode) {
+            mVipCode = vipCode;
+        }
+
+        /**
+         * On pre execute.
+         */
+        @Override
+        protected void onPreExecute() {
+            pdialog = new LmisDialog(getActivity(), false, "查询中...");
+            pdialog.show();
+        }
+
+        /**
+         * Do in background.
+         *
+         * @param voids the voids
+         * @return the boolean
+         */
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Boolean ret = true;
+            JSONArray args = new JSONArray();
+            args.put(mVipCode);
+            Lmis instance = db().getLmisInstance();
+            try {
+                result = instance.callMethod("vip", "find_by_code", args, null);
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+                ret = false;
+            }
+            return ret;
+        }
+
+        /**
+         * On post execute.
+         *
+         * @param success the success
+         */
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                mSearchCustomerTask.cancel(true);
+                try {
+                    if (result.get("result").toString() == "null") {
+                        Toast.makeText(scope.context(), "未查到客户信息!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        JSONObject customer = result.getJSONObject("result");
+                        mEdtFromCustomerName.setText(customer.getString("name"));
+                        mEdtFromCustomerMobile.setText(customer.getString("mobile"));
+                        mEdtCustomerID.setText(customer.getInt("id") + "");
+                        mEdtCustomerNo.setEnabled(false);
+                        mEdtFromCustomerName.setEnabled(false);
+                        mEdtFromCustomerMobile.setEnabled(false);
+                        Toast.makeText(scope.context(), "已查到客户信息!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(scope.context(), "查找客户资料失败!", Toast.LENGTH_SHORT).show();
+            }
+            pdialog.dismiss();
+            mSearchCustomerTask = null;
         }
     }
 }

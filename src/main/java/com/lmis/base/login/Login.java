@@ -34,7 +34,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -42,6 +41,7 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.R;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
+import com.lmis.providers.il_config.IlConfigProvider;
 import com.lmis.providers.org.OrgProvider;
 import com.lmis.providers.user_org.UserOrgProvider;
 import com.lmis.receivers.SyncFinishReceiver;
@@ -113,6 +113,11 @@ public class Login extends BaseFragment {
     @InjectView(R.id.edtPassword)
     LmisEditText edtPassword;
 
+    //三个基础数据是否已同步完毕
+    boolean mSyncOrgs = false;
+    boolean mSyncUserOrgs = false;
+    boolean mSyncIlConfigs = false;
+
     /**
      * The Lmis Object
      */
@@ -133,7 +138,7 @@ public class Login extends BaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mSyncDialog = new LmisDialog(getActivity(), false, "sync data...");
+        mSyncDialog = new LmisDialog(getActivity(), false, "同步基础数据...");
         ButterKnife.inject(this, rootView);
 
         this.handleArguments((Bundle) getArguments());
@@ -220,42 +225,45 @@ public class Login extends BaseFragment {
     }
 
 
-
-    public SyncFinishReceiver orgSyncFinish = new SyncFinishReceiver() {
+    public SyncFinishReceiver syncFinishReceiver = new SyncFinishReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            scope.main().requestSync(UserOrgProvider.AUTHORITY);
-        }
-    };
-    public SyncFinishReceiver userOrgSyncFinish = new SyncFinishReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //reinject MainActivity
-            inject(scope.main());
-            mSyncDialog.dismiss();
-            startSyncWizard();
+            String authority = intent.getStringExtra("authority");
+            if(authority == null)
+                return;
+            if(authority.equals(OrgProvider.AUTHORITY)){
+                mSyncOrgs = true;
+            }
+            if(authority.equals(UserOrgProvider.AUTHORITY)){
+                mSyncUserOrgs = true;
+            }
+            if(authority.equals(IlConfigProvider.AUTHORITY)){
+                mSyncIlConfigs = true;
+            }
+            if(mSyncOrgs && mSyncUserOrgs && mSyncIlConfigs){
+                mSyncDialog.dismiss();
+                startSyncWizard();
+            }
         }
     };
 
     private void startSyncWizard() {
         SyncWizard syncWizard = new SyncWizard();
         FragmentListener mFragment = (FragmentListener) getActivity();
-            mFragment.startMainFragment(syncWizard, false);
+        mFragment.startMainFragment(syncWizard, false);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        context.registerReceiver(orgSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
-        context.registerReceiver(userOrgSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
+        context.registerReceiver(syncFinishReceiver, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        context.unregisterReceiver(orgSyncFinish);
-        context.unregisterReceiver(userOrgSyncFinish);
+        context.unregisterReceiver(syncFinishReceiver);
     }
 
     /**
@@ -287,7 +295,7 @@ public class Login extends BaseFragment {
 
         @Override
         protected void onPreExecute() {
-            pdialog = new LmisDialog(getActivity(), false, "Logging in...");
+            pdialog = new LmisDialog(getActivity(), false, "登录系统...");
             pdialog.show();
             edtPassword.setError(null);
         }
@@ -312,7 +320,7 @@ public class Login extends BaseFragment {
                 if (userData != null) {
                     return true;
                 } else {
-                    errorMsg = "Invalid Username or Password !";
+                    errorMsg = "无效的用户名或密码!";
                     return false;
                 }
             }
@@ -337,6 +345,8 @@ public class Login extends BaseFragment {
                 if (LmisAccountManager.createAccount(getActivity(), userData)) {
                     mSyncDialog.show();
                     scope.main().requestSync(OrgProvider.AUTHORITY);
+                    scope.main().requestSync(UserOrgProvider.AUTHORITY);
+                    scope.main().requestSync(IlConfigProvider.AUTHORITY);
                 }
             } else {
                 edtPassword.setError(errorMsg);

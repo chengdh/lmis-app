@@ -10,17 +10,60 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="到货地" />
+
         <com.lmis.util.controls.ExcludeAccessOrgSpinner
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/spinner_to_org"
             android:layout_weight="1" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="发货人信息"
             style="?android:attr/listSeparatorTextViewStyle" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="5">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/edt_customer_no"
+                android:layout_weight="4"
+                android:hint="客户编号"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_search_customer"
+                android:src="@drawable/ic_action_search" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_remove_customer"
+                android:adjustViewBounds="false"
+                android:src="@drawable/ic_action_remove" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_customer_id" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -47,7 +90,7 @@
                 android:layout_weight="3" />
         </LinearLayout>
 
-        <EditText
+        <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +122,7 @@
                 android:layout_weight="3" />
         </LinearLayout>
 
-        <EditText
+        <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,17 +151,18 @@
                 android:layout_weight="2"
                 android:hint="货物件数"
                 android:singleLine="false"
-                android:gravity="right" />
+                android:gravity="center_horizontal"
+                android:text="1"
+                android:selectAllOnFocus="false" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="件"
-                android:id="@+id/textView"
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <EditText
+        <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -144,7 +188,9 @@
                 android:id="@+id/edt_carrying_fee"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:hint="运费" />
+                android:hint="运费"
+                android:gravity="center_horizontal"
+                android:text="10" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -154,7 +200,7 @@
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
 
-        <EditText
+        <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,7 +210,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:weightSum="2">
+            android:weightSum="6">
 
             <EditText
                 android:layout_width="0dp"
@@ -173,8 +219,17 @@
                 android:ems="10"
                 android:id="@+id/edt_from_short_carrying_fee"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="2"
+                android:hint="接货费"
+                android:text="0"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元"
                 android:layout_weight="1"
-                android:hint="接货费" />
+                android:layout_gravity="center_vertical" />
 
             <EditText
                 android:layout_width="0dp"
@@ -182,40 +237,70 @@
                 android:inputType="numberSigned"
                 android:ems="10"
                 android:id="@+id/edt_to_short_carrying_fee"
+                android:layout_weight="2"
+                android:hint="送货费"
+                android:text="0"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元"
                 android:layout_weight="1"
-                android:hint="送货费" />
+                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
-        <EditText
+        <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="保险费" />
+            android:text="保险费/代收货款" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:inputType="numberSigned"
-            android:ems="10"
-            android:id="@+id/edt_insured_fee"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:hint="保险费" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="6">
 
-        <EditText
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="代收货款" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/edt_insured_fee"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="2"
+                android:hint="保险费"
+                android:editable="false"
+                android:enabled="false"
+                android:text="0"
+                android:gravity="center_horizontal" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:inputType="numberSigned"
-            android:ems="10"
-            android:id="@+id/edt_goods_fee"
-            android:layout_weight="1"
-            android:hint="代收货款" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/edt_goods_fee"
+                android:layout_weight="2"
+                android:hint="代收货款"
+                android:text="0"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"

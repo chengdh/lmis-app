@@ -38,6 +38,7 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.config.SyncWizardValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.SyncValue;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.util.controls.LmisCheckBox;
 import com.lmis.util.controls.LmisRadioButton;
 import com.lmis.util.controls.LmisTextView;
@@ -96,6 +97,7 @@ public class SyncWizard extends BaseFragment {
                     checkbox[i].setTag(value.getTitle());
 
                     checkbox[i].setText(localeTitle);
+                    checkbox[i].setChecked(true);
                     layout.addView(checkbox[i]);
                 } else {
                     rdoGroups[i] = new RadioGroup(scope.context());
@@ -170,11 +172,9 @@ public class SyncWizard extends BaseFragment {
                 for (RadioGroup rdoGrp : rdoGroups) {
                     if (rdoGrp != null) {
                         for (int i = 0; i < rdoGrp.getChildCount(); i++) {
-                            LmisRadioButton rdoBtn = (LmisRadioButton) rdoGrp
-                                    .getChildAt(i);
+                            LmisRadioButton rdoBtn = (LmisRadioButton) rdoGrp.getChildAt(i);
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(scope.context());
                             Editor editor = settings.edit();
-                            //TODO 添加要同步色设置信息
                             editor.commit();
                             String authority = authorities.get(rdoBtn.getId() + "");
                             scope.main().setAutoSync(authority, rdoBtn.isChecked());
@@ -182,8 +182,8 @@ public class SyncWizard extends BaseFragment {
                         }
                     }
                 }
-                // FragmentListener mFragment = (FragmentListener) getActivity();
-                // mFragment.restart();
+                //FragmentListener mFragment = (FragmentListener) getActivity();
+                //mFragment.restart();
                 getActivity().finish();
                 getActivity().startActivity(getActivity().getIntent());
                 return true;
@@ -201,5 +201,4 @@ public class SyncWizard extends BaseFragment {
     public List<DrawerItem> drawerMenus(Context context) {
         return null;
     }
-
 }

@@ -36,8 +36,7 @@ import com.lmis.providers.expense.ExpenseProvider;
 /**
  * The Class LmisContentProvider.
  */
-public abstract class LmisContentProvider extends ContentProvider implements
-        LmisContentProviderHelper {
+public abstract class LmisContentProvider extends ContentProvider implements LmisContentProviderHelper {
 
     /**
      * The Constant CONSTANTS.
