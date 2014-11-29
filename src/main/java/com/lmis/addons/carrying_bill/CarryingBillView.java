@@ -135,6 +135,8 @@ public class CarryingBillView extends BaseFragment {
             String toCustomerMobile = mCarryingBill.getString("to_customer_mobile");
             mTxvToCustomerMobile.setText(toCustomerMobile);
 
+
+
             String payType = mCarryingBill.getString("pay_type");
             String payTypeDes = PayType.payTypes().get(payType);
             mTxvPayType.setText(payTypeDes);
