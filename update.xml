@@ -3,7 +3,7 @@
     <appName>LMIS Mobile</appName>
     <appDescription>LMIS手机端</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>19</versionCode>
+    <versionCode>30</versionCode>
     <versionName>1.1</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
