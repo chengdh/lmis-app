@@ -3,8 +3,8 @@
     <appName>LMIS Mobile</appName>
     <appDescription>LMIS手机端</appDescription>
     <packageName>com.openerp</packageName>
-    <versionCode>50</versionCode>
-    <versionName>1.1 beta</versionName>
+    <versionCode>18</versionCode>
+    <versionName>1.1</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
     <apkUrl>https://github.com/chengdh/lmis-app/raw/master/build/outputs/apk/lmis-app-release.apk</apkUrl>

@@ -28,7 +28,7 @@ import android.view.MenuItem;
  */
 public class AppSettingsActivity extends PreferenceActivity {
 
-	public static final String ACTION_ACCOUNT_CONFIG = "com.openerp.ACTION_ACCOUNT_CONFIG";
+	public static final String ACTION_ACCOUNT_CONFIG = "com.lmis.ACTION_ACCOUNT_CONFIG";
 
 	/*
 	 * (non-Javadoc)
