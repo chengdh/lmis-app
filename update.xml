@@ -3,7 +3,7 @@
     <appName>LMIS Mobile</appName>
     <appDescription>LMIS手机端</appDescription>
     <packageName>com.openerp</packageName>
-    <versionCode>20</versionCode>
+    <versionCode>50</versionCode>
     <versionName>1.1 beta</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
