@@ -118,9 +118,9 @@ public class SearchBill extends BaseFragment {
         menu.clear();
         inflater.inflate(R.menu.menu_fragment_bill_search, menu);
         mMenuSearch = menu.findItem(R.id.menu_bill_search_search);
-        mSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
         mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setQueryHint("输入运单号或扫描条码");
+        mSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
         mQueryTextListener = new MyQueryTextLisener();
         mSearchView.setOnQueryTextListener(mQueryTextListener);
         mMenuSearch.expandActionView();

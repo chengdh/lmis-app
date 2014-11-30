@@ -161,7 +161,6 @@ Your inbox contains private messages or emails sent to you as well as informatio
 
     <!-- sync wizard -->
     <string name="sync_wizard_messages">Messages</string>
-    <string name="sync_wizard_bills">Bills</string>
     <string name="sync_wizard_orgs">Orgs</string>
     <string name="sync_wizard_user_orgs">User Orgs</string>
     <string name="sync_wizard_inventory_moves">Inventory Move</string>
@@ -169,11 +168,6 @@ Your inbox contains private messages or emails sent to you as well as informatio
 
     <!-- provider label-->
     <string name="label_messages">Messages</string>
-    <string name="label_expenses">Expenses</string>
-    <string name="label_vouchers">Vouchers</string>
-    <string name="label_notes">Notes</string>
-    <string name="label_groups">Groups</string>
-
     <!--format string -->
 
     <string name="orgs_sync_notify_title">%1$d New Orgs</string>
@@ -189,12 +183,4 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <!--il config -->
     <string name="il_config_sync_notify_title">%1$d updated Configs</string>
     <string name="il_config_sync_notify_body">%1$d updated Configs received (Lmis)</string>
-
-
-    <!--Toast text-->
-    <string name="voucher_processed_text">The Voucher is processed.</string>
-    <string name="expense_processed_text">The Expense is processed.</string>
-
-    <string name="working_text">Working...</string>
-
 </resources>
