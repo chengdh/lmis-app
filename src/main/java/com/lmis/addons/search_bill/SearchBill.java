@@ -57,9 +57,6 @@ public class SearchBill extends BaseFragment {
     @InjectView(R.id.txv_goods_no)
     TextView mTxvGoodsNo;
 
-    @InjectView(R.id.txv_bill_date)
-    TextView mTxvBillDate;
-
     @InjectView(R.id.txv_pay_type)
     TextView mTxvPayType;
 
@@ -150,8 +147,6 @@ public class SearchBill extends BaseFragment {
         mTxvBillNo.setText(billNo);
         String goodsNo = jsonBill.getString("goods_no");
         mTxvGoodsNo.setText(goodsNo);
-        String billDate = jsonBill.getString("bill_date");
-        mTxvBillDate.setText(billDate);
         String fromCustomerName = jsonBill.getString("from_customer_name");
         mTxvFromCustomerName.setText(fromCustomerName);
         String fromCustomerMobile = jsonBill.getString("from_customer_mobile");
