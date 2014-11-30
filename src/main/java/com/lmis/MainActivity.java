@@ -278,13 +278,9 @@ public class MainActivity extends InjectingFragmentActivity implements
 
     private void initDrawerControls() {
         Log.d(TAG, "MainActivity->initDrawerControls()");
-
         mDrawerAdatper = new DrawerAdatper(this, R.layout.drawer_item_layout, R.layout.drawer_item_group_layout, mDrawerListItems);
-
         mDrawerListView.setAdapter(mDrawerAdatper);
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.app_name) {
-
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
