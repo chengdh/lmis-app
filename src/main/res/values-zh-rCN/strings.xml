@@ -31,7 +31,7 @@
         <!--各种label的定义-->
     <string name="label_org">机构</string>
     <string name="label_il_config">系统设置</string>
-    <string name="label_user_org">用户-机构细心</string>
+    <string name="label_user_org">用户-可访问机构</string>
     <string name="label_message">通知</string>
     <string name="label_inventory_move">盘点单</string>
 

@@ -2,6 +2,7 @@ package com.lmis.addons.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,15 +12,20 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.lmis.CurrentOrgChangeEvent;
 import com.lmis.R;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -29,7 +35,10 @@ import butterknife.InjectView;
  */
 public class DashBoard extends BaseFragment {
     public final static String TAG = "Dashbaord";
-    public final static String DASHBOARD_URL="http://122.0.76.160:3000/sample";
+    public final static String DASHBOARD_URL = "http://122.0.76.160:3000/sample";
+
+    @Inject
+    Bus mBus;
 
     @InjectView(R.id.web_view_dashboard)
     WebView mWebView;
@@ -46,25 +55,36 @@ public class DashBoard extends BaseFragment {
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         ButterKnife.inject(this, mView);
+        mBus.register(this);
         init();
         return mView;
     }
 
     private void init() {
         mWebView.getSettings().setJavaScriptEnabled(true);
-
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
+        loadDashboardUrl();
+
+    }
+
+    private void loadDashboardUrl() {
         LmisUser user = scope.currentUser();
         int curOrgId = user.getDefault_org_id();
         OrgDB orgDB = new OrgDB(scope.context());
         List<LmisDataRow> children = orgDB.getChildrenOrgs(curOrgId);
-        String jsArray = "";
-        for(LmisDataRow r : children){
-            jsArray += "&children_org_ids[]=" + r.getInt("id") + "" ;
+        String jsArray = "&children_org_ids[]=-1";
+        for (LmisDataRow r : children) {
+            jsArray += "&children_org_ids[]=" + r.getInt("id") + "";
         }
-        mWebView.loadUrl(DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray);
+        String url = DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray;
+        mWebView.loadUrl(url);
+        Log.d("Dashboard#loadDashboardUrl : ",url);
+    }
 
+    @Subscribe
+    public void onCurrentOrgChangeEvent(CurrentOrgChangeEvent evt) {
+        loadDashboardUrl();
     }
 
     @Override

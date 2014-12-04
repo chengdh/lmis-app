@@ -65,12 +65,6 @@ public class UserProfile extends BaseFragment {
     @InjectView(R.id.txvServerUrl)
     LmisTextView txvServerUrl;
 
-    @InjectView(R.id.txvTimeZone)
-    LmisTextView txvTimeZone;
-
-    @InjectView(R.id.txvDatabase)
-    LmisTextView txvDatabase;
-
     @InjectView(R.id.imgUserProfilePic)
     ImageView imgUserPic;
 
@@ -104,9 +98,6 @@ public class UserProfile extends BaseFragment {
 
         txvServerUrl.setText(scope.currentUser().getHost());
 
-        txvDatabase.setText("");
-
-        txvTimeZone.setText("GMT");
     }
 
     @Override

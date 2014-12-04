@@ -1,8 +1,6 @@
 buildscript {
     repositories {
         maven { url 'http://repo1.maven.org/maven2' }
-        mavenLocal()
-        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.12.+'
@@ -11,12 +9,11 @@ buildscript {
 apply plugin: 'android'
 
 repositories {
+    mavenLocal()
+    mavenCentral()
     flatDir {
         dirs 'libs'
     }
-
-    mavenLocal()
-    mavenCentral()
     maven { url 'https://github.com/donnfelker/mvn-repo/raw/master/' }
     maven { url "https://github.com/dahlgren/pulltorefresh-aar/raw/master" }
 }
@@ -60,7 +57,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 20
+        versionCode 21
         versionName '1.1'
     }
     packagingOptions {

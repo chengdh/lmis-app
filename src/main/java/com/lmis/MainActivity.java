@@ -587,13 +587,10 @@ public class MainActivity extends InjectingFragmentActivity implements
         int sync_interval = mPref.getInt("sync_interval", 1440);
 
         List<String> default_authorities = new ArrayList<String>();
-        default_authorities.add("com.android.calendar");
-        default_authorities.add("com.android.contacts");
 
         SyncAdapterType[] list = ContentResolver.getSyncAdapterTypes();
 
-        Account mAccount = LmisAccountManager.getAccount(mContext, LmisUser
-                .current(mContext).getAndroidName());
+        Account mAccount = LmisAccountManager.getAccount(mContext, LmisUser.current(mContext).getAndroidName());
 
         for (SyncAdapterType lst : list) {
             if (lst.authority.contains("com.lmis.providers")) {
@@ -601,13 +598,12 @@ public class MainActivity extends InjectingFragmentActivity implements
             }
         }
         for (String authority : default_authorities) {
-            boolean isSyncActive = ContentResolver.getSyncAutomatically(
-                    mAccount, authority);
+            boolean isSyncActive = ContentResolver.getSyncAutomatically(mAccount, authority);
             if (isSyncActive) {
-                setSyncPeriodic(authority, sync_interval, 1, 1);
+                setSyncPeriodic(authority, sync_interval, 60, 1);
             }
         }
-        Toast.makeText(this, "Setting saved.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "系统设置已保存.", Toast.LENGTH_LONG).show();
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
@@ -691,10 +687,8 @@ public class MainActivity extends InjectingFragmentActivity implements
      * @param seconds_per_minute      the seconds_per_minute
      * @param milliseconds_per_second the milliseconds_per_second
      */
-    public void setSyncPeriodic(String authority, long interval_in_minute,
-                                long seconds_per_minute, long milliseconds_per_second) {
-        Account account = LmisAccountManager.getAccount(this, LmisUser
-                .current(mContext).getAndroidName());
+    public void setSyncPeriodic(String authority, long interval_in_minute,long seconds_per_minute, long milliseconds_per_second) {
+        Account account = LmisAccountManager.getAccount(this, LmisUser.current(mContext).getAndroidName());
         Bundle extras = new Bundle();
         this.setAutoSync(authority, true);
         ContentResolver.setIsSyncable(account, authority, 1);

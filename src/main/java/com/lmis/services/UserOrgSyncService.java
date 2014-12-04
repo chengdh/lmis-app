@@ -96,9 +96,7 @@ public class UserOrgSyncService extends InjectingService implements PerformSync 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (user.getAndroidName().equals(account.name)) {
-            context.sendBroadcast(intent);
-        }
+        context.sendBroadcast(intent);
     }
 
     @Override

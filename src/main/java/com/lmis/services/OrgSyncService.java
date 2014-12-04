@@ -95,6 +95,7 @@ public class OrgSyncService extends InjectingService implements PerformSync {
                 if (componentInfo.getPackageName().equalsIgnoreCase("com.lmis")) {
                     notification = false;
                 }
+                /*
                 if (notification && affected_rows > 0) {
                     LmisNotificationHelper mNotification = new LmisNotificationHelper();
                     Intent mainActiivty = new Intent(context, MainActivity.class);
@@ -108,6 +109,7 @@ public class OrgSyncService extends InjectingService implements PerformSync {
 
                     mNotification.showNotification(context, notify_title, notify_body, authority, R.drawable.ic_oe_notification);
                 }
+                */
                 intent.putIntegerArrayListExtra("new_ids", (ArrayList<Integer>) affected_ids);
             }
             context.sendBroadcast(intent);
