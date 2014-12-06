@@ -348,8 +348,8 @@ public class GoodsExceptionList extends BaseFragment implements AdapterView.OnIt
         String title = "异常处理";
 
         drawerItems.add(new DrawerItem(TAG, title, true));
-        drawerItems.add(new DrawerItem(TAG, "草稿", count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem(TAG, "已上传", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "草稿", count(MType.DRAFT, context), R.drawable.ic_menu_goods_exceptioin, getFragment("draft")));
+        drawerItems.add(new DrawerItem(TAG, "已上传", count(MType.PROCESSED, context), R.drawable.ic_menu_goods_exception_uploaded, getFragment("processed")));
         return drawerItems;
     }
 

@@ -256,8 +256,8 @@ public class MessageList extends BaseFragment implements AdapterView.OnItemClick
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
         drawerItems.add(new DrawerItem(TAG, "通知", true));
-        drawerItems.add(new DrawerItem(TAG, "未读", count(MType.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem(TAG, "已读", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "未读", count(MType.DRAFT, context), R.drawable.ic_menu_message_unread, getFragment("draft")));
+        drawerItems.add(new DrawerItem(TAG, "已读", count(MType.PROCESSED, context), R.drawable.ic_menu_message_read, getFragment("processed")));
         return drawerItems;
     }
 

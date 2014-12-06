@@ -96,7 +96,7 @@ public class DashBoard extends BaseFragment {
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
-        drawerItems.add(new DrawerItem(TAG, "业务看板", 0, R.drawable.ic_action_archive, getFragment()));
+        drawerItems.add(new DrawerItem(TAG, "业务看板", 0, R.drawable.ic_menu_dashboard, getFragment()));
         return drawerItems;
     }
 

@@ -246,12 +246,12 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
         drawerItems.add(new DrawerItem(TAG, "运单", true));
-        drawerItems.add(new DrawerItem(TAG, "运单录入", count(MType.PROCESSED, context), R.drawable.ic_action_archive, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "运单录入", count(MType.PROCESSED, context), R.drawable.ic_menu_carrying_bill, getFragment("processed")));
         Bundle args = new Bundle();
         args.putInt("no_use", 1);
         SearchBill fragment = new SearchBill();
         fragment.setArguments(args);
-        drawerItems.add(new DrawerItem(TAG, "运单查询", 0, R.drawable.ic_action_archive, fragment));
+        drawerItems.add(new DrawerItem(TAG, "运单查询", 0, R.drawable.ic_menu_carrying_bill_search, fragment));
         return drawerItems;
     }
 

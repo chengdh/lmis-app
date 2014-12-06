@@ -381,10 +381,10 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         String branchOutProcessed = "已上传";
 
         drawerItems.add(new DrawerItem(TAG, branchOutTitle, true));
-        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.BRANCH_OUT, "draft")));
+        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_menu_barcode, getFragment(InventoryMoveOpType.BRANCH_OUT, "draft")));
         drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_OUT, "processed")));
 
-        //if (currentOrg.getBoolean("is_yard")) {
+        if (currentOrg.getBoolean("is_yard")) {
 
             //货场收货
             String yardConfirmTitle = "货场入库";
@@ -403,7 +403,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             drawerItems.add(new DrawerItem(TAG, yardOutTitle, true));
             drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_OUT, "draft")));
             drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_OUT, "processed")));
-        //}
+        }
 
         //分理处/分公司入库
         String branchConfirmTitle = "入库扫码";
@@ -518,6 +518,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         }
         mInventoryLoader = new InventoryLoader(mType, mState);
         mInventoryLoader.execute((Void) null);
+        scope.main().refreshDrawer(TAG);
     }
 
     public class InventoryLoader extends AsyncTask<Void, Void, Boolean> {
