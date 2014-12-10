@@ -40,9 +40,6 @@ public class CarryingBillView extends BaseFragment {
     @InjectView(R.id.txv_goods_no)
     TextView mTxvGoodsNo;
 
-    @InjectView(R.id.txv_bill_date)
-    TextView mTxvBillDate;
-
     @InjectView(R.id.txv_pay_type)
     TextView mTxvPayType;
 
@@ -124,8 +121,8 @@ public class CarryingBillView extends BaseFragment {
             mTxvBillNo.setText(billNo);
             String goodsNo = mCarryingBill.getString("goods_no");
             mTxvGoodsNo.setText(goodsNo);
-            String billDate = mCarryingBill.getString("bill_date");
-            mTxvBillDate.setText(billDate);
+            //String billDate = mCarryingBill.getString("bill_date");
+            //mTxvBillDate.setText(billDate);
             String fromCustomerName = mCarryingBill.getString("from_customer_name");
             mTxvFromCustomerName.setText(fromCustomerName);
             String fromCustomerMobile = mCarryingBill.getString("from_customer_mobile");
