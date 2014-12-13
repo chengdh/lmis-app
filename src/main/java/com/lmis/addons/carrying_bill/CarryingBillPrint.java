@@ -28,60 +28,154 @@ public class CarryingBillPrint {
 
         tscDll.openport(devAddress);
         try {
-            for (String cmd : formatPrintCommand(bill, rePrint)) {
-                tscDll.sendcommand(cmd + "\n");
+            for (Object cmd : formatPrintCommand(bill, rePrint)) {
+                if (cmd instanceof String)
+                    tscDll.sendcommand(cmd.toString());
+
+                if (cmd instanceof byte[]) {
+                    tscDll.sendcommand((byte[]) cmd);
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        tscDll.printlabel(1, 2);
         tscDll.closeport();
+    }
+
+    public static void testPrint(TSCActivity tsc) {
+        try {
+            byte[] qq2 = new byte[1024];
+            tsc.sendcommand("CODEPAGE UTF-8\n");
+            //tsc.setup(70, 50, 4, 4, 0, 0, 0);
+            tsc.sendcommand("CLS\n");
+            String name = "河南开瑞物流有限公司";
+            qq2 = name.getBytes("GB2312");
+            String string1 = new String(qq2, "GB2312");
+            tsc.sendcommand("TEXT 5,90,\"Font001\",0,5,5,\"");
+            tsc.sendcommand(qq2);
+            tsc.sendcommand("\"\n");
+            tsc.sendcommand("PRINT 1\n");
+            tsc.closeport();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
      * 小票打印指令
      * The constant PRINT_CONTENT.
+     *
+     * @param bill    the bill
+     * @param rePrint the re print
+     * @return the list
      */
-    public static List<String> formatPrintCommand(LmisDataRow bill, Boolean rePrint) {
-        List<String> commands = new ArrayList<String>();
-        commands.addAll(Arrays.asList(
-                "CODEPAGE UTF-8",
-                "SIZE 55 mm,110 mm",
-                "GAP 0 mm,0",
-                "DIRECTION 0",
-                "CLS",
-                //"PUTBMP 5,5,\"logo.BMP\"",
-                "TEXT 5,60,\"DroidSan.TTF\",0,12,12,1,\"河南凯瑞物流有限公司\"",
-                "TEXT 5,90,\"DroidSan.TTF\",0,10,10,1,\"运输协议单\"",
-                "BAR 5,120,300,3",
-                String.format("TEXT 5,150,\"DroidSan.TTF\",0,7,7,\"运单编号:%s\"", bill.getString("bill_no")),
-                String.format("TEXT 5,180,\"DroidSan.TTF\",0,7,7,\"到货地:%s\"", bill.getM2ORecord("to_org_id").browse().getString("name")),
-                String.format("TEXT 5,210,\"DroidSan.TTF\",0,7,7,\"货号:%s\"", bill.getString("goods_no")),
-                String.format("TEXT 5,240,\"DroidSan.TTF\",0,7,7,\"运费支付方式:%s\"", PayType.payTypes().get(bill.getString("pay_type"))),
-                String.format("TEXT 5,270,\"DroidSan.TTF\",0,7,7,\"客户卡号:%s\"", ""),
-                String.format("TEXT 5,300,\"DroidSan.TTF\",0,7,7,\"发货人:%s  电话:%s\"", bill.getString("from_customer_name"), bill.getString("from_customer_mobile")),
-                String.format("TEXT 5,330,\"DroidSan.TTF\",0,7,7,\"收货人:%s 电话:%s\"", bill.getString("to_customer_name"), bill.getString("to_customer_mobile")),
-                String.format("TEXT 5,360,\"DroidSan.TTF\",0,7,7,\"货物名称:%s 数量:%s\"", bill.getString("goods_info"), bill.getInt("goods_num")),
-                String.format("TEXT 5,390,\"DroidSan.TTF\",0,7,7,\"运费总计:%s元 保险费:%s元\"", bill.getInt("carrying_fee"), bill.getInt("insured_fee")),
-                String.format("TEXT 5,420,\"DroidSan.TTF\",0,9,9,\"代收货款:%s元\"", bill.getInt("goods_fee")),
-                String.format("TEXT 5,450,\"DroidSan.TTF\",0,7,7,\"备注:%s\"", bill.getString("note")),
-                "BAR 5,480,300,3",
-                String.format("TEXT 5,510,\"DroidSan.TTF\",0,7,7,\"开票人:%S 日期: %s\"", "凯瑞物流", bill.getString("bill_date")),
-                "TEXT 5,540,\"DroidSan.TTF\",0,7,7,\"发货人签字:\"",
-                "BAR 5,570,300,3",
-                "TEXT 5,600,\"DroidSan.TTF\",0,7,7,\"全国统一客服热线:\"",
-                "TEXT 5,630,\"DroidSan.TTF\",0,7,7,\"400-619-4448\"",
-                "BAR 5,660,300,3",
-                "TEXT 5,690,\"DroidSan.TTF\",0,7,7,\"发货人存根\"",
-                "TEXT 5,720,\"DroidSan.TTF\",0,7,7,\"本人确认以上票据信息,并同意发货!\"",
-                "TEXT 5,750,\"DroidSan.TTF\",0,7,7,\"温馨提示:此票为热敏票据,不宜长期保存,\"",
-                "TEXT 5,780,\"DroidSan.TTF\",0,7,7,\"            请及时复印\""
-                //"PRINT 1"
-        ));
-        if (rePrint) {
-            String cmd = "TEXT 5,810,\"DroidSan.TTF\",0,7,7,\"[重打]\"";
-            commands.add(cmd);
+    public static List<Object> formatPrintCommand(LmisDataRow bill, Boolean rePrint) {
+        List<Object> commands = new ArrayList<Object>();
+        try {
+            commands.addAll(Arrays.asList(
+                    "CODEPAGE UTF-8\n",
+                    "SIZE 70 mm,110 mm\n",
+                    "GAP 0 mm,0\n",
+                    "DIRECTION 0\n",
+                    "CLS\n",
+                    "PUTBMP 165,5,\"logo.BMP\"\n",
+                    "BAR 15,50,500,3\n",
+
+                    "TEXT 65,60,\"Font001\",0,3,3,\"",
+                    "河南凯瑞物流有限公司".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 185,110,\"Font001\",0,2,2,\"",
+                    "运输协议单".getBytes("GB2312"),
+                    "\"\n",
+
+                    "BAR 15,140,500,3\n",
+                    "TEXT 15,150,\"Font001\",0,2,2,\"",
+                    String.format("运单编号:%s", bill.getString("bill_no")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,180,\"Font001\",0,2,2,\"",
+                    String.format("到 货 地:%s", bill.getM2ORecord("to_org_id").browse().getString("name")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,210,\"Font001\",0,2,2,\"",
+                    String.format("货    号:%s", bill.getString("goods_no")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,240,\"Font001\",0,2,2,\"",
+                    String.format("支付方式:%s", PayType.payTypes().get(bill.getString("pay_type"))).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,270,\"Font001\",0,2,2,\"",
+                    String.format("客户卡号:%s", "").getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,300,\"Font001\",0,2,2,\"",
+                    String.format("发 货 人:%s  电话:%s", bill.getString("from_customer_name"), bill.getString("from_customer_mobile")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,330,\"Font001\",0,2,2,\"",
+                    String.format("收 货 人:%s 电话:%s", bill.getString("to_customer_name"), bill.getString("to_customer_mobile")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,360,\"Font001\",0,2,2,\"",
+                    String.format("货物名称:%s 数量:%s", bill.getString("goods_info"), bill.getInt("goods_num")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,390,\"Font001\",0,2,2,\"",
+                    String.format("运费总计:%s元 保险费:%s元", bill.getInt("carrying_fee"), bill.getInt("insured_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,420,\"Font001\",0,2,2,\"",
+                    String.format("代收货款:%s元", bill.getInt("goods_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,450,\"Font001\",0,2,2,\"",
+                    String.format("备    注:%s", bill.getString("note")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "BAR 15,480,500,3\n",
+                    "TEXT 15,510,\"Font001\",0,2,2,\"",
+                    String.format("开 票 人:%S 日期: %s", "凯瑞物流", bill.getString("bill_date")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,540,\"Font001\",0,2,2,\"",
+                    "发货人签字:".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,570,\"Font001\",0,2,2,\"",
+                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
+                    "\"\n",
+                    "TEXT 15,600,\"Font001\",0,2,2,\"",
+                    "发货人存根".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,630,\"Font001\",0,2,2,\"",
+                    "本人确认以上票据信息,并同意发货!".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,660,\"Font001\",0,2,2,\"",
+                    "温馨提示:此票为热敏票据,不宜长期保存,".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,690,\"Font001\",0,2,2,\"",
+                    "请及时复印".getBytes("GB2312"),
+                    "\"\n",
+
+                    "PRINT 2\n"
+            ));
+            if (rePrint) {
+                String cmd1 = "TEXT 5,720,\"Font001\",0,2,2,\"";
+                byte[] cmd2 = "[重打]".getBytes("GB2312");
+                String cmd3 = "\"\n";
+                commands.add(cmd1);
+                commands.add(cmd2);
+                commands.add(cmd3);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
         return commands;
     }
 }

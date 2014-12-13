@@ -62,6 +62,7 @@ public class DashBoard extends BaseFragment {
 
     private void init() {
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
         loadDashboardUrl();

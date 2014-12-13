@@ -3,7 +3,7 @@ buildscript {
         maven { url 'http://repo1.maven.org/maven2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 apply plugin: 'android'
@@ -79,14 +79,14 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            runProguard false
+            //runProguard false
             // zipAlign false // this is default for debug
         }
         release {
             // runProguard true
             // proguardFile '..\proguard.cfg'
             signingConfig signingConfigs.release
-            zipAlign true // this is default for release
+            //zipAlign true // this is default for release
             //testPackageName 'com.lmis.app.mobile.core.core'
             //testInstrumentationRunner 'android.test.InstrumentationTestRunner' // this is the default
         }
