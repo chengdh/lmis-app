@@ -68,8 +68,13 @@ public class CarryingBillDB extends LmisDatabase {
         //到货地
         cols.add(new LmisColumn("to_org_id", "To Org", LmisFields.manyToOne(new OrgDB(mContext))));
 
+        //发货人id
         LmisColumn colFromCustomerID = new LmisColumn("from_customer_id", "From Customer ID", LmisFields.integer());
         cols.add(colFromCustomerID);
+
+        //发货人代码
+        LmisColumn colFromCustomerCode = new LmisColumn("from_customer_code", "From Customer Code", LmisFields.varchar(20),false);
+        cols.add(colFromCustomerCode);
 
         //发货人
         LmisColumn colFromCustomerName = new LmisColumn("from_customer_name", "From Customer", LmisFields.varchar(20));

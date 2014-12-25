@@ -14,7 +14,8 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="到货地" />
+            android:text="到货地"
+            android:textColor="#33b5e5" />
 
         <com.lmis.util.controls.ExcludeAccessOrgSpinner
             android:layout_width="match_parent"
@@ -26,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="发货人信息"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -95,7 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText"
-            android:text="收货人信息" />
+            android:text="收货人信息"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -126,7 +129,8 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="货物信息" />
+            android:text="货物信息"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -166,7 +170,8 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="运费" />
+            android:text="运费"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -204,7 +209,8 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="接货费/送货费" />
+            android:text="发货短途/到货短途"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -254,7 +260,8 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="保险费/代收货款" />
+            android:text="保险费/代收货款"
+            android:textColor="#33b5e5" />
 
         <LinearLayout
             android:orientation="horizontal"

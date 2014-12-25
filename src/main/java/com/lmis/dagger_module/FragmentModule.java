@@ -10,6 +10,7 @@ import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
 import com.lmis.addons.dashboard.DashBoard;
+import com.lmis.addons.dashboard.DashBoardTurnover;
 import com.lmis.addons.goods_exception.GoodsExceptionList;
 import com.lmis.addons.goods_exception.GoodsExceptionNew;
 import com.lmis.addons.goods_exception.GoodsExceptionView;
@@ -56,6 +57,7 @@ import dagger.Provides;
                 CarryingBillNew.class,
                 CarryingBillView.class,
                 DashBoard.class,
+                DashBoardTurnover.class,
                 SearchBill.class,
                 MessageList.class,
                 MessageDetail.class,

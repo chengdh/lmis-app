@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_carrying_bill_print"
-        android:icon="@drawable/ic_action_printer"
+        android:icon="@drawable/ic_action_print"
         android:showAsAction="always"
         android:visible="true"
         android:title="打印"></item>

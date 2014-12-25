@@ -21,7 +21,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="运单编号/货号"
                 style="?android:attr/listSeparatorTextViewStyle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -54,7 +55,8 @@
                 android:text="起止地"
                 android:textStyle="bold"
                 android:layout_marginBottom="2dp"
-                android:id="@+id/textView" />
+                android:id="@+id/textView"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -95,7 +97,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="发货人"
                 android:textStyle="bold"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="2dp"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -137,7 +140,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="收货人"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -180,7 +184,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="运费"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -224,7 +229,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="货款"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -255,7 +261,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="保险费"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -285,7 +292,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="发货短途"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -315,7 +323,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="到货短途"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -345,7 +354,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="货物信息"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#33b5e5" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -389,14 +399,16 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="备注"
                 android:textStyle="bold"
-                android:id="@+id/textView5" />
+                android:id="@+id/textView5"
+                android:textColor="#33b5e5" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="备注"
-                android:id="@+id/txv_note" />
+                android:id="@+id/txv_note"
+                android:padding="8dp" />
 
         </LinearLayout>
     </ScrollView>

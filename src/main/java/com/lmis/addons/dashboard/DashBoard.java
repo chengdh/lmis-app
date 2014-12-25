@@ -80,7 +80,7 @@ public class DashBoard extends BaseFragment {
         }
         String url = DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray;
         mWebView.loadUrl(url);
-        Log.d("Dashboard#loadDashboardUrl : ",url);
+        Log.d("Dashboard#loadDashboardUrl : ", url);
     }
 
     @Subscribe
@@ -97,7 +97,14 @@ public class DashBoard extends BaseFragment {
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
+        drawerItems.add(new DrawerItem(TAG, "看板", true));
         drawerItems.add(new DrawerItem(TAG, "业务看板", 0, R.drawable.ic_menu_dashboard, getFragment()));
+
+        DashBoardTurnover turnover = new DashBoardTurnover();
+        Bundle bundle = new Bundle();
+        bundle.putInt("defaut_org_id", -1);
+        turnover.setArguments(bundle);
+        drawerItems.add(new DrawerItem(TAG, "日营业额", 0, R.drawable.ic_menu_turnover, turnover));
         return drawerItems;
     }
 

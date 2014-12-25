@@ -59,7 +59,7 @@ public class AppSettingsActivity extends PreferenceActivity {
 		switch (item.getItemId()) {
 
 		case android.R.id.home:
-			// app icon in action bar clicked; go home
+			// app icon in action bar clicked; go ic_menu_turnover
 			finish();
 			return true;
 

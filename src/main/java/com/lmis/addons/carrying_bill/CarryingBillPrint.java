@@ -107,7 +107,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,270,\"Font001\",0,2,2,\"",
-                    String.format("客户卡号:%s", "").getBytes("GB2312"),
+                    String.format("客户卡号:%s", bill.getString("from_customer_code")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,300,\"Font001\",0,2,2,\"",

@@ -448,8 +448,10 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         vals.put("to_short_carrying_fee", mEdtToShortCarryingFee.getText());
 
         String fromCustomerID = mEdtCustomerID.getText().toString();
+        String fromCustomerCode = mEdtCustomerNo.getText().toString();
         if (fromCustomerID != null && fromCustomerID.length() > 0) {
             vals.put("from_customer_id", fromCustomerID);
+            vals.put("from_customer_code",fromCustomerCode);
         }
 
         vals.put("note", mEdtNote.getText());
