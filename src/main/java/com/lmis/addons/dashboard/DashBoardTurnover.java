@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.lmis.R;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
+
+import org.xwalk.core.XWalkView;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class DashBoardTurnover extends BaseFragment {
     Bus mBus;
 
     @InjectView(R.id.web_view_dashboard_turnover)
-    WebView mWebView;
+    XWalkView mWebView;
 
     View mView = null;
 
@@ -40,7 +39,7 @@ public class DashBoardTurnover extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_dashboard_turnover, container, false);
-        ButterKnife.inject(this,mView);
+        ButterKnife.inject(this, mView);
         mBus.register(this);
         init();
 
@@ -49,12 +48,7 @@ public class DashBoardTurnover extends BaseFragment {
     }
 
     private void init() {
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setLoadWithOverviewMode(true);
-        mWebView.setWebViewClient(new WebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.setVerticalScrollBarEnabled(true);
-        mWebView.loadUrl(TURNOBER_URL);
+        mWebView.load(TURNOBER_URL, null);
     }
 
     @Override

@@ -16,8 +16,7 @@ public interface FragmentHelper {
 
 	public Object databaseHelper(Context context);
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState);
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater);
 

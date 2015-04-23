@@ -22,6 +22,8 @@ import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.xwalk.core.XWalkView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class DashBoard extends BaseFragment {
     Bus mBus;
 
     @InjectView(R.id.web_view_dashboard)
-    WebView mWebView;
+    XWalkView mWebView;
 
     View mView = null;
 
@@ -61,12 +63,7 @@ public class DashBoard extends BaseFragment {
     }
 
     private void init() {
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setLoadWithOverviewMode(true);
-        mWebView.setWebViewClient(new WebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
         loadDashboardUrl();
-
     }
 
     private void loadDashboardUrl() {
@@ -79,8 +76,8 @@ public class DashBoard extends BaseFragment {
             jsArray += "&children_org_ids[]=" + r.getInt("id") + "";
         }
         String url = DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray;
-        mWebView.loadUrl(url);
-        Log.d("Dashboard#loadDashboardUrl : ", url);
+        mWebView.load(url, null);
+        Log.d("loadDashboardUrl : ", url);
     }
 
     @Subscribe
