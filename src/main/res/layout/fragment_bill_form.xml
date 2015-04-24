@@ -8,7 +8,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
@@ -45,7 +45,8 @@
                 android:layout_weight="4"
                 android:hint="客户编号"
                 android:gravity="center_vertical"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:textSize="14dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -63,6 +64,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="14dp"
                 android:id="@+id/edt_customer_id" />
 
         </LinearLayout>
@@ -78,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
+                android:textSize="14dp"
                 android:id="@+id/edt_from_customer_name"
                 android:hint="发货人"
                 android:layout_weight="2" />
@@ -87,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:ems="10"
+                android:textSize="14dp"
                 android:id="@+id/edt_from_customer_mobile"
                 android:hint="手机"
                 android:layout_weight="3" />
@@ -111,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
+                android:textSize="14dp"
                 android:id="@+id/edt_to_customer_name"
                 android:hint="收货人"
                 android:layout_weight="2" />
@@ -120,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:ems="10"
+                android:textSize="14dp"
                 android:id="@+id/edt_to_customer_mobile"
                 android:hint="手机"
                 android:layout_weight="3" />
@@ -143,6 +149,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:id="@+id/edt_goods_info"
+                android:textSize="14dp"
                 android:hint="货物名称"
                 android:layout_weight="4" />
 
@@ -152,6 +159,7 @@
                 android:inputType="numberSigned"
                 android:ems="10"
                 android:id="@+id/edt_goods_num"
+                android:textSize="14dp"
                 android:layout_weight="2"
                 android:hint="货物件数"
                 android:singleLine="false"
@@ -193,6 +201,7 @@
                 android:id="@+id/edt_carrying_fee"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
+                android:textSize="14dp"
                 android:hint="运费"
                 android:gravity="center_horizontal"
                 android:text="10" />
@@ -224,6 +233,7 @@
                 android:inputType="numberSigned"
                 android:ems="10"
                 android:id="@+id/edt_from_short_carrying_fee"
+                android:textSize="14dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="2"
                 android:hint="接货费"
@@ -242,6 +252,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberSigned"
                 android:ems="10"
+                android:textSize="14dp"
                 android:id="@+id/edt_to_short_carrying_fee"
                 android:layout_weight="2"
                 android:hint="送货费"
@@ -277,6 +288,7 @@
                 android:id="@+id/edt_insured_fee"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="2"
+                android:textSize="14dp"
                 android:hint="保险费"
                 android:editable="false"
                 android:enabled="false"
@@ -298,6 +310,7 @@
                 android:id="@+id/edt_goods_fee"
                 android:layout_weight="2"
                 android:hint="代收货款"
+                android:textSize="14dp"
                 android:text="0"
                 android:gravity="center_horizontal" />
 
@@ -317,6 +330,7 @@
             android:id="@+id/edt_note"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:textSize="14dp"
             android:hint="备注"
             android:lines="2" />
 

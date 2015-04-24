@@ -115,8 +115,6 @@ public class InventoryMoveDB extends LmisDatabase {
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
             line.remove("load_list_with_barcode_id");
-            line.remove("manual_set_all");
-
         }
 
     }

@@ -10,8 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner_yards_select"
-        android:spinnerMode="dropdown"
-        android:layout_margin="5dp" />
+        android:spinnerMode="dropdown" />
 
     <EditText
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
         android:hint="扫描条码"
         android:textAlignment="center"
         android:textSize="20dp"
-        android:layout_margin="8dp"
         android:gravity="center_horizontal"
         android:inputType="number" />
 
@@ -39,7 +37,6 @@
             android:text="~"
             android:id="@+id/txv_barcode"
             android:gravity="center_vertical|center_horizontal"
-            android:padding="5dp"
             android:textStyle="bold"
             style="?android:attr/listSeparatorTextViewStyle" />
 
@@ -47,30 +44,15 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4">
+            android:weightSum="8">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="票号"
+                android:text="票号:"
                 android:textStyle="bold"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_weight="2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="到货地"
-                android:textStyle="bold"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_weight="2" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:weightSum="4">
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -78,7 +60,17 @@
                 android:id="@+id/txv_bill_no"
                 android:padding="8dp"
                 android:text="无"
-                android:layout_weight="2" />
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="3" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="到货地:"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,41 +78,25 @@
                 android:id="@+id/txv_to_org_name"
                 android:padding="8dp"
                 android:text="无"
-                android:layout_weight="2" />
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="3" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:weightSum="4">
+            android:weightSum="8">
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="序号"
+                android:text="序号:"
                 android:textStyle="bold"
                 android:contentDescription="2"
                 android:id="@+id/textView"
-                android:layout_weight="2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="总件数"
-                android:textStyle="bold"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:contentDescription="2"
-                android:layout_weight="2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:weightSum="4">
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,7 +104,19 @@
                 android:id="@+id/txv_seq"
                 android:padding="8dp"
                 android:text="0"
-                android:layout_weight="2" />
+
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="3" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总件数:"
+                android:textStyle="bold"
+                android:contentDescription="2"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,11 +124,29 @@
                 android:id="@+id/txv_goods_num"
                 android:padding="8dp"
                 android:text="0"
-                android:layout_weight="2" />
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="3" />
 
         </LinearLayout>
 
+
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="bottom">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="整票扫描确认"
+            android:drawableLeft="@drawable/thor_hammer"
+            android:id="@+id/btn_all_scan" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -148,12 +154,12 @@
         android:layout_height="match_parent"
         android:gravity="bottom">
 
+
         <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="true"
-            android:layout_gravity="top"
-            android:layout_margin="8dp">
+            android:layout_gravity="top">
 
             <TableRow
                 android:layout_width="fill_parent"
@@ -167,7 +173,7 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="共"
                     android:layout_weight="2"
                     android:gravity="center_vertical|center_horizontal" />
@@ -178,13 +184,13 @@
                     android:text="0"
                     android:id="@+id/btn_sum_goods_num"
                     android:layout_weight="4"
-                    android:textSize="30dp"
+                    android:textSize="25dp"
                     android:background="#fff" />
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="件"
                     android:layout_weight="2"
                     android:gravity="center_vertical|center_horizontal" />
@@ -203,7 +209,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="共"
                     android:layout_weight="2"
                     android:gravity="center_vertical|center_horizontal" />
@@ -214,13 +220,13 @@
                     android:text="0"
                     android:id="@+id/btn_sum_bills_count"
                     android:layout_weight="4"
-                    android:textSize="30dp"
+                    android:textSize="25dp"
                     android:background="#fff" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="票"
                     android:id="@+id/textView6"
                     android:layout_weight="2"
@@ -229,5 +235,6 @@
             </TableRow>
         </TableLayout>
     </LinearLayout>
+
 
 </LinearLayout>

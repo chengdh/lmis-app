@@ -83,8 +83,12 @@ public class FragmentScanBarcode extends BaseFragment {
     @InjectView(R.id.btn_sum_bills_count)
     Button mBtnSumBillsCount;
 
+    @InjectView(R.id.btn_all_scan)
+    Button mBtnAllScan;
+
 
     View mView = null;
+    GoodsInfo mCurGoodsInfo = null;
 
     public BarcodeParser getmBarcodeParser() {
         return mBarcodeParser;
@@ -190,6 +194,24 @@ public class FragmentScanBarcode extends BaseFragment {
             }
         });
         mEdtScanBarcode.requestFocus();
+        //
+        mBtnAllScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mCurGoodsInfo == null)
+                    return;
+
+                try {
+                    mBarcodeParser.setAllGoodsScaned(mCurGoodsInfo.getmBarcode());
+                    Toast.makeText(scope.context(), "整单已扫描!", Toast.LENGTH_LONG).show();
+                } catch (InvalidBarcodeException e) {
+                    Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
+                } catch (BarcodeNotExistsException e) {
+                    Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
 
     }
 
@@ -228,12 +250,12 @@ public class FragmentScanBarcode extends BaseFragment {
      */
     @Subscribe
     public void onBarcodeParseSuccessEvent(BarcodeParseSuccessEvent evt) {
-        GoodsInfo gs = evt.getmGoodsInfo();
-        mTxvBillNo.setText(gs.getmBillNo());
-        mTxvToOrgName.setText(gs.getmToOrgName());
-        mTxvGoodsNum.setText(gs.getmGoodsNum() + "");
-        mTxvSeq.setText(gs.getmSeq() + "");
-        mTxvBarcode.setText(gs.getmBarcode());
+        mCurGoodsInfo = evt.getmGoodsInfo();
+        mTxvBillNo.setText(mCurGoodsInfo.getmBillNo());
+        mTxvToOrgName.setText(mCurGoodsInfo.getmToOrgName());
+        mTxvGoodsNum.setText(mCurGoodsInfo.getmGoodsNum() + "");
+        mTxvSeq.setText(mCurGoodsInfo.getmSeq() + "");
+        mTxvBarcode.setText(mCurGoodsInfo.getmBarcode());
     }
 
     /**

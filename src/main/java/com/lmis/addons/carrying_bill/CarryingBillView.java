@@ -1,6 +1,8 @@
 package com.lmis.addons.carrying_bill;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,6 +134,26 @@ public class CarryingBillView extends BaseFragment {
             String toCustomerMobile = mCarryingBill.getString("to_customer_mobile");
             mTxvToCustomerMobile.setText(toCustomerMobile);
 
+            mTxvFromCustomerMobile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:+" + ((TextView) view).getText().toString().trim()));
+                    startActivity(callIntent);
+
+                }
+            });
+
+            mTxvToCustomerMobile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:+" + ((TextView) view).getText().toString().trim()));
+                    startActivity(callIntent);
+
+                }
+            });
+
 
 
             String payType = mCarryingBill.getString("pay_type");
@@ -155,6 +177,7 @@ public class CarryingBillView extends BaseFragment {
             String note = mCarryingBill.getString("note");
             mTxvNote.setText(note);
         }
+
     }
 
     @Override
@@ -166,7 +189,7 @@ public class CarryingBillView extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.menu_carrying_bill_print):
-                CarryingBillPrint.print(mCarryingBill,true);
+                CarryingBillPrint.print(mCarryingBill, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

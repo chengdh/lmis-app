@@ -152,6 +152,7 @@ public abstract class BarcodeParser {
         return mInventoryLineDB.create(lineValue);
     }
 
+
     /**
      * 将条码确认信息保存到数据库.
      *
@@ -172,6 +173,25 @@ public abstract class BarcodeParser {
      */
     public abstract void addBarcode(String barcode)
             throws InvalidBarcodeException, InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException;
+
+    /**
+     * 设置该条码关联的运单货物全部为已扫描.
+     *
+     * @param barcode the barcode
+     * @return the boolean
+     */
+    public int setAllGoodsScaned(String barcode) throws InvalidBarcodeException, BarcodeNotExistsException {
+        if (!containsBarcode(barcode))
+            throw new BarcodeNotExistsException("条码不存在!");
+
+        String where = "load_list_with_barcode_id = ? AND barcode = ?";
+        String[] whereArgs = new String[]{mMoveId + "", barcode};
+
+        LmisValues update_vals = new LmisValues();
+        update_vals.put("manual_set_all",1);
+
+        return mInventoryLineDB.update(update_vals,where,whereArgs);
+    }
 
     /**
      * 从已扫描的记录中删除给定的条码数据.
