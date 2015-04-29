@@ -46,7 +46,6 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/edt_note"
-        android:lines="2"
         android:layout_margin="8dp"
         android:hint="备注" />
 
@@ -63,7 +62,7 @@
 
         <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:id="@+id/img"
             android:clickable="false"
             android:visibility="visible"

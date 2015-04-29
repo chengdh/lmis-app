@@ -187,6 +187,7 @@ public class CarryingBillDB extends LmisDatabase {
      * @throws JSONException the jSON exception
      */
     private void delUnusedAttr(JSONObject json) throws JSONException {
+        json.remove("from_customer_code");
         json.remove("processed");
         json.remove("process_datetime");
     }

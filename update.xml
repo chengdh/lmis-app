@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updateInfo>
-    <appName>LMIS Mobile</appName>
-    <appDescription>LMIS手机端</appDescription>
+    <appName>凯瑞物流</appName>
+    <appDescription>凯瑞物流手机端</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>21</versionCode>
-    <versionName>1.1</versionName>
+    <versionCode>1</versionCode>
+    <versionName>0.1</versionName>
     <forceUpdate>false</forceUpdate>
     <autoUpdate>false</autoUpdate>
     <apkUrl>https://github.com/chengdh/lmis-app/raw/master/build/outputs/apk/lmis-app-release.apk</apkUrl>

@@ -21,7 +21,7 @@ public class LmisSQLiteHelper extends SQLiteOpenHelper {
     public static final String TAG = LmisSQLiteHelper.class.getSimpleName();
 
     public static final String DATABASE_NAME = "LmisSQLite.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
 
     //此处的mContext实际是MainActivity
     Context mContext;
