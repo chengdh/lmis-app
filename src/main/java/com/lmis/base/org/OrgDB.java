@@ -54,6 +54,7 @@ public class OrgDB extends LmisDatabase {
         cols.add(new LmisColumn("is_yard", "Is Yard", LmisFields.varchar(20)));
         cols.add(new LmisColumn("carrying_fee_gte_on_insured_fee", "carrying_fee_gte_on_insured_fee", LmisFields.integer()));
         cols.add(new LmisColumn("is_visible", "Is Visible", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("is_active", "Is Active", LmisFields.varchar(20)));
         cols.add(new LmisColumn("auto_generate_to_short_carrying_fee", "auto generate to short carrying_fee", LmisFields.varchar(20)));
         cols.add(new LmisColumn("agtscf_rate", "agtscf_rate", LmisFields.varchar(20)));
         cols.add(new LmisColumn("fixed_to_short_carrying_fee", "fixed to short carrying fee", LmisFields.varchar(20)));

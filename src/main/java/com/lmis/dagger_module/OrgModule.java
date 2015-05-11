@@ -60,7 +60,9 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录用户不返回任何数据
         if (LmisUser.current(context) != null) {
-            List<LmisDataRow> orgList = new UserOrgDB(context).select();
+            String where = "is_active = ?";
+            String[] whereArgs = new String[]{"true"};
+            List<LmisDataRow> orgList = new UserOrgDB(context).select(where,whereArgs);
             for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
                 ret.add(i.next().getM2ORecord("org_id").browse());
             }
@@ -74,7 +76,10 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            return new OrgDB(ctx).select();
+            String where = "is_active = ?";
+            String[] whereArgs = new String[]{"true"};
+
+            return new OrgDB(ctx).select(where,whereArgs);
         }
         return ret;
     }
@@ -129,8 +134,8 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            String where = "is_yard = ?";
-            String[] whereArgs = new String[]{"true"};
+            String where = "is_active = ? AND is_yard = ?";
+            String[] whereArgs = new String[]{"true","true"};
             return new OrgDB(ctx).select(where, whereArgs);
         }
         return ret;
@@ -144,8 +149,8 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            String where = "is_summary = ?";
-            String[] whereArgs = new String[]{"true"};
+            String where = "is_active = ? AND is_summary = ?";
+            String[] whereArgs = new String[]{"true","true"};
             OrgDB db = new OrgDB(ctx);
             List<LmisDataRow> summaryOrgs = db.select(where, whereArgs);
             if (summaryOrgs.size() > 0) {

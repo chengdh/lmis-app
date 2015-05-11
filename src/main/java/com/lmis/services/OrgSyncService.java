@@ -83,7 +83,7 @@ public class OrgSyncService extends InjectingService implements PerformSync {
 
             //数据库中原有的数据也需要更新
             List<Integer> ids = orgDB.ids();
-            if (lmis.syncWithMethod("all", arguments)) {
+            if (lmis.syncWithMethod("all", arguments,true)) {
                 int affected_rows = lmis.getAffectedRows();
                 Log.d(TAG, "OrgSyncService[arguments]:" + arguments.toString());
                 Log.d(TAG, "OrgSyncService->affected_rows:" + affected_rows);

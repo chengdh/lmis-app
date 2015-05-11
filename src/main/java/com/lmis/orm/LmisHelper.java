@@ -189,7 +189,7 @@ public class LmisHelper extends Lmis {
             if (result.getJSONArray("result").length() > 0)
                 mAffectedRows = result.getJSONArray("result").length();
 
-            synced = handleResultArray(fields, result.getJSONArray("result"), false);
+            synced = handleResultArray(fields, result.getJSONArray("result"), removeLocalIfNotExists);
         } catch (Exception e) {
             e.printStackTrace();
         }
