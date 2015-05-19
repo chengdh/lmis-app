@@ -62,9 +62,11 @@ public class OrgModule {
         if (LmisUser.current(context) != null) {
             String where = "is_active = ?";
             String[] whereArgs = new String[]{"true"};
-            List<LmisDataRow> orgList = new UserOrgDB(context).select(where,whereArgs);
+            List<LmisDataRow> orgList = new UserOrgDB(context).select();
             for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
-                ret.add(i.next().getM2ORecord("org_id").browse());
+                LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
+                if(theOrg.getString("is_active").equals("true"))
+                    ret.add(theOrg);
             }
         }
         return ret;
