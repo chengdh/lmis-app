@@ -354,12 +354,12 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      */
     private Boolean validate() {
         Boolean ret = true;
-        String customerID = mEdtCustomerID.getText().toString();
-        if (customerID != null && customerID.length() == 0) {
-            mEdtCustomerNo.setError("客户编号不可为空!");
-            mEdtCustomerNo.requestFocus();
-            ret = false;
-        }
+//        String customerID = mEdtCustomerID.getText().toString();
+//        if (customerID != null && customerID.length() == 0) {
+//            mEdtCustomerNo.setError("客户编号不可为空!");
+//            mEdtCustomerNo.requestFocus();
+//            ret = false;
+//        }
         String fromCustomerName = mEdtFromCustomerName.getText().toString();
         if (fromCustomerName != null && fromCustomerName.length() == 0) {
             mEdtFromCustomerName.setError("发货人不可为空!");

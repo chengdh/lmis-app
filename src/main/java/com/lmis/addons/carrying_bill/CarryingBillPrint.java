@@ -165,6 +165,11 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,700,\"Font001\",0,2,2,\"",
+                    "   ".getBytes("GB2312"),
+                    "\"\n",
+
+
+                    "TEXT 15,730,\"Font001\",0,2,2,\"",
                     "发货人签字:________________".getBytes("GB2312"),
                     "\"\n"
 
