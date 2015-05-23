@@ -460,7 +460,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             vals.put("from_customer_code",fromCustomerCode);
         }
 
-        vals.put("note", mEdtNote.getText());
+        vals.put("note", mEdtNote.getText() + "[手机开票]");
         Map.Entry<String, String> payType = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
         vals.put("pay_type", payType.getKey());
 
