@@ -65,7 +65,7 @@ public class OrgModule {
             List<LmisDataRow> orgList = new UserOrgDB(context).select();
             for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
                 LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
-                if(theOrg.getString("is_active").equals("true"))
+                if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))
                     ret.add(theOrg);
             }
         }
@@ -78,10 +78,10 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            String where = "is_active = ?";
-            String[] whereArgs = new String[]{"true"};
+            String where = "is_active = ? AND is_visible = ?";
+            String[] whereArgs = new String[]{"true", "true"};
 
-            return new OrgDB(ctx).select(where,whereArgs);
+            return new OrgDB(ctx).select(where, whereArgs);
         }
         return ret;
     }
@@ -103,21 +103,19 @@ public class OrgModule {
 
             excludeOrgs.add(defaultOrg);
             //如果当前用户所属机构是顶级机构,则选择其他机构
-            Object parentOrgIdObj =   defaultOrg.get("parent_id");
-            if(parentOrgIdObj != null && !parentOrgIdObj.equals("null")) {
+            Object parentOrgIdObj = defaultOrg.get("parent_id");
+            if (parentOrgIdObj != null && !parentOrgIdObj.equals("null")) {
                 Integer parentOrgID = defaultOrg.getInt("parent_id");
                 LmisDataRow parentOrg = orgDB.select(parentOrgID);
                 excludeOrgs.add(parentOrg);
                 excludeOrgs.addAll(orgDB.getChildrenOrgs(parentOrgID));
-            }
-            else
-            {
+            } else {
                 excludeOrgs.addAll(orgDB.getChildrenOrgs(defaultOrgID));
             }
 
-            for(LmisDataRow o : allOrgs){
-                for(LmisDataRow exOrg : excludeOrgs){
-                    if(o.getInt("id").equals(exOrg.getInt("id"))){
+            for (LmisDataRow o : allOrgs) {
+                for (LmisDataRow exOrg : excludeOrgs) {
+                    if (o.getInt("id").equals(exOrg.getInt("id"))) {
                         removeOrgs.add(o);
 
                     }
@@ -136,8 +134,8 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            String where = "is_active = ? AND is_yard = ?";
-            String[] whereArgs = new String[]{"true","true"};
+            String where = "is_active = ? AND is_yard = ? AND is_visible = ?";
+            String[] whereArgs = new String[]{"true", "true", "true"};
             return new OrgDB(ctx).select(where, whereArgs);
         }
         return ret;
@@ -151,8 +149,8 @@ public class OrgModule {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
-            String where = "is_active = ? AND is_summary = ?";
-            String[] whereArgs = new String[]{"true","true"};
+            String where = "is_active = ? AND is_summary = ? AND is_visible = ?";
+            String[] whereArgs = new String[]{"true", "true", "true"};
             OrgDB db = new OrgDB(ctx);
             List<LmisDataRow> summaryOrgs = db.select(where, whereArgs);
             if (summaryOrgs.size() > 0) {

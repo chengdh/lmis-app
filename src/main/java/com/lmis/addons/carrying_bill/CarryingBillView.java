@@ -189,7 +189,7 @@ public class CarryingBillView extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.menu_carrying_bill_print):
-                CarryingBillPrint.print(mCarryingBill, true);
+                CarryingBillPrint.print(mCarryingBill,scope.currentUser(), true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -283,6 +283,12 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
                 mEdtCustomerNo.requestFocus();
             }
         });
+        //计算初始保险费
+        LmisUser currentUser = scope.currentUser();
+        Integer default_org_id = currentUser.getDefault_org_id();
+        OrgDB orgDB = new OrgDB(scope.context());
+        LmisDataRow curOrg = orgDB.select(default_org_id);
+        reCalInsuredFee(curOrg);
     }
 
 
@@ -675,7 +681,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
                 scope.main().startMainFragment(list, true);
                 //打印小票
                 LmisDataRow bill = db().select(mCarryingBillID);
-                CarryingBillPrint.print(bill, false);
+                CarryingBillPrint.print(bill, scope.currentUser(), false);
 
 
             } else {
