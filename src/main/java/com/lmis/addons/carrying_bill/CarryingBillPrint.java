@@ -80,7 +80,7 @@ public class CarryingBillPrint {
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
                     "SIZE 70 mm,110 mm\n",
-                    "GAP 0 mm,0\n",
+                    "GAP 2 mm,0 mm\n",
                     "DIRECTION 0\n",
                     "CLS\n",
                     "PUTBMP 165,5,\"logo.BMP\"\n",
