@@ -160,6 +160,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         return mView;
     }
 
+
     private void init() {
         mTxvBlank.setVisibility(View.GONE);
         mListView.setOnItemClickListener(this);

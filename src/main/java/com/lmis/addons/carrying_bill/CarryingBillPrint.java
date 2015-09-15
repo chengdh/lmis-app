@@ -80,7 +80,8 @@ public class CarryingBillPrint {
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
                     "SIZE 70 mm,110 mm\n",
-                    "GAP 2 mm,0 mm\n",
+                    "GAP 0,0\n",
+                    //"SET PRINTKEY ON\n",
                     "DIRECTION 0\n",
                     "CLS\n",
                     "PUTBMP 165,5,\"logo.BMP\"\n",
@@ -201,7 +202,10 @@ public class CarryingBillPrint {
                 commands.add(cmd2);
                 commands.add(cmd3);
             }
-            commands.add("PRINT 2\n");
+
+            commands.add("PRINT 1\n");
+            commands.add("DELAY 5000\n");
+            commands.add("PRINT 1\n");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

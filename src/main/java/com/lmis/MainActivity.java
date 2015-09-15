@@ -783,6 +783,7 @@ public class MainActivity extends InjectingFragmentActivity implements
 
     @Override
     public void startMainFragment(Fragment fragment, boolean addToBackState) {
+
         Log.d(TAG, "MainActivity->FragmentListener->startMainFragment()");
 
         FragmentTransaction tran = mFragment.beginTransaction();

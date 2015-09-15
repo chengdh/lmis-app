@@ -202,8 +202,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     /**
      * On create view.
      *
-     * @param inflater the inflater
-     * @param container the container
+     * @param inflater           the inflater
+     * @param container          the container
      * @param savedInstanceState the saved instance state
      * @return the view
      */
@@ -238,6 +238,10 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             @Override
             public void afterTextChanged(Editable s) {
                 reCalToShortCarryingFee();
+                //重新计算保险费
+                LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+                reCalInsuredFee(toOrg);
+
             }
         });
         mEdtToShortCarryingFee.addTextChangedListener(new TextWatcher() {
@@ -317,7 +321,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     /**
      * On create options menu.
      *
-     * @param menu the menu
+     * @param menu     the menu
      * @param inflater the inflater
      */
     @Override
@@ -463,7 +467,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         String fromCustomerCode = mEdtCustomerNo.getText().toString();
         if (fromCustomerID != null && fromCustomerID.length() > 0) {
             vals.put("from_customer_id", fromCustomerID);
-            vals.put("from_customer_code",fromCustomerCode);
+            vals.put("from_customer_code", fromCustomerCode);
         }
 
         vals.put("note", mEdtNote.getText() + "[手机开票]");
@@ -485,14 +489,17 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * On item selected.
      * 自动计算到货短途
      *
-     * @param parent the parent
-     * @param view the view
+     * @param parent   the parent
+     * @param view     the view
      * @param position the position
-     * @param id the id
+     * @param id       the id
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         reCalToShortCarryingFee();
+        //重新计算保险费
+        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+        reCalInsuredFee(toOrg);
 
     }
 
@@ -556,8 +563,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * @param evt the evt
      */
     @Subscribe
-    public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt){
-        LmisDataRow curOrg =  evt.getmOrg();
+    public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt) {
+        LmisDataRow curOrg = evt.getmOrg();
         reCalInsuredFee(curOrg);
     }
 
