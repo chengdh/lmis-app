@@ -174,5 +174,8 @@
     <!--il config -->
     <string name="il_config_sync_notify_title">更新%1$d条系统设置资料</string>
     <string name="il_config_sync_notify_body">更新%1$d条系统设置资料(Lmis)</string>
+    <string name="search">查找</string>
+    <string name="edit">修改</string>
+    <string name="cancel">作废</string>
 
 </resources>

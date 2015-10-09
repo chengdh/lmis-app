@@ -73,7 +73,7 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(colFromCustomerID);
 
         //发货人代码
-        LmisColumn colFromCustomerCode = new LmisColumn("from_customer_code", "From Customer Code", LmisFields.varchar(20),false);
+        LmisColumn colFromCustomerCode = new LmisColumn("from_customer_code", "From Customer Code", LmisFields.varchar(20), false);
         cols.add(colFromCustomerCode);
 
         //发货人
@@ -148,7 +148,7 @@ public class CarryingBillDB extends LmisDatabase {
         //录入人员
         LmisColumn colUser = new LmisColumn("user_id", "User", LmisFields.integer());
         cols.add(colUser);
-         //是否已上传
+        //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
         //上传时间
         cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
@@ -172,13 +172,30 @@ public class CarryingBillDB extends LmisDatabase {
         Lmis instance = getLmisInstance();
         JSONObject response = instance.callMethod("ComputerBill", "create", args, null).getJSONObject("result");
         LmisValues v = new LmisValues();
-        v.put("processed",true);
-        v.put("process_datetime",new Date());
-        v.put("bill_no",response.getString("bill_no"));
-        v.put("goods_no",response.getString("goods_no"));
-        v.put("bill_date",response.getString("bill_date"));
-        update(v,id);
+        v.put("processed", true);
+        v.put("process_datetime", new Date());
+        v.put("bill_no", response.getString("bill_no"));
+        v.put("goods_no", response.getString("goods_no"));
+        v.put("bill_date", response.getString("bill_date"));
+        update(v, id);
     }
+
+    /**
+     * 向服务器端更新运单数据.
+     *
+     * @param server_id the server id
+     * @param vals      the vals
+     * @throws JSONException the json exception
+     * @throws IOException   the io exception
+     */
+    public void update2server(int server_id, JSONObject vals) throws JSONException, IOException {
+        JSONArray args = new JSONArray();
+        args.put(server_id);
+        args.put(vals);
+        Lmis instance = getLmisInstance();
+        JSONObject response = instance.callMethod("ComputerBill", "update", args, null).getJSONObject("result");
+    }
+
 
     /**
      * 删除不需要的属性.
@@ -197,11 +214,11 @@ public class CarryingBillDB extends LmisDatabase {
      * 系统设置中 有保险费金额
      * 另外 组织机构设置中 有关于保险费的运费的金额设置
      *
-     * @param orgID the org iD
+     * @param orgID       the org iD
      * @param carryingFee the carrying fee
      * @return the int
      */
-    public float getInsuredFee(int orgID,float carryingFee ){
+    public float getInsuredFee(int orgID, float carryingFee) {
         Lmis instance = getLmisInstance();
 
         return 2;

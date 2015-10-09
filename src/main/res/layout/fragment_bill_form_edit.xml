@@ -6,129 +6,183 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="到货地"
-            android:textColor="#33b5e5" />
-
-        <com.lmis.util.controls.ExcludeAccessOrgSpinner
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/spinner_to_org"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="发货人信息"
-            style="?android:attr/listSeparatorTextViewStyle"
+            android:text="起止地点"
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txv_from_org"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="郑州" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="至" />
+
+
+            <TextView
+                android:id="@+id/txv_to_org"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="北京" />
+
+        </LinearLayout>
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="货号/票号"
+            android:textColor="#33b5e5" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txv_goods_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="140814A邯21-999"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/txv_bill_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="4000001"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="发货人信息"
+            android:textColor="#33b5e5" />
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="horizontal"
             android:weightSum="5">
 
             <EditText
+                android:id="@+id/edt_customer_no"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_customer_no"
-                android:layout_weight="4"
-                android:hint="客户编号"
-                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="4"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="客户编号"
+                android:inputType="numberSigned"
                 android:textSize="14dp" />
 
             <ImageButton
+                android:id="@+id/btn_search_customer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_search_customer"
                 android:src="@drawable/ic_action_search" />
 
             <ImageButton
+                android:id="@+id/btn_remove_customer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_remove_customer"
                 android:adjustViewBounds="false"
                 android:src="@drawable/ic_action_remove" />
 
             <EditText
+                android:id="@+id/edt_customer_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:id="@+id/edt_customer_id" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:weightSum="5">
 
             <EditText
+                android:id="@+id/edt_from_customer_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:layout_weight="2"
                 android:ems="10"
-                android:textSize="14sp"
-                android:id="@+id/edt_from_customer_name"
                 android:hint="发货人"
-                android:layout_weight="2" />
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
             <EditText
+                android:id="@+id/edt_from_customer_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:layout_weight="3"
                 android:ems="10"
-                android:textSize="14dp"
-                android:id="@+id/edt_from_customer_mobile"
                 android:hint="手机"
-                android:layout_weight="3" />
+                android:inputType="phone"
+                android:textSize="14dp" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/editText"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
             android:text="收货人信息"
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="vertical"
             android:weightSum="5">
 
             <EditText
+                android:id="@+id/edt_to_customer_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:layout_weight="2"
                 android:ems="10"
-                android:textSize="14dp"
-                android:id="@+id/edt_to_customer_name"
                 android:hint="收货人"
-                android:layout_weight="2" />
+                android:inputType="textPersonName"
+                android:textSize="14dp" />
 
             <EditText
+                android:id="@+id/edt_to_customer_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:layout_weight="3"
                 android:ems="10"
-                android:textSize="14dp"
-                android:id="@+id/edt_to_customer_mobile"
                 android:hint="手机"
-                android:layout_weight="3" />
+                android:inputType="phone"
+                android:textSize="14dp" />
         </LinearLayout>
 
         <TextView
@@ -139,39 +193,39 @@
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="horizontal"
             android:weightSum="7">
 
             <EditText
+                android:id="@+id/edt_goods_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/edt_goods_info"
-                android:textSize="14dp"
+                android:layout_weight="4"
                 android:hint="货物名称"
-                android:layout_weight="4" />
+                android:inputType="text"
+                android:textSize="14dp" />
 
             <EditText
+                android:id="@+id/edt_goods_num"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_goods_num"
-                android:textSize="14dp"
                 android:layout_weight="2"
-                android:hint="货物件数"
-                android:singleLine="false"
+                android:ems="10"
                 android:gravity="center_horizontal"
+                android:hint="货物件数"
+                android:inputType="numberSigned"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
                 android:text="1"
-                android:selectAllOnFocus="false" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="件"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="件" />
         </LinearLayout>
 
         <TextView
@@ -182,36 +236,36 @@
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="horizontal"
             android:weightSum="7">
 
             <com.lmis.util.controls.PayTypeSpinner
+                android:id="@+id/spin_pay_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/spin_pay_type"
                 android:layout_weight="4" />
 
             <EditText
+                android:id="@+id/edt_carrying_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_carrying_fee"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:textSize="14dp"
-                android:hint="运费"
+                android:ems="10"
                 android:gravity="center_horizontal"
-                android:text="10" />
+                android:hint="运费"
+                android:inputType="numberSigned"
+                android:text="10"
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:text="元" />
         </LinearLayout>
 
         <TextView
@@ -222,49 +276,49 @@
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:weightSum="6">
 
             <EditText
+                android:id="@+id/edt_from_short_carrying_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_from_short_carrying_fee"
-                android:textSize="14dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="2"
+                android:ems="10"
+                android:gravity="center_horizontal"
                 android:hint="接货费"
+                android:inputType="numberSigned"
                 android:text="0"
-                android:gravity="center_horizontal" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:text="元" />
 
             <EditText
+                android:id="@+id/edt_to_short_carrying_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:textSize="14dp"
-                android:id="@+id/edt_to_short_carrying_fee"
                 android:layout_weight="2"
+                android:ems="10"
+                android:gravity="center_horizontal"
                 android:hint="送货费"
+                android:inputType="numberSigned"
                 android:text="0"
-                android:gravity="center_horizontal" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:text="元" />
         </LinearLayout>
 
         <TextView
@@ -275,64 +329,64 @@
             android:textColor="#33b5e5" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="horizontal"
             android:weightSum="6">
 
             <EditText
+                android:id="@+id/edt_insured_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_insured_fee"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="2"
-                android:textSize="14dp"
-                android:hint="保险费"
                 android:editable="false"
+                android:ems="10"
                 android:enabled="false"
+                android:gravity="center_horizontal"
+                android:hint="保险费"
+                android:inputType="numberSigned"
                 android:text="0"
-                android:gravity="center_horizontal" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:text="元" />
 
             <EditText
+                android:id="@+id/edt_goods_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/edt_goods_fee"
                 android:layout_weight="2"
+                android:ems="10"
+                android:gravity="center_horizontal"
                 android:hint="代收货款"
-                android:textSize="14dp"
+                android:inputType="numberSigned"
                 android:text="0"
-                android:gravity="center_horizontal" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:text="元" />
         </LinearLayout>
 
         <EditText
+            android:id="@+id/edt_note"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/edt_note"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:textSize="14dp"
+            android:ems="10"
             android:hint="备注"
-            android:lines="2" />
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:textSize="14dp" />
 
 
     </LinearLayout>

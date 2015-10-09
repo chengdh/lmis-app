@@ -3,6 +3,7 @@ package com.lmis.addons.search_bill;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +27,6 @@ import com.lmis.support.LmisDialog;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -98,6 +98,11 @@ public class SearchBill extends BaseFragment {
 
     View mView = null;
 
+    Menu mMenu;
+
+    //自服务器端传入的运单json对象
+    JSONObject mJsonBill = null;
+
     SearchView mSearchView = null;
     MenuItem mMenuSearch = null;
     MyQueryTextLisener mQueryTextListener = null;
@@ -109,12 +114,12 @@ public class SearchBill extends BaseFragment {
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_bill_search, container, false);
         ButterKnife.inject(this, mView);
-        init();
         return mView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mMenu = menu;
         menu.clear();
         inflater.inflate(R.menu.menu_fragment_bill_search, menu);
         mMenuSearch = menu.findItem(R.id.menu_bill_search_search);
@@ -124,10 +129,17 @@ public class SearchBill extends BaseFragment {
         mQueryTextListener = new MyQueryTextLisener();
         mSearchView.setOnQueryTextListener(mQueryTextListener);
         mMenuSearch.expandActionView();
+        init();
+
     }
 
 
     private void init() {
+        Bundle args = getArguments();
+        if(args != null){
+            String billNo = args.getString("bill_no");
+            mSearchView.setQuery(billNo,true);
+        }
     }
 
     /**
@@ -203,6 +215,8 @@ public class SearchBill extends BaseFragment {
             if (s != null && s.length() > 0) {
                 mSearcher = new BillSearcher(s);
                 mSearcher.execute((Void) null);
+                MenuItem item = mMenu.findItem(R.id.menu_bill_search_search);
+                item.collapseActionView();
                 return true;
             } else
                 return false;
@@ -214,9 +228,41 @@ public class SearchBill extends BaseFragment {
         }
     }
 
+    //设置修改 作废菜单是否可见
+    private void setMenuItemToggle(boolean show) {
+        mMenu.findItem(R.id.menu_bill_edit).setVisible(show);
+        mMenu.findItem(R.id.menu_bill_cancel).setVisible(show);
+    }
+
+    private void editBill() {
+        if (mJsonBill == null)
+            return;
+
+        Bundle arg = new Bundle();
+        arg.putString("json_bill_str", mJsonBill.toString());
+        Fragment frag = new CarryingBillEdit();
+        frag.setArguments(arg);
+        scope.main().startMainFragment(frag, true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_bill_edit:
+                editBill();
+                break;
+            case R.id.menu_bill_cancel:
+                break;
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
     private class BillSearcher extends AsyncTask<Void, Void, Boolean> {
 
-        LmisDialog pdialog;
+        LmisDialog dialog;
         String mQueryText = "";
         JSONObject ret = null;
 
@@ -226,8 +272,8 @@ public class SearchBill extends BaseFragment {
 
         @Override
         protected void onPreExecute() {
-            pdialog = new LmisDialog(getActivity(), false, "正在查找...");
-            pdialog.show();
+//            dialog = new LmisDialog(getActivity(), false, "正在查找...");
+//            dialog.show();
         }
 
         @Override
@@ -238,6 +284,7 @@ public class SearchBill extends BaseFragment {
             Lmis instance = ((CarryingBillDB) databaseHelper(scope.context())).getLmisInstance();
             try {
                 ret = instance.callMethod("carrying_bill", "find_by_bill_no", args, null);
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;
@@ -252,21 +299,25 @@ public class SearchBill extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                mSearcher.cancel(true);
                 try {
                     if (ret.get("result").toString() == "null") {
+                        setMenuItemToggle(false);
                         Toast.makeText(scope.context(), "未查到符合条件的运单!", Toast.LENGTH_SHORT).show();
                         mLayoutBlank.setVisibility(View.VISIBLE);
                     } else {
-                        JSONObject jsonBill = ret.getJSONObject("result");
+                        mJsonBill = ret.getJSONObject("result");
                         mLayoutBlank.setVisibility(View.GONE);
-                        handleView(jsonBill);
+                        setMenuItemToggle(true);
+                        handleView(mJsonBill);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            pdialog.dismiss();
+
+//            dialog.dismiss();
+            mSearcher.cancel(true);
+            mSearcher = null;
         }
     }
 }

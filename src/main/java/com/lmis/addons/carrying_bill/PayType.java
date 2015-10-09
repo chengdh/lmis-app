@@ -22,4 +22,17 @@ public class PayType {
         ret.put(PAY_TYPE_K_GOODSFEE, "货款扣");
         return ret;
     }
+
+    public static int getPayTypeIndex(String payType) {
+        int ret = -1;
+        int i = 0;
+        for (Map.Entry item : payTypes().entrySet()) {
+            if (item.getKey().equals(payType)) {
+                ret = i;
+            }
+            i++;
+
+        }
+        return ret;
+    }
 }

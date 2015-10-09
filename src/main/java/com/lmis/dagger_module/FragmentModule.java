@@ -23,6 +23,7 @@ import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.addons.inventory.InventoryMoveReadonly;
 import com.lmis.addons.message.MessageDetail;
 import com.lmis.addons.message.MessageList;
+import com.lmis.addons.search_bill.CarryingBillEdit;
 import com.lmis.addons.search_bill.SearchBill;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -63,7 +64,8 @@ import dagger.Provides;
                 MessageDetail.class,
                 GoodsExceptionList.class,
                 GoodsExceptionNew.class,
-                GoodsExceptionView.class
+                GoodsExceptionView.class,
+                CarryingBillEdit.class
 
         })
 public class FragmentModule {

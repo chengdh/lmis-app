@@ -198,6 +198,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * 当前运单的id.
      */
     int mCarryingBillID = -1;
+    LmisDataRow mCurOrg;
 
     /**
      * On create view.
@@ -222,9 +223,25 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * Init controls.
      */
     private void initControls() {
+        LmisUser currentUser = scope.currentUser();
+        Integer default_org_id = currentUser.getDefault_org_id();
+        OrgDB orgDB = new OrgDB(scope.context());
+        mCurOrg = orgDB.select(default_org_id);
+
         mEdtInsuredFee.setEnabled(false);
         mEdtCustomerID.setVisibility(View.GONE);
         mSpinnerToOrg.setOnItemSelectedListener(this);
+        mSpinnerPayType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                reCalToShortCarryingFee();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mEdtCarryingFee.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -239,9 +256,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             public void afterTextChanged(Editable s) {
                 reCalToShortCarryingFee();
                 //重新计算保险费
-                LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
-                reCalInsuredFee(toOrg);
-
+                reCalInsuredFee(mCurOrg);
             }
         });
         mEdtToShortCarryingFee.addTextChangedListener(new TextWatcher() {
@@ -288,11 +303,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             }
         });
         //计算初始保险费
-        LmisUser currentUser = scope.currentUser();
-        Integer default_org_id = currentUser.getDefault_org_id();
-        OrgDB orgDB = new OrgDB(scope.context());
-        LmisDataRow curOrg = orgDB.select(default_org_id);
-        reCalInsuredFee(curOrg);
+        reCalInsuredFee(mCurOrg);
     }
 
 
@@ -497,10 +508,6 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         reCalToShortCarryingFee();
-        //重新计算保险费
-        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
-        reCalInsuredFee(toOrg);
-
     }
 
     /**
@@ -525,6 +532,13 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * @return the int
      */
     private int reCalToShortCarryingFee() {
+        Map.Entry<String, String> payTypeEntry = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
+        String payType = payTypeEntry.getKey();
+        //如果不是提货付,则不产生到货短途
+        if (!payType.equals(PayType.PAY_TYPE_TH)) {
+            mEdtToShortCarryingFee.setText("0");
+            return 0;
+        }
         int carryingFee = parseFee(mEdtCarryingFee);
         LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
         OrgDB orgDB = new OrgDB(scope.context());
@@ -542,7 +556,6 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      * @return the int
      */
     private int reCalInsuredFee(LmisDataRow curOrg) {
-        //计算保险费和到货短途
         OrgDB orgDB = new OrgDB(scope.context());
         IlConfigDB configDB = new IlConfigDB(scope.context());
         int setInsuredFee = 0;
@@ -564,8 +577,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      */
     @Subscribe
     public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt) {
-        LmisDataRow curOrg = evt.getmOrg();
-        reCalInsuredFee(curOrg);
+        mCurOrg = evt.getmOrg();
+        reCalInsuredFee(mCurOrg);
     }
 
     /**
