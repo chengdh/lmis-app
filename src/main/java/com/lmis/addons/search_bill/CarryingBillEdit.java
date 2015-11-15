@@ -409,8 +409,8 @@ public class CarryingBillEdit extends BaseFragment {
             ret = false;
         }
         String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
-        if (fromCustomerMobile != null && fromCustomerMobile.length() == 0) {
-            mEdtFromCustomerMobile.setError("发货人手机不可为空!");
+        if (fromCustomerMobile.length() < 11) {
+            mEdtFromCustomerMobile.setError("发货人手机不正确!");
             mEdtFromCustomerMobile.requestFocus();
             ret = false;
         }
@@ -421,8 +421,8 @@ public class CarryingBillEdit extends BaseFragment {
             ret = false;
         }
         String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
-        if (toCustomerMobile != null && toCustomerMobile.length() == 0) {
-            mEdtToCustomerMobile.setError("收货人手机不可为空!");
+        if (toCustomerMobile.length() < 11) {
+            mEdtToCustomerMobile.setError("收货人手机不正确!");
             mEdtToCustomerMobile.requestFocus();
             ret = false;
         }
@@ -551,9 +551,8 @@ public class CarryingBillEdit extends BaseFragment {
                 //返回已处理界面
                 try {
                     showCarryingBill();
-                }
-                catch (Exception ex){
-                    Log.e(TAG,ex.getMessage());
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
                 }
             } else {
                 Toast.makeText(scope.context(), "更新运单数据失败!", Toast.LENGTH_SHORT).show();
@@ -562,12 +561,13 @@ public class CarryingBillEdit extends BaseFragment {
             mUpdateTask = null;
         }
     }
+
     private void showCarryingBill() throws JSONException {
         SearchBill searchBill = new SearchBill();
         Bundle args = new Bundle();
-        args.putString("bill_no",mJsonBill.getString("bill_no"));
+        args.putString("bill_no", mJsonBill.getString("bill_no"));
         searchBill.setArguments(args);
-        ((MainActivity)getActivity()).startMainFragment(searchBill,true);
+        ((MainActivity) getActivity()).startMainFragment(searchBill, true);
 
     }
 

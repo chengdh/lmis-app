@@ -388,8 +388,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             ret = false;
         }
         String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
-        if (fromCustomerMobile != null && fromCustomerMobile.length() == 0) {
-            mEdtFromCustomerMobile.setError("发货人手机不可为空!");
+        if (fromCustomerMobile.length() < 11) {
+            mEdtFromCustomerMobile.setError("发货人手机不正确!");
             mEdtFromCustomerMobile.requestFocus();
             ret = false;
         }
@@ -400,8 +400,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             ret = false;
         }
         String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
-        if (toCustomerMobile != null && toCustomerMobile.length() == 0) {
-            mEdtToCustomerMobile.setError("收货人手机不可为空!");
+        if (toCustomerMobile.length() < 11) {
+            mEdtToCustomerMobile.setError("收货人手机不正确!");
             mEdtToCustomerMobile.requestFocus();
             ret = false;
         }

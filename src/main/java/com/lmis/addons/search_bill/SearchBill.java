@@ -136,9 +136,9 @@ public class SearchBill extends BaseFragment {
 
     private void init() {
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             String billNo = args.getString("bill_no");
-            mSearchView.setQuery(billNo,true);
+            mSearchView.setQuery(billNo, true);
         }
     }
 
@@ -272,8 +272,8 @@ public class SearchBill extends BaseFragment {
 
         @Override
         protected void onPreExecute() {
-//            dialog = new LmisDialog(getActivity(), false, "正在查找...");
-//            dialog.show();
+            dialog = new LmisDialog(getActivity(), false, "正在查找...");
+            dialog.show();
         }
 
         @Override
@@ -282,8 +282,19 @@ public class SearchBill extends BaseFragment {
             JSONArray args = new JSONArray();
             args.put(mQueryText);
             Lmis instance = ((CarryingBillDB) databaseHelper(scope.context())).getLmisInstance();
+            OrgDB orgDB = new OrgDB(scope.context());
+            int defaulOrgID = scope.currentUser().getDefault_org_id();
+            List<LmisDataRow> childOrgs = orgDB.getChildrenOrgs(defaulOrgID);
+            JSONArray orgIDS = new JSONArray();
+            orgIDS.put(defaulOrgID);
+            for(LmisDataRow childOrg : childOrgs){
+                orgIDS.put(childOrg.getInt("id"));
+            }
+            args.put(orgIDS);
+
+
             try {
-                ret = instance.callMethod("carrying_bill", "find_by_bill_no", args, null);
+                ret = instance.callMethod("carrying_bill", "find_by_bill_no_and_from_org_id", args, null);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -315,7 +326,7 @@ public class SearchBill extends BaseFragment {
                 }
             }
 
-//            dialog.dismiss();
+            dialog.dismiss();
             mSearcher.cancel(true);
             mSearcher = null;
         }

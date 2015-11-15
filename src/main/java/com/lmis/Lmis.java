@@ -36,7 +36,7 @@ public class Lmis {
     /**
      * 获取authToken,在子类中覆盖
      */
-    protected String getAuthToken(){
+    protected String getAuthToken() {
         return null;
     }
 
@@ -93,8 +93,8 @@ public class Lmis {
             params = new JSONObject();
 
         String authToken = getAuthToken();
-        if(authToken != null)
-            params.put("auth_token",authToken);
+        if (authToken != null)
+            params.put("auth_token", authToken);
 
         JSONObject ret = new Resty().json(RequestURL, content(params)).object();
         if (debugMode) {
@@ -124,7 +124,7 @@ public class Lmis {
     }
 
     public JSONObject search_count(String model, JSONArray args) throws JSONException, IOException {
-        return callMethod(model, "search_count", args,null);
+        return callMethod(model, "search_count", args, null);
     }
 
     public JSONArray search_read(String model, JSONObject fieldsAccumulates, JSONObject domainAccumulates, int offset, int limit, String sortField, String sortType)
@@ -170,16 +170,16 @@ public class Lmis {
         params.put("model", modelName);
         params.put("method", methodName);
         if (id != null)
-            params.put("id",id);
+            params.put("id", id);
         if (args != null)
-            params.put("args",args);
+            params.put("args", args);
         return params;
     }
 
     public JSONObject callMethod(String modelName, String methodName, JSONArray args, Integer id)
             throws JSONException, IOException {
         String req_url = (new StringBuilder(String.valueOf(_base_url))).append("/api/v1/dataset/call_kw/").toString();
-        JSONObject params ;
+        JSONObject params;
         params = createWriteParams(modelName, methodName, args, id);
         JSONObject response = callHTTP(req_url, params);
         return response;
@@ -216,7 +216,6 @@ public class Lmis {
         editor.commit();
         return true;
     }
-
 
 
     public static String getSessionData(Context context, String key) {
