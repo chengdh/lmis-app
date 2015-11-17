@@ -259,21 +259,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
                 reCalInsuredFee(mCurOrg);
             }
         });
-        mEdtToShortCarryingFee.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                reCalToShortCarryingFee();
-            }
-        });
 
         mBtnSearchCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,24 +334,28 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        boolean ret = false;
         switch (item.getItemId()) {
             case (R.id.menu_carrying_bill_save):
                 if (validate()) {
                     mSaveTask = new SaveTask();
                     mSaveTask.execute((Void) null);
-                    return true;
+                    ret = true;
                 } else
-                    return false;
+                    ret = false;
+                break;
             case (R.id.menu_carrying_bill_upload):
                 if (validate()) {
                     mUploadTask = new UploadTask();
                     mUploadTask.execute((Void) null);
-                    return true;
+                    ret = true;
                 } else
-                    return false;
+                    ret = false;
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return ret;
     }
 
     /**
@@ -388,7 +378,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             ret = false;
         }
         String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
-        if (fromCustomerMobile.length() < 11) {
+        if (fromCustomerMobile.length() != 11) {
             mEdtFromCustomerMobile.setError("发货人手机不正确!");
             mEdtFromCustomerMobile.requestFocus();
             ret = false;
@@ -400,7 +390,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             ret = false;
         }
         String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
-        if (toCustomerMobile.length() < 11) {
+        if (toCustomerMobile.length() != 11) {
             mEdtToCustomerMobile.setError("收货人手机不正确!");
             mEdtToCustomerMobile.requestFocus();
             ret = false;
@@ -543,10 +533,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
         OrgDB orgDB = new OrgDB(scope.context());
         int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(toOrg.getInt("id"), carryingFee);
-        int oldToShortCarryingFee = parseFee(mEdtToShortCarryingFee);
-        if (toShortCarryingFee > oldToShortCarryingFee) {
-            mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
-        }
+        mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
         return toShortCarryingFee;
     }
 

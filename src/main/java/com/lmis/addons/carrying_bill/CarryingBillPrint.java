@@ -113,89 +113,108 @@ public class CarryingBillPrint {
                     String.format("货    号:%s", bill.getString("goods_no").substring(6)).getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,270,\"Font001\",0,2,2,\"",
-                    String.format("支付方式:%s", PayType.payTypes().get(bill.getString("pay_type"))).getBytes("GB2312"),
-                    "\"\n",
 
-                    "TEXT 15,300,\"Font001\",0,2,2,\"",
+                    "TEXT 15,270,\"Font001\",0,2,2,\"",
                     String.format("客户卡号:%s", bill.getString("from_customer_code") == "false" ? "[无]" : bill.getString("from_customer_code")).getBytes("GB2312"),
                     "\"\n",
 
+                    "TEXT 15,300,\"Font001\",0,2,2,\"",
+                    String.format("发 货 人:%s", bill.getString("from_customer_name")).getBytes("GB2312"),
+                    "\"\n",
                     "TEXT 15,330,\"Font001\",0,2,2,\"",
-                    String.format("发 货 人:%s  电话:%s", bill.getString("from_customer_name"), bill.getString("from_customer_mobile")).getBytes("GB2312"),
+                    String.format("电   话:%s", bill.getString("from_customer_mobile")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,360,\"Font001\",0,2,2,\"",
-                    String.format("收 货 人:%s 电话:%s", bill.getString("to_customer_name"), bill.getString("to_customer_mobile")).getBytes("GB2312"),
+                    String.format("收 货 人:%s", bill.getString("to_customer_name")).getBytes("GB2312"),
                     "\"\n",
 
-
                     "TEXT 15,390,\"Font001\",0,2,2,\"",
-                    String.format("运费总计:%s元 保险费:%s元", bill.getInt("carrying_fee"), bill.getInt("insured_fee")).getBytes("GB2312"),
+                    String.format("电   话:%s", bill.getString("to_customer_mobile")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,420,\"Font001\",0,2,2,\"",
+                    String.format("支付方式:%s", PayType.payTypes().get(bill.getString("pay_type"))).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,450,\"Font001\",0,2,2,\"",
+                    String.format("发货短途:%s元 ", bill.getInt("from_short_carrying_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,480,\"Font001\",0,2,2,\"",
+                    String.format("到货短途:%s元 ", bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+
+                    "TEXT 15,510,\"Font001\",0,2,2,\"",
+                    String.format("运费总计:%s元", bill.getInt("carrying_fee") + bill.getInt("from_short_carrying_fee") + bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,540,\"Font001\",0,2,2,\"",
+                    String.format("保 险 费:%s元", bill.getInt("insured_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+
+                    "TEXT 15,570,\"Font001\",0,2,2,\"",
                     String.format("代收货款:%s元", bill.getInt("goods_fee")).getBytes("GB2312"),
                     "\"\n",
 
-
-                    "BAR 15,450,500,3\n",
-
-                    "TEXT 15,460,\"Font001\",0,2,2,\"",
+                    "BAR 15,,600,3\n",
+                    "TEXT 15,640,\"Font001\",0,2,2,\"",
                     "货物名称                   数量".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,490,\"Font001\",0,2,2,\"",
+                    "TEXT 15,670,\"Font001\",0,2,2,\"",
                     String.format("%s                        %s", bill.getString("goods_info"), bill.getInt("goods_num")).getBytes("GB2312"),
                     "\"\n",
 
-                    "BAR 15,520,500,3\n",
+                    "BAR 15,700,500,3\n",
 
-                    "TEXT 15,530,\"Font001\",0,2,2,\"",
+                    "TEXT 15,730,\"Font001\",0,2,2,\"",
                     String.format("备    注:%s", bill.getString("note")).getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,570,\"Font001\",0,2,2,\"",
+                    "TEXT 15,760,\"Font001\",0,2,2,\"",
                     String.format("开 票 人:%S : ", user.getAndroidName()).getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,600,\"Font001\",0,2,2,\"",
+                    "TEXT 15,790,\"Font001\",0,2,2,\"",
                     String.format("日    期: %s", curDateTimeStr).getBytes("GB2312"),
                     "\"\n",
 
 
-                    "TEXT 15,630,\"Font001\",0,2,2,\"",
+                    "TEXT 15,820,\"Font001\",0,2,2,\"",
                     "全国统一客服热线:400-619-4448".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,660,\"Font001\",0,2,2,\"",
+                    "TEXT 15,850,\"Font001\",0,2,2,\"",
                     "本票据以我公司同期票据运输协议条款为依据".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,690,\"Font001\",0,2,2,\"",
+                    "TEXT 15,880,\"Font001\",0,2,2,\"",
                     "未盖我公司收货章为无效票;".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,720,\"Font001\",0,2,2,\"",
+                    "TEXT 15,910,\"Font001\",0,2,2,\"",
                     "本人确认以上票据信息,并同意发货!".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,750,\"Font001\",0,2,2,\"",
+                    "TEXT 15,940,\"Font001\",0,2,2,\"",
                     "温馨提示:此票为热敏票据,请妥善保存!".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,780,\"Font001\",0,2,2,\"",
+                    "TEXT 15,970,\"Font001\",0,2,2,\"",
                     "   ".getBytes("GB2312"),
                     "\"\n",
 
 
-                    "TEXT 15,820,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1000,\"Font001\",0,2,2,\"",
                     "发货人签字:________________".getBytes("GB2312"),
                     "\"\n"
 
             ));
             if (rePrint) {
-                String cmd1 = "TEXT 15,850,\"Font001\",0,2,2,\"";
+                String cmd1 = "TEXT 15,1030,\"Font001\",0,2,2,\"";
                 byte[] cmd2 = "[重打]".getBytes("GB2312");
                 String cmd3 = "\"\n";
                 commands.add(cmd1);

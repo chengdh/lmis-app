@@ -409,7 +409,7 @@ public class CarryingBillEdit extends BaseFragment {
             ret = false;
         }
         String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
-        if (fromCustomerMobile.length() < 11) {
+        if (fromCustomerMobile.length() != 11) {
             mEdtFromCustomerMobile.setError("发货人手机不正确!");
             mEdtFromCustomerMobile.requestFocus();
             ret = false;
@@ -421,7 +421,7 @@ public class CarryingBillEdit extends BaseFragment {
             ret = false;
         }
         String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
-        if (toCustomerMobile.length() < 11) {
+        if (toCustomerMobile.length() != 11) {
             mEdtToCustomerMobile.setError("收货人手机不正确!");
             mEdtToCustomerMobile.requestFocus();
             ret = false;
