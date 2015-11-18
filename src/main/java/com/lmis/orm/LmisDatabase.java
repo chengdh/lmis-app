@@ -187,7 +187,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return newId;
     }
 
-    private HashMap<String, Object> getContentValues(LmisValues values) {
+    protected HashMap<String, Object> getContentValues(LmisValues values) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         ContentValues cValues = new ContentValues();
         List<HashMap<String, Object>> m2mObjectList = new ArrayList<HashMap<String, Object>>();
@@ -222,7 +222,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
     }
 
     @SuppressWarnings("unchecked")
-    private void manageMany2ManyRecords(LmisDBHelper relDb, LmisM2MIds.Operation operation,
+    protected void manageMany2ManyRecords(LmisDBHelper relDb, LmisM2MIds.Operation operation,
                                         long id, Object idsObj) {
         String first_table = tableName();
         String second_table = Inflector.tableize(relDb.getModelName());
@@ -488,7 +488,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return rows;
     }
 
-    private Object createRowData(LmisColumn col, Cursor cr) {
+    protected Object createRowData(LmisColumn col, Cursor cr) {
         if (col.getType() instanceof String) {
             if(col.getType().equals(LmisFields.blob()))
                 return cr.getBlob(cr.getColumnIndex(col.getName()));
@@ -511,7 +511,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         return null;
     }
 
-    private String[] getColumns() {
+    protected String[] getColumns() {
         List<String> cols = new ArrayList<String>();
         cols.add("id");
         for (LmisColumn col : mDBHelper.getModelColumns()) {

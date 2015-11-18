@@ -27,7 +27,9 @@ import com.lmis.support.LmisDialog;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,6 +43,33 @@ import us.monoid.json.JSONObject;
 public class SearchBill extends BaseFragment {
 
     public final static String TAG = "SearchBill";
+    public final static Map<String,String> statesMap = new HashMap<String, String>() {
+        {
+            put("billed","已开票");
+            put("loaded","已装车");
+            put("shipped","已发货");
+            put("reached","已到货");
+            put("distributed","已分货");
+            put("deliveried","已提货");
+            put("settlemented","已日结");
+            put("refunded","已返款");
+            put("refunded_confirmed","返款已确认");
+            put("payment_listed","准备支付");
+            put("paid","货款已付");
+            put("posted","已过帐");
+
+            //外部中转单
+            put("transited","已中转");
+
+            //内部中转单
+            put("transit_reached","已中转至货场");
+            put("transit_shipped","中转货场已发出");
+            put("transit_refunded_confirmed","中转返款已确认");
+
+            put("invalided","无效");
+            put("canceled","注销");
+        }
+    };
 
 
     @InjectView(R.id.layout_blank)
@@ -53,6 +82,10 @@ public class SearchBill extends BaseFragment {
 
     @InjectView(R.id.txv_bill_no)
     TextView mTxvBillNo;
+
+    @InjectView(R.id.txv_state_des)
+    TextView mTxvStateDes;
+
 
     @InjectView(R.id.txv_goods_no)
     TextView mTxvGoodsNo;
@@ -159,6 +192,11 @@ public class SearchBill extends BaseFragment {
         mTxvBillNo.setText(billNo);
         String goodsNo = jsonBill.getString("goods_no");
         mTxvGoodsNo.setText(goodsNo);
+
+        String state = jsonBill.getString("state");
+        String stateDes = statesMap.get(state);
+        mTxvStateDes.setText(stateDes);
+
         String fromCustomerName = jsonBill.getString("from_customer_name");
         mTxvFromCustomerName.setText(fromCustomerName);
         String fromCustomerMobile = jsonBill.getString("from_customer_mobile");

@@ -1,77 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="vertical"
             android:padding="5dp">
 
             <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="运单编号/货号"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="4000001"
                     android:id="@+id/txv_bill_no"
-                    android:padding="8dp" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="4000001"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="140814A邯21-999"
+                    android:layout_alignParentLeft="true" />
+
+
+                <TextView
                     android:id="@+id/txv_goods_no"
-                    android:padding="8dp" />
-            </LinearLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="140814A邯21-999"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_alignParentRight="false"
+                    android:layout_toRightOf="@+id/txv_bill_no" />
+
+                <TextView
+                    android:id="@+id/txv_state_des"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textview_border"
+                    android:gravity="left"
+                    android:padding="8dp"
+                    android:text="已开票"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/holo_green_light"
+                    android:textStyle="bold"
+                    android:layout_alignParentRight="true" />
+
+
+            </RelativeLayout>
 
 
             <TextView
+                android:id="@+id/textView"
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="起止地"
-                android:textStyle="bold"
                 android:layout_marginBottom="2dp"
-                android:id="@+id/textView"
-                android:textColor="#33b5e5" />
+                android:text="起止地"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:orientation="horizontal"
                 android:weightSum="4">
 
                 <TextView
+                    android:id="@+id/txv_from_org"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="A点"
-                    android:id="@+id/txv_from_org"
+                    android:layout_weight="2"
                     android:padding="8dp"
-                    android:layout_weight="2" />
+                    android:text="A点"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -79,83 +99,83 @@
                     android:text="~" />
 
                 <TextView
+                    android:id="@+id/txv_to_org"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="邯郸"
-                    android:id="@+id/txv_to_org"
+                    android:layout_weight="2"
+                    android:gravity="right"
                     android:padding="8dp"
                     android:phoneNumber="true"
-                    android:layout_weight="2"
-                    android:gravity="right" />
+                    android:text="邯郸"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="发货人"
-                android:textStyle="bold"
                 android:layout_marginBottom="2dp"
-                android:textColor="#33b5e5" />
+                android:text="发货人"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="张三"
                     android:id="@+id/txv_from_customer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:padding="8dp"
-                    android:layout_weight="2" />
-
-                <TextView
-                    android:layout_width="1dip"
-                    android:layout_height="fill_parent"
-                    android:background="?android:attr/listDivider" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/sym_action_call" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="13565445655"
-                    android:id="@+id/txv_from_customer_mobile"
-                    android:padding="8dp"
-                    android:phoneNumber="true" />
-            </LinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="收货人"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="张三"
-                    android:id="@+id/txv_to_customer_name"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:layout_width="1dip"
+                    android:layout_height="fill_parent"
+                    android:background="?android:attr/listDivider" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/sym_action_call" />
+
+                <TextView
+                    android:id="@+id/txv_from_customer_mobile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:layout_weight="2" />
+                    android:phoneNumber="true"
+                    android:text="13565445655"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="收货人"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txv_to_customer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="8dp"
+                    android:text="张三"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
                     android:layout_width="1dip"
@@ -169,37 +189,37 @@
                     android:src="@android:drawable/sym_action_call" />
 
                 <TextView
+                    android:id="@+id/txv_to_customer_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="13565445655"
-                    android:id="@+id/txv_to_customer_mobile"
                     android:padding="8dp"
-                    android:phoneNumber="true" />
+                    android:phoneNumber="true"
+                    android:text="13565445655"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="运费"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/txv_pay_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="提货付"
-                    android:id="@+id/txv_pay_type"
+                    android:layout_weight="2"
                     android:padding="8dp"
-                    android:layout_weight="2" />
+                    android:text="提货付"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
                     android:layout_width="1dip"
@@ -209,17 +229,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:padding="8dp"
                     android:text="￥"
-                    android:padding="8dp" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
+                    android:id="@+id/txv_carrying_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:padding="8dp"
                     android:text="200.00"
-                    android:id="@+id/txv_carrying_fee"
-                    android:padding="8dp" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
 
@@ -227,31 +247,31 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="货款"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:padding="8dp"
                     android:text="￥"
-                    android:padding="8dp" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
+                    android:id="@+id/txv_goods_fee"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:gravity="left"
+                    android:padding="8dp"
                     android:text="200.00"
-                    android:id="@+id/txv_goods_fee"
-                    android:padding="8dp"
-                    android:gravity="left" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
 
@@ -259,117 +279,117 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="保险费"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="￥"
-                    android:padding="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="5"
-                    android:id="@+id/txv_insured_fee"
-                    android:padding="8dp" />
-
-            </LinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="发货短途"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="￥"
-                    android:padding="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="5"
-                    android:id="@+id/txv_from_short_carrying_fee"
-                    android:padding="8dp" />
-
-            </LinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="到货短途"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="￥"
-                    android:padding="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="5"
-                    android:id="@+id/txv_to_short_carrying_fee"
-                    android:padding="8dp" />
-
-            </LinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="货物信息"
-                android:textStyle="bold"
-                android:textColor="#33b5e5" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="机械设备"
-                    android:id="@+id/txv_goods_info"
                     android:padding="8dp"
-                    android:layout_weight="2" />
+                    android:text="￥"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/txv_insured_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="5"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="发货短途"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="￥"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/txv_from_short_carrying_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="5"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="到货短途"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="￥"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/txv_to_short_carrying_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="5"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="货物信息"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txv_goods_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="8dp"
+                    android:text="机械设备"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
                     android:layout_width="1dip"
@@ -377,38 +397,38 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
+                    android:id="@+id/txv_goods_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:padding="8dp"
                     android:text="67"
-                    android:id="@+id/txv_goods_num"
-                    android:padding="8dp" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:padding="8dp"
                     android:text="件"
-                    android:padding="8dp" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textView5"
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="备注"
-                android:textStyle="bold"
-                android:id="@+id/textView5"
-                android:textColor="#33b5e5" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txv_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:padding="8dp"
                 android:text="备注"
-                android:id="@+id/txv_note"
-                android:padding="8dp" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
     </ScrollView>

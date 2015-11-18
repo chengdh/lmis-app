@@ -1,13 +1,21 @@
 package com.lmis.base.user_org;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
+import com.lmis.orm.LmisDBHelper;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
+import com.lmis.orm.LmisM2MIds;
+import com.lmis.orm.LmisValues;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +41,8 @@ public class UserOrgDB extends LmisDatabase {
 
     @Override
     public String getModelName() {
+
         return "UserOrg";
     }
+
 }

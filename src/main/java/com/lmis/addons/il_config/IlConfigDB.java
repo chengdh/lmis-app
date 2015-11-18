@@ -1,13 +1,20 @@
 package com.lmis.addons.il_config;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.lmis.orm.LmisColumn;
+import com.lmis.orm.LmisDBHelper;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
+import com.lmis.orm.LmisM2MIds;
+import com.lmis.orm.LmisValues;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -95,6 +102,67 @@ public class IlConfigDB extends LmisDatabase {
      * @return the float
      */
     public int getInsuredFee() {
+
         return getIntValue(INSURED_FEE, 2);
     }
+
+    @Override
+    public int count(String where, String[] whereArgs) {
+        int count = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cr = db.query(tableName(), new String[]{"count(*) as total"},
+                where, whereArgs, null, null, null);
+        if (cr.moveToFirst()) {
+            count = cr.getInt(0);
+        }
+        cr.close();
+        db.close();
+        return count;
+    }
+
+    @Override
+    public List<LmisDataRow> select(String where, String[] whereArgs, String groupBy, String having, String orderBy) {
+        List<LmisDataRow> rows = new ArrayList<LmisDataRow>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = getColumns();
+        Cursor cr = db.query(tableName(), cols, where, whereArgs, groupBy, having, orderBy);
+        List<LmisColumn> mCols = mDBHelper.getModelColumns();
+        mCols.addAll(getDefaultCols());
+        if (cr.moveToFirst()) {
+            do {
+                LmisDataRow row = new LmisDataRow();
+                for (LmisColumn col : mCols) {
+                    row.put(col.getName(), createRowData(col, cr));
+                }
+                rows.add(row);
+            } while (cr.moveToNext());
+        }
+        cr.close();
+        db.close();
+        return rows;
+    }
+
+    @Override
+    public int update(LmisValues values, String where, String[] whereArgs) {
+        if (!values.contains("oea_name")) {
+            values.put("oea_name", mUser.getAndroidName());
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        HashMap<String, Object> res = getContentValues(values);
+        ContentValues cValues = (ContentValues) res.get("cValues");
+        int count = db.update(tableName(), cValues, where, whereArgs);
+        db.close();
+        if (res.containsKey("m2mObjects")) {
+            @SuppressWarnings("unchecked")
+            List<HashMap<String, Object>> objectList = (List<HashMap<String, Object>>) res.get("m2mObjects");
+            for (HashMap<String, Object> obj : objectList) {
+                LmisDBHelper m2mDb = (LmisDBHelper) obj.get("m2mObject");
+                for (LmisDataRow row : select(where, whereArgs, null, null, null)) {
+                    manageMany2ManyRecords(m2mDb, LmisM2MIds.Operation.REPLACE, row.getInt("id"), obj.get("m2mRecordsObj"));
+                }
+            }
+        }
+        return count;
+    }
+
 }
