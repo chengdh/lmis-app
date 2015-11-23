@@ -65,14 +65,14 @@ public class CarryingBillEdit extends BaseFragment {
     /**
      * 货号.
      */
-    @InjectView(R.id.txv_goods_no)
-    TextView mTxvGoodsNo;
+    @InjectView(R.id.edt_goods_no)
+    EditText mEdtGoodsNo;
 
     /**
      * 票号.
      */
-    @InjectView(R.id.txv_bill_no)
-    TextView mTxvBillNo;
+    @InjectView(R.id.edt_bill_no)
+    EditText mEdtBillNo;
 
     /**
      * The M edt from customer name.
@@ -231,8 +231,12 @@ public class CarryingBillEdit extends BaseFragment {
             mToOrg = orgDB.select(to_org_id);
             mTxvFromOrg.setText(mFromOrg.getString("name"));
             mTxvToOrg.setText(mToOrg.getString("name"));
-            mTxvBillNo.setText(mJsonBill.getString("bill_no"));
-            mTxvGoodsNo.setText(mJsonBill.getString("goods_no"));
+            mEdtBillNo.setEnabled(false);
+            mEdtBillNo.setText(mJsonBill.getString("bill_no"));
+
+            mEdtGoodsNo.setEnabled(false);
+            mEdtGoodsNo.setText(mJsonBill.getString("goods_no"));
+
             mEdtFromCustomerName.setText(mJsonBill.getString("from_customer_name"));
             mEdtFromCustomerMobile.setText(mJsonBill.getString("from_customer_mobile"));
             mEdtToCustomerName.setText(mJsonBill.getString("to_customer_name"));
@@ -270,6 +274,25 @@ public class CarryingBillEdit extends BaseFragment {
                     reCalToShortCarryingFee();
                     reCalInsuredFee(mFromOrg);
 
+                }
+            });
+            mEdtGoodsNum.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String goodsNo = mEdtGoodsNo.getText().toString();
+                    int pos = goodsNo.indexOf("-");
+                    String newGoodsNo = goodsNo.substring(0, pos) + "-" + mEdtGoodsNum.getText().toString();
+                    mEdtGoodsNo.setText(newGoodsNo);
                 }
             });
             mBtnSearchCustomer.setOnClickListener(new View.OnClickListener() {
@@ -362,9 +385,9 @@ public class CarryingBillEdit extends BaseFragment {
         OrgDB orgDB = new OrgDB(scope.context());
         int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(mToOrg.getInt("id"), carryingFee);
         int oldToShortCarryingFee = parseFee(mEdtToShortCarryingFee);
-        if (toShortCarryingFee > oldToShortCarryingFee) {
-            mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
-        }
+        //if (toShortCarryingFee > oldToShortCarryingFee) {
+        mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
+        //}
         return toShortCarryingFee;
     }
 
@@ -478,6 +501,7 @@ public class CarryingBillEdit extends BaseFragment {
         String payType = payTypeEntry.getKey();
         ret.put("pay_type", payType);
 
+        ret.put("goods_no", mEdtGoodsNo.getText().toString());
         ret.put("goods_info", mEdtGoodsInfo.getText().toString());
         ret.put("goods_num", mEdtGoodsNum.getText().toString());
         ret.put("carrying_fee", mEdtCarryingFee.getText().toString());

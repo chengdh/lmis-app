@@ -186,4 +186,5 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="search">查找</string>
     <string name="edit">修改</string>
     <string name="cancel">作废</string>
+    <string name="print">打印</string>
 </resources>

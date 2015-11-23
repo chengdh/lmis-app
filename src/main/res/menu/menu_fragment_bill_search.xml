@@ -20,4 +20,10 @@
         android:visible="false"
         android:title="@string/cancel" />
 
+    <item
+        android:id="@+id/menu_bill_print"
+        android:icon="@drawable/ic_action_search"
+        android:visible="false"
+        android:title="@string/print" />
+
 </menu>

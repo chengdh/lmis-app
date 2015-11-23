@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.lmis.Lmis;
 import com.lmis.R;
 import com.lmis.addons.carrying_bill.CarryingBillDB;
+import com.lmis.addons.carrying_bill.CarryingBillPrint;
 import com.lmis.addons.carrying_bill.PayType;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
@@ -43,31 +44,31 @@ import us.monoid.json.JSONObject;
 public class SearchBill extends BaseFragment {
 
     public final static String TAG = "SearchBill";
-    public final static Map<String,String> statesMap = new HashMap<String, String>() {
+    public final static Map<String, String> statesMap = new HashMap<String, String>() {
         {
-            put("billed","已开票");
-            put("loaded","已装车");
-            put("shipped","已发货");
-            put("reached","已到货");
-            put("distributed","已分货");
-            put("deliveried","已提货");
-            put("settlemented","已日结");
-            put("refunded","已返款");
-            put("refunded_confirmed","返款已确认");
-            put("payment_listed","准备支付");
-            put("paid","货款已付");
-            put("posted","已过帐");
+            put("billed", "已开票");
+            put("loaded", "已装车");
+            put("shipped", "已发货");
+            put("reached", "已到货");
+            put("distributed", "已分货");
+            put("deliveried", "已提货");
+            put("settlemented", "已日结");
+            put("refunded", "已返款");
+            put("refunded_confirmed", "返款已确认");
+            put("payment_listed", "准备支付");
+            put("paid", "货款已付");
+            put("posted", "已过帐");
 
             //外部中转单
-            put("transited","已中转");
+            put("transited", "已中转");
 
             //内部中转单
-            put("transit_reached","已中转至货场");
-            put("transit_shipped","中转货场已发出");
-            put("transit_refunded_confirmed","中转返款已确认");
+            put("transit_reached", "已中转至货场");
+            put("transit_shipped", "中转货场已发出");
+            put("transit_refunded_confirmed", "中转返款已确认");
 
-            put("invalided","无效");
-            put("canceled","注销");
+            put("invalided", "无效");
+            put("canceled", "注销");
         }
     };
 
@@ -183,10 +184,14 @@ public class SearchBill extends BaseFragment {
         int fromOrgId = jsonBill.getInt("from_org_id");
         int toOrgId = jsonBill.getInt("to_org_id");
         LmisDataRow fromOrg = orgDB.select(fromOrgId);
-        mTxvFromOrg.setText(fromOrg.getString("name"));
+        String fromOrgName = fromOrg.getString("name");
+        mTxvFromOrg.setText(fromOrgName);
+        jsonBill.put("from_org_name",fromOrgName);
 
         LmisDataRow toOrg = orgDB.select(toOrgId);
-        mTxvToOrg.setText(toOrg.getString("name"));
+        String toOrgName = toOrg.getString("name");
+        mTxvToOrg.setText(toOrgName);
+        jsonBill.put("to_org_name", fromOrgName);
 
         String billNo = jsonBill.getString("bill_no");
         mTxvBillNo.setText(billNo);
@@ -270,6 +275,7 @@ public class SearchBill extends BaseFragment {
     private void setMenuItemToggle(boolean show) {
         mMenu.findItem(R.id.menu_bill_edit).setVisible(show);
         mMenu.findItem(R.id.menu_bill_cancel).setVisible(show);
+        mMenu.findItem(R.id.menu_bill_print).setVisible(show);
     }
 
     private void editBill() {
@@ -283,6 +289,12 @@ public class SearchBill extends BaseFragment {
         scope.main().startMainFragment(frag, true);
 
     }
+    private void printBill(){
+        if (mJsonBill == null)
+            return;
+
+        CarryingBillPrint.printForJson(mJsonBill, scope.currentUser(), true);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -291,6 +303,9 @@ public class SearchBill extends BaseFragment {
                 editBill();
                 break;
             case R.id.menu_bill_cancel:
+                break;
+            case R.id.menu_bill_print:
+                printBill();
                 break;
             default:
                 super.onOptionsItemSelected(item);
@@ -325,7 +340,7 @@ public class SearchBill extends BaseFragment {
             List<LmisDataRow> childOrgs = orgDB.getChildrenOrgs(defaulOrgID);
             JSONArray orgIDS = new JSONArray();
             orgIDS.put(defaulOrgID);
-            for(LmisDataRow childOrg : childOrgs){
+            for (LmisDataRow childOrg : childOrgs) {
                 orgIDS.put(childOrg.getInt("id"));
             }
             args.put(orgIDS);
@@ -355,8 +370,10 @@ public class SearchBill extends BaseFragment {
                         mLayoutBlank.setVisibility(View.VISIBLE);
                     } else {
                         mJsonBill = ret.getJSONObject("result");
+                        if (mJsonBill.getString("state").equals("billed")) {
+                            setMenuItemToggle(true);
+                        }
                         mLayoutBlank.setVisibility(View.GONE);
-                        setMenuItemToggle(true);
                         handleView(mJsonBill);
                     }
                 } catch (JSONException e) {
