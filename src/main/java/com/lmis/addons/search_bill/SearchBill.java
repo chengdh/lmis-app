@@ -180,16 +180,11 @@ public class SearchBill extends BaseFragment {
      * 显示运单信息.
      */
     private void handleView(JSONObject jsonBill) throws JSONException {
-        OrgDB orgDB = new OrgDB(scope.context());
-        int fromOrgId = jsonBill.getInt("from_org_id");
-        int toOrgId = jsonBill.getInt("to_org_id");
-        LmisDataRow fromOrg = orgDB.select(fromOrgId);
-        String fromOrgName = fromOrg.getString("name");
+        String fromOrgName = jsonBill.getString("from_org_name");
         mTxvFromOrg.setText(fromOrgName);
         jsonBill.put("from_org_name",fromOrgName);
 
-        LmisDataRow toOrg = orgDB.select(toOrgId);
-        String toOrgName = toOrg.getString("name");
+        String toOrgName = jsonBill.getString("to_org_name");
         mTxvToOrg.setText(toOrgName);
         jsonBill.put("to_org_name", fromOrgName);
 
@@ -211,8 +206,7 @@ public class SearchBill extends BaseFragment {
         String toCustomerMobile = jsonBill.getString("to_customer_mobile");
         mTxvToCustomerMobile.setText(toCustomerMobile);
 
-        String payType = jsonBill.getString("pay_type");
-        String payTypeDes = PayType.payTypes().get(payType);
+        String payTypeDes = jsonBill.getString("pay_type_des");
         mTxvPayType.setText(payTypeDes);
 
         String carryingFee = jsonBill.getString("carrying_fee");

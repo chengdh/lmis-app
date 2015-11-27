@@ -81,7 +81,7 @@ public class CarryingBillPrint {
             String curDateTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
-                    "SIZE 70 mm,130 mm\n",
+                    "SIZE 70 mm,135 mm\n",
                     "GAP 0,0\n",
                     //"SET PRINTKEY ON\n",
                     "DIRECTION 0\n",
@@ -280,7 +280,7 @@ public class CarryingBillPrint {
             String curDateTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
-                    "SIZE 70 mm,130 mm\n",
+                    "SIZE 70 mm,135 mm\n",
                     "GAP 0,0\n",
                     //"SET PRINTKEY ON\n",
                     "DIRECTION 0\n",
@@ -335,29 +335,29 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,420,\"Font001\",0,2,2,\"",
-                    String.format("支付方式:%s", PayType.payTypes().get(bill.getString("pay_type"))).getBytes("GB2312"),
+                    String.format("支付方式:%s", bill.getString("pay_type_des")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,450,\"Font001\",0,2,2,\"",
-                    String.format("发货短途:%s元 ", bill.getInt("from_short_carrying_fee")).getBytes("GB2312"),
+                    String.format("发货短途:%s元 ", bill.getString("from_short_carrying_fee")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,480,\"Font001\",0,2,2,\"",
-                    String.format("到货短途:%s元 ", bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    String.format("到货短途:%s元 ", bill.getString("to_short_carrying_fee")).getBytes("GB2312"),
                     "\"\n",
 
 
                     "TEXT 15,510,\"Font001\",0,2,2,\"",
-                    String.format("运费总计:%s元", bill.getInt("carrying_fee") + bill.getInt("from_short_carrying_fee") + bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    String.format("运费总计:%s元", bill.getDouble("carrying_fee") + bill.getDouble("from_short_carrying_fee") + bill.getDouble("to_short_carrying_fee")).getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,540,\"Font001\",0,2,2,\"",
-                    String.format("保 险 费:%s元", bill.getInt("insured_fee")).getBytes("GB2312"),
+                    String.format("保 险 费:%s元", bill.getString("insured_fee")).getBytes("GB2312"),
                     "\"\n",
 
 
                     "TEXT 15,570,\"Font001\",0,2,2,\"",
-                    String.format("代收货款:%s元", bill.getInt("goods_fee")).getBytes("GB2312"),
+                    String.format("代收货款:%s元", bill.getString("goods_fee")).getBytes("GB2312"),
                     "\"\n",
 
                     "BAR 15,600,500,3\n",
@@ -366,7 +366,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,670,\"Font001\",0,2,2,\"",
-                    String.format("%s                        %s", bill.getString("goods_info"), bill.getInt("goods_num")).getBytes("GB2312"),
+                    String.format("%s                        %s", bill.getString("goods_info"), bill.getString("goods_num")).getBytes("GB2312"),
                     "\"\n",
 
                     "BAR 15,700,500,3\n",

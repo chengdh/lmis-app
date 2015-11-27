@@ -256,7 +256,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             public void afterTextChanged(Editable s) {
                 reCalToShortCarryingFee();
                 //重新计算保险费
-                reCalInsuredFee(mCurOrg);
+                reCalInsuredFee((LmisDataRow)mSpinnerToOrg.getSelectedItem());
             }
         });
 
@@ -498,6 +498,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         reCalToShortCarryingFee();
+        reCalInsuredFee((LmisDataRow)mSpinnerToOrg.getSelectedItem());
     }
 
     /**
@@ -565,7 +566,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     @Subscribe
     public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt) {
         mCurOrg = evt.getmOrg();
-        reCalInsuredFee(mCurOrg);
+        //reCalInsuredFee(mCurOrg);
     }
 
     /**
