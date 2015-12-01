@@ -360,7 +360,7 @@ public class CarryingBillPrint {
                     String.format("代收货款:%s元", bill.getString("goods_fee")).getBytes("GB2312"),
                     "\"\n",
 
-                    "BAR 15,600,500,3\n",
+                    "BAR 15,630,500,3\n",
                     "TEXT 15,640,\"Font001\",0,2,2,\"",
                     "货物名称                   数量".getBytes("GB2312"),
                     "\"\n",
