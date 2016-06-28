@@ -199,7 +199,7 @@ public class CarryingBillDB extends LmisDatabase {
         args.put(server_id);
         args.put(vals);
         Lmis instance = getLmisInstance();
-        JSONObject response = instance.callMethod("ComputerBill", "update", args, null).getJSONObject("result");
+        instance.callMethod("ComputerBill", "update", args, null);
     }
 
 

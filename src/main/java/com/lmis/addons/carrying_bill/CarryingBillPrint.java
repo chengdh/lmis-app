@@ -83,7 +83,7 @@ public class CarryingBillPrint {
                     "CODEPAGE UTF-8\n",
                     "SIZE 70 mm,135 mm\n",
                     "GAP 0,0\n",
-                    //"SET PRINTKEY ON\n",
+                    "SET PRINTKEY OFF\n",
                     "DIRECTION 0\n",
                     "CLS\n",
                     "PUTBMP 165,5,\"logo.BMP\"\n",
@@ -186,7 +186,7 @@ public class CarryingBillPrint {
 
 
                     "TEXT 15,820,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
+                    "全国统一客服热线:400-116-9956".getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,850,\"Font001\",0,2,2,\"",
@@ -223,7 +223,6 @@ public class CarryingBillPrint {
                 commands.add(cmd2);
                 commands.add(cmd3);
             }
-
             commands.add("PRINT 1\n");
             commands.add("DELAY 5000\n");
             commands.add("PRINT 1\n");
@@ -282,7 +281,7 @@ public class CarryingBillPrint {
                     "CODEPAGE UTF-8\n",
                     "SIZE 70 mm,135 mm\n",
                     "GAP 0,0\n",
-                    //"SET PRINTKEY ON\n",
+                    "SET PRINTKEY OFF\n",
                     "DIRECTION 0\n",
                     "CLS\n",
                     "PUTBMP 165,5,\"logo.BMP\"\n",
@@ -385,7 +384,7 @@ public class CarryingBillPrint {
 
 
                     "TEXT 15,820,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
+                    "全国统一客服热线:400-116-9956".getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,850,\"Font001\",0,2,2,\"",

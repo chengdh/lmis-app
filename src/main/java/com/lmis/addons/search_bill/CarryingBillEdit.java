@@ -229,8 +229,11 @@ public class CarryingBillEdit extends BaseFragment {
             int to_org_id = mJsonBill.getInt("to_org_id");
             mFromOrg = orgDB.select(from_org_id);
             mToOrg = orgDB.select(to_org_id);
-            mTxvFromOrg.setText(mFromOrg.getString("name"));
-            mTxvToOrg.setText(mToOrg.getString("name"));
+            String from_org_name = mJsonBill.getString("from_org_name");
+            String to_org_name = mJsonBill.getString("to_org_name");
+
+            mTxvFromOrg.setText(from_org_name);
+            mTxvToOrg.setText(to_org_name);
             mEdtBillNo.setEnabled(false);
             mEdtBillNo.setText(mJsonBill.getString("bill_no"));
 

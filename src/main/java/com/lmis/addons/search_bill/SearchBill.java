@@ -180,13 +180,14 @@ public class SearchBill extends BaseFragment {
      * 显示运单信息.
      */
     private void handleView(JSONObject jsonBill) throws JSONException {
+
         String fromOrgName = jsonBill.getString("from_org_name");
         mTxvFromOrg.setText(fromOrgName);
-        jsonBill.put("from_org_name",fromOrgName);
+        jsonBill.put("from_org_name", fromOrgName);
 
         String toOrgName = jsonBill.getString("to_org_name");
         mTxvToOrg.setText(toOrgName);
-        jsonBill.put("to_org_name", fromOrgName);
+        jsonBill.put("to_org_name", toOrgName);
 
         String billNo = jsonBill.getString("bill_no");
         mTxvBillNo.setText(billNo);
@@ -283,7 +284,8 @@ public class SearchBill extends BaseFragment {
         scope.main().startMainFragment(frag, true);
 
     }
-    private void printBill(){
+
+    private void printBill() {
         if (mJsonBill == null)
             return;
 
@@ -363,7 +365,14 @@ public class SearchBill extends BaseFragment {
                         Toast.makeText(scope.context(), "未查到符合条件的运单!", Toast.LENGTH_SHORT).show();
                         mLayoutBlank.setVisibility(View.VISIBLE);
                     } else {
-                        mJsonBill = ret.getJSONObject("result");
+                        try{
+                            String result = ret.getString("result");
+                            mJsonBill = new JSONObject(result);
+                        }
+                        catch(Exception ex){
+                           ex.printStackTrace();
+                        }
+
                         if (mJsonBill.getString("state").equals("billed")) {
                             setMenuItemToggle(true);
                         }

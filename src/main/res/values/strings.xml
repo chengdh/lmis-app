@@ -7,6 +7,7 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Account Fragment Strings -->
+    <string name="your_messages_will_appear_shortly">loading...</string>
     <string name="logo_description">lmis</string>
     <string name="account_title">Setup Your lmis Server</string>
     <string name="account_description">Provide your lmis 7.0 Server URL and click on Continue button to test Connection and go next step.</string>
