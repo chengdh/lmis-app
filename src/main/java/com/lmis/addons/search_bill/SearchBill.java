@@ -366,8 +366,7 @@ public class SearchBill extends BaseFragment {
                         mLayoutBlank.setVisibility(View.VISIBLE);
                     } else {
                         try{
-                            String result = ret.getString("result");
-                            mJsonBill = new JSONObject(result);
+                            mJsonBill  = ret.getJSONObject("result");
                         }
                         catch(Exception ex){
                            ex.printStackTrace();

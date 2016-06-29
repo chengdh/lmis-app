@@ -170,6 +170,7 @@ public class CarryingBillDB extends LmisDatabase {
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
+
         JSONObject response = instance.callMethod("ComputerBill", "create", args, null).getJSONObject("result");
         //FIXME 判断是否返回了id,rails model create 方法在失败时,会返回对应的model对象，但是valid?方法返回false
         //参考http://stackoverflow.com/questions/23975835/ruby-on-rails-active-record-return-value-when-create-fails
@@ -199,7 +200,7 @@ public class CarryingBillDB extends LmisDatabase {
         args.put(server_id);
         args.put(vals);
         Lmis instance = getLmisInstance();
-        instance.callMethod("ComputerBill", "update", args, null);
+        JSONObject response = instance.callMethod("ComputerBill", "update", args, null).getJSONObject("result");
     }
 
 
