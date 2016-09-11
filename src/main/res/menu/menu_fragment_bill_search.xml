@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_bill_search_search"
         android:icon="@drawable/ic_action_search"
-        android:showAsAction="always|collapseActionView"
+        android:showAsAction="always"
         android:actionViewClass="android.widget.SearchView"
         android:title="@string/search" />
 
@@ -15,7 +15,7 @@
         android:title="@string/edit" />
 
     <item
-        android:id="@+id/menu_bill_cancel"
+        android:id="@+id/menu_bill_invalidate"
         android:icon="@drawable/ic_action_search"
         android:visible="false"
         android:title="@string/cancel" />

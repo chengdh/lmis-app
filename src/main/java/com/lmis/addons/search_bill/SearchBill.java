@@ -1,5 +1,6 @@
 package com.lmis.addons.search_bill;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -142,6 +143,7 @@ public class SearchBill extends BaseFragment {
     MyQueryTextLisener mQueryTextListener = null;
 
     BillSearcher mSearcher = null;
+    BillInvalidater mInvalidater = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -250,6 +252,8 @@ public class SearchBill extends BaseFragment {
 
         @Override
         public boolean onQueryTextSubmit(String s) {
+            //FIXME 放置代码执行2次,REF http://stackoverflow.com/questions/34207670/the-onquerytextsubmit-in-searchview-is-processed-twice-in-android-java
+            mSearchView.clearFocus();
             if (s != null && s.length() > 0) {
                 mSearcher = new BillSearcher(s);
                 mSearcher.execute((Void) null);
@@ -260,6 +264,7 @@ public class SearchBill extends BaseFragment {
                 return false;
         }
 
+
         @Override
         public boolean onQueryTextChange(String s) {
             return false;
@@ -269,7 +274,7 @@ public class SearchBill extends BaseFragment {
     //设置修改 作废菜单是否可见
     private void setMenuItemToggle(boolean show) {
         mMenu.findItem(R.id.menu_bill_edit).setVisible(show);
-        mMenu.findItem(R.id.menu_bill_cancel).setVisible(show);
+        mMenu.findItem(R.id.menu_bill_invalidate).setVisible(show);
         mMenu.findItem(R.id.menu_bill_print).setVisible(show);
     }
 
@@ -285,6 +290,13 @@ public class SearchBill extends BaseFragment {
 
     }
 
+    private void inValidateBill() {
+        if (mJsonBill == null)
+            return;
+        mInvalidater = new BillInvalidater();
+        mInvalidater.execute((Void) null);
+    }
+
     private void printBill() {
         if (mJsonBill == null)
             return;
@@ -298,7 +310,8 @@ public class SearchBill extends BaseFragment {
             case R.id.menu_bill_edit:
                 editBill();
                 break;
-            case R.id.menu_bill_cancel:
+            case R.id.menu_bill_invalidate:
+                inValidateBill();
                 break;
             case R.id.menu_bill_print:
                 printBill();
@@ -311,7 +324,7 @@ public class SearchBill extends BaseFragment {
 
     private class BillSearcher extends AsyncTask<Void, Void, Boolean> {
 
-        LmisDialog dialog;
+        ProgressDialog dialog;
         String mQueryText = "";
         JSONObject ret = null;
 
@@ -321,8 +334,8 @@ public class SearchBill extends BaseFragment {
 
         @Override
         protected void onPreExecute() {
-            dialog = new LmisDialog(getActivity(), false, "正在查找...");
-            dialog.show();
+            //dialog = new LmisDialog();
+            dialog = LmisDialog.show(getActivity(), "", "正在查找...");
         }
 
         @Override
@@ -365,11 +378,10 @@ public class SearchBill extends BaseFragment {
                         Toast.makeText(scope.context(), "未查到符合条件的运单!", Toast.LENGTH_SHORT).show();
                         mLayoutBlank.setVisibility(View.VISIBLE);
                     } else {
-                        try{
-                            mJsonBill  = ret.getJSONObject("result");
-                        }
-                        catch(Exception ex){
-                           ex.printStackTrace();
+                        try {
+                            mJsonBill = ret.getJSONObject("result");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
 
                         if (mJsonBill.getString("state").equals("billed")) {
@@ -386,6 +398,57 @@ public class SearchBill extends BaseFragment {
             dialog.dismiss();
             mSearcher.cancel(true);
             mSearcher = null;
+        }
+    }
+
+    private class BillInvalidater extends AsyncTask<Void, Void, Boolean> {
+
+        LmisDialog dialog;
+        JSONObject ret = null;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new LmisDialog(getActivity(), false, "正在处理...");
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            Lmis instance = ((CarryingBillDB) databaseHelper(scope.context())).getLmisInstance();
+            try {
+                int id = mJsonBill.getInt("id");
+                ret = instance.callMethod("carrying_bill", "invalidate", null, id);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                try {
+                    if (ret.getBoolean("result")) {
+                        mJsonBill.put("state", "invalided");
+                        setMenuItemToggle(false);
+                        Toast.makeText(scope.context(), "运单作废成功!", Toast.LENGTH_SHORT).show();
+                        handleView(mJsonBill);
+
+                    }
+                } catch (JSONException e) {
+
+                    Toast.makeText(scope.context(), "运单作废失败!", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+
+            dialog.dismiss();
+            mInvalidater.cancel(true);
+            mInvalidater = null;
         }
     }
 }
