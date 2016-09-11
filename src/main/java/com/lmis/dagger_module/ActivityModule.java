@@ -17,6 +17,7 @@ import com.lmis.util.barcode.YardConfirmBarcodeParser;
 import com.lmis.util.barcode.YardOutBarcodeParser;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
+import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
 import com.lmis.util.controls.PayTypeSpinner;
 import com.lmis.util.controls.SummaryChidrenSpinner;
@@ -43,6 +44,7 @@ import dagger.Provides;
                 AllOrgSpinner.class,
                 YardsOrgSpinner.class,
                 SummaryChidrenSpinner.class,
+                ExcludeAccessOrgSearchableSpinner.class,
                 BarcodeParser.class,
                 BranchOutBarcodeParser.class,
                 YardConfirmBarcodeParser.class,

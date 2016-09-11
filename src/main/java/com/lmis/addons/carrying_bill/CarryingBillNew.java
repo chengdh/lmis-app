@@ -28,8 +28,10 @@ import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
+import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.rajasharan.widget.SearchableSpinner;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -47,7 +49,7 @@ import us.monoid.json.JSONObject;
 /**
  * Created by chengdh on 14-8-9.
  */
-public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class CarryingBillNew extends BaseFragment implements SearchableSpinner.OnSelectionChangeListener {
 
     /**
      * The constant TAG.
@@ -67,8 +69,11 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
     /**
      * The M spinner to org.
      */
-    @InjectView(R.id.spinner_to_org)
-    Spinner mSpinnerToOrg;
+    //@InjectView(R.id.spinner_to_org)
+    //Spinner mSpinnerToOrg;
+
+    @InjectView(R.id.search_spinner_to_org)
+    ExcludeAccessOrgSearchableSpinner mSearchSpinnerToOrg;
 
     /**
      * The M edt from customer name.
@@ -230,7 +235,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
 
         mEdtInsuredFee.setEnabled(false);
         mEdtCustomerID.setVisibility(View.GONE);
-        mSpinnerToOrg.setOnItemSelectedListener(this);
+        mSearchSpinnerToOrg.setOnSelectionChangeListener(this);
+        ;
         mSpinnerPayType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -256,7 +262,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             public void afterTextChanged(Editable s) {
                 reCalToShortCarryingFee();
                 //重新计算保险费
-                reCalInsuredFee((LmisDataRow)mSpinnerToOrg.getSelectedItem());
+                reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
             }
         });
 
@@ -444,7 +450,8 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         LmisValues vals = new LmisValues();
         LmisUser currentUser = scope.currentUser();
         vals.put("from_org_id", currentUser.getDefault_org_id());
-        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+//        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+        LmisDataRow toOrg = mSearchSpinnerToOrg.getSelectedOrg();
         vals.put("to_org_id", toOrg.getInt("id"));
         vals.put("from_customer_name", mEdtFromCustomerName.getText());
         vals.put("from_customer_mobile", mEdtFromCustomerMobile.getText());
@@ -486,20 +493,6 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         return true;
     }
 
-    /**
-     * On item selected.
-     * 自动计算到货短途
-     *
-     * @param parent   the parent
-     * @param view     the view
-     * @param position the position
-     * @param id       the id
-     */
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        reCalToShortCarryingFee();
-        reCalInsuredFee((LmisDataRow)mSpinnerToOrg.getSelectedItem());
-    }
 
     /**
      * Parse fee.
@@ -531,7 +524,7 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             return 0;
         }
         int carryingFee = parseFee(mEdtCarryingFee);
-        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+        LmisDataRow toOrg = mSearchSpinnerToOrg.getSelectedOrg();
         OrgDB orgDB = new OrgDB(scope.context());
         int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(toOrg.getInt("id"), carryingFee);
         mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
@@ -569,14 +562,11 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
         //reCalInsuredFee(mCurOrg);
     }
 
-    /**
-     * On nothing selected.
-     *
-     * @param parent the parent
-     */
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
 
+    @Override
+    public void onSelectionChanged(String s) {
+        reCalToShortCarryingFee();
+        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
     }
 
 
@@ -747,9 +737,10 @@ public class CarryingBillNew extends BaseFragment implements AdapterView.OnItemS
             Boolean ret = true;
             JSONArray args = new JSONArray();
             args.put(mVipCode);
+            args.put("audited");
             Lmis instance = db().getLmisInstance();
             try {
-                result = instance.callMethod("vip", "find_by_code", args, null);
+                result = instance.callMethod("vip", "find_by_code_and_vip_state", args, null);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 ret = false;

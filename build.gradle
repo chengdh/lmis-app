@@ -1,13 +1,13 @@
+apply plugin: 'com.android.application'
 buildscript {
     repositories {
-        maven { url 'http://repo1.maven.org/maven2' }
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'org.batcha.gradle.plugins:git-dependencies:0.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
     }
 }
-apply plugin: 'android'
-
 repositories {
     mavenLocal()
     mavenCentral()
@@ -16,7 +16,8 @@ repositories {
     }
     maven { url 'https://github.com/donnfelker/mvn-repo/raw/master/' }
     maven { url "https://github.com/dahlgren/pulltorefresh-aar/raw/master" }
-    maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2'}
+    maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -39,7 +40,7 @@ dependencies {
 
 
     compile('com.github.snowdream.android.app:updater:1.0@aar') {
-        exclude  group: 'com.android.support'
+        exclude group: 'com.android.support'
         transitive = true
     }
     compile('com.android.support:support-v4:19.0.+')
@@ -58,23 +59,22 @@ dependencies {
     compile 'com.joanzapata.iconify:android-iconify-weathericons:2.0.9' // (v2.0)
     compile 'com.joanzapata.iconify:android-iconify-simplelineicons:2.0.9' // (v1.0.0)
     compile 'com.joanzapata.iconify:android-iconify-ionicons:2.0.9' // (v2.0.1)
+    compile 'com.github.stuxuhai:jpinyin:1.1.7'
+    compile 'com.github.rajasharan:SearchableSpinner:master'
 
-
-
-    compile files('libs/fb-android-dagger-1.0.3.jar','libs/bluetooth.jar')
+    compile files('libs/fb-android-dagger-1.0.3.jar', 'libs/bluetooth.jar')
 
     androidTestCompile 'junit:junit:4.11'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
 }
-apply plugin: 'android'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion '21'
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName '0.1'
     }
