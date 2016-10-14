@@ -81,7 +81,7 @@ public class CarryingBillPrint {
             String curDateTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
-                    "SIZE 70 mm,135 mm\n",
+                    "SIZE 70 mm,150 mm\n",
                     "GAP 0,0\n",
                     "SET PRINTKEY OFF\n",
                     "DIRECTION 0\n",
@@ -202,29 +202,34 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,940,\"Font001\",0,2,2,\"",
+                    "及假冒伪劣产品".getBytes("GB2312"),
+                    "\"\n",
+
+
+                    "TEXT 15,970,\"Font001\",0,2,2,\"",
                     "未盖我公司收货章为无效票;".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,970,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1000,\"Font001\",0,2,2,\"",
                     "温馨提示:此票为热敏票据,请妥善保存!".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1000,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1030,\"Font001\",0,2,2,\"",
                     "发货人核对以上票据信息并签字确认:".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1030,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1060,\"Font001\",0,2,2,\"",
                     "   ".getBytes("GB2312"),
                     "\"\n",
 
 
-                    "TEXT 15,1060,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1090,\"Font001\",0,2,2,\"",
                     "发货人签字:________________".getBytes("GB2312"),
                     "\"\n"
 
             ));
             if (rePrint) {
-                String cmd1 = "TEXT 15,1090,\"Font001\",0,2,2,\"";
+                String cmd1 = "TEXT 15,1120,\"Font001\",0,2,2,\"";
                 byte[] cmd2 = "[重打]".getBytes("GB2312");
                 String cmd3 = "\"\n";
                 commands.add(cmd1);

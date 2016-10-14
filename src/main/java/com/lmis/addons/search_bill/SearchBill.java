@@ -252,13 +252,14 @@ public class SearchBill extends BaseFragment {
 
         @Override
         public boolean onQueryTextSubmit(String s) {
-            //FIXME 放置代码执行2次,REF http://stackoverflow.com/questions/34207670/the-onquerytextsubmit-in-searchview-is-processed-twice-in-android-java
+            //FIXME 防止代码执行2次,REF http://stackoverflow.com/questions/34207670/the-onquerytextsubmit-in-searchview-is-processed-twice-in-android-java
             mSearchView.clearFocus();
             if (s != null && s.length() > 0) {
                 mSearcher = new BillSearcher(s);
                 mSearcher.execute((Void) null);
-                MenuItem item = mMenu.findItem(R.id.menu_bill_search_search);
-                item.collapseActionView();
+                mSearchView.onActionViewCollapsed();
+//                MenuItem item = mMenu.findItem(R.id.menu_bill_search_search);
+//                item.collapseActionView();
                 return true;
             } else
                 return false;

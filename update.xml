@@ -3,15 +3,15 @@
     <appName>凯瑞物流</appName>
     <appDescription>凯瑞物流手机端</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>2</versionCode>
-    <versionName>0.2</versionName>
-    <forceUpdate>false</forceUpdate>
-    <autoUpdate>false</autoUpdate>
-    <apkUrl>https://github.com/chengdh/lmis-app/raw/master/build/outputs/apk/lmis-app-release.apk</apkUrl>
+    <versionCode>5</versionCode>
+    <versionName>1.5</versionName>
+    <forceUpdate>true</forceUpdate>
+    <autoUpdate>true</autoUpdate>
+    <apkUrl>http://git.oschina.net/chengdh/lmis-app-release/raw/master/lmis-app-release.apk</apkUrl>
     <updateTips>
         <default>update tips</default>
         <en>update tips</en>
-        <zh>升级提示\n 修改了运单录入界面</zh>
+        <zh>升级提示\n 修改运单打印高度不足的问题</zh>
         <zh_CN>升级提示</zh_CN>
         <zh_TW>升级提示</zh_TW>
         <zh_HK>升级提示</zh_HK>
