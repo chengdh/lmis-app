@@ -190,10 +190,12 @@ public class CarryingBillView extends BaseFragment {
         switch (item.getItemId()) {
             case (R.id.menu_carrying_bill_print):
                 CarryingBillPrint.print(mCarryingBill,scope.currentUser(), true);
-                return true;
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item);
+                break;
         }
+        return true;
     }
 
 }

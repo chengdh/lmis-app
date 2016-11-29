@@ -37,7 +37,7 @@ import butterknife.InjectView;
  */
 public class DashBoard extends BaseFragment {
     public final static String TAG = "Dashbaord";
-    public final static String DASHBOARD_URL = "http://122.0.76.160:3000/sample";
+    public final static String DASHBOARD_URL = "http://106.3.45.42:3000/sample";
 
     @Inject
     Bus mBus;
