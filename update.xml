@@ -3,8 +3,8 @@
     <appName>凯瑞物流</appName>
     <appDescription>凯瑞物流手机端</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>5</versionCode>
-    <versionName>1.5</versionName>
+    <versionCode>6</versionCode>
+    <versionName>1.6</versionName>
     <forceUpdate>true</forceUpdate>
     <autoUpdate>true</autoUpdate>
     <apkUrl>http://git.oschina.net/chengdh/lmis-app-release/raw/master/lmis-app-release.apk</apkUrl>

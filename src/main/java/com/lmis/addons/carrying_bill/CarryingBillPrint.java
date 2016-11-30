@@ -87,7 +87,7 @@ public class CarryingBillPrint {
             String curDateTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
             commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
-                    "SIZE 70 mm,150 mm\n",
+                    "SIZE 70 mm,170 mm\n",
                     "GAP 0,0\n",
                     "SET PRINTKEY OFF\n",
                     "DIRECTION 0\n",
@@ -104,7 +104,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
 
-                    "TEXT 200,150,\"Font001\",0,3,3,\"",
+                    "TEXT 150,140,\"5.EFT\",0,1,1,\"",
                     String.format("%s", bill.getString("bill_no")).getBytes("GB2312"),
                     "\"\n",
 
@@ -177,16 +177,29 @@ public class CarryingBillPrint {
 
 
                     "TEXT 15,570,\"Font001\",0,2,2,\"",
-                    String.format("运费总计:%s元", bill.getInt("carrying_fee") + bill.getInt("from_short_carrying_fee") + bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    "运费总计:".getBytes("GB2312"),
                     "\"\n",
 
+                    "TEXT 135,570,\"Font001\",0,2,2,\"",
+                    String.format("%s元", bill.getInt("carrying_fee") + bill.getInt("from_short_carrying_fee") + bill.getInt("to_short_carrying_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+
                     "TEXT 280,570,\"Font001\",0,2,2,\"",
-                    String.format("保 险 费:%s元", bill.getInt("insured_fee")).getBytes("GB2312"),
+                    "保 险 费:".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 395,570,\"Font001\",0,2,2,\"",
+                    String.format("%s元", bill.getInt("insured_fee")).getBytes("GB2312"),
                     "\"\n",
 
 
                     "TEXT 15,610,\"Font001\",0,2,2,\"",
-                    String.format("代收货款:%s元", bill.getInt("goods_fee")).getBytes("GB2312"),
+                    "代收货款:".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 135,610,\"Font001\",0,3,3,\"",
+                    String.format("%s元", bill.getInt("goods_fee")).getBytes("GB2312"),
                     "\"\n",
 
                     "BAR 15,650,500,2\n",
@@ -211,7 +224,7 @@ public class CarryingBillPrint {
                     String.format("开 票 人:%S : ", user.getAndroidName()).getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,840,\"Font001\",0,2,2,\"",
+                    "TEXT 15,850,\"Font001\",0,2,2,\"",
                     "发货人签字:________________".getBytes("GB2312"),
                     "\"\n",
 
@@ -229,30 +242,34 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1040,\"Font001\",0,2,2,\"",
-                    "及假冒伪劣产品".getBytes("GB2312"),
+                    "  及假冒伪劣产品".getBytes("GB2312"),
                     "\"\n",
 
                     "TEXT 15,1080,\"Font001\",0,2,2,\"",
-                    "4.发货人请核对发货票据信息,如有问题请及时更正票据信息".getBytes("GB2312"),
+                    "4.发货人请核对发货票据信息,如有问题请及时".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,1120,\"Font001\",0,2,2,\"",
+                    "  及时更正票据信息".getBytes("GB2312"),
                     "\"\n",
 
 
-                    "TEXT 15,1120,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1160,\"Font001\",0,2,2,\"",
                     "5.未盖我公司收货章为无效票;".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1160,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1200,\"Font001\",0,2,2,\"",
                     "6.温馨提示:此票为热敏票据,请妥善保存!".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1200,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1240,\"Font001\",0,2,2,\"",
                     "全国统一客服热线:400-116-9956".getBytes("GB2312"),
                     "\"\n"
 
 
             ));
             if (rePrint) {
-                String cmd1 = "TEXT 15,1240,\"Font001\",0,2,2,\"";
+                String cmd1 = "TEXT 15,1280,\"Font001\",0,2,2,\"";
                 byte[] cmd2 = "[重打]".getBytes("GB2312");
                 String cmd3 = "\"\n";
                 commands.add(cmd1);
@@ -318,9 +335,9 @@ public class CarryingBillPrint {
         List<Object> commands = new ArrayList<Object>();
         try {
             String curDateTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
-            commands.addAll(Arrays.asList(
+                 commands.addAll(Arrays.asList(
                     "CODEPAGE UTF-8\n",
-                    "SIZE 70 mm,150 mm\n",
+                    "SIZE 70 mm,170 mm\n",
                     "GAP 0,0\n",
                     "SET PRINTKEY OFF\n",
                     "DIRECTION 0\n",
@@ -337,7 +354,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
 
-                    "TEXT 200,150,\"Font001\",0,3,3,\"",
+                    "TEXT 150,140,\"5.EFT\",0,1,1,\"",
                     String.format("%s", bill.getString("bill_no")).getBytes("GB2312"),
                     "\"\n",
 
@@ -410,16 +427,29 @@ public class CarryingBillPrint {
 
 
                     "TEXT 15,570,\"Font001\",0,2,2,\"",
-                    String.format("运费总计:%s元", bill.getDouble("carrying_fee") + bill.getDouble("from_short_carrying_fee") + bill.getDouble("to_short_carrying_fee")).getBytes("GB2312"),
+                    "运费总计:".getBytes("GB2312"),
                     "\"\n",
 
+                    "TEXT 135,570,\"Font001\",0,2,2,\"",
+                    String.format("%s元", bill.getDouble("carrying_fee") + bill.getDouble("from_short_carrying_fee") + bill.getDouble("to_short_carrying_fee")).getBytes("GB2312"),
+                    "\"\n",
+
+
                     "TEXT 280,570,\"Font001\",0,2,2,\"",
-                    String.format("保 险 费:%s元", bill.getDouble("insured_fee")).getBytes("GB2312"),
+                    "保 险 费:".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 395,570,\"Font001\",0,2,2,\"",
+                    String.format("%s元", bill.getDouble("insured_fee")).getBytes("GB2312"),
                     "\"\n",
 
 
                     "TEXT 15,610,\"Font001\",0,2,2,\"",
-                    String.format("代收货款:%s元", bill.getDouble("goods_fee")).getBytes("GB2312"),
+                    "代收货款:".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 135,610,\"Font001\",0,3,3,\"",
+                    String.format("%s元", bill.getDouble("goods_fee")).getBytes("GB2312"),
                     "\"\n",
 
                     "BAR 15,650,500,2\n",
@@ -444,7 +474,7 @@ public class CarryingBillPrint {
                     String.format("开 票 人:%S : ", user.getAndroidName()).getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,840,\"Font001\",0,2,2,\"",
+                    "TEXT 15,850,\"Font001\",0,2,2,\"",
                     "发货人签字:________________".getBytes("GB2312"),
                     "\"\n",
 
@@ -466,24 +496,29 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1080,\"Font001\",0,2,2,\"",
-                    "4.发货人请核对发货票据信息,如有问题请及时更正票据信息".getBytes("GB2312"),
+                    "4.发货人请核对发货票据信息,如有问题请及时".getBytes("GB2312"),
+                    "\"\n",
+
+                    "TEXT 15,1120,\"Font001\",0,2,2,\"",
+                    "  及时更正票据信息".getBytes("GB2312"),
                     "\"\n",
 
 
-                    "TEXT 15,1120,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1160,\"Font001\",0,2,2,\"",
                     "5.未盖我公司收货章为无效票;".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1160,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1200,\"Font001\",0,2,2,\"",
                     "6.温馨提示:此票为热敏票据,请妥善保存!".getBytes("GB2312"),
                     "\"\n",
 
-                    "TEXT 15,1200,\"Font001\",0,2,2,\"",
+                    "TEXT 15,1240,\"Font001\",0,2,2,\"",
                     "全国统一客服热线:400-116-9956".getBytes("GB2312"),
                     "\"\n"
 
 
             ));
+
             if (rePrint) {
                 String cmd1 = "TEXT 15,1240,\"Font001\",0,2,2,\"";
                 byte[] cmd2 = "[重打]".getBytes("GB2312");
