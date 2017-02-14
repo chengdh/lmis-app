@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">凯瑞物流</string>
-    <string name="title_activity_main">凯瑞物流</string>
+    <string name="app_name">ERP审批</string>
+    <string name="title_activity_main">国电投河南公司</string>
     <string name="drawer_open">打开导航面板</string>
     <string name="drawer_close">关闭导航面板</string>
 
