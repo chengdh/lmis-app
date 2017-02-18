@@ -169,9 +169,8 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         newId = db.insert(tableName(), null, cValues);
         try {
             newId = cValues.getAsInteger("id");
-        }
-        catch(Exception ex){
-            Log.d(TAG,"cValues not give a id");
+        } catch (Exception ex) {
+            Log.d(TAG, "cValues not give a id");
         }
         broadcastInfo(newId);
         db.close();
@@ -210,8 +209,8 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
                 }
                 //处理blob字段
                 Object val = values.get(key);
-                if(val instanceof byte[])
-                    cValues.put(key, (byte[])val);
+                if (val instanceof byte[])
+                    cValues.put(key, (byte[]) val);
                 else
                     cValues.put(key, values.get(key).toString());
             }
@@ -223,7 +222,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
 
     @SuppressWarnings("unchecked")
     protected void manageMany2ManyRecords(LmisDBHelper relDb, LmisM2MIds.Operation operation,
-                                        long id, Object idsObj) {
+                                          long id, Object idsObj) {
         String first_table = tableName();
         String second_table = Inflector.tableize(relDb.getModelName());
         String rel_table = first_table + "_" + second_table;
@@ -389,9 +388,10 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         }
         return ids;
     }
-    public List<Integer> ids(String where,String[] whereArgs){
-         List<Integer> ids = new ArrayList<Integer>();
-        for (LmisDataRow row : select(where,whereArgs)) {
+
+    public List<Integer> ids(String where, String[] whereArgs) {
+        List<Integer> ids = new ArrayList<Integer>();
+        for (LmisDataRow row : select(where, whereArgs)) {
             ids.add(row.getInt("id"));
         }
         return ids;
@@ -411,8 +411,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         List<LmisDataRow> rows = new ArrayList<LmisDataRow>();
         SQLiteDatabase db = getReadableDatabase();
         String[] cols = getColumns();
-        Cursor cr = db.query(tableName(), cols, where, whereArgs, groupBy,
-                having, orderBy);
+        Cursor cr = db.query(tableName(), cols, where, whereArgs, groupBy, having, orderBy);
         List<LmisColumn> mCols = mDBHelper.getModelColumns();
         mCols.addAll(getDefaultCols());
         if (cr.moveToFirst()) {
@@ -490,7 +489,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
 
     protected Object createRowData(LmisColumn col, Cursor cr) {
         if (col.getType() instanceof String) {
-            if(col.getType().equals(LmisFields.blob()))
+            if (col.getType().equals(LmisFields.blob()))
                 return cr.getBlob(cr.getColumnIndex(col.getName()));
             else
                 return cr.getString(cr.getColumnIndex(col.getName()));

@@ -35,9 +35,9 @@ public class LmisSQLiteHelper extends SQLiteOpenHelper {
 
     public List<LmisDBHelper> baseModels() {
         List<LmisDBHelper> baseModels = new ArrayList<LmisDBHelper>();
-        baseModels.add(new OrgDB(mContext));
-        baseModels.add(new UserOrgDB(mContext));
-        baseModels.add(new IlConfigDB(mContext));
+//        baseModels.add(new OrgDB(mContext));
+//        baseModels.add(new UserOrgDB(mContext));
+//        baseModels.add(new IlConfigDB(mContext));
         return baseModels;
     }
 

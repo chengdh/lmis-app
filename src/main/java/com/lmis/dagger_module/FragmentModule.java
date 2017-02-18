@@ -9,6 +9,7 @@ import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
+import com.lmis.addons.cux_demand.CuxDemandList;
 import com.lmis.addons.dashboard.DashBoard;
 import com.lmis.addons.dashboard.DashBoardTurnover;
 import com.lmis.addons.goods_exception.GoodsExceptionList;
@@ -25,6 +26,7 @@ import com.lmis.addons.message.MessageDetail;
 import com.lmis.addons.message.MessageList;
 import com.lmis.addons.search_bill.CarryingBillEdit;
 import com.lmis.addons.search_bill.SearchBill;
+import com.lmis.addons.wf_notification.WfNoticicationList;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
@@ -65,7 +67,9 @@ import dagger.Provides;
                 GoodsExceptionList.class,
                 GoodsExceptionNew.class,
                 GoodsExceptionView.class,
-                CarryingBillEdit.class
+                CarryingBillEdit.class,
+                WfNoticicationList.class,
+                CuxDemandList.class
 
         })
 public class FragmentModule {

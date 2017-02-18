@@ -170,5 +170,47 @@
             android:exported="true"
             android:label="@string/label_inventory_move"
             android:syncable="true" />
+
+        <!--wf notification sync service-->
+        <service
+            android:name="com.lmis.services.WfNotificationSyncService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_wf_notification" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.wf_notification.WfNotificationProvider"
+            android:authorities="com.lmis.providers.wf_notification"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_message"
+            android:syncable="true" />
+
+          <!-- cux demand sync service-->
+        <service
+            android:name="com.lmis.services.CuxDemandSyncService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_cux_demand" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.cux_demand.CuxDemandProvider"
+            android:authorities="com.lmis.providers.cux_demand"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_cux_demand"
+            android:syncable="true" />
+
+
     </application>
 </manifest>

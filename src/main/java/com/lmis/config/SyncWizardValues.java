@@ -18,11 +18,8 @@
  */
 package com.lmis.config;
 
-import com.lmis.providers.il_config.IlConfigProvider;
-import com.lmis.providers.inventory_move.InventoryMoveProvider;
-import com.lmis.providers.message.MessageProvider;
 import com.lmis.providers.org.OrgProvider;
-import com.lmis.providers.user_org.UserOrgProvider;
+import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.support.SyncValue;
 import com.lmis.support.SyncWizardHelper;
 
@@ -37,11 +34,12 @@ public class SyncWizardValues implements SyncWizardHelper {
 
         //单据信息
         list.add(new SyncValue("basic"));
-        list.add(new SyncValue("il_configs", IlConfigProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("il_configs", IlConfigProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         list.add(new SyncValue("orgs", OrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("user_orgs", UserOrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("inventory_moves", InventoryMoveProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("messages", MessageProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("user_orgs", UserOrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("inventory_moves", InventoryMoveProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("messages", MessageProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+        list.add(new SyncValue("wf_notification", WfNotificationProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         return list;
     }
 }

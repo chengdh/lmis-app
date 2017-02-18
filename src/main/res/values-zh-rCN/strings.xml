@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ERP审批</string>
-    <string name="title_activity_main">国电投河南公司</string>
+    <string name="title_activity_main">移动审批</string>
     <string name="drawer_open">打开导航面板</string>
     <string name="drawer_close">关闭导航面板</string>
 
@@ -35,8 +35,9 @@
     <string name="label_message">通知</string>
     <string name="label_inventory_move">盘点单</string>
 
-    <!--inventory out 相关定义-->
+    <string name="label_wf_notification">工作流审批</string>
 
+    <!--inventory out 相关定义-->
     <string name="inventory_out_blank">当前没有盘点单!</string>
     <string name="inventory_out_group_title">盘点单</string>
     <string name="inventory_out_draw_item_draft">未上传</string>
@@ -158,6 +159,7 @@
 
     <!-- provider label-->
     <string name="label_messages">消息</string>
+    <string name="label_cux_demand">需求计划</string>
 
     <!--format string -->
     <string name="messages_sync_notify_title">%1$d条新消息</string>
@@ -171,6 +173,11 @@
     <string name="inventory_move_sync_notify_title">%1$d条新的盘点单</string>
     <string name="inventory_move_sync_notify_body">收到%1$d新德盘点单(Lmis)</string>
 
+    <!-- wf_notification 消息-->
+    <string name="wf_notification_sync_notify_title">%1$d条新通知</string>
+    <string name="wf_notification_sync_notify_body">收到%1$d条新通知(erp)</string>
+
+
     <!--il config -->
     <string name="il_config_sync_notify_title">更新%1$d条系统设置资料</string>
     <string name="il_config_sync_notify_body">更新%1$d条系统设置资料(Lmis)</string>
@@ -178,5 +185,6 @@
     <string name="edit">修改</string>
     <string name="cancel">作废</string>
     <string name="print">打印</string>
+    <string name="label_cux_demand_blank">未查到需求计划单</string>
 
 </resources>

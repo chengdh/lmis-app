@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingService;
 import com.fizzbuzz.android.dagger.Injector;
+import com.lmis.addons.wf_notification.WfNoticicationList;
+import com.lmis.services.CuxDemandSyncService;
 import com.lmis.services.IlConfigSyncService;
 import com.lmis.services.InventoryOutSyncService;
 import com.lmis.services.MessageSyncService;
 import com.lmis.services.OrgSyncService;
 import com.lmis.services.SyncAdapterImpl;
 import com.lmis.services.UserOrgSyncService;
+import com.lmis.services.WfNotificationSyncService;
 
 import javax.inject.Singleton;
 
@@ -26,7 +29,9 @@ import dagger.Provides;
                 UserOrgSyncService.class,
                 IlConfigSyncService.class,
                 MessageSyncService.class,
-                InventoryOutSyncService.class
+                InventoryOutSyncService.class,
+                WfNotificationSyncService.class,
+                CuxDemandSyncService.class
         })
 
 public class ServiceModule {

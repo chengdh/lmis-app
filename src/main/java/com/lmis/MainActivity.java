@@ -125,8 +125,8 @@ public class MainActivity extends InjectingFragmentActivity implements
     /**
      * The M orgs.
      */
-    @Inject
-    @OrgModule.AccessOrgs
+//    @Inject
+//    @OrgModule.AccessOrgs
     List<LmisDataRow> mOrgs;
 
     /**
@@ -271,7 +271,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                 accountSelectionDialog(LmisAccountManager.fetchAllAccounts(mContext)).show();
             } else {
                 initDrawer();
-                initSpinner();
+                //initSpinner();
             }
         }
     }

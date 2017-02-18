@@ -343,10 +343,11 @@ public class Login extends BaseFragment {
                     }
                 }
                 if (LmisAccountManager.createAccount(getActivity(), userData)) {
-                    mSyncDialog.show();
-                    scope.main().requestSync(OrgProvider.AUTHORITY);
-                    scope.main().requestSync(UserOrgProvider.AUTHORITY);
-                    scope.main().requestSync(IlConfigProvider.AUTHORITY);
+                    startSyncWizard();
+//                    mSyncDialog.show();
+//                    scope.main().requestSync(OrgProvider.AUTHORITY);
+//                    scope.main().requestSync(UserOrgProvider.AUTHORITY);
+//                    scope.main().requestSync(IlConfigProvider.AUTHORITY);
                 }
             } else {
                 edtPassword.setError(errorMsg);
