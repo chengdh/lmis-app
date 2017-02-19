@@ -18,6 +18,7 @@
  */
 package com.lmis.config;
 
+import com.lmis.providers.cux_demand.CuxDemandProvider;
 import com.lmis.providers.org.OrgProvider;
 import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.support.SyncValue;
@@ -40,6 +41,7 @@ public class SyncWizardValues implements SyncWizardHelper {
 //        list.add(new SyncValue("inventory_moves", InventoryMoveProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
 //        list.add(new SyncValue("messages", MessageProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         list.add(new SyncValue("wf_notification", WfNotificationProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+        list.add(new SyncValue("cux_demand", CuxDemandProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         return list;
     }
 }

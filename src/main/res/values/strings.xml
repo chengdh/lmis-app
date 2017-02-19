@@ -167,6 +167,8 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="sync_wizard_user_orgs">User Orgs</string>
     <string name="sync_wizard_inventory_moves">Inventory Move</string>
     <string name="sync_wizard_il_configs">Il Config</string>
+    <string name="sync_wizard_wf_notification">工作流通知</string>
+    <string name="sync_wizard_cux_demand">需求计划</string>
 
     <!-- provider label-->
     <string name="label_messages">Messages</string>
@@ -196,4 +198,6 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="print">打印</string>
     <string name="label_cux_demand">需求计划</string>
     <string name="label_cux_demand_blank">未查到需求计划单</string>
+    <string name="cux_demand_sync_notify_title">%1$d张需求计划单</string>
+    <string name="cux_demand_sync_notify_body">%1$d张张需求计划单</string>
 </resources>

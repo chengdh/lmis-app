@@ -408,7 +408,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
             tmpWhereArgs.add(mUser.getAndroidName());
             whereArgs = tmpWhereArgs.toArray(new String[tmpWhereArgs.size()]);
         }
-        List<LmisDataRow> rows = new ArrayList<LmisDataRow>();
+        List<LmisDataRow> rows = new ArrayList();
         SQLiteDatabase db = getReadableDatabase();
         String[] cols = getColumns();
         Cursor cr = db.query(tableName(), cols, where, whereArgs, groupBy, having, orderBy);

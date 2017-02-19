@@ -23,9 +23,8 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
-import com.lmis.addons.wf_notification.WfNotificationDB;
 import com.lmis.orm.LmisDataRow;
-import com.lmis.providers.wf_notification.WfNotificationProvider;
+import com.lmis.providers.cux_demand.CuxDemandProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
@@ -192,7 +191,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-                scope.main().requestSync(WfNotificationProvider.AUTHORITY);
+                scope.main().requestSync(CuxDemandProvider.AUTHORITY);
             }
 
             @Override
@@ -236,16 +235,15 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
             LmisDataRow row_data = (LmisDataRow) mCuxDemandObjects.get(position);
 
             String projectName = row_data.getString("project_name");
-            String applyDept = row_data.getString("apply_department");
+            String applyDept = row_data.getString("apply_deparment");
             String applyUser = row_data.getString("apply_user");
             String applyDate = row_data.getString("apply_date");
-            String user = row_data.getString("applier_user");
             String headerBugdet = row_data.getString("header_bugdet");
             holder.txvProjectName.setText(projectName);
             holder.txvApplyDept.setText(applyDept);
-            holder.txvUser.setText("[" + user + "]");
-            holder.txvApplyDate.setText(applyDate);
-            holder.txvHeaderBugdet.setText(headerBugdet);
+            holder.txvUser.setText("[" + applyUser+ "]");
+            holder.txvApplyDate.setText(applyDate.substring(0,10));
+            holder.txvHeaderBugdet.setText("RMB:" + headerBugdet);
         }
 
         return mView;
@@ -253,7 +251,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public Object databaseHelper(Context context) {
-        return new WfNotificationDB(context);
+        return new CuxDemandPlatformHeaderDB(context);
     }
 
 
@@ -314,7 +312,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     private int count(MType type, Context context) {
         int count = 0;
-        WfNotificationDB db = (WfNotificationDB) databaseHelper(context);
+        CuxDemandPlatformHeaderDB db = (CuxDemandPlatformHeaderDB) databaseHelper(context);
         String where = null;
         String whereArgs[] = null;
         HashMap<String, Object> obj = getWhere(type);
@@ -370,7 +368,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            Log.d(TAG, "WfNotificationLoader#onPostExecute");
+            Log.d(TAG, "CuxDemandLoader#onPostExecute");
             mListViewAdapter.notifiyDataChange(mCuxDemandObjects);
             mTxvBlank.setVisibility(mCuxDemandObjects.size() > 0 ? View.GONE : View.VISIBLE);
             mCuxDemandLoader = null;
@@ -417,11 +415,11 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         public void onReceive(Context context, Intent intent) {
             try {
 
-                Log.d(TAG, "MessageList->datasetChangeReceiver@onReceive");
+                Log.d(TAG, "CuxDemandList->datasetChangeReceiver@onReceive");
 
                 String id = intent.getExtras().getString("id");
                 String model = intent.getExtras().getString("model");
-                if (model.equals("LoadListWithBarcode")) {
+                if (model.equals("CuxDemand")) {
                     LmisDataRow row = db().select(Integer.parseInt(id));
                     mCuxDemandObjects.add(0, row);
                     mListViewAdapter.notifiyDataChange(mCuxDemandObjects);

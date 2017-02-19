@@ -67,8 +67,9 @@ public class CuxDemandSyncService extends InjectingService implements PerformSyn
 
             //获取wfDB中status=OPEN的数据
             String[] whereArgs = {};
-            List<LmisDataRow> wfNotifications = wfDB.select("where status='OPEN'", whereArgs);
-            if (wfNotifications.size() == 0) {
+            List<LmisDataRow> wfNotifications = wfDB.select("status='OPEN'", whereArgs);
+            if (wfNotifications.size() == 0 && user.getAndroidName().equals(account.name)) {
+                context.sendBroadcast(intent);
                 return;
             }
 
@@ -81,14 +82,11 @@ public class CuxDemandSyncService extends InjectingService implements PerformSyn
 
             //获取wf_notificationDB中的item_key
             LmisArguments arguments = new LmisArguments();
-            JSONObject args= new JSONObject();
-            args.put("wf_itemkey", itemKeys);
-            arguments.add(args);
+            arguments.add(itemKeys);
 
             //数据库中原有的数据也需要更新
             List<Integer> ids = db.ids();
-            //FIXME 通过extras中传递的item_key来同步对应的票据
-            if (lmis.syncWithMethod("where", arguments)) {
+            if (lmis.syncWithMethod("bills_by_wf_itemkeys", arguments)) {
                 int affected_rows = lmis.getAffectedRows();
                 Log.d(TAG, "CuxDemandSyncService[arguments]:" + arguments.toString());
                 Log.d(TAG, "CuxDemandSyncService->affected_rows:" + affected_rows);
@@ -105,10 +103,10 @@ public class CuxDemandSyncService extends InjectingService implements PerformSyn
                     Intent mainActiivty = new Intent(context, MainActivity.class);
                     mNotification.setResultIntent(mainActiivty, context);
 
-                    String notify_title = context.getResources().getString(R.string.wf_notification_sync_notify_title);
+                    String notify_title = context.getResources().getString(R.string.cux_demand_sync_notify_title);
                     notify_title = String.format(notify_title, affected_rows);
 
-                    String notify_body = context.getResources().getString(R.string.wf_notification_sync_notify_body);
+                    String notify_body = context.getResources().getString(R.string.cux_demand_sync_notify_body);
                     notify_body = String.format(notify_body, affected_rows);
 
                     mNotification.showNotification(context, notify_title, notify_body, authority, R.drawable.ic_oe_notification);

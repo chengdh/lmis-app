@@ -21,7 +21,7 @@ public class CuxDemandPlatformLineDB  extends LmisDatabase{
 
     @Override
     public String getModelName() {
-        return "CuxDemandPlatformLinesA";
+        return "CusDemandLine";
     }
 
     @Override

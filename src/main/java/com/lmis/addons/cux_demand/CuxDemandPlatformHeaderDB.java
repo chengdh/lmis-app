@@ -34,7 +34,7 @@ public class CuxDemandPlatformHeaderDB extends LmisDatabase {
         cols.add(new LmisColumn("org_id", "org id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("apply_date", "apply date", LmisFields.varchar(20), true));
         cols.add(new LmisColumn("apply_source", "apply source", LmisFields.varchar(60), true));
-        cols.add(new LmisColumn("apply_department", "apply department", LmisFields.varchar(40), true));
+        cols.add(new LmisColumn("apply_deparment", "apply department", LmisFields.varchar(40), true));
         cols.add(new LmisColumn("applier_user", "applier", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("apply_type", "apply_type", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("remark", "remark", LmisFields.varchar(30), true));

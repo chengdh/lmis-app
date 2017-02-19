@@ -24,7 +24,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
-import com.lmis.providers.message.MessageProvider;
 import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
@@ -412,11 +411,11 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
         public void onReceive(Context context, Intent intent) {
             try {
 
-                Log.d(TAG, "MessageList->datasetChangeReceiver@onReceive");
+                Log.d(TAG, "WfNotificationList->datasetChangeReceiver@onReceive");
 
                 String id = intent.getExtras().getString("id");
                 String model = intent.getExtras().getString("model");
-                if (model.equals("LoadListWithBarcode")) {
+                if (model.equals("WfNotification")) {
                     LmisDataRow row = db().select(Integer.parseInt(id));
                     mWfNotificationObjects.add(0, row);
                     mListViewAdapter.notifiyDataChange(mWfNotificationObjects);
