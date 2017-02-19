@@ -194,10 +194,11 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="il_config_sync_notify_body">%1$d updated Configs received (erp)</string>
     <string name="search">查找</string>
     <string name="edit">修改</string>
-    <string name="cancel">作废</string>
+    <string name="cancel">取消</string>
     <string name="print">打印</string>
     <string name="label_cux_demand">需求计划</string>
     <string name="label_cux_demand_blank">未查到需求计划单</string>
     <string name="cux_demand_sync_notify_title">%1$d张需求计划单</string>
     <string name="cux_demand_sync_notify_body">%1$d张张需求计划单</string>
+    <string name="confirm_audit">确定</string>
 </resources>

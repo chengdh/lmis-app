@@ -21,7 +21,7 @@ public class CuxDemandPlatformLineDB  extends LmisDatabase{
 
     @Override
     public String getModelName() {
-        return "CusDemandLine";
+        return "CuxDemandLine";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CuxDemandPlatformLineDB  extends LmisDatabase{
         List<LmisColumn> cols = new ArrayList<>();
         cols.add(new LmisColumn("id", "id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("cux_demand_id", "cux demand id", LmisFields.integer(16), true));
-        cols.add(new LmisColumn("line type", "line type", LmisFields.varchar(30), true));
+        cols.add(new LmisColumn("line_type", "line type", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("item_number", "item number", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("item_description", "item description", LmisFields.varchar(30), true));

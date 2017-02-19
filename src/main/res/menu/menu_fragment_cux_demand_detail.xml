@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_audit_pass"
+        android:icon="@drawable/ic_action_done"
+        android:showAsAction="always"
+        android:title="通过">
+    </item>
+
+    <item
+        android:id="@+id/menu_audit_reject"
+        android:icon="@drawable/ic_action_content_remove"
+        android:showAsAction="always"
+        android:title="驳回">
+    </item>
+</menu>

@@ -25,7 +25,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_marginTop="15dp"
                 android:contentDescription="@string/imgcontentDescription"
-                android:src="@drawable/openerp_logo" />
+                android:src="@drawable/spic_logo" />
 
             <com.lmis.util.controls.LmisTextView
                 android:id="@+id/txvVersionName"

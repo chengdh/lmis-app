@@ -28,6 +28,7 @@ import com.lmis.providers.cux_demand.CuxDemandProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
 
@@ -236,13 +237,13 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
             String projectName = row_data.getString("project_name");
             String applyDept = row_data.getString("apply_deparment");
-            String applyUser = row_data.getString("apply_user");
+            String applyUser = row_data.getString("applier_user");
             String applyDate = row_data.getString("apply_date");
             String headerBugdet = row_data.getString("header_bugdet");
             holder.txvProjectName.setText(projectName);
             holder.txvApplyDept.setText(applyDept);
-            holder.txvUser.setText("[" + applyUser+ "]");
-            holder.txvApplyDate.setText(applyDate.substring(0,10));
+            holder.txvUser.setText("[" + applyUser + "]");
+            holder.txvApplyDate.setText(applyDate.substring(0, 10));
             holder.txvHeaderBugdet.setText("RMB:" + headerBugdet);
         }
 
@@ -324,22 +325,22 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//        if (position == 0)
-//            return;
-//
-//        position -= mListView.getRefreshableView().getHeaderViewsCount();
-//
-//        mSelectedItemPosition = position;
-//        LmisDataRow row = (LmisDataRow) mWfNotificationObjects.get(position);
-//        BaseFragment detail;
-//        detail = new MessageDetail();
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("message_id", row.getInt("id"));
-//        bundle.putInt("position", position);
-//        detail.setArguments(bundle);
-//
-//        FragmentListener listener = (FragmentListener) getActivity();
-//        listener.startDetailFragment(detail);
+        if (position == 0)
+            return;
+
+        position -= mListView.getRefreshableView().getHeaderViewsCount();
+
+        mSelectedItemPosition = position;
+        LmisDataRow row = (LmisDataRow) mCuxDemandObjects.get(position);
+        BaseFragment detail;
+        detail = new CuxDemandDetail();
+        Bundle bundle = new Bundle();
+        bundle.putInt("cux_demand_id", row.getInt("id"));
+        bundle.putInt("position", position);
+        detail.setArguments(bundle);
+
+        FragmentListener listener = (FragmentListener) getActivity();
+        listener.startDetailFragment(detail);
     }
 
     @Override

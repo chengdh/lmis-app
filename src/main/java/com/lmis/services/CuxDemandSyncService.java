@@ -86,7 +86,7 @@ public class CuxDemandSyncService extends InjectingService implements PerformSyn
 
             //数据库中原有的数据也需要更新
             List<Integer> ids = db.ids();
-            if (lmis.syncWithMethod("bills_by_wf_itemkeys", arguments)) {
+            if (lmis.syncWithMethod("unread_bills", arguments)) {
                 int affected_rows = lmis.getAffectedRows();
                 Log.d(TAG, "CuxDemandSyncService[arguments]:" + arguments.toString());
                 Log.d(TAG, "CuxDemandSyncService->affected_rows:" + affected_rows);

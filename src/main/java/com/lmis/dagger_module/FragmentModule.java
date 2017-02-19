@@ -9,6 +9,7 @@ import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
+import com.lmis.addons.cux_demand.CuxDemandDetail;
 import com.lmis.addons.cux_demand.CuxDemandList;
 import com.lmis.addons.dashboard.DashBoard;
 import com.lmis.addons.dashboard.DashBoardTurnover;
@@ -69,7 +70,8 @@ import dagger.Provides;
                 GoodsExceptionView.class,
                 CarryingBillEdit.class,
                 WfNoticicationList.class,
-                CuxDemandList.class
+                CuxDemandList.class,
+                CuxDemandDetail.class
 
         })
 public class FragmentModule {

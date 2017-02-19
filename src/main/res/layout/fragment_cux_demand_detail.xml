@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <include
+        android:id="@+id/loadingProgress"
+        layout="@layout/listview_data_loading_progress"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/txv_project_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="项目名称"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#498BF4"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/txv_apply_deparment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="运行部"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#498BF4" />
+
+
+            <TextView
+                android:id="@+id/txv_apply_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="2017-01-01"
+                android:textColor="#498BF4"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/txv_applier_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="张三"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#414141" />
+
+
+            <TextView
+                android:id="@+id/txv_header_bugdet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="10000"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#414141" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <ListView
+            android:id="@+id/lst_cux_demand_lines"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:smoothScrollbar="true" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/groupColorLine"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#ffffff" />
+
+</LinearLayout>
