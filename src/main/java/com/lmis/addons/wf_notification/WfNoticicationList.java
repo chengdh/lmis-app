@@ -235,7 +235,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
             String subject = row_data.getString("subject");
             String messageType = row_data.getString("message_type");
             String fromUser = row_data.getString("from_user");
-            String beginDate = row_data.getString("begin_date");
+            String beginDate = row_data.getString("begin_date").substring(0,10);
             holder.txvSubject.setText(subject);
             holder.txvBeginDate.setText(beginDate);
             holder.txvFromUser.setText("[" + fromUser + "]");

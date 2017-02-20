@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
@@ -17,6 +19,7 @@ import com.lmis.orm.LmisDataRow;
 
 public class DialogAudit extends DialogFragment {
 
+    EditText mEdtAuditNote;
     /* The activity that creates an instance of this dialog fragment must
          * implement this interface in order to receive event callbacks.
          * Each method passes the DialogFragment in case the host needs to query it. */
@@ -43,10 +46,13 @@ public class DialogAudit extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_audit, null);
 
+
+        mEdtAuditNote = (EditText) view.findViewById(R.id.edt_audit);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.dialog_audit, null))
+        builder.setView(view)
                 // Add action buttons
                 .setPositiveButton(R.string.confirm_audit, new DialogInterface.OnClickListener() {
                     @Override
@@ -61,5 +67,9 @@ public class DialogAudit extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+    public String getAuditNote(){
+        return mEdtAuditNote.getText().toString();
+
     }
 }

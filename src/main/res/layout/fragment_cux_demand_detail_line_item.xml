@@ -12,15 +12,15 @@
         android:layout_height="wrap_content"
         android:weightSum="13">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:id="@+id/txv_line_number"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:maxLength="16"
-            android:layout_weight="1" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="1"-->
+            <!--android:id="@+id/txv_line_number"-->
+            <!--android:ellipsize="end"-->
+            <!--android:maxLines="1"-->
+            <!--android:maxLength="16"-->
+            <!--android:layout_weight="1" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,17 +28,20 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="物料"
             android:id="@+id/txv_item_description"
-            android:gravity="center"
+            android:gravity="left"
+            android:ellipsize="none"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
             android:layout_weight="3" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="20mmx30mm"
-            android:id="@+id/txv_item_spec"
-            android:gravity="right"
-            android:layout_weight="3" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:text="20mmx30mm"-->
+            <!--android:id="@+id/txv_item_spec"-->
+            <!--android:gravity="right"-->
+            <!--android:layout_weight="3" />-->
 
         <TextView
             android:layout_width="wrap_content"

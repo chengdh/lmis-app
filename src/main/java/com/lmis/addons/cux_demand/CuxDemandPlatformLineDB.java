@@ -28,7 +28,6 @@ public class CuxDemandPlatformLineDB  extends LmisDatabase{
     public List<LmisColumn> getModelColumns() {
 
         List<LmisColumn> cols = new ArrayList<>();
-        cols.add(new LmisColumn("id", "id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("cux_demand_id", "cux demand id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("line_type", "line type", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(30), true));

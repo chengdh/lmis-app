@@ -1,8 +1,10 @@
 package com.lmis.addons.cux_demand;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,25 +15,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.lmis.LmisArguments;
 import com.lmis.R;
+import com.lmis.addons.wf_notification.WfNoticicationList;
+import com.lmis.addons.wf_notification.WfNotificationDB;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.orm.LmisHelper;
+import com.lmis.orm.LmisValues;
+import com.lmis.providers.cux_demand.CuxDemandProvider;
+import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.LmisUser;
 import com.lmis.support.listview.LmisListAdapter;
+import com.lmis.util.controls.ExceptionTypeSpinner;
 import com.lmis.util.drawer.DrawerItem;
+import com.lmis.util.drawer.DrawerListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import us.monoid.json.JSONObject;
 
 /**
  * Created by chengdh on 2017/2/19.
  */
 
-public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeDialogListener,DialogAuditReject.NoticeDialogListener {
+public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
 
     public static final String TAG = "CuxDemandDetail";
     View mView = null;
@@ -58,24 +73,49 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
     //费用单明细
     List<Object> mCuxDemandLines = new ArrayList<Object>();
 
+    //工作流审批pass
+    WorkflowOperation wfPassOperator = null;
+
+    //工作流审批拒绝
+    WorkflowOperation wfRejectOperator = null;
+
     @Override
     public void onDialogPositiveClick(DialogAudit dialog) {
-        dialog.dismiss();
+        if (wfPassOperator != null) {
+            wfPassOperator.cancel(true);
+            wfPassOperator = null;
+        }
+        String auditNote = dialog.getAuditNote();
+        wfPassOperator = new WorkflowOperation("0", auditNote);
+
+        wfPassOperator.execute((Void) null);
 
     }
 
     @Override
     public void onDialogNegativeClick(DialogAudit dialog) {
 
+        dialog.dismiss();
+
     }
 
     @Override
     public void onRejectDialogPositiveClick(DialogAuditReject dialog) {
-        dialog.dismiss();
+        if (wfRejectOperator != null) {
+            wfRejectOperator.cancel(true);
+            wfRejectOperator = null;
+        }
+
+        String auditNote = dialog.getAuditNote();
+        wfRejectOperator = new WorkflowOperation("1", auditNote);
+
+        wfRejectOperator.execute((Void) null);
     }
 
     @Override
     public void onRejectDialogNegativeClick(DialogAuditReject dialog) {
+
+        dialog.dismiss();
 
     }
 
@@ -84,12 +124,12 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
      * butterKnife viewholder
      */
     static class LineViewHolder {
-        @InjectView(R.id.txv_line_number)
-        TextView txvLineNumber;
+        //        @InjectView(R.id.txv_line_number)
+//        TextView txvLineNumber;
         @InjectView(R.id.txv_item_description)
         TextView txvItemDescription;
-        @InjectView(R.id.txv_item_spec)
-        TextView txvItemSpec;
+//        @InjectView(R.id.txv_item_spec)
+//        TextView txvItemSpec;
 
         @InjectView(R.id.txv_item_price)
         TextView txvItemPrice;
@@ -140,6 +180,7 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
         String applyDate = mCuxDemandData.getString("apply_date");
         String headerBugdet = mCuxDemandData.getString("header_bugdet");
         String applyDeparment = mCuxDemandData.getString("apply_deparment");
+        mProcessed = mCuxDemandData.getBoolean("processed");
 
         mTxvProjectName.setText(projectName + "[" + applyNumber + "]");
         mTxvApplierUser.setText(applierUser);
@@ -174,9 +215,9 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
             String itemPrice = line.getString("item_price");
             String demandQuantiry = line.getString("demand_quantiry");
             String lineBugdet = line.getString("line_bugdet");
-            holder.txvLineNumber.setText(lineNumber);
-            holder.txvItemDescription.setText(itemDescription);
-            holder.txvItemSpec.setText(itemSpec);
+//            holder.txvLineNumber.setText(lineNumber);
+            holder.txvItemDescription.setText(itemSpec);
+//            holder.txvItemSpec.setText(itemSpec);
             holder.txvItemPrice.setText(itemPrice);
             holder.txvDemandQuantiry.setText(demandQuantiry);
             holder.txvLineBugdet.setText(lineBugdet);
@@ -185,26 +226,6 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
         return mView;
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_cux_demand_detail, menu);
-//        setMenuVisible(menu, !mProcessed);
-    }
-
-    //workflow处理完毕后,需要禁用审核按钮
-    private void setMenuVisible(Menu menu, Boolean visible) {
-//        MenuItem item_ok = menu.findItem(R.id.menu_expense_detail_audit);
-//        MenuItem item_cancel = menu.findItem(R.id.menu_expense_detail_cancel);
-//        item_ok.setVisible(visible);
-//        item_cancel.setVisible(visible);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-//        setMenuVisible(menu, !mProcessed);
-        super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -218,11 +239,7 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
                 return true;
             case R.id.menu_audit_reject:
                 Log.d(TAG, "CuxDemandDetail#onOptionsItemSelected#reject");
-                // 编写cancel代码
-
                 showRejectAuditDialog();
-//                mWorkflowOperation = new WorkflowOperation("refuse");
-//                mWorkflowOperation.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -265,6 +282,26 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
         }
     };
 
+    //workflow处理完毕后,需要禁用审核按钮
+    private void setMenuVisible(Menu menu, Boolean visible) {
+        MenuItem item_ok = menu.findItem(R.id.menu_audit_pass);
+        MenuItem item_cancel = menu.findItem(R.id.menu_audit_reject);
+        item_ok.setVisible(visible);
+        item_cancel.setVisible(visible);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_cux_demand_detail, menu);
+        setMenuVisible(menu, !mProcessed);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        setMenuVisible(menu, !mProcessed);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     private String getStatus(String state) {
         int id = scope.main().getResources().getIdentifier("state_" + state, "string", scope.main().getPackageName());
         String value = id == 0 ? "" : scope.main().getResources().getString(id);
@@ -281,80 +318,105 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
      *5 使用Toast提示用户操作完成
      *6 更新drawer的状态
      * */
-//    public class WorkflowOperation extends AsyncTask<Void, Void, Boolean> {
-//        boolean isConnection = true;
-//        OEHelper mOE = null;
-//        ProgressDialog mProgressDialog = null;
-//        String mSignal = null;
-//
-//        public WorkflowOperation(String signal) {
-//            mSignal = signal;
-//            mOE = db().getOEInstance();
-//            if (mOE == null)
-//                isConnection = false;
-//
-//            String working_text = scope.main().getResources().getString(R.string.working_text);
-//            mProgressDialog = new ProgressDialog(getActivity());
-//            mProgressDialog.setMessage(working_text);
-//            if (isConnection) {
-//                mProgressDialog.show();
-//            }
-//        }
-//
-//        @Override
-//        protected Boolean doInBackground(Void... params) {
-//            Boolean execSuccess = false;
-//            if (!isConnection) {
-//                return false;
-//            }
-//            OEArguments arguments = new OEArguments();
-//            // Param 1 : model_name
-//            String modelName = "hr.expense.expense";
-//            // Param 2 : res_id
-//            Integer resId = mExpenseId;
-//            //params 3 : signal
-//            try {
-//                mOE.exec_workflow(modelName, resId, mSignal);
-//                execSuccess = true;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            // Creating Local Database Requirement Values
-//            OEValues values = new OEValues();
-//            String value = (execSuccess) ? "true" : "false";
-//            mProcessed = true;
-//            values.put("processed", value);
-//
-//            if (execSuccess) {
-//                try {
-//                    db().update(values, mExpenseId);
-//                } catch (Exception e) {
-//                }
-//            }
-//            return execSuccess;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean result) {
-//            if (result) {
-//                //刷新菜单栏
-//                scope.main().supportInvalidateOptionsMenu();
-//
-//                //重新同步数据
-//                scope.main().requestSync(ExpenseProvider.AUTHORITY);
-//
-//                DrawerListener drawer = (DrawerListener) getActivity();
-//                drawer.refreshDrawer(Expense.TAG);
-//
-//                String toast_text = scope.main().getResources().getString(R.string.expense_processed_text);
-//                Toast.makeText(getActivity(), toast_text, Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(getActivity(), "No connection", Toast.LENGTH_LONG).show();
-//            }
-//            mProgressDialog.dismiss();
-//        }
-//    }
+    public class WorkflowOperation extends AsyncTask<Void, Void, Boolean> {
+        boolean isConnection = true;
+        LmisHelper mLmisHelper = null;
+        WfNotificationDB wfDB = null;
+        ProgressDialog mProgressDialog = null;
+        String mSignal = null;
+        String mAuditNote = null;
+
+        public WorkflowOperation(String auditSignal, String auditNote) {
+            mSignal = auditSignal;
+            mAuditNote = auditNote;
+            mLmisHelper = db().getLmisInstance();
+            wfDB = new WfNotificationDB(scope.context());
+            if (mLmisHelper == null)
+                isConnection = false;
+
+            String working_text = "处理中...";
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage(working_text);
+            if (isConnection) {
+                mProgressDialog.show();
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Boolean execSuccess = false;
+            if (!isConnection) {
+                return false;
+            }
+            LmisUser user = scope.currentUser();
+            LmisArguments arguments = new LmisArguments();
+            //params 1 : user_id
+            Integer userId = user.getUser_id();
+            //Param 2  : user_name
+            String username = user.getUsername();
+            //param 3 : notification_id
+            String wfItemkey = mCuxDemandData.getString("wf_itemkey");
+            String[] whereArgs = {wfItemkey};
+            List<LmisDataRow> wfRows = wfDB.select("item_key = ?", whereArgs);
+            Integer wfNotificationId = wfRows.get(0).getInt("id");
+            //params 4: 审批结果：0：审批通过；1：审批拒绝
+
+            //params 5: P_APP_RESULT_NOTE 审批人填写的审批意见
+            arguments.add(userId);
+            arguments.add(username);
+            arguments.add(wfNotificationId);
+            arguments.add(mSignal);
+            arguments.add(mAuditNote);
+
+
+            String retCode = "-1";
+            String retMessage = "";
+            try {
+                JSONObject ret = (JSONObject) mLmisHelper.call_kw("audit", arguments);
+                retCode = ret.getString("x_ret_code");
+                retMessage = ret.getString("x_ret_message");
+                execSuccess = retCode.equals("0");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            // Creating Local Database Requirement Values
+            LmisValues values = new LmisValues();
+            String value = execSuccess ? "true" : "false";
+            mProcessed = true;
+            values.put("processed", value);
+
+            if (execSuccess) {
+                try {
+                    db().update(values, mCuxDemandId);
+                } catch (Exception e) {
+                }
+            }
+            return execSuccess;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                //刷新菜单栏
+                scope.main().supportInvalidateOptionsMenu();
+
+                //重新同步数据
+                scope.main().requestSync(CuxDemandProvider.AUTHORITY);
+                scope.main().requestSync(WfNotificationProvider.AUTHORITY);
+
+                DrawerListener drawer = (DrawerListener) getActivity();
+                drawer.refreshDrawer(CuxDemandList.TAG);
+                drawer.refreshDrawer(WfNoticicationList.TAG);
+
+                String toast_text = scope.main().getResources().getString(R.string.cux_demand_processed_text);
+                Toast.makeText(getActivity(), toast_text, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "No connection", Toast.LENGTH_LONG).show();
+            }
+            mProgressDialog.dismiss();
+        }
+    }
 
 
     @Override

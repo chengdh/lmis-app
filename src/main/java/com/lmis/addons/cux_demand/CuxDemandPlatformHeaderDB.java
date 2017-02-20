@@ -28,7 +28,6 @@ public class CuxDemandPlatformHeaderDB extends LmisDatabase {
     public List<LmisColumn> getModelColumns() {
         List<LmisColumn> cols = new ArrayList<>();
 
-        cols.add(new LmisColumn("id", "id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("ou_name", "org name", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("org_id", "org id", LmisFields.integer(16), true));
@@ -59,6 +58,8 @@ public class CuxDemandPlatformHeaderDB extends LmisDatabase {
         cols.add(new LmisColumn("header_bugdet", "header_bugdet", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("bugdet_balance", "bugdet_balance", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("actual_cost", "actual_cost", LmisFields.varchar(60), true));
+
+        cols.add(new LmisColumn("wf_itemkey", "wf itemkey", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("cux_demand_lines", "line_ids", LmisFields.oneToMany(new CuxDemandPlatformLineDB(mContext) )));
 
         //是否已查看

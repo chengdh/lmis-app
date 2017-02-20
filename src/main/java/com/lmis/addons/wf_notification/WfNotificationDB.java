@@ -28,7 +28,6 @@ public class WfNotificationDB extends LmisDatabase {
     public List<LmisColumn> getModelColumns() {
         List<LmisColumn> cols = new ArrayList<>();
 
-        cols.add(new LmisColumn("id", "id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("message_type", "message type", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("status", "status", LmisFields.varchar(20), true));
         cols.add(new LmisColumn("from_user", "from user", LmisFields.varchar(20), true));
