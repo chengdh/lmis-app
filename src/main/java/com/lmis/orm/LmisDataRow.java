@@ -56,6 +56,10 @@ public class LmisDataRow {
     }
 
     public Boolean getBoolean(String key) {
+        Object v = _data.get(key);
+        if(v == null){
+            return false;
+        }
         return Boolean.parseBoolean(_data.get(key).toString());
     }
 

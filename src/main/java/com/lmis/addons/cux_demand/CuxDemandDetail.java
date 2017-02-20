@@ -389,6 +389,7 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
             if (execSuccess) {
                 try {
                     db().update(values, mCuxDemandId);
+                    wfDB.update(values,wfNotificationId);
                 } catch (Exception e) {
                 }
             }
