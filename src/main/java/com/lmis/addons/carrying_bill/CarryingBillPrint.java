@@ -263,7 +263,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1240,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-116-9956".getBytes("GB2312"),
+                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
                     "\"\n"
 
 
@@ -513,7 +513,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1240,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-116-9956".getBytes("GB2312"),
+                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
                     "\"\n"
 
 
