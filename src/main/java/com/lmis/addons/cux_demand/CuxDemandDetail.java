@@ -54,16 +54,67 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
     LmisDataRow mCuxDemandData = null;
     LmisListAdapter mCuxDemandLinesAdapter = null;
 
+    //计划编号
+    @InjectView(R.id.txv_apply_number)
+    TextView mTxvApplyNumber;
+    //计划状态
+    @InjectView(R.id.txv_apply_status)
+    TextView mTxvApplyStatus;
+
     @InjectView(R.id.txv_project_name)
     TextView mTxvProjectName;
-    @InjectView(R.id.txv_apply_date)
-    TextView mTxvApplyDate;
-    @InjectView(R.id.txv_applier_user)
-    TextView mTxvApplierUser;
+
+    //计划来源
+    @InjectView(R.id.txv_apply_source)
+    TextView mTxvApplySource;
+
+    //计划类型
+    @InjectView(R.id.txv_apply_type)
+    TextView mTxvApplyType;
+
+    //提报部门
     @InjectView(R.id.txv_apply_deparment)
     TextView mTxvApplyDeparment;
+
+    //编制时间
+    @InjectView(R.id.txv_apply_date)
+    TextView mTxvApplyDate;
+
+    //需求人员
+    @InjectView(R.id.txv_applier_user)
+    TextView mTxvApplierUser;
+
+    //提交时间
+    @InjectView(R.id.txv_submit_date)
+    TextView mTxvSubmitDate;
+
+    //备注
+    @InjectView(R.id.txv_remark)
+    TextView mTxvRemark;
+
+    //预算总额
+    @InjectView(R.id.txv_bugdet_total)
+    TextView mTxvBugdetTotal;
+
+    //已审批额
+    @InjectView(R.id.txv_bugdet_demand_total)
+    TextView mTxvBugdetDemandTotal;
+
+    //实际成本
+    @InjectView(R.id.txv_actual_cost)
+    TextView mTxvBugdetActualCost;
+
+    //需求额
     @InjectView(R.id.txv_header_bugdet)
     TextView mTxvHeaderBugdet;
+    //余额
+    @InjectView(R.id.txv_bugdet_balance)
+    TextView mTxvBugdetBalance;
+
+    //未审批额
+    @InjectView(R.id.txv_left_bugdet_demand_total)
+    TextView mTxvLeftBugdetDemandTotal;
+
     @InjectView(R.id.lst_cux_demand_lines)
     ListView mCuxDemandLinesView;
 
@@ -172,21 +223,63 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
     }
 
     private void initControls() {
+
         //设置主表内容
 
-        String projectName = mCuxDemandData.getString("project_name");
         String applyNumber = mCuxDemandData.getString("apply_number");
-        String applierUser = mCuxDemandData.getString("applier_user");
-        String applyDate = mCuxDemandData.getString("apply_date");
-        String headerBugdet = mCuxDemandData.getString("header_bugdet");
-        String applyDeparment = mCuxDemandData.getString("apply_deparment");
-        mProcessed = mCuxDemandData.getBoolean("processed");
+        mTxvApplyNumber.setText(applyNumber);
+        String applyStatus = mCuxDemandData.getString("apply_status");
+        mTxvApplyStatus.setText(applyStatus);
+        String projectName = mCuxDemandData.getString("project_name");
+        mTxvProjectName.setText(projectName);
 
-        mTxvProjectName.setText(projectName + "[" + applyNumber + "]");
-        mTxvApplierUser.setText(applierUser);
-        mTxvApplyDate.setText(applyDate.substring(0, 10));
+        String applySource = mCuxDemandData.getString("apply_source");
+        mTxvApplySource.setText(applySource);
+        String applyType = mCuxDemandData.getString("apply_type");
+        mTxvApplyType.setText(applyType);
+
+        String applyDeparment = mCuxDemandData.getString("apply_deparment");
         mTxvApplyDeparment.setText(applyDeparment);
-        mTxvHeaderBugdet.setText("SUM:" + headerBugdet);
+        String applyDate = mCuxDemandData.getString("apply_date");
+        mTxvApplyDate.setText(applyDate.substring(0, 15));
+
+        String applierUser = mCuxDemandData.getString("applier_user");
+        mTxvApplierUser.setText(applierUser);
+        String submitDate = mCuxDemandData.getString("submit_date");
+        mTxvSubmitDate.setText(submitDate);
+
+        String applyRemark = mCuxDemandData.getString("apply_remark");
+        mTxvRemark.setText(applyRemark);
+        //预算总额
+
+        String bugdetTotal = mCuxDemandData.getString("bugdet_total");
+        mTxvBugdetTotal.setText(bugdetTotal);
+
+        //已审批额
+        String bugdetDemandTotal = mCuxDemandData.getString("bugdet_demand_total");
+        mTxvBugdetDemandTotal.setText(bugdetDemandTotal);
+
+        //实际成本
+
+        String bugdetActualCost = mCuxDemandData.getString("bugdet_actual_cost");
+        mTxvBugdetActualCost.setText(bugdetActualCost);
+
+        //需求额
+
+        String headerBugdet = mCuxDemandData.getString("header_bugdet");
+        mTxvHeaderBugdet.setText(headerBugdet);
+        //余额
+
+        String bugdetB1alance = mCuxDemandData.getString("bugdet_balance");
+        mTxvBugdetBalance.setText(bugdetB1alance);
+
+        //未审批额
+        //FIXME 算法
+        String leftBalanceDemandTotal = "0";
+        mTxvLeftBugdetDemandTotal.setText(leftBalanceDemandTotal);
+
+
+        mProcessed = mCuxDemandData.getBoolean("processed");
 
         //设置子表内容
         mCuxDemandLinesAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_cux_demand_detail_line_item, mCuxDemandLines) {
@@ -389,7 +482,7 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
             if (execSuccess) {
                 try {
                     db().update(values, mCuxDemandId);
-                    wfDB.update(values,wfNotificationId);
+                    wfDB.update(values, wfNotificationId);
                 } catch (Exception e) {
                 }
             }

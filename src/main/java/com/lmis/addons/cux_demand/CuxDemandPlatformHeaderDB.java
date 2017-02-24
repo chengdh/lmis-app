@@ -31,11 +31,22 @@ public class CuxDemandPlatformHeaderDB extends LmisDatabase {
         cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(60), true));
         cols.add(new LmisColumn("ou_name", "org name", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("org_id", "org id", LmisFields.integer(16), true));
+
+        //编制时间
         cols.add(new LmisColumn("apply_date", "apply date", LmisFields.varchar(20), true));
+
+
+        //计划来源
         cols.add(new LmisColumn("apply_source", "apply source", LmisFields.varchar(60), true));
+
+        //计划类型
+        cols.add(new LmisColumn("apply_type", "apply type", LmisFields.varchar(60), true));
+
+        //提交日期
+        cols.add(new LmisColumn("submit_date", "submit date", LmisFields.varchar(20), true));
+
         cols.add(new LmisColumn("apply_deparment", "apply department", LmisFields.varchar(40), true));
         cols.add(new LmisColumn("applier_user", "applier", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("apply_type", "apply_type", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("remark", "remark", LmisFields.varchar(30), true));
 
         cols.add(new LmisColumn("project_number", "project number", LmisFields.varchar(60), true));
@@ -51,6 +62,9 @@ public class CuxDemandPlatformHeaderDB extends LmisDatabase {
 
         cols.add(new LmisColumn("wip_entity_id", "wip_entity_id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("wip_entity_name", "wip_entity_name", LmisFields.varchar(60), true));
+
+        //计划状态
+        cols.add(new LmisColumn("apply_status", "apply status", LmisFields.varchar(40), true));
 
 
         cols.add(new LmisColumn("bugdet_total", "bugdet_total", LmisFields.varchar(60), true));

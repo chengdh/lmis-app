@@ -8,9 +8,9 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="13">
+        android:weightSum="10">
 
         <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
@@ -23,7 +23,7 @@
             <!--android:layout_weight="1" />-->
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="物料"
@@ -32,7 +32,7 @@
             android:ellipsize="none"
             android:maxLines="100"
             android:scrollHorizontally="false"
-            android:layout_weight="3" />
+            android:layout_weight="4" />
 
         <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
@@ -44,7 +44,7 @@
             <!--android:layout_weight="3" />-->
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="20"
@@ -53,7 +53,7 @@
             android:layout_weight="2" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="20"
@@ -62,7 +62,7 @@
             android:layout_weight="2" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="20"
