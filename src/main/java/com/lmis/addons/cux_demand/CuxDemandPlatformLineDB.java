@@ -15,6 +15,7 @@ import java.util.List;
 
 public class CuxDemandPlatformLineDB  extends LmisDatabase{
 
+
     public CuxDemandPlatformLineDB(Context context) {
         super(context);
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,89 +48,28 @@ import us.monoid.json.JSONObject;
  * Created by chengdh on 2017/2/19.
  */
 
-public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
+public class CuxDemandDetail extends BaseFragment implements TabHost.OnTabChangeListener, DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
 
     public static final String TAG = "CuxDemandDetail";
     View mView = null;
     Integer mCuxDemandId = null;
     LmisDataRow mCuxDemandData = null;
-    LmisListAdapter mCuxDemandLinesAdapter = null;
-
-    //计划编号
-    @InjectView(R.id.txv_apply_number)
-    TextView mTxvApplyNumber;
-    //计划状态
-    @InjectView(R.id.txv_apply_status)
-    TextView mTxvApplyStatus;
-
-    @InjectView(R.id.txv_project_name)
-    TextView mTxvProjectName;
-
-    //计划来源
-    @InjectView(R.id.txv_apply_source)
-    TextView mTxvApplySource;
-
-    //计划类型
-    @InjectView(R.id.txv_apply_type)
-    TextView mTxvApplyType;
-
-    //提报部门
-    @InjectView(R.id.txv_apply_deparment)
-    TextView mTxvApplyDeparment;
-
-    //编制时间
-    @InjectView(R.id.txv_apply_date)
-    TextView mTxvApplyDate;
-
-    //需求人员
-    @InjectView(R.id.txv_applier_user)
-    TextView mTxvApplierUser;
-
-    //提交时间
-    @InjectView(R.id.txv_submit_date)
-    TextView mTxvSubmitDate;
-
-    //备注
-    @InjectView(R.id.txv_remark)
-    TextView mTxvRemark;
-
-    //预算总额
-    @InjectView(R.id.txv_bugdet_total)
-    TextView mTxvBugdetTotal;
-
-    //已审批额
-    @InjectView(R.id.txv_bugdet_demand_total)
-    TextView mTxvBugdetDemandTotal;
-
-    //实际成本
-    @InjectView(R.id.txv_actual_cost)
-    TextView mTxvBugdetActualCost;
-
-    //需求额
-    @InjectView(R.id.txv_header_bugdet)
-    TextView mTxvHeaderBugdet;
-    //余额
-    @InjectView(R.id.txv_bugdet_balance)
-    TextView mTxvBugdetBalance;
-
-    //未审批额
-    @InjectView(R.id.txv_left_bugdet_demand_total)
-    TextView mTxvLeftBugdetDemandTotal;
-
-    @InjectView(R.id.lst_cux_demand_lines)
-    ListView mCuxDemandLinesView;
-
 
     //是否已操作
     Boolean mProcessed = false;
-    //费用单明细
-    List<Object> mCuxDemandLines = new ArrayList<Object>();
 
     //工作流审批pass
     WorkflowOperation wfPassOperator = null;
 
     //工作流审批拒绝
     WorkflowOperation wfRejectOperator = null;
+
+    CuxDemandDetailPageAdapter mPageAdapter;
+
+    @InjectView(R.id.tab_host_cux_detail)
+    TabHost mTabHost;
+    @InjectView(R.id.pager_cux_demand_detail)
+    ViewPager mPager;
 
     @Override
     public void onDialogPositiveClick(DialogAudit dialog) {
@@ -170,32 +111,6 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
 
     }
 
-    /**
-     * The type View holder.
-     * butterKnife viewholder
-     */
-    static class LineViewHolder {
-        //        @InjectView(R.id.txv_line_number)
-//        TextView txvLineNumber;
-        @InjectView(R.id.txv_item_description)
-        TextView txvItemDescription;
-//        @InjectView(R.id.txv_item_spec)
-//        TextView txvItemSpec;
-
-        @InjectView(R.id.txv_item_price)
-        TextView txvItemPrice;
-
-        @InjectView(R.id.txv_demand_quantiry)
-        TextView txvDemandQuantiry;
-        @InjectView(R.id.txv_line_bugdet)
-        TextView txvLineBugdet;
-
-
-        public LineViewHolder(View view) {
-            ButterKnife.inject(this, view);
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -212,113 +127,67 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
         if (bundle != null) {
             mCuxDemandId = bundle.getInt("cux_demand_id");
             mCuxDemandData = db().select(mCuxDemandId);
-            //mProcessed = mCuxDemandData.getBoolean("processed");
-
-            List<LmisDataRow> lines = mCuxDemandData.getO2MRecord("cux_demand_lines").browseEach();
-            for (Object l : lines) {
-                mCuxDemandLines.add(l);
-            }
             initControls();
         }
     }
 
+    /**
+     * /**
+     * 初始化控件.
+     */
     private void initControls() {
+        initTabs();
+        initPager();
+    }
 
-        //设置主表内容
-
-        String applyNumber = mCuxDemandData.getString("apply_number");
-        mTxvApplyNumber.setText(applyNumber);
-        String applyStatus = mCuxDemandData.getString("apply_status");
-        mTxvApplyStatus.setText(applyStatus);
-        String projectName = mCuxDemandData.getString("project_name");
-        mTxvProjectName.setText(projectName);
-
-        String applySource = mCuxDemandData.getString("apply_source");
-        mTxvApplySource.setText(applySource);
-        String applyType = mCuxDemandData.getString("apply_type");
-        mTxvApplyType.setText(applyType);
-
-        String applyDeparment = mCuxDemandData.getString("apply_deparment");
-        mTxvApplyDeparment.setText(applyDeparment);
-        String applyDate = mCuxDemandData.getString("apply_date");
-        mTxvApplyDate.setText(applyDate.substring(0, 15));
-
-        String applierUser = mCuxDemandData.getString("applier_user");
-        mTxvApplierUser.setText(applierUser);
-        String submitDate = mCuxDemandData.getString("submit_date");
-        mTxvSubmitDate.setText(submitDate);
-
-        String applyRemark = mCuxDemandData.getString("apply_remark");
-        mTxvRemark.setText(applyRemark);
-        //预算总额
-
-        String bugdetTotal = mCuxDemandData.getString("bugdet_total");
-        mTxvBugdetTotal.setText(bugdetTotal);
-
-        //已审批额
-        String bugdetDemandTotal = mCuxDemandData.getString("bugdet_demand_total");
-        mTxvBugdetDemandTotal.setText(bugdetDemandTotal);
-
-        //实际成本
-
-        String bugdetActualCost = mCuxDemandData.getString("bugdet_actual_cost");
-        mTxvBugdetActualCost.setText(bugdetActualCost);
-
-        //需求额
-
-        String headerBugdet = mCuxDemandData.getString("header_bugdet");
-        mTxvHeaderBugdet.setText(headerBugdet);
-        //余额
-
-        String bugdetB1alance = mCuxDemandData.getString("bugdet_balance");
-        mTxvBugdetBalance.setText(bugdetB1alance);
-
-        //未审批额
-        //FIXME 算法
-        String leftBalanceDemandTotal = "0";
-        mTxvLeftBugdetDemandTotal.setText(leftBalanceDemandTotal);
-
-
-        mProcessed = mCuxDemandData.getBoolean("processed");
-
-        //设置子表内容
-        mCuxDemandLinesAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_cux_demand_detail_line_item, mCuxDemandLines) {
+    private void initPager() {
+        mPageAdapter = new CuxDemandDetailPageAdapter(getFragmentManager(), mCuxDemandData);
+        mPager.setAdapter(mPageAdapter);
+        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = convertView;
-                if (view == null) {
-                    view = getActivity().getLayoutInflater().inflate(getResource(), parent, false);
-                    view.setTag(new LineViewHolder(view));
-                }
-                view = handleRowView(view, position);
-                return view;
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
-        };
-        mCuxDemandLinesView.setAdapter(mCuxDemandLinesAdapter);
+
+            @Override
+            public void onPageSelected(int position) {
+                mTabHost.setCurrentTab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
-    private View handleRowView(View mView, final int position) {
-        LineViewHolder holder = (LineViewHolder) mView.getTag();
-        if (mCuxDemandLines.size() > 0) {
-            LmisDataRow line = (LmisDataRow) mCuxDemandLines.get(position);
+    /**
+     * 初始化tabs.
+     */
+    private void initTabs() {
+        mTabHost.setup();
+        //TODO 此处加上tab图标
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_HEADER").setIndicator("单据表头").setContent(R.id.tab_not_use));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_LINES").setIndicator("单据明细").setContent(R.id.tab_not_use));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_WF_MESSAGES").setIndicator("审批记录").setContent(R.id.tab_not_use));
+        mTabHost.setOnTabChangedListener(this);
+    }
 
-            String lineNumber = line.getString("line_number");
-            String itemDescription = line.getString("item_description");
-            String itemSpec = line.getString("item_spec");
-            String itemPrice = line.getString("item_price");
-            String demandQuantiry = line.getString("demand_quantiry");
-            String lineBugdet = line.getString("line_bugdet");
-//            holder.txvLineNumber.setText(lineNumber);
-            holder.txvItemDescription.setText(itemSpec);
-//            holder.txvItemSpec.setText(itemSpec);
-            holder.txvItemPrice.setText(itemPrice);
-            holder.txvDemandQuantiry.setText(demandQuantiry);
-            holder.txvLineBugdet.setText(lineBugdet);
+
+    /**
+     * On tab changed.
+     *
+     * @param s the s
+     */
+    @Override
+    public void onTabChanged(String s) {
+        if (s.equals("TAB_CUX_DEMAND_DETAIL_HEADER")) {
+            mPager.setCurrentItem(0);
+        } else if (s.equals("TAB_CUX_DEMAND_DETAIL_LINES")) {
+            mPager.setCurrentItem(1);
+        } else if (s.equals("TAB_CUX_DEMAND_DETAIL_WF_MESSAGES")) {
+            mPager.setCurrentItem(2);
         }
-
-        return mView;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -361,13 +230,6 @@ public class CuxDemandDetail extends BaseFragment implements DialogAudit.NoticeD
                     Log.d(TAG, "CuxDemandDetail->datasetChangeReceiver@onReceive");
                     LmisDataRow row = db().select(Integer.parseInt(id));
                     mCuxDemandData = row;
-                    //更新界面上state的显示
-//                    String name = mExpenseData.getString("name");
-//                    String state = mExpenseData.getString("state");
-//                    String status = getStatus(state);
-//                    TextView txvName = (TextView) mView.findViewById(R.id.txvExpenseName);
-//
-//                    txvName.setText(name + "(" + status + ")");
                 }
             } catch (Exception e) {
             }

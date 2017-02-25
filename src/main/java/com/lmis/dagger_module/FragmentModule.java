@@ -11,6 +11,9 @@ import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
 import com.lmis.addons.cux_demand.CuxDemandDetail;
 import com.lmis.addons.cux_demand.CuxDemandList;
+import com.lmis.addons.cux_demand.FragmentCuxDemandDetailHeader;
+import com.lmis.addons.cux_demand.FragmentCuxDemandDetailLines;
+import com.lmis.addons.cux_demand.FragmentCuxDemandDetailWorkflowMessages;
 import com.lmis.addons.dashboard.DashBoard;
 import com.lmis.addons.dashboard.DashBoardTurnover;
 import com.lmis.addons.goods_exception.GoodsExceptionList;
@@ -71,7 +74,11 @@ import dagger.Provides;
                 CarryingBillEdit.class,
                 WfNoticicationList.class,
                 CuxDemandList.class,
-                CuxDemandDetail.class
+                CuxDemandDetail.class,
+                FragmentCuxDemandDetailHeader.class,
+                FragmentCuxDemandDetailLines.class,
+                FragmentCuxDemandDetailWorkflowMessages.class
+
 
         })
 public class FragmentModule {
