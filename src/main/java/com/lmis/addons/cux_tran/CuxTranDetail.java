@@ -19,9 +19,7 @@ import android.widget.Toast;
 
 import com.lmis.LmisArguments;
 import com.lmis.R;
-import com.lmis.addons.cux_demand.CuxDemandDetailPageAdapter;
 import com.lmis.addons.cux_demand.CuxDemandList;
-import com.lmis.addons.cux_demand.CuxDemandPlatformHeaderDB;
 import com.lmis.addons.shared.DialogAudit;
 import com.lmis.addons.shared.DialogAuditReject;
 import com.lmis.addons.wf_notification.WfNoticicationList;
@@ -29,7 +27,7 @@ import com.lmis.addons.wf_notification.WfNotificationDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisHelper;
 import com.lmis.orm.LmisValues;
-import com.lmis.providers.cux_demand.CuxDemandProvider;
+import com.lmis.providers.cux_tran.CuxTranProvider;
 import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.support.BaseFragment;
@@ -49,10 +47,10 @@ import us.monoid.json.JSONObject;
 
 public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeListener, DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
 
-    public static final String TAG = "CuxDemandDetail";
+    public static final String TAG = "CuxTranDetail";
     View mView = null;
-    Integer mCuxDemandId = null;
-    LmisDataRow mCuxDemandData = null;
+    Integer mCuxTranId = null;
+    LmisDataRow mCuxTranData = null;
 
     //是否已操作
     Boolean mProcessed = false;
@@ -63,11 +61,11 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
     //工作流审批拒绝
     WorkflowOperation wfRejectOperator = null;
 
-    CuxDemandDetailPageAdapter mPageAdapter;
+    CuxTranDetailPageAdapter mPageAdapter;
 
-    @InjectView(R.id.tab_host_cux_detail)
+    @InjectView(R.id.tab_host_cux_tran_detail)
     TabHost mTabHost;
-    @InjectView(R.id.pager_cux_demand_detail)
+    @InjectView(R.id.pager_cux_tran_detail)
     ViewPager mPager;
 
     @Override
@@ -114,18 +112,18 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_cux_demand_detail, container, false);
+        mView = inflater.inflate(R.layout.fragment_cux_tran_detail, container, false);
         ButterKnife.inject(this, mView);
         init();
         return mView;
     }
 
     private void init() {
-        Log.d(TAG, "CuxDemandDetail->init()");
+        Log.d(TAG, "CuxTranDetail->init()");
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mCuxDemandId = bundle.getInt("cux_demand_id");
-            mCuxDemandData = db().select(mCuxDemandId);
+            mCuxTranId = bundle.getInt("cux_tran_id");
+            mCuxTranData = db().select(mCuxTranId);
             initControls();
         }
     }
@@ -140,7 +138,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
     }
 
     private void initPager() {
-        mPageAdapter = new CuxDemandDetailPageAdapter(getFragmentManager(), mCuxDemandData);
+        mPageAdapter = new CuxTranDetailPageAdapter(getFragmentManager(), mCuxTranData);
         mPager.setAdapter(mPageAdapter);
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -165,9 +163,9 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
     private void initTabs() {
         mTabHost.setup();
         //TODO 此处加上tab图标
-        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_HEADER").setIndicator("单据表头").setContent(R.id.tab_not_use));
-        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_LINES").setIndicator("单据明细").setContent(R.id.tab_not_use));
-        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_DEMAND_DETAIL_WF_MESSAGES").setIndicator("审批记录").setContent(R.id.tab_not_use));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_TRAN_DETAIL_HEADER").setIndicator("单据表头").setContent(R.id.tab_not_use));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_TRAN_DETAIL_LINES").setIndicator("单据明细").setContent(R.id.tab_not_use));
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_CUX_TRAN_DETAIL_WF_MESSAGES").setIndicator("审批记录").setContent(R.id.tab_not_use));
         mTabHost.setOnTabChangedListener(this);
     }
 
@@ -179,11 +177,11 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
      */
     @Override
     public void onTabChanged(String s) {
-        if (s.equals("TAB_CUX_DEMAND_DETAIL_HEADER")) {
+        if (s.equals("TAB_CUX_TRAN_DETAIL_HEADER")) {
             mPager.setCurrentItem(0);
-        } else if (s.equals("TAB_CUX_DEMAND_DETAIL_LINES")) {
+        } else if (s.equals("TAB_CUX_TRAN_DETAIL_LINES")) {
             mPager.setCurrentItem(1);
-        } else if (s.equals("TAB_CUX_DEMAND_DETAIL_WF_MESSAGES")) {
+        } else if (s.equals("TAB_CUX_TRAN_DETAIL_WF_MESSAGES")) {
             mPager.setCurrentItem(2);
         }
     }
@@ -194,12 +192,12 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
         // handle item selection
         switch (item.getItemId()) {
             case R.id.menu_audit_pass:
-                Log.d(TAG, "CuxDemandDetail#onOptionsItemSelected#pass");
+                Log.d(TAG, "CuxTranDetail#onOptionsItemSelected#pass");
                 // 编写审批代码
                 showPassAuditDialog();
                 return true;
             case R.id.menu_audit_reject:
-                Log.d(TAG, "CuxDemandDetail#onOptionsItemSelected#reject");
+                Log.d(TAG, "CuxTranDetail#onOptionsItemSelected#reject");
                 showRejectAuditDialog();
                 return true;
             default:
@@ -225,10 +223,10 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
             try {
                 String id = intent.getExtras().getString("id");
                 String model = intent.getExtras().getString("model");
-                if (model.equals("CuxDemand") && mCuxDemandId == Integer.parseInt(id)) {
-                    Log.d(TAG, "CuxDemandDetail->datasetChangeReceiver@onReceive");
+                if (model.equals("CuxTran") && mCuxTranId == Integer.parseInt(id)) {
+                    Log.d(TAG, "CuxTranDetail->datasetChangeReceiver@onReceive");
                     LmisDataRow row = db().select(Integer.parseInt(id));
-                    mCuxDemandData = row;
+                    mCuxTranData = row;
                 }
             } catch (Exception e) {
             }
@@ -246,7 +244,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_cux_demand_detail, menu);
+        inflater.inflate(R.menu.menu_fragment_cux_tran_detail, menu);
         setMenuVisible(menu, !mProcessed);
     }
 
@@ -274,7 +272,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
      * */
     public class WorkflowOperation extends AsyncTask<Void, Void, Boolean> {
         boolean isConnection = true;
-        LmisHelper mLmisHelper = null;
+        LmisHelper lmisHelper = null;
         WfNotificationDB wfDB = null;
         ProgressDialog mProgressDialog = null;
         String mSignal = null;
@@ -283,9 +281,9 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
         public WorkflowOperation(String auditSignal, String auditNote) {
             mSignal = auditSignal;
             mAuditNote = auditNote;
-            mLmisHelper = db().getLmisInstance();
+            lmisHelper = db().getLmisInstance();
             wfDB = new WfNotificationDB(scope.context());
-            if (mLmisHelper == null)
+            if (lmisHelper == null)
                 isConnection = false;
 
             String working_text = "处理中...";
@@ -309,7 +307,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
             //Param 2  : user_name
             String username = user.getUsername();
             //param 3 : notification_id
-            String wfItemkey = mCuxDemandData.getString("wf_itemkey");
+            String wfItemkey = mCuxTranData.getString("wf_itemkey");
             String[] whereArgs = {wfItemkey};
             List<LmisDataRow> wfRows = wfDB.select("item_key = ?", whereArgs);
             Integer wfNotificationId = wfRows.get(0).getInt("id");
@@ -326,7 +324,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
             String retCode = "-1";
             String retMessage = "";
             try {
-                JSONObject ret = (JSONObject) mLmisHelper.call_kw("audit", arguments);
+                JSONObject ret = (JSONObject) lmisHelper.call_kw("audit", arguments);
                 retCode = ret.getString("x_ret_code");
                 retMessage = ret.getString("x_ret_message");
                 execSuccess = retCode.equals("0");
@@ -342,7 +340,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
 
             if (execSuccess) {
                 try {
-                    db().update(values, mCuxDemandId);
+                    db().update(values, mCuxTranId);
                     wfDB.update(values, wfNotificationId);
                 } catch (Exception e) {
                 }
@@ -357,7 +355,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
                 scope.main().supportInvalidateOptionsMenu();
 
                 //重新同步数据
-                scope.main().requestSync(CuxDemandProvider.AUTHORITY);
+                scope.main().requestSync(CuxTranProvider.AUTHORITY);
                 scope.main().requestSync(WfNotificationProvider.AUTHORITY);
 
                 DrawerListener drawer = (DrawerListener) getActivity();
@@ -376,7 +374,7 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
 
     @Override
     public Object databaseHelper(Context context) {
-        return new CuxDemandPlatformHeaderDB(context);
+        return new CuxTranHeaderDB(context);
     }
 
     @Override
@@ -397,6 +395,5 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
         dialog.setmListener(this);
         dialog.show(getFragmentManager(), "auditDialogReject");
     }
-
 }
 

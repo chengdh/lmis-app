@@ -334,9 +334,9 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mCuxTranObjects.get(position);
         BaseFragment detail;
-        detail = new CuxDemandDetail();
+        detail = new CuxTranDetail();
         Bundle bundle = new Bundle();
-        bundle.putInt("require_id", row.getInt("id"));
+        bundle.putInt("cux_tran_id", row.getInt("id"));
         bundle.putInt("position", position);
         detail.setArguments(bundle);
 

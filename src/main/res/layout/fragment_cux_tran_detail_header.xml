@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txv_require_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="5dp"
+            android:text="DE0001"
+            android:textColor="#498BF4"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txv_require_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:padding="5dp"
+            android:text="DE0001"
+            android:textColor="#498BF4"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/txv_project_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="项目名称"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="计划来源:" />
+
+            <TextView
+                android:id="@+id/txv_categorie"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="运行部"
+                android:textColor="#498BF4" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="计划类型:" />
+
+            <TextView
+                android:id="@+id/txv_require_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="2017-01-01"
+                android:textColor="#498BF4" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="申请部门:" />
+
+            <TextView
+                android:id="@+id/txv_require_deparment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="运行部"
+                android:textColor="#498BF4" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="编制时间:" />
+
+            <TextView
+                android:id="@+id/txv_require_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="2017-01-01"
+                android:textColor="#498BF4" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="需求人员:" />
+
+
+            <TextView
+                android:id="@+id/txv_require_person"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="张三"
+                android:textColor="#498BF4" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="创建日期:" />
+
+            <TextView
+                android:id="@+id/txv_creation_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="10000"
+                android:textColor="#498BF4" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="备注:" />
+
+            <TextView
+                android:id="@+id/txv_remark"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="10000"
+                android:textColor="#498BF4" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="8">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="项目总额:" />
+
+
+            <TextView
+                android:id="@+id/txv_bugdet_balance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="张三"
+                android:textColor="#498BF4" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="可用预算:" />
+
+            <TextView
+                android:id="@+id/txv_bugdet_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="10000"
+                android:textColor="#498BF4" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="8">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="本次领用:" />
+
+            <TextView
+                android:id="@+id/txv_header_bugdet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:padding="5dp"
+                android:text="张三"
+                android:textColor="#498BF4" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

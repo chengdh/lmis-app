@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="14">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:text="物料名称" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:text="规格型号" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:text="单位" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:text="申请数量" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="参考成本"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="2"-->
+            <!--android:gravity="center"-->
+            <!--android:text="支出类型"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_drop_shadow"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <ListView
+            android:id="@+id/lst_cux_tran_lines"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:smoothScrollbar="true" />
+    </LinearLayout>
+</LinearLayout>

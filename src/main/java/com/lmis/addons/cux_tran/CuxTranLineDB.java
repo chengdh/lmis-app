@@ -30,7 +30,7 @@ public class CuxTranLineDB extends LmisDatabase{
     public List<LmisColumn> getModelColumns() {
 
         List<LmisColumn> cols = new ArrayList<>();
-        cols.add(new LmisColumn("require_id", "require id", LmisFields.integer(16), true));
+        cols.add(new LmisColumn("cux_tran_id", "cux tran id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("line_number", "line number", LmisFields.integer(16), true));
         cols.add(new LmisColumn("organization_id", "organization id", LmisFields.integer(16), true));
         cols.add(new LmisColumn("inventory_item_id", "item id", LmisFields.integer(16), true));
@@ -43,8 +43,6 @@ public class CuxTranLineDB extends LmisDatabase{
         cols.add(new LmisColumn("task_number", "task number", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("apply_number", "apply_number", LmisFields.varchar(30), true));
         cols.add(new LmisColumn("apply_line_num", "apply line num", LmisFields.integer(16), true));
-        cols.add(new LmisColumn("apply_qty", "apply qty", LmisFields.integer(16), true));
-
         cols.add(new LmisColumn("apply_qty", "apply qty", LmisFields.integer(16), true));
 
         //物料编码

@@ -122,6 +122,8 @@ public class CuxDemandSyncService extends InjectingService implements PerformSyn
         }
     }
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         IBinder ret = getSyncAdapter().getSyncAdapterBinder();

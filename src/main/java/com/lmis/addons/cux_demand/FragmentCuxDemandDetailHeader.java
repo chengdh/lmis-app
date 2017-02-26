@@ -134,7 +134,7 @@ public class FragmentCuxDemandDetailHeader extends BaseFragment {
         String submitDate = mCuxDemandData.getString("submit_date");
         mTxvSubmitDate.setText(submitDate);
 
-        String applyRemark = mCuxDemandData.getString("apply_remark");
+        String applyRemark = mCuxDemandData.getString("remark");
         mTxvRemark.setText(applyRemark);
         //预算总额
 

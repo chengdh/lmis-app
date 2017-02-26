@@ -15,10 +15,13 @@ import com.fizzbuzz.android.dagger.InjectingService;
 import com.lmis.LmisArguments;
 import com.lmis.MainActivity;
 import com.lmis.R;
+import com.lmis.addons.cux_demand.CuxDemandPlatformHeaderDB;
+import com.lmis.addons.cux_tran.CuxTranHeaderDB;
 import com.lmis.addons.message.MessageDB;
 import com.lmis.addons.wf_notification.WfNotificationDB;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.dagger_module.ServiceModule;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisHelper;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.LmisUser;
@@ -28,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import us.monoid.json.JSONArray;
 
 /**
  * Created by chengdh on 2017/2/17.
@@ -65,6 +70,7 @@ public class WfNotificationSyncService extends InjectingService implements Perfo
                 int affected_rows = lmis.getAffectedRows();
                 Log.d(TAG, "WfNotifySyncService[arguments]:" + arguments.toString());
                 Log.d(TAG, "WfNotifySyncService->affected_rows:" + affected_rows);
+                syncCux(context,account);
                 List<Integer> affected_ids = lmis.getAffectedIds();
                 boolean notification = true;
                 ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
@@ -97,6 +103,54 @@ public class WfNotificationSyncService extends InjectingService implements Perfo
         if (user.getAndroidName().equals(account.name)) {
             context.sendBroadcast(intent);
         }
+    }
+
+    private void syncCux(Context context, Account account){
+        LmisUser user = LmisAccountManager.getAccountDetail(context, account.name);
+        try {
+            WfNotificationDB wfDB = new WfNotificationDB(context);
+            CuxDemandPlatformHeaderDB cuxDemandDb = new CuxDemandPlatformHeaderDB(context);
+            CuxTranHeaderDB cuxTranDb = new CuxTranHeaderDB(context);
+            wfDB.setAccountUser(user);
+            cuxDemandDb.setAccountUser(user);
+            cuxTranDb.setAccountUser(user);
+            LmisHelper lmisCuxDemand = cuxDemandDb.getLmisInstance();
+            LmisHelper lmisCuxTran = cuxTranDb.getLmisInstance();
+            if (lmisCuxDemand == null) {
+                return;
+            }
+            if (lmisCuxTran== null) {
+                return;
+            }
+
+
+            //获取wfDB中status=OPEN的数据
+            String[] whereArgs = {};
+            List<LmisDataRow> wfNotifications = wfDB.select("status='OPEN'", whereArgs);
+            if (wfNotifications.size() == 0 && user.getAndroidName().equals(account.name)) {
+                return;
+            }
+
+            JSONArray itemKeys = new JSONArray();
+            //获取item_key数组
+            for (LmisDataRow wf : wfNotifications) {
+                itemKeys.put(wf.getString("item_key"));
+            }
+
+
+            //获取wf_notificationDB中的item_key
+            LmisArguments arguments = new LmisArguments();
+            arguments.add(itemKeys);
+
+            //数据库中原有的数据也需要更新
+            List<Integer> ids = cuxDemandDb.ids();
+            lmisCuxDemand.syncWithMethod("unread_bills", arguments);
+            lmisCuxTran.syncWithMethod("unread_bills", arguments);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
     }
 
     @Override

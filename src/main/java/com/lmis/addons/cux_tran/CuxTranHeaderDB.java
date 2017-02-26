@@ -71,6 +71,9 @@ public class CuxTranHeaderDB extends LmisDatabase {
         //工作流关联ID
         cols.add(new LmisColumn("wf_itemkey", "workflow item key", LmisFields.varchar(60), true));
 
+
+        cols.add(new LmisColumn("cux_tran_lines", "line_ids", LmisFields.oneToMany(new CuxTranLineDB(mContext) )));
+
         //是否已查看
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
         //查看时间

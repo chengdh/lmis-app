@@ -23,11 +23,16 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
+import com.lmis.addons.cux_demand.CuxDemandDetail;
+import com.lmis.addons.cux_demand.CuxDemandPlatformHeaderDB;
+import com.lmis.addons.cux_tran.CuxTranDetail;
+import com.lmis.addons.cux_tran.CuxTranHeaderDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.providers.wf_notification.WfNotificationProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
+import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.drawer.DrawerItem;
 
@@ -235,7 +240,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
             String subject = row_data.getString("subject");
             String messageType = row_data.getString("message_type");
             String fromUser = row_data.getString("from_user");
-            String beginDate = row_data.getString("begin_date").substring(0,10);
+            String beginDate = row_data.getString("begin_date").substring(0, 10);
             holder.txvSubject.setText(subject);
             holder.txvBeginDate.setText(beginDate);
             holder.txvFromUser.setText("[" + fromUser + "]");
@@ -320,22 +325,50 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//        if (position == 0)
-//            return;
-//
-//        position -= mListView.getRefreshableView().getHeaderViewsCount();
-//
-//        mSelectedItemPosition = position;
-//        LmisDataRow row = (LmisDataRow) mWfNotificationObjects.get(position);
-//        BaseFragment detail;
-//        detail = new MessageDetail();
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("message_id", row.getInt("id"));
-//        bundle.putInt("position", position);
-//        detail.setArguments(bundle);
-//
-//        FragmentListener listener = (FragmentListener) getActivity();
-//        listener.startDetailFragment(detail);
+        if (position == 0)
+            return;
+
+        BaseFragment detail = null;
+        position -= mListView.getRefreshableView().getHeaderViewsCount();
+
+        mSelectedItemPosition = position;
+        LmisDataRow row = (LmisDataRow) mWfNotificationObjects.get(position);
+        String itemType = row.getString("message_type");
+        String itemKey = row.getString("item_key");
+        switch (itemType) {
+            case "CUXPOSA":
+                CuxDemandPlatformHeaderDB cuxDemandDB = new CuxDemandPlatformHeaderDB(scope.context());
+                String[] wArgs1 = {itemKey};
+                List<LmisDataRow> cuxDemandRet = cuxDemandDB.select("wf_itemkey = ?", wArgs1);
+                if (cuxDemandRet.size() > 0) {
+                    Integer cuxDemandID = cuxDemandRet.get(0).getInt("id");
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("cux_demand_id", cuxDemandID);
+                    bundle.putInt("position", position);
+                    detail = new CuxDemandDetail();
+                    detail.setArguments(bundle);
+                }
+                break;
+            case "CUXPOSB":
+                CuxTranHeaderDB cuxTranDB = new CuxTranHeaderDB(scope.context());
+                String[] wArgs = {itemKey};
+                List<LmisDataRow> cuxTranRet = cuxTranDB.select("wf_itemkey = ?", wArgs);
+                if (cuxTranRet.size() > 0) {
+                    Integer cuxTranID = cuxTranRet.get(0).getInt("id");
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("cux_tran_id", cuxTranID);
+                    bundle.putInt("position", position);
+                    detail = new CuxTranDetail();
+                    detail.setArguments(bundle);
+                    break;
+                }
+            default:
+                ;
+
+        }
+
+        FragmentListener listener = (FragmentListener) getActivity();
+        listener.startDetailFragment(detail);
     }
 
     @Override
