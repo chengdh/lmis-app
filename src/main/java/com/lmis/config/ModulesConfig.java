@@ -18,12 +18,8 @@
  */
 package com.lmis.config;
 
-import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.cux_demand.CuxDemandList;
-import com.lmis.addons.dashboard.DashBoard;
-import com.lmis.addons.goods_exception.GoodsExceptionList;
-import com.lmis.addons.inventory.InventoryMoveList;
-import com.lmis.addons.message.MessageList;
+import com.lmis.addons.cux_tran.CuxTranList;
 import com.lmis.addons.wf_notification.WfNoticicationList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
@@ -47,5 +43,6 @@ public class ModulesConfig extends ModulesConfigHelper {
 
         add(new Module("module_wf_notification", "workflow notification", new WfNoticicationList(), 0), true);
         add(new Module("module_cux_demand", "cux demand", new CuxDemandList(), 0), true);
+        add(new Module("module_cux_tran", "cux tran", new CuxTranList(), 0), true);
     }
 }

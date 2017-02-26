@@ -1,4 +1,4 @@
-package com.lmis.addons.cux_demand;
+package com.lmis.addons.cux_tran;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,8 +23,9 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
+import com.lmis.addons.cux_demand.CuxDemandDetail;
 import com.lmis.orm.LmisDataRow;
-import com.lmis.providers.cux_demand.CuxDemandProvider;
+import com.lmis.providers.cux_tran.CuxTranProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
@@ -42,9 +43,9 @@ import butterknife.InjectView;
 /**
  * Created by chengdh on 14-8-27.
  */
-public class CuxDemandList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class CuxTranList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    public static final String TAG = "CuxDemandList";
+    public static final String TAG = "CuxTranList";
 
 
     int mSelectedItemPosition = -1;
@@ -57,15 +58,15 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     LmisListAdapter mListViewAdapter = null;
 
-    @InjectView(R.id.list_cux_demand)
+    @InjectView(R.id.list_cux_tran)
     PullToRefreshListView mListView;
 
-    @InjectView(R.id.txv_cux_demand_blank)
+    @InjectView(R.id.txv_cux_tran_blank)
     TextView mTxvBlank;
 
-    List<Object> mCuxDemandObjects = new ArrayList<Object>();
+    List<Object> mCuxTranObjects = new ArrayList<Object>();
 
-    CuxDemandLoader mCuxDemandLoader = null;
+    CuxTranLoader mCuxDemandLoader = null;
 
 
     HashMap<Integer, Boolean> mMultiSelectedRows = new HashMap<Integer, Boolean>();
@@ -90,13 +91,13 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
     static class ViewHolder {
         @InjectView(R.id.txv_project_name)
         TextView txvProjectName;
-        @InjectView(R.id.txv_apply_department)
-        TextView txvApplyDept;
-        @InjectView(R.id.txv_applier_user)
+        @InjectView(R.id.txv_require_department)
+        TextView txvRequireDept;
+        @InjectView(R.id.txv_require_person)
         TextView txvUser;
 
-        @InjectView(R.id.txv_apply_date)
-        TextView txvApplyDate;
+        @InjectView(R.id.txv_require_date)
+        TextView txvRequireDate;
 
         @InjectView(R.id.txv_header_bugdet)
         TextView txvHeaderBugdet;
@@ -159,7 +160,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
             mSelectedItemPosition = savedInstanceState.getInt("mSelectedItemPosition", -1);
         }
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_cux_demand_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_cux_tran_list, container, false);
         ButterKnife.inject(this, mView);
         init();
         return mView;
@@ -175,7 +176,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         mListView.getRefreshableView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.getRefreshableView().setOnItemLongClickListener(this);
         mListView.getRefreshableView().setMultiChoiceModeListener(mMultiChoiceListener);
-        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_cux_demand_list_item, mCuxDemandObjects) {
+        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_cux_tran_list_item, mCuxTranObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = convertView;
@@ -192,7 +193,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-                scope.main().requestSync(CuxDemandProvider.AUTHORITY);
+                scope.main().requestSync(CuxTranProvider.AUTHORITY);
             }
 
             @Override
@@ -206,7 +207,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private void initData() {
-        Log.d(TAG, "CuxDemandList->initData()");
+        Log.d(TAG, "CuxTranList->initData()");
         String title = "Draft";
 
         Bundle bundle = getArguments();
@@ -225,25 +226,25 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
                 }
             }
             scope.main().setTitle(title);
-            mCuxDemandLoader = new CuxDemandLoader(mType);
+            mCuxDemandLoader = new CuxTranLoader(mType);
             mCuxDemandLoader.execute((Void) null);
         }
     }
 
     private View handleRowView(View mView, final int position) {
         ViewHolder holder = (ViewHolder) mView.getTag();
-        if (mCuxDemandObjects.size() > 0) {
-            LmisDataRow row_data = (LmisDataRow) mCuxDemandObjects.get(position);
+        if (mCuxTranObjects.size() > 0) {
+            LmisDataRow row_data = (LmisDataRow) mCuxTranObjects.get(position);
 
-            String projectName = row_data.getString("project_name");
-            String applyDept = row_data.getString("apply_deparment");
-            String applyUser = row_data.getString("applier_user");
-            String applyDate = row_data.getString("apply_date");
+            String projectName = row_data.getString("name");
+            String requireDept = row_data.getString("require_deparment");
+            String requirePerson = row_data.getString("require_person");
+            String requireDate = row_data.getString("require_date");
             String headerBugdet = row_data.getString("header_bugdet");
             holder.txvProjectName.setText(projectName);
-            holder.txvApplyDept.setText(applyDept);
-            holder.txvUser.setText("[" + applyUser + "]");
-            holder.txvApplyDate.setText(applyDate.substring(0, 10));
+            holder.txvRequireDept.setText(requireDept);
+            holder.txvUser.setText("[" + requirePerson + "]");
+            holder.txvRequireDate.setText(requireDate.substring(0, 10));
             holder.txvHeaderBugdet.setText("RMB:" + headerBugdet);
         }
 
@@ -252,7 +253,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public Object databaseHelper(Context context) {
-        return new CuxDemandPlatformHeaderDB(context);
+        return new CuxTranHeaderDB(context);
     }
 
 
@@ -260,7 +261,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
-        drawerItems.add(new DrawerItem(TAG, "需求计划", true));
+        drawerItems.add(new DrawerItem(TAG, "领料单", true));
         drawerItems.add(new DrawerItem(TAG, "待处理", count(MType.DRAFT, context), R.drawable.ic_menu_message_unread, getFragment("draft")));
         drawerItems.add(new DrawerItem(TAG, "已处理", count(MType.PROCESSED, context), R.drawable.ic_menu_message_read, getFragment("processed")));
         return drawerItems;
@@ -304,7 +305,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
      * @return the fragment
      */
     private BaseFragment getFragment(String value) {
-        CuxDemandList list = new CuxDemandList();
+        CuxTranList list = new CuxTranList();
         Bundle bundle = new Bundle();
         bundle.putString("type", value);
         list.setArguments(bundle);
@@ -313,7 +314,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
 
     private int count(MType type, Context context) {
         int count = 0;
-        CuxDemandPlatformHeaderDB db = (CuxDemandPlatformHeaderDB) databaseHelper(context);
+        CuxTranHeaderDB db = (CuxTranHeaderDB) databaseHelper(context);
         String where = null;
         String whereArgs[] = null;
         HashMap<String, Object> obj = getWhere(type);
@@ -331,11 +332,11 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         position -= mListView.getRefreshableView().getHeaderViewsCount();
 
         mSelectedItemPosition = position;
-        LmisDataRow row = (LmisDataRow) mCuxDemandObjects.get(position);
+        LmisDataRow row = (LmisDataRow) mCuxTranObjects.get(position);
         BaseFragment detail;
         detail = new CuxDemandDetail();
         Bundle bundle = new Bundle();
-        bundle.putInt("cux_demand_id", row.getInt("id"));
+        bundle.putInt("require_id", row.getInt("id"));
         bundle.putInt("position", position);
         detail.setArguments(bundle);
 
@@ -348,10 +349,10 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         return false;
     }
 
-    public class CuxDemandLoader extends AsyncTask<Void, Void, Boolean> {
+    public class CuxTranLoader extends AsyncTask<Void, Void, Boolean> {
         MType mType = null;
 
-        public CuxDemandLoader(MType type) {
+        public CuxTranLoader(MType type) {
             mType = type;
         }
 
@@ -362,16 +363,16 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "");
-            mCuxDemandObjects.clear();
-            mCuxDemandObjects.addAll(result);
+            mCuxTranObjects.clear();
+            mCuxTranObjects.addAll(result);
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             Log.d(TAG, "CuxTranLoader#onPostExecute");
-            mListViewAdapter.notifiyDataChange(mCuxDemandObjects);
-            mTxvBlank.setVisibility(mCuxDemandObjects.size() > 0 ? View.GONE : View.VISIBLE);
+            mListViewAdapter.notifiyDataChange(mCuxTranObjects);
+            mTxvBlank.setVisibility(mCuxTranObjects.size() > 0 ? View.GONE : View.VISIBLE);
             mCuxDemandLoader = null;
         }
 
@@ -381,32 +382,32 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
     public void onResume() {
         super.onResume();
         scope.context().registerReceiver(datasetChangeReceiver, new IntentFilter(DataSetChangeReceiver.DATA_CHANGED));
-        scope.context().registerReceiver(cuxDemandSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
+        scope.context().registerReceiver(cuxTranSyncFinish, new IntentFilter(SyncFinishReceiver.SYNC_FINISH));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         scope.context().unregisterReceiver(datasetChangeReceiver);
-        scope.context().unregisterReceiver(cuxDemandSyncFinish);
+        scope.context().unregisterReceiver(cuxTranSyncFinish);
         Bundle outState = new Bundle();
         outState.putInt("mSelectedItemPosition", mSelectedItemPosition);
         onSaveInstanceState(outState);
 
     }
 
-    private SyncFinishReceiver cuxDemandSyncFinish = new SyncFinishReceiver() {
+    private SyncFinishReceiver cuxTranSyncFinish = new SyncFinishReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.d(TAG, "CuxDemandList->SyncFinishReceiverReceiver@onReceive");
+            Log.d(TAG, "CuxTranList->SyncFinishReceiverReceiver@onReceive");
             scope.main().refreshDrawer(TAG);
             mListView.onRefreshComplete();
             mListViewAdapter.clear();
-            mCuxDemandObjects.clear();
-            mListViewAdapter.notifiyDataChange(mCuxDemandObjects);
-            new CuxDemandLoader(mType).execute();
+            mCuxTranObjects.clear();
+            mListViewAdapter.notifiyDataChange(mCuxTranObjects);
+            new CuxTranLoader(mType).execute();
         }
     };
 
@@ -416,14 +417,14 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         public void onReceive(Context context, Intent intent) {
             try {
 
-                Log.d(TAG, "CuxDemandList->datasetChangeReceiver@onReceive");
+                Log.d(TAG, "CuxTranList->datasetChangeReceiver@onReceive");
 
                 String id = intent.getExtras().getString("id");
                 String model = intent.getExtras().getString("model");
-                if (model.equals("CuxDemand")) {
+                if (model.equals("CuxTran")) {
                     LmisDataRow row = db().select(Integer.parseInt(id));
-                    mCuxDemandObjects.add(0, row);
-                    mListViewAdapter.notifiyDataChange(mCuxDemandObjects);
+                    mCuxTranObjects.add(0, row);
+                    mListViewAdapter.notifiyDataChange(mCuxTranObjects);
                 }
 
             } catch (Exception e) {

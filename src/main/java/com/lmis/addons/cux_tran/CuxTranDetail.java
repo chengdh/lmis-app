@@ -1,4 +1,4 @@
-package com.lmis.addons.cux_demand;
+package com.lmis.addons.cux_tran;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import com.lmis.LmisArguments;
 import com.lmis.R;
+import com.lmis.addons.cux_demand.CuxDemandDetailPageAdapter;
+import com.lmis.addons.cux_demand.CuxDemandList;
+import com.lmis.addons.cux_demand.CuxDemandPlatformHeaderDB;
 import com.lmis.addons.shared.DialogAudit;
 import com.lmis.addons.shared.DialogAuditReject;
 import com.lmis.addons.wf_notification.WfNoticicationList;
@@ -44,7 +47,7 @@ import us.monoid.json.JSONObject;
  * Created by chengdh on 2017/2/19.
  */
 
-public class CuxDemandDetail extends BaseFragment implements TabHost.OnTabChangeListener, DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
+public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeListener, DialogAudit.NoticeDialogListener, DialogAuditReject.NoticeDialogListener {
 
     public static final String TAG = "CuxDemandDetail";
     View mView = null;

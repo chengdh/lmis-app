@@ -193,5 +193,8 @@
     <string name="cux_demand_sync_notify_body">%1$d张张需求计划单</string>
     <string name="confirm_audit">确定</string>
     <string name="cux_demand_processed_text">单据审批完成</string>
+    <string name="cux_tran_sync_notify_title">%1$d张领料单</string>
+    <string name="cux_tran_sync_notify_body">%1$d张领料单</string>
+    <string name="label_cux_tran_blank">未查到领料单</string>
 
 </resources>

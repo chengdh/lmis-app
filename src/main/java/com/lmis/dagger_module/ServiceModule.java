@@ -6,6 +6,7 @@ import com.fizzbuzz.android.dagger.InjectingService;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.wf_notification.WfNoticicationList;
 import com.lmis.services.CuxDemandSyncService;
+import com.lmis.services.CuxTranSyncService;
 import com.lmis.services.IlConfigSyncService;
 import com.lmis.services.InventoryOutSyncService;
 import com.lmis.services.MessageSyncService;
@@ -31,7 +32,8 @@ import dagger.Provides;
                 MessageSyncService.class,
                 InventoryOutSyncService.class,
                 WfNotificationSyncService.class,
-                CuxDemandSyncService.class
+                CuxDemandSyncService.class,
+                CuxTranSyncService.class
         })
 
 public class ServiceModule {

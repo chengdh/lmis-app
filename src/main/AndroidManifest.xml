@@ -191,7 +191,7 @@
             android:label="@string/label_message"
             android:syncable="true" />
 
-          <!-- cux demand sync service-->
+        <!-- cux demand sync service-->
         <service
             android:name="com.lmis.services.CuxDemandSyncService" android:exported="true">
             <intent-filter>
@@ -211,6 +211,25 @@
             android:label="@string/label_cux_demand"
             android:syncable="true" />
 
+        <!-- cux tran sync service-->
+        <service
+            android:name="com.lmis.services.CuxTranSyncService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_cux_tran" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.cux_tran.CuxTranProvider"
+            android:authorities="com.lmis.providers.cux_tran"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_cux_tran"
+            android:syncable="true" />
 
     </application>
 </manifest>

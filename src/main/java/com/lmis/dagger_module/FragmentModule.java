@@ -14,6 +14,7 @@ import com.lmis.addons.cux_demand.CuxDemandList;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailHeader;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailLines;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailWorkflowMessages;
+import com.lmis.addons.cux_tran.CuxTranList;
 import com.lmis.addons.dashboard.DashBoard;
 import com.lmis.addons.dashboard.DashBoardTurnover;
 import com.lmis.addons.goods_exception.GoodsExceptionList;
@@ -77,7 +78,8 @@ import dagger.Provides;
                 CuxDemandDetail.class,
                 FragmentCuxDemandDetailHeader.class,
                 FragmentCuxDemandDetailLines.class,
-                FragmentCuxDemandDetailWorkflowMessages.class
+                FragmentCuxDemandDetailWorkflowMessages.class,
+                CuxTranList.class
 
 
         })

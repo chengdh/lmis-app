@@ -1,6 +1,5 @@
-package com.lmis.addons.cux_demand;
+package com.lmis.addons.shared;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

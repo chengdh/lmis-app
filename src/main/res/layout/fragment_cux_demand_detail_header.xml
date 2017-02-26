@@ -53,7 +53,6 @@
             android:padding="5dp"
             android:text="项目名称"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#498BF4"
             android:textStyle="bold" />
 
         <View
@@ -76,8 +75,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="计划来源:"
-                android:textColor="#498BF4" />
+                android:text="计划来源:" />
 
             <TextView
                 android:id="@+id/txv_apply_source"
@@ -97,8 +95,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="计划类型:"
-                android:textColor="#498BF4" />
+                android:text="计划类型:" />
 
             <TextView
                 android:id="@+id/txv_apply_type"
@@ -110,7 +107,7 @@
                 android:padding="5dp"
                 android:text="2017-01-01"
                 android:textColor="#498BF4"
-                android:textStyle="bold" />
+                />
 
         </LinearLayout>
 
@@ -135,8 +132,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="提报部门:"
-                android:textColor="#498BF4" />
+                android:text="提报部门:" />
 
             <TextView
                 android:id="@+id/txv_apply_deparment"
@@ -156,8 +152,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="编制时间:"
-                android:textColor="#498BF4" />
+                android:text="编制时间:" />
 
             <TextView
                 android:id="@+id/txv_apply_date"
@@ -167,9 +162,8 @@
                 android:background="#ffffff"
                 android:gravity="right"
                 android:padding="5dp"
-                android:text="2017-01-01"
                 android:textColor="#498BF4"
-                android:textStyle="bold" />
+                android:text="2017-01-01" />
 
         </LinearLayout>
 
@@ -194,8 +188,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="需求人员:"
-                android:textColor="#498BF4" />
+                android:text="需求人员:" />
 
 
             <TextView
@@ -203,12 +196,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:textColor="#498BF4"
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="张三"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#414141" />
+                android:text="张三" />
 
             <TextView
                 android:layout_width="0dp"
@@ -217,8 +209,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="提交时间:"
-                android:textColor="#498BF4" />
+                android:text="提交时间:" />
 
             <TextView
                 android:id="@+id/txv_submit_date"
@@ -229,7 +220,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="10000"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
 
 
         </LinearLayout>
@@ -255,8 +246,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="备注:"
-                android:textColor="#498BF4" />
+                android:text="备注:" />
 
             <TextView
                 android:id="@+id/txv_remark"
@@ -267,7 +257,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="10000"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
 
         </LinearLayout>
     </LinearLayout>
@@ -296,8 +286,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="预算总额:"
-                android:textColor="#498BF4" />
+                android:text="预算总额:" />
 
 
             <TextView
@@ -309,8 +298,7 @@
                 android:gravity="left"
                 android:padding="5dp"
                 android:text="张三"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
 
             <TextView
                 android:layout_width="0dp"
@@ -319,8 +307,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="已审批额:"
-                android:textColor="#498BF4" />
+                android:text="已审批额:" />
 
             <TextView
                 android:id="@+id/txv_bugdet_demand_total"
@@ -331,7 +318,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="10000"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
         </LinearLayout>
 
         <View
@@ -357,8 +344,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="实际成本:"
-                android:textColor="#498BF4" />
+                android:text="实际成本:" />
 
 
             <TextView
@@ -370,8 +356,7 @@
                 android:gravity="left"
                 android:padding="5dp"
                 android:text="张三"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
 
             <TextView
                 android:layout_width="0dp"
@@ -380,8 +365,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="需求额:"
-                android:textColor="#498BF4" />
+                android:text="需求额:" />
 
             <TextView
                 android:id="@+id/txv_header_bugdet"
@@ -392,7 +376,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="10000"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
         </LinearLayout>
 
         <View
@@ -417,8 +401,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="余额:"
-                android:textColor="#498BF4" />
+                android:text="余额:" />
 
 
             <TextView
@@ -430,8 +413,7 @@
                 android:gravity="left"
                 android:padding="5dp"
                 android:text="张三"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
 
             <TextView
                 android:layout_width="0dp"
@@ -440,8 +422,7 @@
                 android:background="#ffffff"
                 android:gravity="left"
                 android:padding="5dp"
-                android:text="未审批额:"
-                android:textColor="#498BF4" />
+                android:text="未审批额:" />
 
             <TextView
                 android:id="@+id/txv_left_bugdet_demand_total"
@@ -452,7 +433,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="10000"
-                android:textColor="#414141" />
+                android:textColor="#498BF4" />
         </LinearLayout>
 
 

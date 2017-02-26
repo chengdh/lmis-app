@@ -1,4 +1,4 @@
-package com.lmis.addons.cux_demand;
+package com.lmis.addons.shared;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.lmis.R;
-import com.lmis.orm.LmisDataRow;
 
 /**
  * Created by chengdh on 2017/2/19.
