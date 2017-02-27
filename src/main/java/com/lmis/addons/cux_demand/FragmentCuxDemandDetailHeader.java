@@ -127,7 +127,7 @@ public class FragmentCuxDemandDetailHeader extends BaseFragment {
         String applyDeparment = mCuxDemandData.getString("apply_deparment");
         mTxvApplyDeparment.setText(applyDeparment);
         String applyDate = mCuxDemandData.getString("apply_date");
-        mTxvApplyDate.setText(applyDate.substring(0, 15));
+        mTxvApplyDate.setText(applyDate);
 
         String applierUser = mCuxDemandData.getString("applier_user");
         mTxvApplierUser.setText(applierUser);

@@ -349,7 +349,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
                     detail.setArguments(bundle);
                 }
                 break;
-            case "CUXPOSB":
+            case "CUXTRAN":
                 CuxTranHeaderDB cuxTranDB = new CuxTranHeaderDB(scope.context());
                 String[] wArgs = {itemKey};
                 List<LmisDataRow> cuxTranRet = cuxTranDB.select("wf_itemkey = ?", wArgs);
@@ -363,7 +363,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
                     break;
                 }
             default:
-                ;
+                return;
 
         }
 

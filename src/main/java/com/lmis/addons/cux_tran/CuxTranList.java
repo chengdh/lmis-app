@@ -244,7 +244,7 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
             holder.txvProjectName.setText(projectName);
             holder.txvRequireDept.setText(requireDept);
             holder.txvUser.setText("[" + requirePerson + "]");
-            holder.txvRequireDate.setText(requireDate.substring(0, 10));
+            holder.txvRequireDate.setText(requireDate);
             holder.txvHeaderBugdet.setText("RMB:" + headerBugdet);
         }
 

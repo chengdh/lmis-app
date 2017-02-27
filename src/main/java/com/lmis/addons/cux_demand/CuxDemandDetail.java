@@ -123,6 +123,7 @@ public class CuxDemandDetail extends BaseFragment implements TabHost.OnTabChange
         if (bundle != null) {
             mCuxDemandId = bundle.getInt("cux_demand_id");
             mCuxDemandData = db().select(mCuxDemandId);
+            mProcessed = mCuxDemandData.getBoolean("processed");
             initControls();
         }
     }

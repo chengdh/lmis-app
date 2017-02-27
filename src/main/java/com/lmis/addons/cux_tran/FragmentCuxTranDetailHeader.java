@@ -116,7 +116,7 @@ public class FragmentCuxTranDetailHeader extends BaseFragment {
         String requireDeparment = mCuxTranData.getString("require_deparment");
         mTxvRequireDeparment.setText(requireDeparment);
         String requireDate = mCuxTranData.getString("require_date");
-        mTxvCreationDate.setText(requireDate.substring(0, 15));
+        mTxvCreationDate.setText(requireDate);
 
         String requirePerson = mCuxTranData.getString("require_person");
         mTxvRequirePerson.setText(requirePerson);

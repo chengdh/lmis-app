@@ -124,6 +124,8 @@ public class CuxTranDetail extends BaseFragment implements TabHost.OnTabChangeLi
         if (bundle != null) {
             mCuxTranId = bundle.getInt("cux_tran_id");
             mCuxTranData = db().select(mCuxTranId);
+
+            mProcessed = mCuxTranData.getBoolean("processed");
             initControls();
         }
     }
