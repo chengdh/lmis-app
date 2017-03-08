@@ -28,7 +28,7 @@
     <string name="syncwizard_description">设置同步.</string>
     <string name="account_sync_wizard_button">下一步</string>
 
-        <!--各种label的定义-->
+    <!--各种label的定义-->
     <string name="label_org">机构</string>
     <string name="label_il_config">系统设置</string>
     <string name="label_user_org">用户-可访问机构</string>
@@ -167,7 +167,6 @@
     <string name="orgs_sync_notify_body">更新%1$d条机构信息(Lmis)</string>
 
 
-
     <string name="inventory_move_sync_notify_title">%1$d条新的盘点单</string>
     <string name="inventory_move_sync_notify_body">收到%1$d新德盘点单(Lmis)</string>
 
@@ -178,5 +177,14 @@
     <string name="edit">修改</string>
     <string name="cancel">作废</string>
     <string name="print">打印</string>
+    <!--软件更新模块-->
+    <string name="update_title">软件更新</string>
+    <string name="update_info">检测到新版本，立即更新吗？</string>
+    <string name="update_update">更新</string>
+    <string name="update_later">稍后更新</string>
+    <string name="update_updating">正在更新</string>
+    <string name="update_cancel">取消</string>
+    <string name="update_no">已经是最新版本</string>
+
 
 </resources>

@@ -30,7 +30,9 @@ import android.content.Intent;
 import android.content.SyncAdapterType;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,10 +50,6 @@ import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
-import com.github.snowdream.android.app.UpdateFormat;
-import com.github.snowdream.android.app.UpdateManager;
-import com.github.snowdream.android.app.UpdateOptions;
-import com.github.snowdream.android.app.UpdatePeriod;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -65,6 +63,7 @@ import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.util.OnBackButtonPressedListener;
 import com.lmis.util.PreferenceManager;
+import com.lmis.util.UpdateManager;
 import com.lmis.util.drawer.DrawerAdatper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
@@ -196,6 +195,10 @@ public class MainActivity extends InjectingFragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         ButterKnife.inject(this);
 
         if (savedInstanceState != null) {
@@ -238,14 +241,14 @@ public class MainActivity extends InjectingFragmentActivity implements
     private void checkUpgrade() {
         UpdateManager manager = new UpdateManager(this);
 
-        UpdateOptions options = new UpdateOptions.Builder(this)
-                .checkUrl("http://git.oschina.net/chengdh/lmis-app-release/raw/master/update.xml")
-                .updateFormat(UpdateFormat.XML)
-                .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
-                .checkPackageName(true)
-                .build();
-
-        manager.check(this, options);
+//        UpdateOptions options = new UpdateOptions.Builder(this)
+//                .checkUrl("http://git.oschina.net/chengdh/lmis-app-release/raw/master/update.xml")
+//                .updateFormat(UpdateFormat.XML)
+//                .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
+//                .checkPackageName(false)
+//                .build();
+//
+//        manager.check(this, options);
     }
 
     private void init() {
@@ -455,7 +458,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                         startMainFragment(fragment, false);
                     }
                 })
-                        // Set the action buttons
+                // Set the action buttons
                 .setPositiveButton("Login",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -687,7 +690,7 @@ public class MainActivity extends InjectingFragmentActivity implements
      * @param seconds_per_minute      the seconds_per_minute
      * @param milliseconds_per_second the milliseconds_per_second
      */
-    public void setSyncPeriodic(String authority, long interval_in_minute,long seconds_per_minute, long milliseconds_per_second) {
+    public void setSyncPeriodic(String authority, long interval_in_minute, long seconds_per_minute, long milliseconds_per_second) {
         Account account = LmisAccountManager.getAccount(this, LmisUser.current(mContext).getAndroidName());
         Bundle extras = new Bundle();
         this.setAutoSync(authority, true);
