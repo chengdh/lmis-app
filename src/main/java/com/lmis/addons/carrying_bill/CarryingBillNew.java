@@ -241,6 +241,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 reCalToShortCarryingFee();
+                reCalFromShortCarryingFee();
             }
 
             @Override
@@ -261,9 +262,45 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
             @Override
             public void afterTextChanged(Editable s) {
                 reCalToShortCarryingFee();
+                reCalFromShortCarryingFee();
                 //重新计算保险费
                 reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
             }
+        });
+
+        //发货短途只能增加不能减少
+        mEdtFromShortCarryingFee.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    int curFee = parseFee(mEdtFromShortCarryingFee);
+                    int configFromShortCarryingFee = getConfigFromShortCarryingFee();
+                    if (curFee < configFromShortCarryingFee) {
+                        mEdtFromShortCarryingFee.setError("已重新计算发货短途!");
+                        mEdtFromShortCarryingFee.setText(configFromShortCarryingFee + "");
+
+                    }
+                }
+
+            }
+
+        });
+
+        //到货短途只能增加不能减少
+        mEdtToShortCarryingFee.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    int curFee = parseFee(mEdtToShortCarryingFee);
+                    int configToShortCarryingFee = getConfigToShortCarryingFee();
+                    if (curFee < configToShortCarryingFee) {
+                        mEdtToShortCarryingFee.setError("已重新计算到货短途!");
+                        mEdtToShortCarryingFee.setText(configToShortCarryingFee + "");
+
+                    }
+                }
+            }
+
         });
 
 
@@ -510,6 +547,25 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         return fee;
     }
 
+    private int getConfigToShortCarryingFee() {
+        int carryingFee = parseFee(mEdtCarryingFee);
+        LmisDataRow toOrg = mSearchSpinnerToOrg.getSelectedOrg();
+        OrgDB orgDB = new OrgDB(scope.context());
+        int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(toOrg.getInt("id"), carryingFee);
+        return toShortCarryingFee;
+
+    }
+
+    private int getConfigFromShortCarryingFee() {
+        int carryingFee = parseFee(mEdtCarryingFee);
+        int fromOrgId = scope.currentUser().getDefault_org_id();
+        OrgDB orgDB = new OrgDB(scope.context());
+        int fromShortCarryingFee = orgDB.getConfigFromShortCarryingFee(fromOrgId, carryingFee);
+        return fromShortCarryingFee;
+
+    }
+
+
     /**
      * 根据系统设置计算到货短途.
      *
@@ -519,17 +575,28 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         Map.Entry<String, String> payTypeEntry = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
         String payType = payTypeEntry.getKey();
         //如果不是提货付,则不产生到货短途
-        if (!payType.equals(PayType.PAY_TYPE_TH)) {
-            mEdtToShortCarryingFee.setText("0");
-            return 0;
-        }
-        int carryingFee = parseFee(mEdtCarryingFee);
-        LmisDataRow toOrg = mSearchSpinnerToOrg.getSelectedOrg();
-        OrgDB orgDB = new OrgDB(scope.context());
-        int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(toOrg.getInt("id"), carryingFee);
+//        if (!payType.equals(PayType.PAY_TYPE_TH)) {
+//            mEdtToShortCarryingFee.setText("0");
+//            return 0;
+//        }
+        int toShortCarryingFee = getConfigToShortCarryingFee();
         mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
         return toShortCarryingFee;
     }
+
+    private int reCalFromShortCarryingFee() {
+        Map.Entry<String, String> payTypeEntry = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
+        String payType = payTypeEntry.getKey();
+        //如果不是提货付,则不产生到货短途
+//        if (!payType.equals(PayType.PAY_TYPE_TH)) {
+//            mEdtToShortCarryingFee.setText("0");
+//            return 0;
+//        }
+        int fromShortCarryingFee = getConfigFromShortCarryingFee();
+        mEdtFromShortCarryingFee.setText(fromShortCarryingFee + "");
+        return fromShortCarryingFee;
+    }
+
 
     /**
      * 发货地变化时,重新计算保险费.
@@ -566,6 +633,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     @Override
     public void onSelectionChanged(String s) {
         reCalToShortCarryingFee();
+        reCalFromShortCarryingFee();
         reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
     }
 

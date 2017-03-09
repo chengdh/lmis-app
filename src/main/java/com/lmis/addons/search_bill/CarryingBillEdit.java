@@ -253,6 +253,7 @@ public class CarryingBillEdit extends BaseFragment {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     reCalToShortCarryingFee();
+                    reCalFromShortCarryingFee();
                 }
 
                 @Override
@@ -275,6 +276,7 @@ public class CarryingBillEdit extends BaseFragment {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     reCalToShortCarryingFee();
+                    reCalFromShortCarryingFee();
                     reCalInsuredFee(mFromOrg);
 
                 }
@@ -298,6 +300,42 @@ public class CarryingBillEdit extends BaseFragment {
                     mEdtGoodsNo.setText(newGoodsNo);
                 }
             });
+            //发货短途只能增加不能减少
+            mEdtFromShortCarryingFee.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        int curFee = parseFee(mEdtFromShortCarryingFee);
+                        int configFromShortCarryingFee = getConfigFromShortCarryingFee();
+                        if (curFee < configFromShortCarryingFee) {
+                            mEdtFromShortCarryingFee.setError("已重新计算发货短途!");
+                            mEdtFromShortCarryingFee.setText(configFromShortCarryingFee + "");
+
+                        }
+                    }
+
+                }
+
+            });
+
+            //到货短途只能增加不能减少
+            mEdtToShortCarryingFee.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        int curFee = parseFee(mEdtToShortCarryingFee);
+                        int configToShortCarryingFee = getConfigToShortCarryingFee();
+                        if (curFee < configToShortCarryingFee) {
+                            mEdtToShortCarryingFee.setError("已重新计算到货短途!");
+                            mEdtToShortCarryingFee.setText(configToShortCarryingFee + "");
+
+                        }
+                    }
+                }
+
+            });
+
+
             mBtnSearchCustomer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -371,6 +409,24 @@ public class CarryingBillEdit extends BaseFragment {
 
     }
 
+
+    private int getConfigToShortCarryingFee() {
+        int carryingFee = parseFee(mEdtCarryingFee);
+        OrgDB orgDB = new OrgDB(scope.context());
+        int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(mToOrg.getInt("id"), carryingFee);
+        return toShortCarryingFee;
+
+    }
+
+    private int getConfigFromShortCarryingFee() {
+        int carryingFee = parseFee(mEdtCarryingFee);
+        OrgDB orgDB = new OrgDB(scope.context());
+        int fromShortCarryingFee = orgDB.getConfigFromShortCarryingFee(mFromOrg.getInt("id"), carryingFee);
+        return fromShortCarryingFee;
+
+    }
+
+
     /**
      * 根据系统设置计算到货短途.
      *
@@ -380,19 +436,28 @@ public class CarryingBillEdit extends BaseFragment {
         Map.Entry<String, String> payTypeEntry = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
         String payType = payTypeEntry.getKey();
         //如果不是提货付,则不产生到货短途
-        if (!payType.equals(PayType.PAY_TYPE_TH)) {
-            mEdtToShortCarryingFee.setText("0");
-            return 0;
-        }
-        int carryingFee = parseFee(mEdtCarryingFee);
-        OrgDB orgDB = new OrgDB(scope.context());
-        int toShortCarryingFee = orgDB.getConfigToShortCarryingFee(mToOrg.getInt("id"), carryingFee);
-        int oldToShortCarryingFee = parseFee(mEdtToShortCarryingFee);
-        //if (toShortCarryingFee > oldToShortCarryingFee) {
+//        if (!payType.equals(PayType.PAY_TYPE_TH)) {
+//            mEdtToShortCarryingFee.setText("0");
+//            return 0;
+//        }
+        int toShortCarryingFee = getConfigToShortCarryingFee();
         mEdtToShortCarryingFee.setText(toShortCarryingFee + "");
-        //}
         return toShortCarryingFee;
     }
+
+    private int reCalFromShortCarryingFee() {
+        Map.Entry<String, String> payTypeEntry = (Map.Entry<String, String>) mSpinnerPayType.getSelectedItem();
+        String payType = payTypeEntry.getKey();
+        //如果不是提货付,则不产生到货短途
+//        if (!payType.equals(PayType.PAY_TYPE_TH)) {
+//            mEdtToShortCarryingFee.setText("0");
+//            return 0;
+//        }
+        int fromShortCarryingFee = getConfigFromShortCarryingFee();
+        mEdtFromShortCarryingFee.setText(fromShortCarryingFee + "");
+        return fromShortCarryingFee;
+    }
+
 
     /**
      * 发货地变化时,重新计算保险费.

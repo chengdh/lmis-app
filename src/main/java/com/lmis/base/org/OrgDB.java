@@ -126,6 +126,10 @@ public class OrgDB extends LmisDatabase {
         cols.add(new LmisColumn("auto_generate_to_short_carrying_fee", "auto generate to short carrying_fee", LmisFields.varchar(20)));
         cols.add(new LmisColumn("agtscf_rate", "agtscf_rate", LmisFields.varchar(20)));
         cols.add(new LmisColumn("fixed_to_short_carrying_fee", "fixed to short carrying fee", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("auto_generate_from_short_carrying_fee", "auto generate from short carrying_fee", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("agfscf_rate", "agfscf_rate", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("fixed_from_short_carrying_fee", "fixed from short carrying fee", LmisFields.varchar(20)));
+
         return cols;
     }
 
@@ -176,6 +180,30 @@ public class OrgDB extends LmisDatabase {
                 ret = (int) (carryingFee * agtscfRate);
             } else {
                 ret = (int) fixedToShortCarryingFee;
+            }
+
+        }
+
+        return ret;
+
+    }
+
+    public int getConfigFromShortCarryingFee(int fromOrgId, int carryingFee) {
+        int ret = 0;
+        if (carryingFee == 0) {
+            return 0;
+        }
+        String where = "id = ?";
+        String[] whereArgs = {fromOrgId + ""};
+        List<LmisDataRow> rows = select(where, whereArgs, null, null, null);
+        String isGenerate = rows.get(0).getString("auto_generate_from_short_carrying_fee");
+        if (isGenerate.equals("true")) {
+            double agfscfRate = Double.parseDouble(rows.get(0).getString("agfscf_rate"));
+            double fixedFromShortCarryingFee = Double.parseDouble(rows.get(0).getString("fixed_from_short_carrying_fee"));
+            if (agfscfRate > 0) {
+                ret = (int) (carryingFee * agfscfRate);
+            } else {
+                ret = (int) fixedFromShortCarryingFee;
             }
 
         }
