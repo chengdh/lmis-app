@@ -75,8 +75,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 6
-        versionName '1.6'
+        versionCode 7
+        versionName '1.7'
     }
     packagingOptions {
         // Exclude file to avoid
