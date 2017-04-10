@@ -190,11 +190,11 @@ public class AccountsDetail extends BaseFragment {
         // Source of the data in the DIalog
 
         // Set the dialog title
-        builder.setTitle("Confirm")
-                .setMessage("Are you sure want to logout?")
+        builder.setTitle("退出")
+                .setMessage("确认要退出APP?")
 
                         // Set the action buttons
-                .setPositiveButton("Yes",
+                .setPositiveButton("确定",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -208,7 +208,7 @@ public class AccountsDetail extends BaseFragment {
                             }
                         }
                 )
-                .setNegativeButton("Cancel",
+                .setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -227,11 +227,11 @@ public class AccountsDetail extends BaseFragment {
         // Source of the data in the DIalog
 
         // Set the dialog title
-        builder.setTitle("Confirm")
-                .setMessage("Are you sure want to delete account?")
+        builder.setTitle("删除")
+                .setMessage("确认删除该用户吗?")
 
                         // Set the action buttons
-                .setPositiveButton("Yes",
+                .setPositiveButton("确定",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -246,7 +246,7 @@ public class AccountsDetail extends BaseFragment {
                             }
                         }
                 )
-                .setNegativeButton("Cancel",
+                .setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {

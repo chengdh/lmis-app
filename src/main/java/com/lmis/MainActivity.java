@@ -329,6 +329,9 @@ public class MainActivity extends InjectingFragmentActivity implements
                 position = 1;
             }
         }
+        else{
+            return ;
+        }
         if (mDrawerItemSelectedPosition >= 0) {
             position = mDrawerItemSelectedPosition;
         }
@@ -438,7 +441,7 @@ public class MainActivity extends InjectingFragmentActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Select Account")
+        builder.setTitle("选择用户")
                 .setSingleChoiceItems(accountList(accounts), 1,
                         new DialogInterface.OnClickListener() {
 
@@ -448,7 +451,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                             }
                         }
                 )
-                .setNeutralButton("New", new OnClickListener() {
+                .setNeutralButton("新建", new OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -459,7 +462,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                     }
                 })
                 // Set the action buttons
-                .setPositiveButton("Login",
+                .setPositiveButton("登录",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -468,14 +471,14 @@ public class MainActivity extends InjectingFragmentActivity implements
                                             mAccount.getAndroidName());
                                 } else {
                                     Toast.makeText(mContext,
-                                            "Please select account",
+                                            "请选择一个用户",
                                             Toast.LENGTH_LONG).show();
                                 }
                                 init();
                             }
                         }
                 )
-                .setNegativeButton("Cancel",
+                .setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {

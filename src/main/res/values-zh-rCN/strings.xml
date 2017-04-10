@@ -8,7 +8,7 @@
     <!-- Account Fragment Strings -->
     <string name="logo_description">lmis</string>
     <string name="account_title">设置你的服务器信息</string>
-    <string name="account_description">输入lmis7.0服务器URL.</string>
+    <string name="account_description">输入物流平台服务器URL.</string>
     <string name="account_edit_server_url">服务器URL</string>
     <string name="account_edit_server_port">端口</string>
     <string name="account_continue_button">下一步</string>
@@ -101,7 +101,7 @@
     </string-array>
 
     <!-- Aboout Company Fragment Strings -->
-    <string name="about_Company_line1">Copyright © 2004-TODAY lmis SA. 版权所有.</string>
+    <string name="about_Company_line1">Copyright © 2014-TODAY 创艺公司. 版权所有.</string>
     <string name="about_Company_line2">lmis 是<a href="https://www.lmis.com/">lmis.com.</a>的注册商标</string>
     <string name="about_Company_line3">授权 <a href="http://www.gnu.org/licenses/agpl.html/">GNU Affero General Public License</a></string>
     <string name="about_Company_line4">更多信息请访问 <a href="https://www.lmis.com/">lmis.com</a>.</string>
