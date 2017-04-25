@@ -24,8 +24,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lmis.R;
 import com.lmis.addons.cux_demand.CuxDemandDetail;
+import com.lmis.addons.cux_demand.CuxDemandDetailWebView;
 import com.lmis.addons.cux_demand.CuxDemandPlatformHeaderDB;
 import com.lmis.addons.cux_tran.CuxTranDetail;
+import com.lmis.addons.cux_tran.CuxTranDetailWebView;
 import com.lmis.addons.cux_tran.CuxTranHeaderDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.providers.wf_notification.WfNotificationProvider;
@@ -345,7 +347,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
                     Bundle bundle = new Bundle();
                     bundle.putInt("cux_demand_id", cuxDemandID);
                     bundle.putInt("position", position);
-                    detail = new CuxDemandDetail();
+                    detail = new CuxDemandDetailWebView();
                     detail.setArguments(bundle);
                 }
                 break;
@@ -358,7 +360,7 @@ public class WfNoticicationList extends BaseFragment implements AdapterView.OnIt
                     Bundle bundle = new Bundle();
                     bundle.putInt("cux_tran_id", cuxTranID);
                     bundle.putInt("position", position);
-                    detail = new CuxTranDetail();
+                    detail = new CuxTranDetailWebView();
                     detail.setArguments(bundle);
                     break;
                 }

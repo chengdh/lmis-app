@@ -80,9 +80,11 @@ public class CuxTranSyncService extends InjectingService implements PerformSync 
             }
 
 
+            String businessType = extras.getString("business_type");
             //获取wf_notificationDB中的item_key
             LmisArguments arguments = new LmisArguments();
             arguments.add(itemKeys);
+            arguments.add(businessType);
 
             //数据库中原有的数据也需要更新
             List<Integer> ids = db.ids();

@@ -66,6 +66,7 @@ import com.lmis.support.fragment.FragmentListener;
 import com.lmis.util.OnBackButtonPressedListener;
 import com.lmis.util.PreferenceManager;
 import com.lmis.util.drawer.DrawerAdatper;
+import com.lmis.util.drawer.DrawerHelper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 import com.lmis.widgets.WidgetHelper;
@@ -118,8 +119,8 @@ public class MainActivity extends InjectingFragmentActivity implements
     /**
      * The M drawer list items.
      */
-    @Inject
-    @Activity
+//    @Inject
+//    @Activity
     List<DrawerItem> mDrawerListItems;
 
     /**
@@ -276,8 +277,51 @@ public class MainActivity extends InjectingFragmentActivity implements
         }
     }
 
+    private Fragment getFragBundle(Fragment fragment, String key, MainActivity.SettingKeys val) {
+        Bundle bundle = new Bundle();
+        bundle.putString(key, val.toString());
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    private List<DrawerItem> getSysMenuItems() {
+        List<DrawerItem> sys = new ArrayList<DrawerItem>();
+        String key = "com.lmis.settings";
+
+        String settings_group_title = this.getResources().getString(R.string.settings_group_title);
+        String locale_profile = this.getResources().getString(R.string.settings_drawer_item_profile);
+        String locale_general_setting = this.getResources().getString(R.string.settings_drawer_item_general_setting);
+        String locale_account = this.getResources().getString(R.string.settings_drawer_item_account);
+        String locale_about_us = this.getResources().getString(R.string.settings_drawer_item_about_us);
+
+
+        sys.add(new DrawerItem(key, settings_group_title, true));
+        sys.add(new DrawerItem(key, locale_profile, 0, R.drawable.ic_action_user,
+                getFragBundle(new Fragment(), "settings", MainActivity.SettingKeys.PROFILE)));
+
+        sys.add(new DrawerItem(key, locale_general_setting, 0,
+                R.drawable.ic_action_settings, getFragBundle(new Fragment(),
+                "settings", MainActivity.SettingKeys.GLOBAL_SETTING)
+        ));
+
+        sys.add(new DrawerItem(key, locale_account, 0,
+                R.drawable.ic_action_accounts, getFragBundle(new Fragment(),
+                "settings", MainActivity.SettingKeys.ACCOUNTS)
+        ));
+        sys.add(new DrawerItem(key, locale_about_us, 0, R.drawable.ic_action_about,
+                getFragBundle(new Fragment(), "settings", MainActivity.SettingKeys.ABOUT_US)));
+        return sys;
+    }
+
     private void initDrawerControls() {
         Log.d(TAG, "MainActivity->initDrawerControls()");
+        mDrawerListItems = new ArrayList<>();
+        //未登录时,不显示菜单
+        if (LmisUser.current(this) != null) {
+            mDrawerListItems.addAll(DrawerHelper.drawerItems(this));
+            mDrawerListItems.addAll(getSysMenuItems());
+        }
+
         mDrawerAdatper = new DrawerAdatper(this, R.layout.drawer_item_layout, R.layout.drawer_item_group_layout, mDrawerListItems);
         mDrawerListView.setAdapter(mDrawerAdatper);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.app_name) {
@@ -455,7 +499,7 @@ public class MainActivity extends InjectingFragmentActivity implements
                         startMainFragment(fragment, false);
                     }
                 })
-                        // Set the action buttons
+                // Set the action buttons
                 .setPositiveButton("Login",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -687,7 +731,7 @@ public class MainActivity extends InjectingFragmentActivity implements
      * @param seconds_per_minute      the seconds_per_minute
      * @param milliseconds_per_second the milliseconds_per_second
      */
-    public void setSyncPeriodic(String authority, long interval_in_minute,long seconds_per_minute, long milliseconds_per_second) {
+    public void setSyncPeriodic(String authority, long interval_in_minute, long seconds_per_minute, long milliseconds_per_second) {
         Account account = LmisAccountManager.getAccount(this, LmisUser.current(mContext).getAndroidName());
         Bundle extras = new Bundle();
         this.setAutoSync(authority, true);

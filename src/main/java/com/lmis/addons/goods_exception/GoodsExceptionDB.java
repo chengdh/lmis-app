@@ -48,9 +48,9 @@ public class GoodsExceptionDB extends LmisDatabase {
         cols.add(new LmisColumn("photo", "Photo", LmisFields.blob()));
 
         //是否已上传
-        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
+        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false, true));
         //上传时间
-        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false, true));
 
         return cols;
     }

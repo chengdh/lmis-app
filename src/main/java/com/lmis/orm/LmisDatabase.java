@@ -575,7 +575,7 @@ public abstract class LmisDatabase extends LmisSQLiteHelper implements LmisDBHel
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
         cols.add(new LmisColumn("id", "id", LmisFields.integer()));
         cols.add(new LmisColumn("oea_name", "android name", LmisFields.varchar(50),
-                false));
+                false, true));
         return cols;
     }
 

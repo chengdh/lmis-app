@@ -73,7 +73,7 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(colFromCustomerID);
 
         //发货人代码
-        LmisColumn colFromCustomerCode = new LmisColumn("from_customer_code", "From Customer Code", LmisFields.varchar(20), false);
+        LmisColumn colFromCustomerCode = new LmisColumn("from_customer_code", "From Customer Code", LmisFields.varchar(20), false, true);
         cols.add(colFromCustomerCode);
 
         //发货人
@@ -149,9 +149,9 @@ public class CarryingBillDB extends LmisDatabase {
         LmisColumn colUser = new LmisColumn("user_id", "User", LmisFields.integer());
         cols.add(colUser);
         //是否已上传
-        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
+        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false, true));
         //上传时间
-        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false, true));
 
         return cols;
     }

@@ -97,7 +97,7 @@ public class LmisHelper extends Lmis {
         try {
             JSONObject rs = this.authenticate(username, password);
             int userId = 0;
-            if (rs.get("id") instanceof Integer) {
+            if (rs.get("id") != null && rs.get("id") != "" ) {
                 userId = rs.getInt("id");
 
                 userObj = new LmisUser();

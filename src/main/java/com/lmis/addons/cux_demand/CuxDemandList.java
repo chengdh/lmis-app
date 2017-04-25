@@ -333,7 +333,7 @@ public class CuxDemandList extends BaseFragment implements AdapterView.OnItemCli
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mCuxDemandObjects.get(position);
         BaseFragment detail;
-        detail = new CuxDemandDetail();
+        detail = new CuxDemandDetailWebView();
         Bundle bundle = new Bundle();
         bundle.putInt("cux_demand_id", row.getInt("id"));
         bundle.putInt("position", position);

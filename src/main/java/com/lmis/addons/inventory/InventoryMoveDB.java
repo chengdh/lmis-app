@@ -57,9 +57,9 @@ public class InventoryMoveDB extends LmisDatabase {
         cols.add(new LmisColumn("confirmer_id", "confirm_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("confirm_date", "confirm_date", LmisFields.varchar(20)));
         //是否已上传
-        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
+        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false, true));
         //上传时间
-        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false, true));
         //出入库类别
         cols.add(new LmisColumn("op_type", "operate type", LmisFields.varchar(20)));
         //明细

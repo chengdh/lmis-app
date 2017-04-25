@@ -36,6 +36,7 @@ import com.lmis.util.drawer.DrawerItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -73,6 +74,28 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
 
     Integer mSelectedCounter = 0;
 
+    public static final Map<String, String> mMapBusinessType;
+
+    static {
+        mMapBusinessType = new HashMap();
+        mMapBusinessType.put("NORMAL", "领用单");
+        mMapBusinessType.put("RETURN", "退库单");
+        mMapBusinessType.put("WASTE", "废旧物资入库申请");
+        mMapBusinessType.put("TOOL_IN", "工器具归还");
+        mMapBusinessType.put("TOOL_OUT", "工器具领用");
+        mMapBusinessType.put("ASSETS_OUT", "固资代保管出库");
+        mMapBusinessType.put("ASSETS_IN", "固资代保管入库");
+        mMapBusinessType.put("OLD_ITEM_IN", "旧件物资回收取消");
+        mMapBusinessType.put("OLD_ITEM_OUT", "旧件物资回收");
+        mMapBusinessType.put("LOSSES", "盘亏调整");
+        mMapBusinessType.put("PROFIT", "盘盈调整");
+        mMapBusinessType.put("SJBJ_IN", "随机备品入库");
+        mMapBusinessType.put("SALE", "物品销售出库");
+        mMapBusinessType.put("REFUND", "物品销售退回");
+        mMapBusinessType.put("RECYCLE", "物资报废");
+        mMapBusinessType.put("RECYCLE_1", "修旧利废入库");
+    }
+
     /**
      * The enum M type.
      * 数据分为草稿及已处理
@@ -83,6 +106,10 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
 
     ;
     MType mType = MType.DRAFT;
+
+
+    //单据类型
+    private String mBusinessType;
 
     /**
      * The type View holder.
@@ -153,7 +180,6 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
         }
     };
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -193,7 +219,9 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-                scope.main().requestSync(CuxTranProvider.AUTHORITY);
+                Bundle bundle = new Bundle();
+                bundle.putString("business_type", mBusinessType);
+                scope.main().requestSync(CuxTranProvider.AUTHORITY, bundle);
             }
 
             @Override
@@ -224,6 +252,9 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
                     mType = MType.PROCESSED;
                     title = "Processed";
                 }
+            }
+            if (bundle.containsKey("business_type")) {
+                mBusinessType = bundle.getString("business_type");
             }
             scope.main().setTitle(title);
             mCuxDemandLoader = new CuxTranLoader(mType);
@@ -261,7 +292,7 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
     public List<DrawerItem> drawerMenus(Context context) {
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
-        drawerItems.add(new DrawerItem(TAG, "领料单", true));
+        drawerItems.add(new DrawerItem(TAG, getTitle(), true));
         drawerItems.add(new DrawerItem(TAG, "待处理", count(MType.DRAFT, context), R.drawable.ic_menu_message_unread, getFragment("draft")));
         drawerItems.add(new DrawerItem(TAG, "已处理", count(MType.PROCESSED, context), R.drawable.ic_menu_message_read, getFragment("processed")));
         return drawerItems;
@@ -271,14 +302,14 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
      * Gets where.
      * 根据类型构造where条件
      *
-     * @param type the type
+     * @param processType the process type
      * @return the where
      */
-    public HashMap<String, Object> getWhere(MType type) {
+    public HashMap<String, Object> getWhere(MType processType) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         String where = null;
         String[] whereArgs = null;
-        switch (type) {
+        switch (processType) {
             case DRAFT:
                 where = "processed = ? or processed is null ";
                 whereArgs = new String[]{"false"};
@@ -292,32 +323,48 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
                 whereArgs = new String[]{"false"};
                 break;
         }
+        where += " and business_type = '" + mBusinessType + "'";
         map.put("where", where);
         map.put("whereArgs", whereArgs);
         return map;
     }
 
     /**
+     * 根据business_type获取title .
+     *
+     * @return the string
+     */
+    public String getTitle() {
+        String ret = "";
+        if (mMapBusinessType.containsKey(mBusinessType)) {
+            ret = mMapBusinessType.get(mBusinessType);
+        }
+        return ret;
+
+    }
+
+    /**
      * Gets fragment.
      * 根据查看数据类型构造显示界面
      *
-     * @param value the value
+     * @param processType 处理类型
      * @return the fragment
      */
-    private BaseFragment getFragment(String value) {
+    private BaseFragment getFragment(String processType) {
         CuxTranList list = new CuxTranList();
         Bundle bundle = new Bundle();
-        bundle.putString("type", value);
+        bundle.putString("business_type", mBusinessType);
+        bundle.putString("type", processType);
         list.setArguments(bundle);
         return list;
     }
 
-    private int count(MType type, Context context) {
+    private int count(MType processType, Context context) {
         int count = 0;
         CuxTranHeaderDB db = (CuxTranHeaderDB) databaseHelper(context);
         String where = null;
         String whereArgs[] = null;
-        HashMap<String, Object> obj = getWhere(type);
+        HashMap<String, Object> obj = getWhere(processType);
         where = (String) obj.get("where");
         whereArgs = (String[]) obj.get("whereArgs");
         count = db.count(where, whereArgs);
@@ -334,7 +381,7 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mCuxTranObjects.get(position);
         BaseFragment detail;
-        detail = new CuxTranDetail();
+        detail = new CuxTranDetailWebView();
         Bundle bundle = new Bundle();
         bundle.putInt("cux_tran_id", row.getInt("id"));
         bundle.putInt("position", position);
@@ -347,6 +394,14 @@ public class CuxTranList extends BaseFragment implements AdapterView.OnItemClick
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         return false;
+    }
+
+    public String getmBusinessType() {
+        return mBusinessType;
+    }
+
+    public void setmBusinessType(String mBusinessType) {
+        this.mBusinessType = mBusinessType;
     }
 
     public class CuxTranLoader extends AsyncTask<Void, Void, Boolean> {

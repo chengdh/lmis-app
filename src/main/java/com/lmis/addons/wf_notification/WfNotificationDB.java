@@ -28,18 +28,18 @@ public class WfNotificationDB extends LmisDatabase {
     public List<LmisColumn> getModelColumns() {
         List<LmisColumn> cols = new ArrayList<>();
 
-        cols.add(new LmisColumn("message_type", "message type", LmisFields.varchar(60), true));
-        cols.add(new LmisColumn("status", "status", LmisFields.varchar(20), true));
-        cols.add(new LmisColumn("from_user", "from user", LmisFields.varchar(20), true));
-        cols.add(new LmisColumn("to_user", "to user", LmisFields.varchar(20), true));
-        cols.add(new LmisColumn("subject", "subject", LmisFields.text(), true));
-        cols.add(new LmisColumn("begin_date", "begin date", LmisFields.varchar(40), true));
-        cols.add(new LmisColumn("item_key", "item_key", LmisFields.varchar(60), true));
-        cols.add(new LmisColumn("fuser_id", "fuser_id", LmisFields.integer(16), true));
+        cols.add(new LmisColumn("message_type", "message type", LmisFields.varchar(60), true, true));
+        cols.add(new LmisColumn("status", "status", LmisFields.varchar(20), true, true));
+        cols.add(new LmisColumn("from_user", "from user", LmisFields.varchar(20), true, true));
+        cols.add(new LmisColumn("to_user", "to user", LmisFields.varchar(20), true, true));
+        cols.add(new LmisColumn("subject", "subject", LmisFields.text(), true, true));
+        cols.add(new LmisColumn("begin_date", "begin date", LmisFields.varchar(40), true, true));
+        cols.add(new LmisColumn("item_key", "item_key", LmisFields.varchar(60), true, true));
+        cols.add(new LmisColumn("fuser_id", "fuser_id", LmisFields.integer(16), true, true));
         //是否已查看
-        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
+        cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false, true));
         //查看时间
-        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
+        cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false, true));
 
         return cols;
     }

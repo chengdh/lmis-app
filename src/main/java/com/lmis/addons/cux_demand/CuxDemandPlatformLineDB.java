@@ -29,15 +29,15 @@ public class CuxDemandPlatformLineDB  extends LmisDatabase{
     public List<LmisColumn> getModelColumns() {
 
         List<LmisColumn> cols = new ArrayList<>();
-        cols.add(new LmisColumn("cux_demand_id", "cux demand id", LmisFields.integer(16), true));
-        cols.add(new LmisColumn("line_type", "line type", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("item_number", "item number", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("item_description", "item description", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("item_spec", "item spec", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("item_price", "item price", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("demand_quantiry", "demand quantiry", LmisFields.varchar(30), true));
-        cols.add(new LmisColumn("line_bugdet", "line bugdet", LmisFields.varchar(30), true));
+        cols.add(new LmisColumn("cux_demand_id", "cux demand id", LmisFields.integer(16), true, true));
+        cols.add(new LmisColumn("line_type", "line type", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("apply_number", "apply number", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("item_number", "item number", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("item_description", "item description", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("item_spec", "item spec", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("item_price", "item price", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("demand_quantiry", "demand quantiry", LmisFields.varchar(30), true, true));
+        cols.add(new LmisColumn("line_bugdet", "line bugdet", LmisFields.varchar(30), true, true));
         return cols;
     }
 }

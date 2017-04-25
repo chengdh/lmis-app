@@ -34,7 +34,7 @@ public class InventoryLineDB extends LmisDatabase {
         cols.add(new LmisColumn("barcode","barcode", LmisFields.varchar(20)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
         //手动全部出入库标记,用于标明用户是否手动将该条码关联的运单货物全部入库
-        cols.add(new LmisColumn("manual_set_all","manual_set_all", LmisFields.integer(),false));
+        cols.add(new LmisColumn("manual_set_all","manual_set_all", LmisFields.integer(),false, true));
 
         return cols;
     }

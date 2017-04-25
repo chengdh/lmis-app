@@ -46,6 +46,7 @@ public class DialogAuditReject extends DialogFragment {
 
         View view = inflater.inflate(R.layout.dialog_audit_reject, null);
         mEdtAuditNote = (EditText) view.findViewById(R.id.edt_audit);
+        mEdtAuditNote.setText("驳回");
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)

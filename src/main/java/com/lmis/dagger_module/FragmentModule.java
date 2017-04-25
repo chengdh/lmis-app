@@ -10,11 +10,13 @@ import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.carrying_bill.CarryingBillNew;
 import com.lmis.addons.carrying_bill.CarryingBillView;
 import com.lmis.addons.cux_demand.CuxDemandDetail;
+import com.lmis.addons.cux_demand.CuxDemandDetailWebView;
 import com.lmis.addons.cux_demand.CuxDemandList;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailHeader;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailLines;
 import com.lmis.addons.cux_demand.FragmentCuxDemandDetailWorkflowMessages;
 import com.lmis.addons.cux_tran.CuxTranDetail;
+import com.lmis.addons.cux_tran.CuxTranDetailWebView;
 import com.lmis.addons.cux_tran.CuxTranList;
 import com.lmis.addons.cux_tran.FragmentCuxTranDetailHeader;
 import com.lmis.addons.cux_tran.FragmentCuxTranDetailLines;
@@ -80,11 +82,13 @@ import dagger.Provides;
                 WfNoticicationList.class,
                 CuxDemandList.class,
                 CuxDemandDetail.class,
+                CuxDemandDetailWebView.class,
                 FragmentCuxDemandDetailHeader.class,
                 FragmentCuxDemandDetailLines.class,
                 FragmentCuxDemandDetailWorkflowMessages.class,
                 CuxTranList.class,
                 CuxTranDetail.class,
+                CuxTranDetailWebView.class,
                 FragmentCuxTranDetailHeader.class,
                 FragmentCuxTranDetailLines.class,
                 FragmentCuxTranDetailWorkflowMessages.class

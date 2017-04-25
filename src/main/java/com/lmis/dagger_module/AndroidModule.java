@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.inputmethod.InputMethodManager;
@@ -75,6 +76,10 @@ public class AndroidModule {
     @Provides
     ClassLoader provideClassLoader(@Application final Context context) {
         return context.getClassLoader();
+    }
+    @Provides
+    ConnectivityManager provideConnectivityManager(@Application Context context) {
+        return getSystemService(context, Context.CONNECTIVITY_SERVICE);
     }
 
     @Provides

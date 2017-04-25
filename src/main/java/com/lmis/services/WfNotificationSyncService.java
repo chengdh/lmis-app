@@ -145,7 +145,7 @@ public class WfNotificationSyncService extends InjectingService implements Perfo
             //数据库中原有的数据也需要更新
             List<Integer> ids = cuxDemandDb.ids();
             lmisCuxDemand.syncWithMethod("unread_bills", arguments);
-            lmisCuxTran.syncWithMethod("unread_bills", arguments);
+            lmisCuxTran.syncWithMethod("unread_bills_all", arguments);
         }
         catch (Exception ex){
             ex.printStackTrace();

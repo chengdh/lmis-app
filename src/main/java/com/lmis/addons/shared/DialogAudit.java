@@ -49,6 +49,7 @@ public class DialogAudit extends DialogFragment {
 
 
         mEdtAuditNote = (EditText) view.findViewById(R.id.edt_audit);
+        mEdtAuditNote.setText("同意");
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)

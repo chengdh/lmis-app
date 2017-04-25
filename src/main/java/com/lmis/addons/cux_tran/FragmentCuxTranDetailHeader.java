@@ -28,6 +28,10 @@ public class FragmentCuxTranDetailHeader extends BaseFragment {
 
     View mView = null;
     LmisDataRow mCuxTranData;
+
+    //单据类型
+    @InjectView(R.id.txv_business_type)
+    TextView mTxvBusinessType;
     //计划编号
     @InjectView(R.id.txv_require_number)
     TextView mTxvRequireNumber;
@@ -100,6 +104,9 @@ public class FragmentCuxTranDetailHeader extends BaseFragment {
 
     private void initView() {
         //设置主表内容
+
+        String businessType = mCuxTranData.getString("business_type");
+        mTxvBusinessType.setText(CuxTranList.mMapBusinessType.get(businessType));
 
         String requireNumber = mCuxTranData.getString("require_number");
         mTxvRequireNumber.setText(requireNumber);

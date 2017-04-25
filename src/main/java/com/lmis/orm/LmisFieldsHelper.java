@@ -13,6 +13,10 @@ import us.monoid.json.JSONObject;
 public class LmisFieldsHelper {
     public static final String TAG = "LmisFieldsHelper";
     JSONObject mFields = new JSONObject();
+
+    //发送到服务端需要选择的字段
+    JSONObject mSelectFields = new JSONObject();
+
     List<LmisValues> mValues = new ArrayList<LmisValues>();
     List<LmisColumn> mColumns = new ArrayList<LmisColumn>();
     OERelRecord mRelRecord = new OERelRecord();
@@ -31,6 +35,7 @@ public class LmisFieldsHelper {
     public LmisFieldsHelper(JSONArray records) {
         addAll(records);
     }
+
 
     public void addAll(JSONArray records) {
         try {
@@ -138,9 +143,13 @@ public class LmisFieldsHelper {
                 if (col.canSync()) {
                     mFields.accumulate("fields", col.getName());
                 }
+                if(col.ismInSelect()){
+                    mSelectFields.accumulate("fields", col.getName());
+                }
             }
             if (cols.size() == 1) {
                 mFields.accumulate("fields", cols.get(0));
+                mSelectFields.accumulate("fields", cols.get(0));
             }
         } catch (Exception e) {
         }
@@ -152,6 +161,10 @@ public class LmisFieldsHelper {
 
     public JSONObject get() {
         return mFields;
+    }
+    public JSONObject getSelectFields() {
+        return mSelectFields;
+
     }
 
     public List<LmisValues> getValues() {

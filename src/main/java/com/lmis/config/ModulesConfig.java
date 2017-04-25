@@ -18,11 +18,15 @@
  */
 package com.lmis.config;
 
+import android.os.Bundle;
+
 import com.lmis.addons.cux_demand.CuxDemandList;
 import com.lmis.addons.cux_tran.CuxTranList;
 import com.lmis.addons.wf_notification.WfNoticicationList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
+
+import java.util.Map;
 
 /**
  * The Class ModulesConfig.
@@ -43,6 +47,11 @@ public class ModulesConfig extends ModulesConfigHelper {
 
         add(new Module("module_wf_notification", "workflow notification", new WfNoticicationList(), 0), true);
         add(new Module("module_cux_demand", "cux demand", new CuxDemandList(), 0), true);
-        add(new Module("module_cux_tran", "cux tran", new CuxTranList(), 0), true);
+
+        for (Map.Entry<String, String> entry : CuxTranList.mMapBusinessType.entrySet()) {
+            CuxTranList list = new CuxTranList();
+            list.setmBusinessType(entry.getKey());
+            add(new Module("module_cux_tran_" + entry.getKey(), "cux tran", list, 0), true);
+        }
     }
 }
