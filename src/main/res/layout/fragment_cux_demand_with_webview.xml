@@ -8,5 +8,14 @@
         android:id="@+id/webView_cux_demand_detail"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal" >
+
+        <ProgressBar
+            android:id="@+id/pb_spinner"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_x="161dp"
+            android:layout_y="23dp" />
+    </WebView>
 </LinearLayout>

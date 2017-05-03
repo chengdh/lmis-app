@@ -41,7 +41,7 @@ public class Lmis {
     }
 
     public Lmis(SharedPreferences pref) {
-        debugMode = false;
+        debugMode = true;
         _base_url = null;
         _base_location = null;
         _port = null;
@@ -50,7 +50,7 @@ public class Lmis {
 
     public Lmis(String base_url, long port)
             throws JSONException, IOException, LmisVersionException {
-        debugMode = false;
+        debugMode = true;
         _base_url = null;
         _base_location = null;
         _port = null;
@@ -60,7 +60,7 @@ public class Lmis {
 
     public Lmis(String base_url)
             throws JSONException, IOException, LmisVersionException {
-        debugMode = false;
+        debugMode = true;
         _base_url = null;
         _base_location = null;
         _port = null;
@@ -69,7 +69,7 @@ public class Lmis {
 
     public Lmis(String base_url, boolean isnetwork)
             throws JSONException, IOException, LmisVersionException {
-        debugMode = false;
+        debugMode = true;
         _base_url = null;
         _base_location = null;
         _port = null;
@@ -98,6 +98,7 @@ public class Lmis {
 
         JSONObject ret = new Resty().json(RequestURL, content(params)).object();
         if (debugMode) {
+
             Log.i("LMIS_POST_URL", RequestURL);
             Log.i("LMIS_POST", params.toString());
             Log.i("LMIS_RESPONSE", ret.toString());

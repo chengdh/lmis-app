@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.lmis.LmisArguments;
@@ -76,6 +78,8 @@ public class CuxDemandDetailWebView extends BaseFragment implements DialogAudit.
 
     @InjectView(R.id.webView_cux_demand_detail)
     WebView mWebView;
+    @InjectView(R.id.pb_spinner)
+    ProgressBar mPbar;
 
     @Override
     public void onDialogPositiveClick(DialogAudit dialog) {
@@ -160,6 +164,15 @@ public class CuxDemandDetailWebView extends BaseFragment implements DialogAudit.
 //                    return false;
                 }
 
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    mPbar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    mPbar.setVisibility(View.GONE);
+                }
 
                 @Override
                 public void onReceivedError(WebView view, int errorCode,
