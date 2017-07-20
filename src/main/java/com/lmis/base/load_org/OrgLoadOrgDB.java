@@ -1,4 +1,4 @@
-package com.lmis.base.user_org;
+package com.lmis.base.load_org;
 
 import android.content.Context;
 
@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by chengdh on 14-6-15.
- * 记录当前用户可访问的机构信息
+ * Created by chengdh on 2017/7/20.
  */
-public class UserOrgDB extends LmisDatabase {
+
+public class OrgLoadOrgDB extends LmisDatabase {
+
     Context mContext;
 
-    public UserOrgDB(Context context) {
+    public OrgLoadOrgDB(Context context) {
         super(context);
         mContext = context;
     }
@@ -26,15 +27,17 @@ public class UserOrgDB extends LmisDatabase {
     public List<LmisColumn> getModelColumns() {
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
 
-        cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer()));
-        cols.add(new LmisColumn("org_id", "Parent Org", LmisFields.manyToOne(new OrgDB(mContext))));
+        //分拣组id
+        cols.add(new LmisColumn("org_load_id", "org_load_id", LmisFields.integer()));
+        cols.add(new LmisColumn("org_id", "Org ", LmisFields.manyToOne(new OrgDB(mContext))));
         return cols;
     }
 
     @Override
     public String getModelName() {
 
-        return "UserOrg";
+        return "OrgLoadOrg";
     }
 
 }
+

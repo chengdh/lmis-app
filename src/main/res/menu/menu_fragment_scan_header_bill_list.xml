@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_scan_header_bill_list_search"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="always|collapseActionView"
+        android:actionViewClass="android.widget.SearchView"
+        android:title="@string/inventory_out_list_search"></item>
+</menu>

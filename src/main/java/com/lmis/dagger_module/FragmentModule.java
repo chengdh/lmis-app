@@ -23,6 +23,8 @@ import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.addons.inventory.InventoryMoveReadonly;
 import com.lmis.addons.message.MessageDetail;
 import com.lmis.addons.message.MessageList;
+import com.lmis.addons.scan_header.ScanHeaderList;
+import com.lmis.addons.scan_header.ScanHeaderNew;
 import com.lmis.addons.search_bill.CarryingBillEdit;
 import com.lmis.addons.search_bill.SearchBill;
 import com.lmis.base.about.AboutFragment;
@@ -65,7 +67,11 @@ import dagger.Provides;
                 GoodsExceptionList.class,
                 GoodsExceptionNew.class,
                 GoodsExceptionView.class,
-                CarryingBillEdit.class
+                CarryingBillEdit.class,
+                ScanHeaderList.class,
+                ScanHeaderNew.class,
+                com.lmis.addons.scan_header.FragmentBillList.class,
+                com.lmis.addons.scan_header.FragmentScanBarcode.class
 
         })
 public class FragmentModule {

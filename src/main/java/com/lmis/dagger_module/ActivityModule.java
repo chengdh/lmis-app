@@ -15,6 +15,7 @@ import com.lmis.util.barcode.BranchOutBarcodeParser;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.YardConfirmBarcodeParser;
 import com.lmis.util.barcode.YardOutBarcodeParser;
+import com.lmis.util.barcode_scan_header.SortingInBarcodeParser;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
@@ -51,6 +52,10 @@ import dagger.Provides;
                 YardOutBarcodeParser.class,
                 BranchConfirmBarcodeParser.class,
                 GoodsInfo.class,
+                com.lmis.util.barcode_scan_header.BarcodeParser.class,
+                SortingInBarcodeParser.class,
+                com.lmis.util.barcode_scan_header.GoodsInfo.class
+
         })
 public class ActivityModule {
     private MainActivity mActivity;

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
+import com.lmis.base.sorting_org.OrgSortingOrgDB;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.LmisUser;
@@ -70,6 +71,61 @@ public class OrgModule {
             }
         }
         return ret;
+    }
+
+    /**
+     * 返回当前分拣组可操作的分理处列表.
+     *
+     * @param ctx the ctx
+     * @return the list
+     */
+    @Provides
+    @SortingOrgs
+    public List<LmisDataRow> provideSortingOrgs(@InjectingActivityModule.Activity Context ctx) {
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        LmisUser curUser = LmisUser.current(ctx);
+        if (curUser != null) {
+            OrgDB orgDB = new OrgDB(ctx);
+            int defaultOrgID = curUser.getDefault_org_id();
+
+            String where = "org_sorting_id = ?";
+            String[] whereArgs = new String[]{defaultOrgID + ""};
+            List<LmisDataRow> orgSortingOrgList = new OrgSortingOrgDB(ctx).select(where,whereArgs);
+            for (Iterator<LmisDataRow> i = orgSortingOrgList.iterator(); i.hasNext(); ) {
+                LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
+                if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))
+                    ret.add(theOrg);
+            }
+        }
+        return ret;
+
+    }
+
+    /**
+     * 返回当前分拣组可操作的分理处列表.
+     *
+     * @param ctx the ctx
+     * @return the list
+     */
+    @Provides
+    @LoadOrgs
+    public List<LmisDataRow> provideLoadOrgs(@InjectingActivityModule.Activity Context ctx) {
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        LmisUser curUser = LmisUser.current(ctx);
+        if (curUser != null) {
+            int defaultOrgID = curUser.getDefault_org_id();
+
+            String where = "org_load_id = ?";
+            String[] whereArgs = new String[]{defaultOrgID + ""};
+            List<LmisDataRow> orgLoadOrgList = new OrgSortingOrgDB(ctx).select(where,whereArgs);
+            for (Iterator<LmisDataRow> i = orgLoadOrgList.iterator(); i.hasNext(); ) {
+                LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
+                if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))
+                    ret.add(theOrg);
+            }
+        }
+        return ret;
+
     }
 
     @Provides
@@ -208,5 +264,21 @@ public class OrgModule {
     @Documented
     @Retention(RUNTIME)
     public @interface SummaryChildrenOrgs {
+    }
+
+    //当前登录分拣组可操作的分理处信息
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface SortingOrgs {
+    }
+
+    //当前装卸组可操作的分公司列表信息
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface LoadOrgs {
     }
 }

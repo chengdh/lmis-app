@@ -33,6 +33,16 @@ public class GoodsInfo {
      * 运单编号.
      */
     String mBillNo = null;
+
+    /**
+     * 货号.
+     */
+    String mGoodsNo = null;
+    String mBillDate = null;
+    double mCarryingFee = 0;
+    double mGoodsFee = 0;
+    String mGoodsInfo = "";
+
     /**
      * 货物总件数.
      */
@@ -49,7 +59,7 @@ public class GoodsInfo {
      */
     Integer mID = -1;
 
-    public GoodsInfo(Context context, String barcode) throws InvalidBarcodeException{
+    public GoodsInfo(Context context, String barcode) throws InvalidBarcodeException {
         mContext = context;
         mBarcode = barcode;
         ((Injector) context).inject(this);
@@ -122,10 +132,10 @@ public class GoodsInfo {
      *
      * @return the string
      */
-    private String getOrgName(){
-        for(LmisDataRow org : mOrgs){
+    private String getOrgName() {
+        for (LmisDataRow org : mOrgs) {
             Integer id = org.getInt("id");
-            if(id.equals(mToOrgId))
+            if (id.equals(mToOrgId))
                 mToOrgName = org.getString("name");
         }
         return mToOrgName;

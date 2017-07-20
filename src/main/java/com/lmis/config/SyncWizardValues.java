@@ -39,9 +39,9 @@ public class SyncWizardValues implements SyncWizardHelper {
         list.add(new SyncValue("basic"));
         list.add(new SyncValue("il_configs", IlConfigProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         list.add(new SyncValue("orgs", OrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("user_orgs", UserOrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("inventory_moves", InventoryMoveProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
-        list.add(new SyncValue("messages", MessageProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("user_orgs", UserOrgProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("inventory_moves", InventoryMoveProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
+//        list.add(new SyncValue("messages", MessageProvider.AUTHORITY, SyncValue.Type.CHECKBOX));
         return list;
     }
 }

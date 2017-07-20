@@ -1,6 +1,5 @@
-package com.lmis.addons.inventory;
+package com.lmis.addons.scan_header;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,22 +21,20 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.lmis.CurrentOrgChangeEvent;
 import com.lmis.R;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
-import com.lmis.providers.inventory_move.InventoryMoveProvider;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.support.listview.LmisListAdapter;
-import com.lmis.util.barcode.InventoryMoveOpType;
+import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
-import com.lmis.CurrentOrgChangeEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -51,12 +48,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * Created by chengdh on 14-6-16.
- * 出库单列表
+ * Created by chengdh on 2017/7/12.
  */
-public class InventoryMoveList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    public static final String TAG = "InventoryOutList";
+public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    public static final String TAG = "ScanHeaderList";
 
 
     @Inject
@@ -74,13 +70,22 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     /**
      * 单据类型.
-     * 分理处盘货单/货场确认单/货场发货单/分公司确认单
+     * 分拣组入库/装卸组入库/装卸组出库
      */
-    private enum MType {
-        BRANCH_OUT, YARD_CONFIRM, YARD_OUT, BRANCH_CONFIRM
+    public enum MType {
+        SORTING_IN, LOAD_IN, LOAD_OUT
     }
 
-    MType mType = MType.BRANCH_OUT;
+    public MType getmType() {
+        return mType;
+    }
+
+    public void setmType(MType mType) {
+        this.mType = mType;
+    }
+
+    MType mType = MType.SORTING_IN;
+
 
     /**
      * 当前选定的数据索引.
@@ -89,7 +94,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     String mCurrentState = "draft";
 
-    String mCurrentType = InventoryMoveOpType.BRANCH_OUT;
+    String mCurrentType = ScanHeaderOpType.SORTING_IN;
 
     View mView = null;
 
@@ -97,15 +102,15 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     LmisListAdapter mListViewAdapter = null;
 
-    @InjectView(R.id.listInventoryOuts)
+    @InjectView(R.id.listScanHeaders)
     PullToRefreshListView mListView;
 
-    @InjectView(R.id.txvInventoryOutBlank)
+    @InjectView(R.id.txvScanHeaderBlank)
     TextView mTxvBlank;
 
-    List<Object> mInventoryObjects = new ArrayList<Object>();
+    List<Object> mScanHeaderObjects = new ArrayList<Object>();
 
-    InventoryLoader mInventoryLoader = null;
+    ScanHeaderLoader mScanHeaderLoader = null;
 
 
     HashMap<Integer, Boolean> mMultiSelectedRows = new HashMap<Integer, Boolean>();
@@ -119,13 +124,13 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
      */
     static class ViewHolder {
         //发货地
-        @InjectView(R.id.txvInventoryOutFromTo)
+        @InjectView(R.id.txvScanHeaderOrg)
         TextView txvFromTo;
         //描述信息
-        @InjectView(R.id.txvInventoryOutDescribe)
+        @InjectView(R.id.txvScanHeaderDescribe)
         TextView txvDescribe;
         //创建日期
-        @InjectView(R.id.txvInventoryOutBillDate)
+        @InjectView(R.id.txvScanHeaderBillDate)
         TextView txvBillDate;
 
         public ViewHolder(View view) {
@@ -139,7 +144,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             mSelectedItemPosition = savedInstanceState.getInt("mSelectedItemPosition", -1);
         }
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_inventory_move_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_scan_header_list, container, false);
         ButterKnife.inject(this, mView);
         mBus.register(this);
         init();
@@ -157,7 +162,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setOnItemLongClickListener(this);
         listView.setMultiChoiceModeListener(mMultiChoiceListener);
-        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_inventory_move_listview_items, mInventoryObjects) {
+        mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_scan_header_listview_items, mScanHeaderObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View mView = convertView;
@@ -172,17 +177,17 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
         };
         listView.setAdapter(mListViewAdapter);
-        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-                scope.main().requestSync(InventoryMoveProvider.AUTHORITY);
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-
-            }
-        });
+//        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+//                scope.main().requestSync(InventoryMoveProvider.AUTHORITY);
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+//
+//            }
+//        });
 
 
         initData();
@@ -190,17 +195,14 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
     }
 
     private void initData() {
-        Log.d(TAG, "InventoryOutList->initData()");
+        Log.d(TAG, "ScanHeaderList->initData()");
         String title = "Draft";
-//        if(mSelectedItemPosition > -1) {
-//            return;
-//        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            if (mInventoryLoader != null) {
-                mInventoryLoader.cancel(true);
-                mInventoryLoader = null;
+            if (mScanHeaderLoader != null) {
+                mScanHeaderLoader.cancel(true);
+                mScanHeaderLoader = null;
             }
             if (bundle.containsKey("state")) {
                 mCurrentState = bundle.getString("state");
@@ -211,38 +213,26 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
                     title = "Processed";
                 }
             }
-            if (bundle.containsKey("type")) {
-                mCurrentType = bundle.getString("type");
-                if (mCurrentType.equals(InventoryMoveOpType.BRANCH_OUT)) {
-                    mType = MType.BRANCH_OUT;
-                } else if (mCurrentType.equals(InventoryMoveOpType.YARD_CONFIRM)) {
-                    mType = MType.YARD_CONFIRM;
-                } else if (mCurrentType.equals(InventoryMoveOpType.YARD_OUT)) {
-                    mType = MType.YARD_OUT;
-                } else if (mCurrentType.equals(InventoryMoveOpType.BRANCH_CONFIRM)) {
-                    mType = MType.BRANCH_CONFIRM;
-                }
 
-            }
             scope.main().setTitle(title);
-            mInventoryLoader = new InventoryLoader(mType, mState);
-            mInventoryLoader.execute((Void) null);
+            mScanHeaderLoader = new ScanHeaderLoader(mType, mState);
+            mScanHeaderLoader.execute((Void) null);
         }
     }
 
     private View handleRowView(View mView, final int position) {
         ViewHolder holder = (ViewHolder) mView.getTag();
-        if (mInventoryObjects.size() > 0) {
-            LmisDataRow row_data = (LmisDataRow) mInventoryObjects.get(position);
-            String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
-            String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
+        if (mScanHeaderObjects.size() > 0) {
+            LmisDataRow row_data = (LmisDataRow) mScanHeaderObjects.get(position);
+//            String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
+//            String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
 
             Integer goodsCount = row_data.getInt("sum_goods_count");
             Integer billsCount = row_data.getInt("sum_bills_count");
             String describe = String.format("共%d票%d件", billsCount, goodsCount);
             String billDate = row_data.getString("bill_date");
-            String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
-            holder.txvFromTo.setText(fromTo);
+//            String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
+//            holder.txvFromTo.setText(fromTo);
             holder.txvBillDate.setText(billDate);
             holder.txvDescribe.setText(describe);
         }
@@ -264,7 +254,6 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             }
         }
 
-        @SuppressLint("UseSparseArrays")
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
@@ -294,6 +283,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
+
     };
 
 
@@ -309,24 +299,20 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         String[] whereArgs = new String[3];
         String where = "op_type = ?";
         switch (type) {
-            case BRANCH_OUT:
-                where += " AND from_org_id = ?";
-                whereArgs[0] = InventoryMoveOpType.BRANCH_OUT;
-                break;
-            case YARD_CONFIRM:
+            case SORTING_IN:
                 where += " AND to_org_id = ?";
-                whereArgs[0] = InventoryMoveOpType.YARD_CONFIRM;
+                whereArgs[0] = ScanHeaderOpType.SORTING_IN;
                 break;
-            case YARD_OUT:
-                where += " AND from_org_id = ?";
-                whereArgs[0] = InventoryMoveOpType.YARD_OUT;
-                break;
-            case BRANCH_CONFIRM:
+            case LOAD_IN:
                 where += " AND to_org_id = ?";
-                whereArgs[0] = InventoryMoveOpType.BRANCH_CONFIRM;
+                whereArgs[0] = ScanHeaderOpType.LOAD_IN;
+                break;
+            case LOAD_OUT:
+                where += " AND from_org_id = ?";
+                whereArgs[0] = ScanHeaderOpType.LOAD_OUT;
                 break;
             default:
-                whereArgs[0] = InventoryMoveOpType.BRANCH_OUT;
+                whereArgs[0] = ScanHeaderOpType.LOAD_IN;
                 break;
         }
 
@@ -359,12 +345,12 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
      * @return the fragment
      */
     private BaseFragment getFragment(String type, String state) {
-        InventoryMoveList inventory = new InventoryMoveList();
+        ScanHeaderList list = new ScanHeaderList();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
         bundle.putString("state", state);
-        inventory.setArguments(bundle);
-        return inventory;
+        list.setArguments(bundle);
+        return list;
     }
 
     @Override
@@ -374,52 +360,41 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
         OrgDB db = new OrgDB(context);
         LmisDataRow currentOrg = db.select(user.getDefault_org_id());
+        String groupTitle = "";
+        String draftTitle = "待处理";
+        String processedTitle = "已处理";
 
-        //分理处出库
-        String branchOutTitle = "出库扫码";
-        String branchOutDraft = "草稿";
-        String branchOutProcessed = "已上传";
+        //分拣组入库
+        if (mType == MType.SORTING_IN) {
+            groupTitle = "分拣组入库";
 
-        drawerItems.add(new DrawerItem(TAG, branchOutTitle, true));
-        drawerItems.add(new DrawerItem(TAG, branchOutDraft, count(MType.BRANCH_OUT, MState.DRAFT, context), R.drawable.ic_menu_barcode, getFragment(InventoryMoveOpType.BRANCH_OUT, "draft")));
-        drawerItems.add(new DrawerItem(TAG, branchOutProcessed, count(MType.BRANCH_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_OUT, "processed")));
-
-        if (currentOrg.getBoolean("is_yard")) {
-
-            //货场收货
-            String yardConfirmTitle = "货场入库";
-            String yardConfirmDraft = "待处理";
-            String yardConfirmProcessed = "已处理";
-
-            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
-
-            //货场出库
-            String yardOutTitle = "货场出库";
-            String yardOutDraft = "待处理";
-            String yardOutProcessed = "已处理";
-
-            drawerItems.add(new DrawerItem(TAG, yardOutTitle, true));
-            drawerItems.add(new DrawerItem(TAG, yardOutDraft, count(MType.YARD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_OUT, "draft")));
-            drawerItems.add(new DrawerItem(TAG, yardOutProcessed, count(MType.YARD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_OUT, "processed")));
+            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.SORTING_IN, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SORTING_IN, "draft")));
+            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.SORTING_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SORTING_IN, "processed")));
         }
 
-        //分理处/分公司入库
-        String branchConfirmTitle = "入库扫码";
-        String branchConfirmDraft = "待处理";
-        String branchConfirmProcessed = "已处理";
+        //装卸组入库
+        if (mType == MType.LOAD_IN) {
+            groupTitle = "装卸组入库";
 
-        drawerItems.add(new DrawerItem(TAG, branchConfirmTitle, true));
-        drawerItems.add(new DrawerItem(TAG, branchConfirmDraft, count(MType.BRANCH_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.BRANCH_CONFIRM, "draft")));
-        drawerItems.add(new DrawerItem(TAG, branchConfirmProcessed, count(MType.BRANCH_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.BRANCH_CONFIRM, "processed")));
+            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.LOAD_IN, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
+            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.LOAD_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
+        }
+        //装卸组出库
+        if (mType == MType.LOAD_IN) {
+            groupTitle = "装卸组出库";
 
+            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.LOAD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
+            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.LOAD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+        }
         return drawerItems;
     }
 
     private int count(MType type, MState state, Context context) {
         int count = 0;
-        InventoryMoveDB db = new InventoryMoveDB(context);
+        ScanHeaderDB db = new ScanHeaderDB(context);
         String where = null;
         String whereArgs[] = null;
         HashMap<String, Object> obj = getWhere(type, state);
@@ -431,7 +406,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public Object databaseHelper(Context context) {
-        return new InventoryMoveDB(context);
+        return new ScanHeaderDB(context);
     }
 
     /**
@@ -450,17 +425,19 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         position -= mListView.getRefreshableView().getHeaderViewsCount();
 
         mSelectedItemPosition = position;
-        LmisDataRow row = (LmisDataRow) mInventoryObjects.get(position);
+        LmisDataRow row = (LmisDataRow) mScanHeaderObjects.get(position);
         BaseFragment detail;
         Bundle bundle = new Bundle();
-        bundle.putInt("inventory_move_id", row.getInt("id"));
+        bundle.putInt("scan_header_id", row.getInt("id"));
         bundle.putInt("position", position);
         bundle.putString("type", mCurrentType);
         if (row.get("processed") != null && row.getBoolean("processed")) {
-            detail = new InventoryMoveReadonly();
+//            detail = new ScanHeaderDetail();
         } else {
-            detail = new InventoryMove();
+            detail = new ScanHeaderNew();
         }
+
+        detail = new ScanHeaderNew();
 
         detail.setArguments(bundle);
 
@@ -478,8 +455,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_fragment_inventory_move_list, menu);
-        mSearchView = (SearchView) menu.findItem(R.id.menu_inventory_out_list_search).getActionView();
+        inflater.inflate(R.menu.menu_fragment_scan_header_list, menu);
+        mSearchView = (SearchView) menu.findItem(R.id.menu_scan_header_list_search).getActionView();
         mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
     }
 
@@ -494,15 +471,15 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case (R.id.menu_inventory_out_new):
+            case (R.id.menu_scan_header_new):
                 Log.d(TAG, "New Menu select");
                 Bundle args = new Bundle();
                 args.putString("type", mCurrentType);
-                Fragment inventoryOut = new InventoryMove();
-                inventoryOut.setArguments(args);
-                scope.main().startDetailFragment(inventoryOut);
+                Fragment fragment = new ScanHeaderNew();
+                fragment.setArguments(args);
+                scope.main().startDetailFragment(fragment);
                 return true;
-            case (R.id.menu_inventory_out_list_search):
+            case (R.id.menu_scan_header_list_search):
                 Log.d(TAG, "Search menu select");
                 return true;
             default:
@@ -512,20 +489,20 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     @Subscribe
     public void onCurrentOrgChangeEvent(CurrentOrgChangeEvent evt) {
-        if (mInventoryLoader != null) {
-            mInventoryLoader.cancel(true);
+        if (mScanHeaderLoader != null) {
+            mScanHeaderLoader.cancel(true);
 
         }
-        mInventoryLoader = new InventoryLoader(mType, mState);
-        mInventoryLoader.execute((Void) null);
+        mScanHeaderLoader = new ScanHeaderLoader(mType, mState);
+        mScanHeaderLoader.execute((Void) null);
         scope.main().refreshDrawer(TAG);
     }
 
-    public class InventoryLoader extends AsyncTask<Void, Void, Boolean> {
+    public class ScanHeaderLoader extends AsyncTask<Void, Void, Boolean> {
         MState mState = null;
         MType mType = null;
 
-        public InventoryLoader(MType type, MState state) {
+        public ScanHeaderLoader(MType type, MState state) {
             mState = state;
             mType = type;
         }
@@ -537,17 +514,17 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "bill_date DESC");
-            mInventoryObjects.clear();
-            mInventoryObjects.addAll(result);
+            mScanHeaderObjects.clear();
+            mScanHeaderObjects.addAll(result);
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             Log.d(TAG, "ScanHeaderLoader#onPostExecute");
-            mListViewAdapter.notifiyDataChange(mInventoryObjects);
-            checkInventoryListStatus();
-            mInventoryLoader = null;
+            mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
+            checkScanHeaderListStatus();
+            mScanHeaderLoader = null;
         }
 
     }
@@ -555,8 +532,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
     /**
      * 设置空记录指示控件是否可见.
      */
-    private void checkInventoryListStatus() {
-        mTxvBlank.setVisibility(mInventoryObjects.size() > 0 ? View.GONE : View.VISIBLE);
+    private void checkScanHeaderListStatus() {
+        mTxvBlank.setVisibility(mScanHeaderObjects.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -588,8 +565,8 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
                 String model = intent.getExtras().getString("model");
                 if (model.equals("LoadListWithBarcode")) {
                     LmisDataRow row = db().select(Integer.parseInt(id));
-                    mInventoryObjects.add(0, row);
-                    mListViewAdapter.notifiyDataChange(mInventoryObjects);
+                    mScanHeaderObjects.add(0, row);
+                    mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
                 }
 
             } catch (Exception e) {
@@ -608,9 +585,9 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             scope.main().refreshDrawer(TAG);
             mListView.onRefreshComplete();
             mListViewAdapter.clear();
-            mInventoryObjects.clear();
-            mListViewAdapter.notifiyDataChange(mInventoryObjects);
-            new InventoryLoader(mType, mState).execute();
+            mScanHeaderObjects.clear();
+            mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
+            new ScanHeaderLoader(mType, mState).execute();
         }
     };
 
@@ -629,19 +606,19 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
         for (int position : mMultiSelectedRows.keySet()) {
-            LmisDataRow inventoryOut = (LmisDataRow) mInventoryObjects.get(position);
-            delObjs.add(inventoryOut);
-            int id = inventoryOut.getInt("id");
+            LmisDataRow scanHeader = (LmisDataRow) mScanHeaderObjects.get(position);
+            delObjs.add(scanHeader);
+            int id = scanHeader.getInt("id");
             db().delete(id);
-            InventoryLineDB ldb = new InventoryLineDB(scope.context());
-            String where = "load_list_with_barcode_id = ?";
+            ScanLineDB lineDB = new ScanLineDB(scope.context());
+            String where = "scan_header_id = ?";
             String[] whereArgs = new String[]{id + ""};
-            ldb.delete(where, whereArgs);
+            lineDB.delete(where, whereArgs);
             ret++;
         }
         mMultiSelectedRows.clear();
-        mInventoryObjects.removeAll(delObjs);
-        mListViewAdapter.notifiyDataChange(mInventoryObjects);
+        mScanHeaderObjects.removeAll(delObjs);
+        mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
 
         DrawerListener drawer = scope.main();
         drawer.refreshDrawer(TAG);

@@ -18,11 +18,14 @@
  */
 package com.lmis.config;
 
+import android.support.v4.app.Fragment;
+
 import com.lmis.addons.carrying_bill.CarryingBillList;
 import com.lmis.addons.dashboard.DashBoard;
 import com.lmis.addons.goods_exception.GoodsExceptionList;
 import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.addons.message.MessageList;
+import com.lmis.addons.scan_header.ScanHeaderList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
 
@@ -37,10 +40,13 @@ public class ModulesConfig extends ModulesConfigHelper {
     public ModulesConfig() {
         /* application modules */
         //add(new Module("module_idea", "Idea", new Idea(), 0), true);
-        add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
-        add(new Module("module_message", "Message", new MessageList(), 0), true);
-        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
-        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
-        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
+//        add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
+//        add(new Module("module_message", "Message", new MessageList(), 0), true);
+//        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
+//        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
+//        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
+        ScanHeaderList scanHeader = new ScanHeaderList();
+        scanHeader.setmType(ScanHeaderList.MType.SORTING_IN);
+        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeader, 0), true);
     }
 }
