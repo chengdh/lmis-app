@@ -20,6 +20,8 @@ import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
+import com.lmis.util.controls.OrgLoadOrgSpinner;
+import com.lmis.util.controls.OrgSortingOrgSpinner;
 import com.lmis.util.controls.PayTypeSpinner;
 import com.lmis.util.controls.SummaryChidrenSpinner;
 import com.lmis.util.controls.YardsOrgSpinner;
@@ -54,7 +56,9 @@ import dagger.Provides;
                 GoodsInfo.class,
                 com.lmis.util.barcode_scan_header.BarcodeParser.class,
                 SortingInBarcodeParser.class,
-                com.lmis.util.barcode_scan_header.GoodsInfo.class
+                com.lmis.util.barcode_scan_header.GoodsInfo.class,
+                OrgLoadOrgSpinner.class,
+                OrgSortingOrgSpinner.class
 
         })
 public class ActivityModule {

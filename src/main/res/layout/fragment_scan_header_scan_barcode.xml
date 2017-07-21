@@ -10,12 +10,14 @@
         android:id="@+id/spinner_load_org_select"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:spinnerMode="dropdown" />
 
     <com.lmis.util.controls.OrgSortingOrgSpinner
         android:id="@+id/spinner_sorting_org_select"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:spinnerMode="dropdown" />
 
     <EditText

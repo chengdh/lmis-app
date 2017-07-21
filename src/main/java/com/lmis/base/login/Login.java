@@ -229,18 +229,18 @@ public class Login extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String authority = intent.getStringExtra("authority");
-            if(authority == null)
+            if (authority == null)
                 return;
-            if(authority.equals(OrgProvider.AUTHORITY)){
+            if (authority.equals(OrgProvider.AUTHORITY)) {
                 mSyncOrgs = true;
             }
-            if(authority.equals(UserOrgProvider.AUTHORITY)){
-                mSyncUserOrgs = true;
-            }
-            if(authority.equals(IlConfigProvider.AUTHORITY)){
+//            if(authority.equals(UserOrgProvider.AUTHORITY)){
+//                mSyncUserOrgs = true;
+//            }
+            if (authority.equals(IlConfigProvider.AUTHORITY)) {
                 mSyncIlConfigs = true;
             }
-            if(mSyncOrgs && mSyncUserOrgs && mSyncIlConfigs){
+            if (mSyncOrgs && mSyncIlConfigs) {
                 mSyncDialog.dismiss();
                 startSyncWizard();
             }

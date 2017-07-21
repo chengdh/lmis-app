@@ -20,7 +20,7 @@ public class ScanLineDB extends LmisDatabase {
 
     @Override
     public String getModelName() {
-        return "scan_line";
+        return "ScanLine";
     }
 
     @Override
@@ -29,6 +29,7 @@ public class ScanLineDB extends LmisDatabase {
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
 
         cols.add(new LmisColumn("scan_header_id", "Scan Header", LmisFields.integer()));
+        cols.add(new LmisColumn("carrying_bill_id", "carrying_bill_id", LmisFields.integer()));
         cols.add(new LmisColumn("qty", "Quantity", LmisFields.integer()));
         cols.add(new LmisColumn("barcode", "barcode", LmisFields.varchar(20),false));
         return cols;

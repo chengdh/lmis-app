@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import us.monoid.json.JSONObject;
+
 /**
  * Created by chengdh on 14-6-9.
  */
@@ -86,10 +88,13 @@ public class OrgSyncService extends InjectingService implements PerformSync {
             LmisHelper lmisOrgLoadOrgDB = orgLoadOrgDB.getLmisInstance();
 
             LmisArguments arguments = new LmisArguments();
-            lmisOrgDB.syncWithMethod("all", arguments, true);
-            lmisUserOrgDB.syncWithMethod("all", arguments, true);
-            lmisOrgSortingOrgDB.syncWithMethod("all", arguments, true);
-            lmisOrgLoadOrgDB.syncWithMethod("all", arguments, true);
+            JSONObject jso = new JSONObject();
+            jso.put("is_select", 1);
+            arguments.add(jso);
+            lmisOrgDB.syncWithMethod("all", new LmisArguments(), true);
+            lmisUserOrgDB.syncWithMethod("where", arguments, true);
+            lmisOrgSortingOrgDB.syncWithMethod("where", arguments, true);
+            lmisOrgLoadOrgDB.syncWithMethod("where", arguments, true);
 
 
             //数据库中原有的数据也需要更新
@@ -121,7 +126,7 @@ public class OrgSyncService extends InjectingService implements PerformSync {
 //                }
 //                intent.putIntegerArrayListExtra("new_ids", (ArrayList<Integer>) affected_ids);
 //            }
-//            context.sendBroadcast(intent);
+            context.sendBroadcast(intent);
             Log.d(TAG, "OrgSyncService finished");
 
         } catch (Exception e) {

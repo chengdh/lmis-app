@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.Lmis;
+import com.lmis.base.load_org.OrgLoadOrgDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.base.sorting_org.OrgSortingOrgDB;
 import com.lmis.base.user_org.UserOrgDB;
@@ -90,7 +91,7 @@ public class OrgModule {
 
             String where = "org_sorting_id = ?";
             String[] whereArgs = new String[]{defaultOrgID + ""};
-            List<LmisDataRow> orgSortingOrgList = new OrgSortingOrgDB(ctx).select(where,whereArgs);
+            List<LmisDataRow> orgSortingOrgList = new OrgSortingOrgDB(ctx).select(where, whereArgs);
             for (Iterator<LmisDataRow> i = orgSortingOrgList.iterator(); i.hasNext(); ) {
                 LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
                 if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))
@@ -117,7 +118,8 @@ public class OrgModule {
 
             String where = "org_load_id = ?";
             String[] whereArgs = new String[]{defaultOrgID + ""};
-            List<LmisDataRow> orgLoadOrgList = new OrgSortingOrgDB(ctx).select(where,whereArgs);
+            OrgLoadOrgDB orgLoadOrgDB = new OrgLoadOrgDB(ctx);
+            List<LmisDataRow> orgLoadOrgList = orgLoadOrgDB.select(where, whereArgs);
             for (Iterator<LmisDataRow> i = orgLoadOrgList.iterator(); i.hasNext(); ) {
                 LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
                 if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))

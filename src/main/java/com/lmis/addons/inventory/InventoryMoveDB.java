@@ -80,7 +80,7 @@ public class InventoryMoveDB extends LmisDatabase {
     public void save2server(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
         String opType = row.getString("op_type");
-        JSONObject json = row.exportAsJSON(true);
+        JSONObject json = row.exportAsJSON();
         delUnusedAttrs(json);
 
         JSONArray args = new JSONArray();

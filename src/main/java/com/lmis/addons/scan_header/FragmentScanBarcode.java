@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.lmis.util.barcode_scan_header.InvalidToOrgException;
 import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeChangeEventForScanHeader;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeConfirmChangeEvent;
+import com.lmis.util.controls.OrgLoadOrgSpinner;
+import com.lmis.util.controls.OrgSortingOrgSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -90,7 +93,14 @@ public class FragmentScanBarcode extends BaseFragment {
     @InjectView(R.id.btn_sum_bills_count)
     Button mBtnSumBillsCount;
 
+    @InjectView(R.id.spinner_load_org_select)
+    OrgLoadOrgSpinner mLoadOrgSpinner;
+
+    @InjectView(R.id.spinner_sorting_org_select)
+    OrgSortingOrgSpinner mSortingOrgSpinner;
+
     View mView = null;
+
     GoodsInfo mCurGoodsInfo = null;
 
     public BarcodeParser getmBarcodeParser() {
@@ -115,21 +125,20 @@ public class FragmentScanBarcode extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
         Bundle args = getArguments();
         if (args != null && args.containsKey("type"))
             mOpType = args.getString("type");
         switch (mOpType) {
             case ScanHeaderOpType.SORTING_IN:
-                mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
                 break;
             case ScanHeaderOpType.LOAD_IN:
-                mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
                 break;
             case ScanHeaderOpType.LOAD_OUT:
-                mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
+                mLoadOrgSpinner.setVisibility(View.VISIBLE);
                 break;
             default:
-                mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
                 break;
         }
         ButterKnife.inject(this, mView);

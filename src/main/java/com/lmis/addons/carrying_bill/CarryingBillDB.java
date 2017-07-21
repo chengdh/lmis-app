@@ -164,7 +164,7 @@ public class CarryingBillDB extends LmisDatabase {
      * @throws JSONException the jSON exception
      */
     public void save2server(int id) throws JSONException, IOException {
-        JSONObject json = select(id).exportAsJSON(false);
+        JSONObject json = select(id).exportAsJSON();
         delUnusedAttr(json);
 
         JSONArray args = new JSONArray();

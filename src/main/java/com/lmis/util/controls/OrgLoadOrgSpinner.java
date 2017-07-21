@@ -21,6 +21,7 @@ public class OrgLoadOrgSpinner extends Spinner {
     @Inject
     @OrgModule.LoadOrgs
     List<LmisDataRow> mAccessOrgs;
+
     ArrayAdapter<LmisDataRow> mAdapter = null;
 
     public OrgLoadOrgSpinner(Context context) {

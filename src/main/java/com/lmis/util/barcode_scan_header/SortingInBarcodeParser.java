@@ -40,6 +40,10 @@ public class SortingInBarcodeParser extends BarcodeParser {
         GoodsInfo gs = evt.getmGoodsInfo();
 
         //TODO 判断单据状态
+        if(!gs.getmState().equals("billed")){
+            Toast.makeText(mContext, "单据状态不是已开票状态!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //判断是否重复扫描
         for (GoodsInfo f : mScanedBarcode) {
             if (f.getmBarcode().equals(gs.getmBarcode())) {
@@ -51,7 +55,7 @@ public class SortingInBarcodeParser extends BarcodeParser {
         }
         mScanedBarcode.add(gs);
         SoundPlayer.playBarcodeScanSuccessSound(mContext);
-        if (save2DB(gs.getmBarcode()) > 0) {
+        if (save2DB(gs) > 0) {
             //publish相关事件
             mBus.post(new ScanHeaderGoodsInfoAddSuccessEvent(gs));
             mBus.post(new ScandedBarcodeChangeEventForScanHeader(sumGoodsCount(), sumBillsCount()));

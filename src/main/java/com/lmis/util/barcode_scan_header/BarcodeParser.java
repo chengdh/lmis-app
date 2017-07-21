@@ -121,7 +121,7 @@ public abstract class BarcodeParser {
      * Save dB.
      * 将扫码数据保存到数据库
      */
-    protected long save2DB(String barcode) {
+    protected long save2DB(GoodsInfo gs) {
         //需要新建数据库
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
@@ -144,8 +144,9 @@ public abstract class BarcodeParser {
         //添加scan_line信息
         LmisValues lineValue = new LmisValues();
         lineValue.put("scan_header_id", mId);
-        lineValue.put("barcode", barcode);
-        lineValue.put("manual_set_all", false);
+        lineValue.put("barcode", gs.getmBarcode());
+        lineValue.put("carrying_bill_id", gs.getmID());
+        lineValue.put("qty",gs.getmScanedQty());
         return mScanLineDB.create(lineValue);
     }
 

@@ -87,6 +87,7 @@ public class FragmentScanBarcode extends BaseFragment {
     Button mBtnAllScan;
 
 
+
     View mView = null;
     GoodsInfo mCurGoodsInfo = null;
 
@@ -110,7 +111,6 @@ public class FragmentScanBarcode extends BaseFragment {
     LmisDataRow mInventoryOut = null;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_inventory_move_scan_barcode, container, false);
@@ -123,7 +123,7 @@ public class FragmentScanBarcode extends BaseFragment {
 
     private void initData() {
         Log.d(TAG, "FragmentScanBarcode#initData");
-        if(mBarcodeParser.getmMoveId() > 0) {
+        if (mBarcodeParser.getmMoveId() > 0) {
             //refresh mInventoryMove
             LmisDatabase db = new InventoryMoveDB(scope.context());
             mInventoryOut = db.select(mBarcodeParser.getmMoveId());
@@ -166,7 +166,7 @@ public class FragmentScanBarcode extends BaseFragment {
                 if (barcode.length() == 16) {
                     try {
                         mBarcodeParser.addBarcode(s.toString());
-                        if(mInventoryOut == null){
+                        if (mInventoryOut == null) {
                             LmisDatabase db = new InventoryMoveDB(scope.context());
                             mInventoryOut = db.select(mBarcodeParser.getmMoveId());
                         }
@@ -198,7 +198,7 @@ public class FragmentScanBarcode extends BaseFragment {
         mBtnAllScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mCurGoodsInfo == null)
+                if (mCurGoodsInfo == null)
                     return;
 
                 try {
@@ -276,9 +276,9 @@ public class FragmentScanBarcode extends BaseFragment {
      */
 
     @Subscribe
-    public void onScanedBarcodeConfirmChangedEvent(ScandedBarcodeConfirmChangeEvent evt){
-        mBtnSumGoodsNum.setText(evt.getmConfirmGoodsCount() + "/" +evt.getmGoodsCount());
-     }
+    public void onScanedBarcodeConfirmChangedEvent(ScandedBarcodeConfirmChangeEvent evt) {
+        mBtnSumGoodsNum.setText(evt.getmConfirmGoodsCount() + "/" + evt.getmGoodsCount());
+    }
 
     /**
      * 货物信息正确添加.

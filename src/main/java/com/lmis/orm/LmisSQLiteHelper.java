@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.lmis.addons.il_config.IlConfigDB;
+import com.lmis.base.load_org.OrgLoadOrgDB;
 import com.lmis.base.org.OrgDB;
+import com.lmis.base.sorting_org.OrgSortingOrgDB;
 import com.lmis.base.user_org.UserOrgDB;
 import com.lmis.config.ModulesConfig;
 import com.lmis.support.Module;
@@ -38,6 +40,8 @@ public class LmisSQLiteHelper extends SQLiteOpenHelper {
         baseModels.add(new OrgDB(mContext));
         baseModels.add(new UserOrgDB(mContext));
         baseModels.add(new IlConfigDB(mContext));
+        baseModels.add(new OrgSortingOrgDB(mContext));
+        baseModels.add(new OrgLoadOrgDB(mContext));
         return baseModels;
     }
 

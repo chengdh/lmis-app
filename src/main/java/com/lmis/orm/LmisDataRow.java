@@ -137,11 +137,10 @@ public class LmisDataRow {
     /**
      * 将数据转换为json
      *
-     * @param includeId 导出数据时是否包含id
      * @return the jSON object
      * @throws JSONException the jSON exception
      */
-    public JSONObject exportAsJSON(Boolean includeId) throws JSONException {
+    public JSONObject exportAsJSON() throws JSONException {
         JSONObject ret = new JSONObject();
         for (Map.Entry<String, Object> o : _data.entrySet()) {
             Object value = o.getValue();
@@ -150,12 +149,18 @@ public class LmisDataRow {
                 continue;
 
             if (value instanceof LmisM2ORecord) {
-                ret.put(key, ((LmisM2ORecord) value).browse().getInt("id"));
+                try {
+                    LmisDataRow row = ((LmisM2ORecord) value).browse();
+                    ret.put(key, row.getInt("id"));
+                }
+                catch(Exception ex){
+                    ret.put(key, -1);
+                }
             } else if (value instanceof LmisO2MRecord) {
                 //对O2M循环处理
                 int i = 0;
                 for (LmisDataRow line : ((LmisO2MRecord) value).browseEach()) {
-                    JSONObject jsonLine = line.exportAsJSON(includeId);
+                    JSONObject jsonLine = line.exportAsJSON();
                     ret.append(key + "_attributes", jsonLine);
 
                 }
@@ -164,7 +169,7 @@ public class LmisDataRow {
                 int i = 0;
                 //对M2M循环处理
                 for (LmisDataRow line : ((LmisM2MRecord) value).browseEach()) {
-                    JSONObject jsonLine = line.exportAsJSON(includeId);
+                    JSONObject jsonLine = line.exportAsJSON();
                     ret.append(key + "_attributes", jsonLine);
                 }
             } else if (value instanceof byte[]) {

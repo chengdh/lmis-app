@@ -3,16 +3,16 @@ package com.lmis.addons.scan_header;
 import android.content.Context;
 
 import com.lmis.Lmis;
-import com.lmis.addons.inventory.InventoryLineDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
-import com.lmis.support.LmisUser;
+import com.lmis.orm.LmisValues;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import us.monoid.json.JSONArray;
@@ -31,7 +31,7 @@ public class ScanHeaderDB extends LmisDatabase {
 
     @Override
     public String getModelName() {
-        return "scan_header";
+        return "ScanHeader";
     }
 
     @Override
@@ -75,26 +75,19 @@ public class ScanHeaderDB extends LmisDatabase {
      */
     public void save2server(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
-        JSONObject json = row.exportAsJSON(true);
+        JSONObject json = row.exportAsJSON();
+        String clazz = json.getString("op_type");
         delUnusedAttrs(json);
 
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
-        LmisUser user = LmisUser.current(mContext);
-//        if(opType.equals(InventoryMoveOpType.YARD_CONFIRM) || opType.equals(InventoryMoveOpType.BRANCH_CONFIRM)){
-//            json.put("confirmer_id",user.getUser_id());
-//            instance.callMethod("LoadListWithBarcode", "update_attributes", args, id);
-//            instance.callMethod("LoadListWithBarcode", "confirm", null, id);
-//        }
-//        else{
-//            json.remove("id");
-//            instance.callMethod("LoadListWithBarcode", "create", args, null);
-//        }
-//        LmisValues v = new LmisValues();
-//        v.put("processed",true);
-//        v.put("process_datetime",new Date());
-//        update(v,id);
+        json.remove("id");
+        instance.callMethod(clazz, "create", args, null);
+        LmisValues v = new LmisValues();
+        v.put("processed", true);
+        v.put("process_datetime", new Date());
+        update(v, id);
     }
 
     /**
@@ -106,10 +99,13 @@ public class ScanHeaderDB extends LmisDatabase {
         json.remove("processed");
         json.remove("process_datetime");
         json.remove("op_type");
-        JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
+        json.remove("sum_bills_count");
+        json.remove("sum_goods_count");
+        JSONArray arr = json.getJSONArray("scan_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
-            line.remove("load_list_with_barcode_id");
+            line.remove("scan_header_id");
+            line.remove("barcode");
         }
 
     }

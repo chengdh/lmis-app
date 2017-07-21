@@ -56,7 +56,7 @@ public class GoodsExceptionDB extends LmisDatabase {
     }
 
     public void save2server(int id) throws JSONException, IOException {
-        JSONObject json = select(id).exportAsJSON(false);
+        JSONObject json = select(id).exportAsJSON();
         json.put("photo_file_name","goods_exception_" + json.getString("bill_no") + ".png");
         json.remove("bill_no");
         json.remove("goods_no");
