@@ -67,6 +67,8 @@ public class GoodsInfo {
 
     String mState = "draft";
 
+    String mStateDes = "";
+
     /**
      * 货号.
      */
@@ -99,6 +101,12 @@ public class GoodsInfo {
      * 如果是更新数据时,对应的明细id.
      */
     Integer mID = -1;
+
+
+    public GoodsInfo(Context context) {
+        mContext = context;
+        ((Injector) context).inject(this);
+    }
 
     public GoodsInfo(Context context, String barcode) throws InvalidBarcodeException {
         mContext = context;
@@ -231,6 +239,10 @@ public class GoodsInfo {
         this.mPayTypeDes = mPayTypeDes;
     }
 
+    public void setmBarcode(String mBarcode) {
+        this.mBarcode = mBarcode;
+    }
+
     /**
      * 验证barcode
      */
@@ -286,6 +298,14 @@ public class GoodsInfo {
 
     public void setmScanedQty(int mScanedQty) {
         this.mScanedQty = mScanedQty;
+    }
+
+    public String getmStateDes() {
+        return mStateDes;
+    }
+
+    public void setmStateDes(String mStateDes) {
+        this.mStateDes = mStateDes;
     }
 
     @Override
@@ -377,6 +397,7 @@ public class GoodsInfo {
                         setmCarryingFee(bill.getDouble("carrying_fee"));
                         setmGoodsFee(bill.getDouble("goods_fee"));
                         setmState(bill.getString("state"));
+                        setmStateDes(bill.getString("human_state_name"));
 
                         //FIXME 默认扫描全部条码
                         setmScanedQty(bill.getInt("goods_num"));

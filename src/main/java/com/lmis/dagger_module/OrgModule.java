@@ -61,10 +61,11 @@ public class OrgModule {
     private List<LmisDataRow> getAccessOrgs(Context context) {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录用户不返回任何数据
-        if (LmisUser.current(context) != null) {
-            String where = "is_active = ?";
-            String[] whereArgs = new String[]{"true"};
-            List<LmisDataRow> orgList = new UserOrgDB(context).select();
+        LmisUser user = LmisUser.current(context);
+        if (user != null) {
+            String where = "user_id = ?";
+            String[] whereArgs = new String[]{user.getUser_id() + ""};
+            List<LmisDataRow> orgList = new UserOrgDB(context).select(where, whereArgs);
             for (Iterator<LmisDataRow> i = orgList.iterator(); i.hasNext(); ) {
                 LmisDataRow theOrg = i.next().getM2ORecord("org_id").browse();
                 if (theOrg.getString("is_active").equals("true") && theOrg.getString("is_visible").equals("true"))

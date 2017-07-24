@@ -8,13 +8,10 @@ import com.lmis.util.SoundPlayer;
 import com.squareup.otto.Subscribe;
 
 /**
- * 分拣组入库扫码操作
- * Created by chengdh on 2017/7/16.
+ * Created by chengdh on 2017/7/23.
  */
 
-public class SortingInBarcodeParser extends BarcodeParser {
-    final static String CONFIRMED = "confirmed";
-
+public class LoadOutBarcodeParser extends BarcodeParser {
     /**
      * Instantiates a new Barcode parser.
      *
@@ -23,8 +20,8 @@ public class SortingInBarcodeParser extends BarcodeParser {
      * @param fromOrgID the from org iD
      * @param toOrgID   the to org iD
      */
-    public SortingInBarcodeParser(Context context, int id, int fromOrgID, int toOrgID) {
-        super(context, id, fromOrgID, toOrgID, false, false, ScanHeaderOpType.SORTING_IN);
+    public LoadOutBarcodeParser(Context context, int id, int fromOrgID, int toOrgID) {
+        super(context, id, fromOrgID, toOrgID, false, false, ScanHeaderOpType.LOAD_OUT);
     }
 
     @Override
@@ -35,12 +32,12 @@ public class SortingInBarcodeParser extends BarcodeParser {
         mBus.post(new BarcodeParseSuccessEventForScanHeader(gs));
 
     }
-    //判断当前分拣组是否有权限扫描该票据
-    private boolean checkOrgPower(int from_org_id) {
-        for (LmisDataRow o : getmAccessLoadOrgs()) {
-            if (o.getInt("id") == from_org_id) {
-                return true;
-            }
+
+    //判断当前装卸组是否有权限扫描该票据
+    private boolean checkOrgPower(int to_org_id) {
+        if (getmToOrgID() == to_org_id) {
+            return true;
+
         }
         return false;
 
@@ -50,14 +47,15 @@ public class SortingInBarcodeParser extends BarcodeParser {
     public void onGetBillFromServerSuccessEvent(GetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();
 
-        //判断单据状态
-        if(!gs.getmState().equals("billed")){
+        //判断单据状态是否分拣入库状态
+        if (!gs.getmState().equals("loaded_in")) {
+            Toast.makeText(mContext, "单据状态不是装卸组入库状态!", Toast.LENGTH_SHORT).show();
+
             SoundPlayer.playBarcodeScanErrorSound(mContext);
-            Toast.makeText(mContext, "单据状态不是已开票状态!", Toast.LENGTH_SHORT).show();
             return;
         }
         //判断当前分拣组是否有权限扫描该货物
-        if (!checkOrgPower(gs.getmFromOrgId())) {
+        if (!checkOrgPower(gs.getmToOrgId())) {
             Toast.makeText(mContext, "您无权扫描该票据!", Toast.LENGTH_SHORT).show();
 
             SoundPlayer.playBarcodeScanErrorSound(mContext);
@@ -81,7 +79,6 @@ public class SortingInBarcodeParser extends BarcodeParser {
             SoundPlayer.playBarcodeScanErrorSound(mContext);
 
             Toast.makeText(mContext, "保存条码信息时出现错误!", Toast.LENGTH_SHORT).show();
-//            throw new DBException("保存条码信息时出现错误!");
         }
     }
 }

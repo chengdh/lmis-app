@@ -26,6 +26,7 @@ import com.lmis.CurrentOrgChangeEvent;
 import com.lmis.R;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.orm.LmisM2ORecord;
 import com.lmis.receivers.DataSetChangeReceiver;
 import com.lmis.receivers.SyncFinishReceiver;
 import com.lmis.support.BaseFragment;
@@ -67,24 +68,6 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     }
 
     MState mState = MState.DRAFT;
-
-    /**
-     * 单据类型.
-     * 分拣组入库/装卸组入库/装卸组出库
-     */
-    public enum MType {
-        SORTING_IN, LOAD_IN, LOAD_OUT
-    }
-
-    public MType getmType() {
-        return mType;
-    }
-
-    public void setmType(MType mType) {
-        this.mType = mType;
-    }
-
-    MType mType = MType.SORTING_IN;
 
 
     /**
@@ -213,9 +196,12 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                     title = "Processed";
                 }
             }
+            if (bundle.containsKey("type")) {
+                mCurrentType = bundle.getString("type");
+            }
 
             scope.main().setTitle(title);
-            mScanHeaderLoader = new ScanHeaderLoader(mType, mState);
+            mScanHeaderLoader = new ScanHeaderLoader(mCurrentType, mState);
             mScanHeaderLoader.execute((Void) null);
         }
     }
@@ -224,15 +210,24 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         ViewHolder holder = (ViewHolder) mView.getTag();
         if (mScanHeaderObjects.size() > 0) {
             LmisDataRow row_data = (LmisDataRow) mScanHeaderObjects.get(position);
-//            String fromOrgName = row_data.getM2ORecord("from_org_id").browse().getString("name");
-//            String toOrgName = row_data.getM2ORecord("to_org_id").browse().getString("name");
+            String fromOrgName = "";
+            String toOrgName = "";
+            LmisDataRow fromOrg = row_data.getM2ORecord("from_org_id").browse();
+            LmisDataRow toOrg = row_data.getM2ORecord("to_org_id").browse();
+            if (fromOrg != null) {
+                fromOrgName = fromOrg.getString("name");
+            }
+
+            if (toOrg != null) {
+                toOrgName = toOrg.getString("name");
+            }
 
             Integer goodsCount = row_data.getInt("sum_goods_count");
             Integer billsCount = row_data.getInt("sum_bills_count");
             String describe = String.format("共%d票%d件", billsCount, goodsCount);
             String billDate = row_data.getString("bill_date");
-//            String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
-//            holder.txvFromTo.setText(fromTo);
+            String fromTo = String.format("%s  %s", fromOrgName, toOrgName);
+            holder.txvFromTo.setText(fromTo);
             holder.txvBillDate.setText(billDate);
             holder.txvDescribe.setText(describe);
         }
@@ -291,23 +286,22 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
      * Gets where.
      * 根据类型构造where条件
      *
-     * @param type the type
      * @return the where
      */
-    public HashMap<String, Object> getWhere(MType type, MState state) {
+    public HashMap<String, Object> getWhere(MState state) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         String[] whereArgs = new String[3];
         String where = "op_type = ?";
-        switch (type) {
-            case SORTING_IN:
+        switch (mCurrentType) {
+            case ScanHeaderOpType.SORTING_IN:
                 where += " AND to_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.SORTING_IN;
                 break;
-            case LOAD_IN:
+            case ScanHeaderOpType.LOAD_IN:
                 where += " AND to_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.LOAD_IN;
                 break;
-            case LOAD_OUT:
+            case ScanHeaderOpType.LOAD_OUT:
                 where += " AND from_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.LOAD_OUT;
                 break;
@@ -365,39 +359,47 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         String processedTitle = "已处理";
 
         //分拣组入库
-        if (mType == MType.SORTING_IN) {
-            groupTitle = "分拣组入库";
+        switch (mCurrentType) {
+            case (ScanHeaderOpType.SORTING_IN):
 
-            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.SORTING_IN, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SORTING_IN, "draft")));
-            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.SORTING_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SORTING_IN, "processed")));
-        }
+                groupTitle = "分拣组入库";
 
-        //装卸组入库
-        if (mType == MType.LOAD_IN) {
-            groupTitle = "装卸组入库";
+                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SORTING_IN, "draft")));
+                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SORTING_IN, "processed")));
+                break;
 
-            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.LOAD_IN, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
-            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.LOAD_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
-        }
-        //装卸组出库
-        if (mType == MType.LOAD_IN) {
-            groupTitle = "装卸组出库";
+            //装卸组入库
+            case (ScanHeaderOpType.LOAD_IN):
+                groupTitle = "装卸组入库";
 
-            drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-            drawerItems.add(new DrawerItem(TAG, draftTitle, count(MType.LOAD_OUT, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
-            drawerItems.add(new DrawerItem(TAG, processedTitle, count(MType.LOAD_OUT, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
+                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
+
+                break;
+            //装卸组出库
+            case (ScanHeaderOpType.LOAD_OUT):
+                groupTitle = "装卸组出库";
+
+                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
+                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
+
+                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+
+                break;
+            default:
+                break;
         }
         return drawerItems;
     }
 
-    private int count(MType type, MState state, Context context) {
+    private int count(MState state, Context context) {
         int count = 0;
         ScanHeaderDB db = new ScanHeaderDB(context);
         String where = null;
         String whereArgs[] = null;
-        HashMap<String, Object> obj = getWhere(type, state);
+        HashMap<String, Object> obj = getWhere(state);
         where = (String) obj.get("where");
         whereArgs = (String[]) obj.get("whereArgs");
         count = db.count(where, whereArgs);
@@ -432,12 +434,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         bundle.putInt("position", position);
         bundle.putString("type", mCurrentType);
         if (row.get("processed") != null && row.getBoolean("processed")) {
-//            detail = new ScanHeaderDetail();
+            detail = new ScanHeaderDetail();
         } else {
             detail = new ScanHeaderNew();
         }
-
-        detail = new ScanHeaderNew();
 
         detail.setArguments(bundle);
 
@@ -493,16 +493,16 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
             mScanHeaderLoader.cancel(true);
 
         }
-        mScanHeaderLoader = new ScanHeaderLoader(mType, mState);
+        mScanHeaderLoader = new ScanHeaderLoader(mCurrentType, mState);
         mScanHeaderLoader.execute((Void) null);
         scope.main().refreshDrawer(TAG);
     }
 
     public class ScanHeaderLoader extends AsyncTask<Void, Void, Boolean> {
         MState mState = null;
-        MType mType = null;
+        String mType = null;
 
-        public ScanHeaderLoader(MType type, MState state) {
+        public ScanHeaderLoader(String type, MState state) {
             mState = state;
             mType = type;
         }
@@ -510,7 +510,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         @Override
         protected Boolean doInBackground(Void... arg0) {
             Log.d(TAG, "ScanHeaderLoader#doInBackground");
-            HashMap<String, Object> map = getWhere(mType, mState);
+            HashMap<String, Object> map = getWhere(mState);
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "bill_date DESC");
@@ -587,7 +587,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
             mListViewAdapter.clear();
             mScanHeaderObjects.clear();
             mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
-            new ScanHeaderLoader(mType, mState).execute();
+            new ScanHeaderLoader(mCurrentType, mState).execute();
         }
     };
 
@@ -625,5 +625,13 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
         Toast.makeText(scope.context(), "单据已删除!", Toast.LENGTH_LONG).show();
         return ret;
+    }
+
+    public String getmCurrentType() {
+        return mCurrentType;
+    }
+
+    public void setmCurrentType(String mCurrentType) {
+        this.mCurrentType = mCurrentType;
     }
 }

@@ -24,8 +24,11 @@ public class BarcodeParserFactory {
                 parser = new SortingInBarcodeParser(context,id,fromOrgId,toOrgId);
                 break;
             case ScanHeaderOpType.LOAD_IN:
+
+                parser = new LoadInBarcodeParser(context,id,fromOrgId,toOrgId);
                 break;
             case ScanHeaderOpType.LOAD_OUT:
+                parser = new LoadOutBarcodeParser(context,id,fromOrgId,toOrgId);
                 break;
 
         }

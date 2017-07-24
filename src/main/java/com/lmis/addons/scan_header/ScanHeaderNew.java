@@ -102,7 +102,6 @@ public class ScanHeaderNew extends BaseFragment {
             if (mOpType.equals(ScanHeaderOpType.SORTING_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN)) {
                 fromOrgID = -1;
                 toOrgID = currentUser.getDefault_org_id();
-
             }
 
             if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
@@ -235,7 +234,8 @@ public class ScanHeaderNew extends BaseFragment {
                 //返回已处理界面
                 ScanHeaderList list = new ScanHeaderList();
                 Bundle arg = new Bundle();
-                arg.putString("type", "draft");
+                arg.putString("type",mOpType );
+                arg.putString("state","processed");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
 
@@ -253,7 +253,7 @@ public class ScanHeaderNew extends BaseFragment {
         final android.app.ActionBar actionBar = getActivity().getActionBar();
         // Specify that tabs should be displayed in the action bar.
         actionBar.removeAllTabs();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 
     @Override
@@ -262,6 +262,6 @@ public class ScanHeaderNew extends BaseFragment {
         final android.app.ActionBar actionBar = getActivity().getActionBar();
         // Specify that tabs should be displayed in the action bar.
         actionBar.removeAllTabs();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 }

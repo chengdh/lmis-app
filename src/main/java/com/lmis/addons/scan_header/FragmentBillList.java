@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.lmis.R;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode_scan_header.BarcodeParser;
@@ -112,6 +113,19 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
      */
     private void initBillsListTab() {
         Log.d(TAG, "FragmentBillList#initBillListTab");
+//        if (mBarcodeParser.getmId() > 0) {
+//            ScanHeaderDB db = new ScanHeaderDB(scope.context());
+//            LmisDataRow scanHeader = db.select(mBarcodeParser.getmId());
+//            List<LmisDataRow> lines = scanHeader.getO2MRecord("scan_lines").browseEach();
+//            for (LmisDataRow l : lines) {
+//                GoodsInfo gs = new GoodsInfo(scope.context());
+//                gs.setmBarcode(l.getString("barcode"));
+//                gs.setmID(l.getInt("carrying_bill_id"));
+//                gs.setmScanedQty(l.getInt("qty"));
+//                mBarcodeParser.addGoodsInfo(gs);
+//            }
+//
+//        }
         mBillsObjects = new ArrayList<Object>(mBarcodeParser.getmScanedBarcode());
         mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_scan_header_list_bills_item, mBillsObjects) {
             @Override

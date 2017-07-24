@@ -18,6 +18,7 @@
  */
 package com.lmis.config;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.lmis.addons.carrying_bill.CarryingBillList;
@@ -28,6 +29,7 @@ import com.lmis.addons.message.MessageList;
 import com.lmis.addons.scan_header.ScanHeaderList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
+import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 
 /**
  * The Class ModulesConfig.
@@ -45,8 +47,17 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
 //        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
 //        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
-        ScanHeaderList scanHeader = new ScanHeaderList();
-        scanHeader.setmType(ScanHeaderList.MType.SORTING_IN);
-        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeader, 0), true);
+        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
+        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
+        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
+
+        ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
+        scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
+        add(new Module("module_scan_header_load_in", "scan_header_load_in", scanHeaderLoadIn, 0), true);
+
+        ScanHeaderList scanHeaderLoadOut = new ScanHeaderList();
+        scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
+        add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
+
     }
 }

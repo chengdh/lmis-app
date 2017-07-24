@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -86,6 +87,10 @@ public class FragmentScanBarcode extends BaseFragment {
     @InjectView(R.id.txv_goods_num)
     TextView mTxvGoodsNum;
 
+    @InjectView(R.id.txv_state_des)
+    TextView mTxvStateDes;
+
+
     @InjectView(R.id.btn_sum_goods_num)
     Button mBtnSumGoodsNum;
 
@@ -100,8 +105,6 @@ public class FragmentScanBarcode extends BaseFragment {
     OrgSortingOrgSpinner mSortingOrgSpinner;
 
     View mView = null;
-
-    GoodsInfo mCurGoodsInfo = null;
 
     public BarcodeParser getmBarcodeParser() {
         return mBarcodeParser;
@@ -127,6 +130,7 @@ public class FragmentScanBarcode extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
+        ButterKnife.inject(this, mView);
         Bundle args = getArguments();
         if (args != null && args.containsKey("type"))
             mOpType = args.getString("type");
@@ -141,7 +145,6 @@ public class FragmentScanBarcode extends BaseFragment {
             default:
                 break;
         }
-        ButterKnife.inject(this, mView);
         mBus.register(this);
         initData();
         initScanTab();
@@ -155,8 +158,8 @@ public class FragmentScanBarcode extends BaseFragment {
             //refresh mInventoryMove
             LmisDatabase db = new ScanHeaderDB(scope.context());
             mScanHeader = db.select(mBarcodeParser.getmId());
-            mBtnSumGoodsNum.setText(mBarcodeParser.sumGoodsCount());
-            mBtnSumBillsCount.setText(mBarcodeParser.sumBillsCount());
+            mBtnSumGoodsNum.setText(mBarcodeParser.sumGoodsCount() + "");
+            mBtnSumBillsCount.setText(mBarcodeParser.sumBillsCount() + "");
         }
 
     }
@@ -203,6 +206,18 @@ public class FragmentScanBarcode extends BaseFragment {
 
             }
         });
+        mLoadOrgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                LmisDataRow org = (LmisDataRow) mLoadOrgSpinner.getItemAtPosition(position);
+                mBarcodeParser.setmToOrgID(org.getInt("id"));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         mEdtScanBarcode.requestFocus();
     }
 
@@ -235,6 +250,7 @@ public class FragmentScanBarcode extends BaseFragment {
         mTxvGoodsInfo.setText("");
         mTxvGoodsNum.setText("");
         mTxvPayType.setText("");
+        mTxvStateDes.setText("");
         mEdtScanBarcode.requestFocus();
     }
 
@@ -251,6 +267,8 @@ public class FragmentScanBarcode extends BaseFragment {
         mTxvGoodsInfo.setText(gs.getmGoodsInfo());
         mTxvPayType.setText(gs.getmPayTypeDes());
         mTxvGoodsNum.setText(gs.getmGoodsNum() + "");
+        mTxvStateDes.setText(gs.getmStateDes());
+        mEdtScanBarcode.requestFocus();
 
 
     }

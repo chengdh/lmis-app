@@ -6,8 +6,10 @@ import android.util.Log;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.scan_header.ScanHeaderDB;
 import com.lmis.addons.scan_header.ScanLineDB;
+import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisValues;
+import com.lmis.support.LmisUser;
 import com.squareup.otto.Bus;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +36,15 @@ public abstract class BarcodeParser {
      */
     @Inject
     protected Bus mBus;
+
+    @Inject
+    @OrgModule.LoadOrgs
+    List<LmisDataRow> mAccessLoadOrgs;
+
+    @Inject
+    @OrgModule.SortingOrgs
+    List<LmisDataRow> mAccessSortingOrgs;
+
 
     /**
      * The M context.
@@ -105,14 +116,13 @@ public abstract class BarcodeParser {
     private void initData() {
         if (mId > 0) {
             LmisDataRow record = mScanHeaderDB.select(mId);
-            for (LmisDataRow line : record.getO2MRecord("scan_lines").browseEach()) {
-                try {
-                    GoodsInfo gs = new GoodsInfo(mContext, line.getString("barcode"));
-                    mScanedBarcode.add(gs);
-                } catch (InvalidBarcodeException ex) {
-                    Log.e(TAG, ex.getMessage());
-                    ex.printStackTrace();
-                }
+            for (LmisDataRow l : record.getO2MRecord("scan_lines").browseEach()) {
+                GoodsInfo gs = new GoodsInfo(mContext);
+                gs.setmBarcode(l.getString("barcode"));
+                gs.setmBillNo(l.getString("barcode"));
+                gs.setmID(l.getInt("carrying_bill_id"));
+                gs.setmScanedQty(l.getInt("qty"));
+                mScanedBarcode.add(gs);
             }
         }
     }
@@ -131,7 +141,8 @@ public abstract class BarcodeParser {
             row.put("to_org_id", mToOrgID);
             row.put("processed", false);
             row.put("op_type", mOpType);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            row.put("user_id", LmisUser.current(mContext).getUser_id());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
             row.put("state", "draft");
@@ -146,7 +157,7 @@ public abstract class BarcodeParser {
         lineValue.put("scan_header_id", mId);
         lineValue.put("barcode", gs.getmBarcode());
         lineValue.put("carrying_bill_id", gs.getmID());
-        lineValue.put("qty",gs.getmScanedQty());
+        lineValue.put("qty", gs.getmScanedQty());
         return mScanLineDB.create(lineValue);
     }
 
@@ -260,6 +271,10 @@ public abstract class BarcodeParser {
         return -1;
     }
 
+    public void addGoodsInfo(GoodsInfo gs) {
+        mScanedBarcode.add(gs);
+    }
+
     /**
      * 获取已扫描的货物数量.
      *
@@ -327,6 +342,7 @@ public abstract class BarcodeParser {
         public int compare(GoodsInfo gs_1, GoodsInfo gs_2) {
             return gs_1.getmBarcode().compareTo(gs_2.getmBarcode());
         }
+
     }
 
     public int getmFromOrgID() {
@@ -351,5 +367,25 @@ public abstract class BarcodeParser {
 
     public void setmOpType(String mOpType) {
         this.mOpType = mOpType;
+    }
+
+    public static String getTAG() {
+        return TAG;
+    }
+
+    public List<LmisDataRow> getmAccessLoadOrgs() {
+        return mAccessLoadOrgs;
+    }
+
+    public void setmAccessLoadOrgs(List<LmisDataRow> mAccessLoadOrgs) {
+        this.mAccessLoadOrgs = mAccessLoadOrgs;
+    }
+
+    public List<LmisDataRow> getmAccessSortingOrgs() {
+        return mAccessSortingOrgs;
+    }
+
+    public void setmAccessSortingOrgs(List<LmisDataRow> mAccessSortingOrgs) {
+        this.mAccessSortingOrgs = mAccessSortingOrgs;
     }
 }

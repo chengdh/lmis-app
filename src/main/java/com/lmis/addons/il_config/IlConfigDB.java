@@ -59,7 +59,7 @@ public class IlConfigDB extends LmisDatabase {
      */
     @Override
     public String getModelName() {
-        return "il_config";
+        return "IlConfig";
     }
 
     /**

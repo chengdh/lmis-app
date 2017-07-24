@@ -82,8 +82,9 @@ public class ScanHeaderDB extends LmisDatabase {
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
+
         json.remove("id");
-        instance.callMethod(clazz, "create", args, null);
+        instance.callMethod(clazz, "create_and_process", args, null);
         LmisValues v = new LmisValues();
         v.put("processed", true);
         v.put("process_datetime", new Date());
