@@ -191,6 +191,10 @@ public class CarryingBillView extends BaseFragment {
             case (R.id.menu_carrying_bill_print):
                 CarryingBillPrint.print(mCarryingBill,scope.currentUser(), true);
                 break;
+            case (R.id.menu_carrying_bill_print_barcode):
+                CarryingBillPrint.testPrintBarcode();
+                break;
+
             default:
                 super.onOptionsItemSelected(item);
                 break;
