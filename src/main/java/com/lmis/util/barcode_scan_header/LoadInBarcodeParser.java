@@ -51,8 +51,8 @@ public class LoadInBarcodeParser extends BarcodeParser {
         GoodsInfo gs = evt.getmGoodsInfo();
 
         //判断单据状态是否分拣入库状态
-        if (!gs.getmState().equals("sorted_in")) {
-            Toast.makeText(mContext, "单据状态不是分拣入库状态!", Toast.LENGTH_SHORT).show();
+        if (!gs.getmState().equals("billed")) {
+            Toast.makeText(mContext, "单据状态不是草稿状态!", Toast.LENGTH_SHORT).show();
 
             SoundPlayer.playBarcodeScanErrorSound(mContext);
             return;

@@ -47,9 +47,9 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
 //        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
 //        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
-        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
-        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
-        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
+//        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
+//        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
+//        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
 
         ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
         scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
