@@ -39,11 +39,18 @@ public class ScanHeaderDB extends LmisDatabase {
 
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
 
+        //司机姓名
+        cols.add(new LmisColumn("driver_name", "driver name", LmisFields.varchar(30)));
+        //车牌号
+        cols.add(new LmisColumn("v_no", "vehicle number", LmisFields.varchar(30)));
+        //司机电话
+        cols.add(new LmisColumn("mobile", "mobile", LmisFields.varchar(30)));
+        //身份证号
+        cols.add(new LmisColumn("id_no", "id number", LmisFields.varchar(30)));
         //发货地
         cols.add(new LmisColumn("from_org_id", "From Org", LmisFields.manyToOne(new OrgDB(mContext))));
         //到货地
         cols.add(new LmisColumn("to_org_id", "To Org", LmisFields.manyToOne(new OrgDB(mContext))));
-
 
         cols.add(new LmisColumn("bill_date", "bill_date", LmisFields.varchar(20)));
 

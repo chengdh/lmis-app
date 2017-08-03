@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.lmis.R;
@@ -129,6 +131,9 @@ public class ScanHeaderNew extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
+                final android.app.ActionBar actionBar = getActivity().getActionBar();
+                actionBar.setSelectedNavigationItem(position);
+
             }
 
             @Override
@@ -164,6 +169,9 @@ public class ScanHeaderNew extends BaseFragment {
         final android.app.ActionBar actionBar = getActivity().getActionBar();
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(NAVIGATION_MODE_TABS);
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+            actionBar.addTab(actionBar.newTab().setText("车辆信息").setTabListener(tabListener));
+        }
         actionBar.addTab(actionBar.newTab().setText("扫描票据").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("票据列表").setTabListener(tabListener));
 
@@ -189,12 +197,28 @@ public class ScanHeaderNew extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_scan_header_upload:
-                mUploadAsync = new ScanHeaderNew.Uploader();
-                mUploadAsync.execute((Void) null);
-                return true;
+                if (validateBeforeUpload()) {
+                    mUploadAsync = new ScanHeaderNew.Uploader();
+                    mUploadAsync.execute((Void) null);
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean validateBeforeUpload() {
+
+        boolean success = true;
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+            mPager.setCurrentItem(0);
+            FragmentVehicleForm page = (FragmentVehicleForm) mPageAdapter.getRegisteredFragment(0);
+            success = page.validateBeforeUpload();
+            if (!success) {
+                Toast.makeText(scope.context(), "请输入装车信息!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        return success;
     }
 
     /**
@@ -234,8 +258,8 @@ public class ScanHeaderNew extends BaseFragment {
                 //返回已处理界面
                 ScanHeaderList list = new ScanHeaderList();
                 Bundle arg = new Bundle();
-                arg.putString("type",mOpType );
-                arg.putString("state","processed");
+                arg.putString("type", mOpType);
+                arg.putString("state", "processed");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
 

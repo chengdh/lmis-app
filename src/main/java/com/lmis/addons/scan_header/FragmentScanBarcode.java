@@ -140,7 +140,7 @@ public class FragmentScanBarcode extends BaseFragment {
             case ScanHeaderOpType.LOAD_IN:
                 break;
             case ScanHeaderOpType.LOAD_OUT:
-                mLoadOrgSpinner.setVisibility(View.VISIBLE);
+//                mLoadOrgSpinner.setVisibility(View.VISIBLE);
                 break;
             default:
                 break;

@@ -23,6 +23,7 @@ import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.addons.inventory.InventoryMoveReadonly;
 import com.lmis.addons.message.MessageDetail;
 import com.lmis.addons.message.MessageList;
+import com.lmis.addons.scan_header.FragmentVehicleForm;
 import com.lmis.addons.scan_header.ScanHeaderDetail;
 import com.lmis.addons.scan_header.ScanHeaderList;
 import com.lmis.addons.scan_header.ScanHeaderNew;
@@ -72,6 +73,7 @@ import dagger.Provides;
                 ScanHeaderList.class,
                 ScanHeaderNew.class,
                 ScanHeaderDetail.class,
+                FragmentVehicleForm.class,
                 com.lmis.addons.scan_header.FragmentBillList.class,
                 com.lmis.addons.scan_header.FragmentScanBarcode.class
 

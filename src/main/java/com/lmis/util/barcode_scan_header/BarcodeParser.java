@@ -63,6 +63,10 @@ public abstract class BarcodeParser {
 
     protected boolean mCheckFromOrg = false;
     protected boolean mCheckToOrg = false;
+    String mVNo = "";
+    String mDriverName = "";
+    String mMobile = "";
+    String mIdNo = "";
 
     /**
      * 发出机构id.
@@ -99,6 +103,7 @@ public abstract class BarcodeParser {
         ((Injector) mContext).inject(this);
         mBus.register(this);
 
+
         mScanedBarcode = new ArrayList<GoodsInfo>();
         mCheckFromOrg = checkFromOrg;
         mCheckToOrg = checkToOrg;
@@ -134,17 +139,21 @@ public abstract class BarcodeParser {
     protected long save2DB(GoodsInfo gs) {
         //需要新建数据库
         LmisValues row = new LmisValues();
+        row.put("v_no", mVNo);
+        row.put("driver_name", mDriverName);
+        row.put("mobile", mMobile);
+        row.put("id_no", mIdNo);
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
+        row.put("from_org_id", mFromOrgID);
+        row.put("to_org_id", mToOrgID);
+        row.put("processed", false);
+        row.put("op_type", mOpType);
+        row.put("user_id", LmisUser.current(mContext).getUser_id());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        Date now = new Date();
+        row.put("bill_date", sdf.format(now));
         if (mId == -1) {
-            row.put("from_org_id", mFromOrgID);
-            row.put("to_org_id", mToOrgID);
-            row.put("processed", false);
-            row.put("op_type", mOpType);
-            row.put("user_id", LmisUser.current(mContext).getUser_id());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-            Date now = new Date();
-            row.put("bill_date", sdf.format(now));
             row.put("state", "draft");
             mId = (int) mScanHeaderDB.create(row);
         } else {
@@ -324,6 +333,38 @@ public abstract class BarcodeParser {
     public void setmToOrgID(Integer mToOrgID) {
 
         this.mToOrgID = mToOrgID;
+    }
+
+    public String getmVNo() {
+        return mVNo;
+    }
+
+    public void setmVNo(String mVNo) {
+        this.mVNo = mVNo;
+    }
+
+    public String getmDriverName() {
+        return mDriverName;
+    }
+
+    public void setmDriverName(String mDriverName) {
+        this.mDriverName = mDriverName;
+    }
+
+    public String getmMobile() {
+        return mMobile;
+    }
+
+    public void setmMobile(String mMobile) {
+        this.mMobile = mMobile;
+    }
+
+    public String getmIdNo() {
+        return mIdNo;
+    }
+
+    public void setmIdNo(String mIdNo) {
+        this.mIdNo = mIdNo;
     }
 
     /**
