@@ -170,6 +170,35 @@ public abstract class BarcodeParser {
         return mScanLineDB.create(lineValue);
     }
 
+    protected long save2DB() {
+        int ret = -1;
+        //需要新建数据库
+        LmisValues row = new LmisValues();
+        row.put("v_no", mVNo);
+        row.put("driver_name", mDriverName);
+        row.put("mobile", mMobile);
+        row.put("id_no", mIdNo);
+        row.put("sum_goods_count", sumGoodsCount());
+        row.put("sum_bills_count", sumBillsCount());
+        row.put("from_org_id", mFromOrgID);
+        row.put("to_org_id", mToOrgID);
+        row.put("processed", false);
+        row.put("op_type", mOpType);
+        row.put("user_id", LmisUser.current(mContext).getUser_id());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        Date now = new Date();
+        row.put("bill_date", sdf.format(now));
+        if (mId == -1) {
+            row.put("state", "draft");
+            mId = (int) mScanHeaderDB.create(row);
+            ret = mId;
+        } else {
+            //更新数据库
+            ret = mScanHeaderDB.update(row, mId);
+        }
+        return ret;
+    }
+
 
     /**
      * 添加将扫描的条码.
@@ -341,6 +370,7 @@ public abstract class BarcodeParser {
 
     public void setmVNo(String mVNo) {
         this.mVNo = mVNo;
+        save2DB();
     }
 
     public String getmDriverName() {
@@ -349,6 +379,7 @@ public abstract class BarcodeParser {
 
     public void setmDriverName(String mDriverName) {
         this.mDriverName = mDriverName;
+        save2DB();
     }
 
     public String getmMobile() {
@@ -357,6 +388,8 @@ public abstract class BarcodeParser {
 
     public void setmMobile(String mMobile) {
         this.mMobile = mMobile;
+        save2DB();
+
     }
 
     public String getmIdNo() {
@@ -365,6 +398,7 @@ public abstract class BarcodeParser {
 
     public void setmIdNo(String mIdNo) {
         this.mIdNo = mIdNo;
+        save2DB();
     }
 
     /**

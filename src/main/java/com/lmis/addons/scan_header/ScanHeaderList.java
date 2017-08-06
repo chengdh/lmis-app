@@ -61,10 +61,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
     /**
      * The enum state.
-     * 数据分为草稿及已处理
+     * 数据分为草稿及已上传 已发货
      */
     private enum MState {
-        DRAFT, PROCESSED
+        DRAFT, PROCESSED, SENDED
     }
 
     MState mState = MState.DRAFT;
@@ -115,6 +115,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         //创建日期
         @InjectView(R.id.txvScanHeaderBillDate)
         TextView txvBillDate;
+
+        @InjectView(R.id.txvScanHeaderVNo)
+        TextView txvVno;
+
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);
@@ -179,7 +183,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
     private void initData() {
         Log.d(TAG, "ScanHeaderList->initData()");
-        String title = "Draft";
+        String title = "草稿";
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -193,7 +197,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                     mState = MState.DRAFT;
                 } else if (mCurrentState.equals("processed")) {
                     mState = MState.PROCESSED;
-                    title = "Processed";
+                    title = "已上传";
+                } else if (mCurrentState.equals("sended")) {
+                    mState = MState.SENDED;
+                    title = "已发车";
                 }
             }
             if (bundle.containsKey("type")) {
@@ -226,10 +233,12 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
             Integer billsCount = row_data.getInt("sum_bills_count");
             String describe = String.format("共%d票%d件", billsCount, goodsCount);
             String billDate = row_data.getString("bill_date");
+            String vNo = row_data.getString("v_no");
             String fromTo = String.format("%s  %s", fromOrgName, toOrgName);
             holder.txvFromTo.setText(fromTo);
             holder.txvBillDate.setText(billDate);
             holder.txvDescribe.setText(describe);
+            holder.txvVno.setText(vNo);
         }
 
         return mView;
@@ -320,9 +329,18 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 where += " AND (processed = ? or processed IS NULL)";
                 whereArgs[2] = "false";
                 break;
-            default:
+            case PROCESSED:
                 where += "AND processed = ? ";
-                whereArgs[2] = "true";
+                whereArgs[2] = "loaded";
+                break;
+            case SENDED:
+                where += "AND processed = ? ";
+                whereArgs[2] = "sended";
+                break;
+
+            default:
+                where += " AND (processed = ? or processed IS NULL)";
+                whereArgs[2] = "false";
                 break;
         }
         map.put("where", where);
@@ -376,16 +394,16 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 drawerItems.add(new DrawerItem(TAG, groupTitle, true));
                 drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
                 drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
-
                 break;
+
             //装卸组出库
             case (ScanHeaderOpType.LOAD_OUT):
                 groupTitle = "装卸组出库";
 
                 drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
-
-                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+                drawerItems.add(new DrawerItem(TAG, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
+                drawerItems.add(new DrawerItem(TAG, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+                drawerItems.add(new DrawerItem(TAG, "已发车", count(MState.SENDED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "sended")));
 
                 break;
             default:
@@ -433,7 +451,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         bundle.putInt("scan_header_id", row.getInt("id"));
         bundle.putInt("position", position);
         bundle.putString("type", mCurrentType);
-        if (row.get("processed") != null && row.getBoolean("processed")) {
+        if (row.get("processed") != null) {
             detail = new ScanHeaderDetail();
         } else {
             detail = new ScanHeaderNew();

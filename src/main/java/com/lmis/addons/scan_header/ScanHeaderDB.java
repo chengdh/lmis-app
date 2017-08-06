@@ -68,8 +68,12 @@ public class ScanHeaderDB extends LmisDatabase {
         cols.add(new LmisColumn("op_type", "operate type", LmisFields.varchar(20), false));
         //货物件数
         cols.add(new LmisColumn("sum_goods_count", "sum goods count", LmisFields.integer(), false));
+
         //运单数量
         cols.add(new LmisColumn("sum_bills_count", "bills count", LmisFields.integer(), false));
+
+        //服务端id
+        cols.add(new LmisColumn("server_id", "server id", LmisFields.integer(), false));
 
 
         return cols;
@@ -91,11 +95,37 @@ public class ScanHeaderDB extends LmisDatabase {
         Lmis instance = getLmisInstance();
 
         json.remove("id");
-        instance.callMethod(clazz, "create_and_process", args, null);
+        JSONObject result = instance.callMethod(clazz, "create_and_process", args, null);
+        JSONObject sh = result.getJSONObject("result");
+        int serverId = sh.getInt("id");
+
         LmisValues v = new LmisValues();
-        v.put("processed", true);
+        v.put("server_id", serverId);
+        v.put("processed", "loaded");
         v.put("process_datetime", new Date());
         update(v, id);
+    }
+
+    /**
+     * 处理发车操作.
+     *
+     * @param id the id
+     */
+    public void processSend(int id) throws JSONException, IOException {
+        LmisDataRow row = select(id);
+
+        Lmis instance = getLmisInstance();
+
+        String clazz = row.getString("op_type");
+        int serverId = row.getInt("server_id");
+        JSONArray args = new JSONArray();
+
+        JSONObject result = instance.callMethod(clazz, "process_send", args, serverId);
+        LmisValues v = new LmisValues();
+        v.put("processed", "sended");
+        v.put("process_datetime", new Date());
+        update(v, id);
+
     }
 
     /**

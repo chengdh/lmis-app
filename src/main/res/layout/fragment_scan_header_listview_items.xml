@@ -54,11 +54,22 @@
             android:id="@+id/txvScanHeaderDescribe"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:layout_marginLeft="5dp"
+            android:layout_weight="3"
+            android:gravity="left|center_vertical"
             android:paddingRight="5dp"
-            android:singleLine="true"
             android:text="1988 items/200 bills"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/txvScanHeaderVNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="3"
+            android:gravity="right|center_vertical"
+            android:paddingRight="5dp"
+            android:text="豫A-12345"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 </LinearLayout>
