@@ -10,15 +10,16 @@
         android:id="@+id/spinner_load_org_select"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:visibility="gone" />
 
     <com.lmis.util.controls.OrgSortingOrgSpinner
         android:id="@+id/spinner_sorting_org_select"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:visibility="gone" />
+
 
     <EditText
         android:id="@+id/edt_scan_barcode"
@@ -29,6 +30,18 @@
         android:inputType="number"
         android:textAlignment="center"
         android:textSize="20dp" />
+
+    <com.lmis.util.controls.GoodsStatusSpinner
+        android:id="@+id/spinner_goods_status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
+
+    <!--<EditText-->
+        <!--android:id="@+id/edt_goods_status"-->
+        <!--android:hint="请录入货物异常信息"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content" />-->
 
 
     <include layout="@layout/fragment_carrying_bill_view_for_scan" />

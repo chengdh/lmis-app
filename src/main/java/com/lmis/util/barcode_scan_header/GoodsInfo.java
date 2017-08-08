@@ -97,6 +97,10 @@ public class GoodsInfo {
 
     String mPayTypeDes = "";
 
+    //货物异常类别及描述
+    int mGoodsStatusType = 0;
+    String mGoodsStatusNote = "";
+
     /**
      * 如果是更新数据时,对应的明细id.
      */
@@ -241,6 +245,26 @@ public class GoodsInfo {
 
     public void setmBarcode(String mBarcode) {
         this.mBarcode = mBarcode;
+    }
+
+    public static String getTAG() {
+        return TAG;
+    }
+
+    public int getmGoodsStatusType() {
+        return mGoodsStatusType;
+    }
+
+    public void setmGoodsStatusType(int mGoodsStatusType) {
+        this.mGoodsStatusType = mGoodsStatusType;
+    }
+
+    public String getmGoodsStatusNote() {
+        return mGoodsStatusNote;
+    }
+
+    public void setmGoodsStatusNote(String mGoodsStatusNote) {
+        this.mGoodsStatusNote = mGoodsStatusNote;
     }
 
     /**

@@ -143,6 +143,11 @@ public class ScanHeaderNew extends BaseFragment {
         });
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
     /**
      * 初始化tabs.
      */

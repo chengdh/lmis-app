@@ -22,6 +22,7 @@ import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
+import com.lmis.util.controls.GoodsStatusSpinner;
 import com.lmis.util.controls.OrgLoadOrgSpinner;
 import com.lmis.util.controls.OrgSortingOrgSpinner;
 import com.lmis.util.controls.PayTypeSpinner;
@@ -46,6 +47,7 @@ import dagger.Provides;
                 AccessOrgSpinner.class,
                 ExcludeAccessOrgSpinner.class,
                 PayTypeSpinner.class,
+                GoodsStatusSpinner.class,
                 AllOrgSpinner.class,
                 YardsOrgSpinner.class,
                 SummaryChidrenSpinner.class,

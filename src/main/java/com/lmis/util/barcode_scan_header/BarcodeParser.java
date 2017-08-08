@@ -163,6 +163,8 @@ public abstract class BarcodeParser {
 
         //添加scan_line信息
         LmisValues lineValue = new LmisValues();
+
+        lineValue.put("id", gs.getmID());
         lineValue.put("scan_header_id", mId);
         lineValue.put("barcode", gs.getmBarcode());
         lineValue.put("carrying_bill_id", gs.getmID());
@@ -463,4 +465,6 @@ public abstract class BarcodeParser {
     public void setmAccessSortingOrgs(List<LmisDataRow> mAccessSortingOrgs) {
         this.mAccessSortingOrgs = mAccessSortingOrgs;
     }
+
+
 }

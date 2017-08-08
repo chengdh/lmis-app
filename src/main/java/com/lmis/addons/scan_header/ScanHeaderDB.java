@@ -120,7 +120,7 @@ public class ScanHeaderDB extends LmisDatabase {
         int serverId = row.getInt("server_id");
         JSONArray args = new JSONArray();
 
-        JSONObject result = instance.callMethod(clazz, "process_send", args, serverId);
+        JSONObject result = instance.callMethod(clazz, "ship", args, serverId);
         LmisValues v = new LmisValues();
         v.put("processed", "sended");
         v.put("process_datetime", new Date());

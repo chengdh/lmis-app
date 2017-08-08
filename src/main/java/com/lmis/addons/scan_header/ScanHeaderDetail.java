@@ -22,6 +22,7 @@ import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode_scan_header.BarcodeQueryListener;
+import com.lmis.util.controls.GoodsStatus;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 
@@ -61,6 +62,7 @@ public class ScanHeaderDetail extends BaseFragment {
     List<Object> mScanedBillsObjects = null;
 
     View mView = null;
+    Menu mMenu;
     Integer mId = null;
     LmisDataRow mScanHeader = null;
 
@@ -87,8 +89,14 @@ public class ScanHeaderDetail extends BaseFragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_scan_header_detail, menu);
+        mMenu = menu;
         mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_scan_header_detail_search).getActionView();
         mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mScanedBillsAdapter));
 
@@ -101,6 +109,11 @@ public class ScanHeaderDetail extends BaseFragment {
         } else {
             item.setVisible(false);
         }
+    }
+
+    private void setShipMenuItemVisible(boolean visible) {
+        MenuItem item = mMenu.findItem(R.id.menu_scan_header_detail_send);
+        item.setVisible(visible);
     }
 
     /**
@@ -155,6 +168,12 @@ public class ScanHeaderDetail extends BaseFragment {
                     LmisDataRow line = (LmisDataRow) mScanedBillsObjects.get(position);
                     String billNo = line.getString("barcode");
                     int qty = line.getInt("qty");
+
+                    int goodsStatusType = line.getInt("goods_status_type");
+                    String goodsStatusNote = line.getString("goods_status_note");
+                    holder.txvBillNo.setText(billNo);
+                    holder.txvGoodsStatusType.setText(GoodsStatus.statusList().get(goodsStatusType));
+                    holder.txvGoodsStatusNote.setText(goodsStatusNote);
                     holder.txvBillNo.setText(billNo);
                     holder.txvBarcodeCount.setText(qty + "件");
                     return mView;
@@ -177,6 +196,12 @@ public class ScanHeaderDetail extends BaseFragment {
         //描述信息
         @InjectView(R.id.txv_barcode_count)
         TextView txvBarcodeCount;
+
+        @InjectView(R.id.txv_goods_status_type)
+        TextView txvGoodsStatusType;
+
+        @InjectView(R.id.txv_goods_status_note)
+        TextView txvGoodsStatusNote;
 
         public ViewHolderForBillsList(View view) {
             ButterKnife.inject(this, view);
@@ -235,6 +260,7 @@ public class ScanHeaderDetail extends BaseFragment {
             if (success) {
                 mProcessSenderAsync.cancel(true);
                 Toast.makeText(scope.context(), "发车处理成功!", Toast.LENGTH_SHORT).show();
+                setShipMenuItemVisible(false);
                 DrawerListener drawer = scope.main();
                 drawer.refreshDrawer(ScanHeaderList.TAG);
                 //返回已处理界面
@@ -247,6 +273,7 @@ public class ScanHeaderDetail extends BaseFragment {
 
             } else {
                 Toast.makeText(scope.context(), "发车处理失败!", Toast.LENGTH_SHORT).show();
+                setShipMenuItemVisible(true);
             }
 
             pdialog.dismiss();

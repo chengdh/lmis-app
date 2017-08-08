@@ -451,7 +451,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         bundle.putInt("scan_header_id", row.getInt("id"));
         bundle.putInt("position", position);
         bundle.putString("type", mCurrentType);
-        if (row.get("processed") != null) {
+        if (!row.get("processed").equals("false")) {
             detail = new ScanHeaderDetail();
         } else {
             detail = new ScanHeaderNew();
@@ -461,6 +461,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
         FragmentListener listener = (FragmentListener) getActivity();
         listener.startDetailFragment(detail);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
     }
 
     /**

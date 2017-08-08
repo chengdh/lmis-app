@@ -1,6 +1,8 @@
 package com.lmis.addons.scan_header;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
+import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.barcode_scan_header.BarcodeDuplicateException;
 import com.lmis.util.barcode_scan_header.BarcodeNotExistsException;
@@ -32,6 +36,8 @@ import com.lmis.util.barcode_scan_header.InvalidToOrgException;
 import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeChangeEventForScanHeader;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeConfirmChangeEvent;
+import com.lmis.util.controls.GoodsStatus;
+import com.lmis.util.controls.GoodsStatusSpinner;
 import com.lmis.util.controls.OrgLoadOrgSpinner;
 import com.lmis.util.controls.OrgSortingOrgSpinner;
 import com.lmis.util.drawer.DrawerItem;
@@ -39,6 +45,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -101,8 +108,15 @@ public class FragmentScanBarcode extends BaseFragment {
     @InjectView(R.id.spinner_load_org_select)
     OrgLoadOrgSpinner mLoadOrgSpinner;
 
+
     @InjectView(R.id.spinner_sorting_org_select)
     OrgSortingOrgSpinner mSortingOrgSpinner;
+
+    @InjectView(R.id.spinner_goods_status)
+    GoodsStatusSpinner mGoodsStatusSpinner;
+
+    GoodsInfo mCurrentGoodsInfo = null;
+
 
     View mView = null;
 
@@ -179,6 +193,7 @@ public class FragmentScanBarcode extends BaseFragment {
                 String barcode = mEdtScanBarcode.getText().toString();
 
                 if (barcode.length() == 7 || barcode.length() == 8) {
+                    mCurrentGoodsInfo = null;
                     try {
                         mBarcodeParser.addBarcode(s.toString());
                         if (mScanHeader == null) {
@@ -218,7 +233,86 @@ public class FragmentScanBarcode extends BaseFragment {
 
             }
         });
+        mGoodsStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                          @Override
+                                                          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                              if (mCurrentGoodsInfo == null) {
+                                                                  return;
+                                                              }
+                                                              Map.Entry gsType = (Map.Entry<Integer, String>) mGoodsStatusSpinner.getItemAtPosition(position);
+                                                              Integer goodsStatusType = (Integer) gsType.getKey();
+                                                              int lineID = mCurrentGoodsInfo.getmID();
+                                                              LmisValues vals = new LmisValues();
+                                                              vals.put("goods_status_type", goodsStatusType);
+                                                              updateScanLine(vals, lineID);
+
+                                                              if (goodsStatusType == GoodsStatus.GOODS_STATUS_INPUT) {
+                                                                  openGoodsStatusInput();
+                                                              }
+
+                                                          }
+
+                                                          @Override
+                                                          public void onNothingSelected(AdapterView<?> parent) {
+
+                                                          }
+                                                      }
+        );
+
         mEdtScanBarcode.requestFocus();
+    }
+
+    private void openGoodsStatusInput() {
+        // Creating alert Dialog with one Button
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(scope.context());
+
+        //AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+        // Setting Dialog Title
+//        alertDialog.setTitle("录入备注信息");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("录入备注");
+        final EditText input = new EditText(scope.context());
+        alertDialog.setView(input);
+
+        // Setting Icon to Dialog
+//        alertDialog.setIcon(R.drawable.key);
+
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog
+                        if (mCurrentGoodsInfo == null) {
+                            return;
+                        }
+                        int lineID = mCurrentGoodsInfo.getmID();
+                        String goodsStatusNote = input.getText().toString();
+                        LmisValues vals = new LmisValues();
+                        vals.put("goods_status_note", goodsStatusNote);
+                        updateScanLine(vals, lineID);
+                    }
+                });
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog
+                        dialog.cancel();
+                    }
+                });
+
+        // closed
+
+        // Showing Alert Message
+        alertDialog.show();
+
+    }
+
+    private int updateScanLine(LmisValues vals, int id) {
+        ScanLineDB db = new ScanLineDB(scope.context());
+        return db.update(vals, id);
     }
 
     /**
@@ -311,6 +405,7 @@ public class FragmentScanBarcode extends BaseFragment {
      */
     @Subscribe
     public void onGoodsInfoAddSuccessEvent(ScanHeaderGoodsInfoAddSuccessEvent evt) {
+        mCurrentGoodsInfo = evt.getmGoodsInfo();
         setUI(evt.getmGoodsInfo());
     }
 

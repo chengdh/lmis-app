@@ -23,6 +23,7 @@ import com.lmis.util.barcode_scan_header.BarcodeQueryListener;
 import com.lmis.util.barcode_scan_header.GoodsInfo;
 import com.lmis.util.barcode_scan_header.MultiChoiceBillListener;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeChangeEventForScanHeader;
+import com.lmis.util.controls.GoodsStatus;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -79,6 +80,11 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_scan_header_bill_list, menu);
         mSearchViewBillList = (SearchView) menu.findItem(R.id.menu_scan_header_bill_list_search).getActionView();
@@ -101,6 +107,13 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         //描述信息
         @InjectView(R.id.txv_barcode_count)
         TextView txvBarcodeCount;
+
+        @InjectView(R.id.txv_goods_status_type)
+        TextView txvGoodsStatusType;
+
+        @InjectView(R.id.txv_goods_status_note)
+        TextView txvGoodsStatusNote;
+
 
         public ViewHolderForBillsList(View view) {
             ButterKnife.inject(this, view);
@@ -142,8 +155,13 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
                 GoodsInfo gs = (GoodsInfo) mBillsObjects.get(position);
                 String billNo = gs.getmBillNo();
                 int count = gs.getmScanedQty();
+                int goodsStatusType = gs.getmGoodsStatusType();
+                String goodsStatusNote = gs.getmGoodsStatusNote();
                 holder.txvBillNo.setText(billNo);
+                holder.txvGoodsStatusType.setText(GoodsStatus.statusList().get(goodsStatusType));
+                holder.txvGoodsStatusNote.setText(goodsStatusNote);
                 holder.txvBarcodeCount.setText("已扫" + count + "件");
+
                 return mView;
             }
 
