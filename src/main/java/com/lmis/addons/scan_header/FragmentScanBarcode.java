@@ -30,6 +30,7 @@ import com.lmis.util.barcode_scan_header.BarcodeParser;
 import com.lmis.util.barcode_scan_header.BarcodeRemoveEventForScanHeader;
 import com.lmis.util.barcode_scan_header.DBException;
 import com.lmis.util.barcode_scan_header.GoodsInfo;
+import com.lmis.util.barcode_scan_header.GoodsInfoChangeEvent;
 import com.lmis.util.barcode_scan_header.ScanHeaderGoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode_scan_header.InvalidBarcodeException;
 import com.lmis.util.barcode_scan_header.InvalidToOrgException;
@@ -311,7 +312,16 @@ public class FragmentScanBarcode extends BaseFragment {
     }
 
     private int updateScanLine(LmisValues vals, int id) {
+
+        if (vals.contains("goods_status_type")) {
+            mCurrentGoodsInfo.setmGoodsStatusType(vals.getInt("goods_status_type"));
+        }
+        if (vals.contains("goods_status_note")) {
+
+            mCurrentGoodsInfo.setmGoodsStatusNote(vals.getString("goods_status_note"));
+        }
         ScanLineDB db = new ScanLineDB(scope.context());
+        mBus.post(new GoodsInfoChangeEvent(mCurrentGoodsInfo));
         return db.update(vals, id);
     }
 

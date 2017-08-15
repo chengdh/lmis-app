@@ -169,8 +169,15 @@ public class ScanHeaderDetail extends BaseFragment {
                     String billNo = line.getString("barcode");
                     int qty = line.getInt("qty");
 
-                    int goodsStatusType = line.getInt("goods_status_type");
-                    String goodsStatusNote = line.getString("goods_status_note");
+
+                    int goodsStatusType = 0;
+                    if (line.get("goods_status_type") != null) {
+                        goodsStatusType = line.getInt("goods_status_type");
+                    }
+                    String goodsStatusNote = "";
+                    if (line.get("goods_status_note") != null) {
+                        goodsStatusNote = line.getString("goods_status_note");
+                    }
                     holder.txvBillNo.setText(billNo);
                     holder.txvGoodsStatusType.setText(GoodsStatus.statusList().get(goodsStatusType));
                     holder.txvGoodsStatusNote.setText(goodsStatusNote);

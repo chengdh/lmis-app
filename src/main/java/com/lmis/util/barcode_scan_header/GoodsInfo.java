@@ -39,6 +39,9 @@ public class GoodsInfo {
     @DbModule.AccessLmis
     Lmis mLmis;
 
+    //操作方式
+    String mOptype;
+
     Context mContext = null;
     String mBarcode = null;
     private GetBillTask mGetBillTask = null;
@@ -112,11 +115,18 @@ public class GoodsInfo {
         ((Injector) context).inject(this);
     }
 
+    public GoodsInfo(Context context, String barcode, String opType) throws InvalidBarcodeException {
+        mContext = context;
+        mBarcode = barcode;
+        mOptype = opType;
+        ((Injector) context).inject(this);
+        parseBarcodeFromServer();
+    }
+
     public GoodsInfo(Context context, String barcode) throws InvalidBarcodeException {
         mContext = context;
         mBarcode = barcode;
         ((Injector) context).inject(this);
-        parseBarcodeFromServer();
     }
 
     public Integer getmID() {
@@ -265,6 +275,14 @@ public class GoodsInfo {
 
     public void setmGoodsStatusNote(String mGoodsStatusNote) {
         this.mGoodsStatusNote = mGoodsStatusNote;
+    }
+
+    public String getmOptype() {
+        return mOptype;
+    }
+
+    public void setmOptype(String mOptype) {
+        this.mOptype = mOptype;
     }
 
     /**
@@ -426,7 +444,24 @@ public class GoodsInfo {
                         //FIXME 默认扫描全部条码
                         setmScanedQty(bill.getInt("goods_num"));
 
-                        mBus.post(new GetBillFromServerSuccessEvent(GoodsInfo.this));
+                        switch (mOptype) {
+                            case ScanHeaderOpType.SORTING_IN:
+                                mBus.post(new SortingInGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
+
+                            case ScanHeaderOpType.LOAD_IN:
+
+                                mBus.post(new LoadInGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
+                            case ScanHeaderOpType.LOAD_OUT:
+
+                                mBus.post(new LoadOutGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
+                            default:
+                                break;
+                        }
+
+
 //                        Toast.makeText(mContext, "已查到运单信息!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {

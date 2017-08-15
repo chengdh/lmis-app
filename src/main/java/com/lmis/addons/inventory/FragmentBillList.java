@@ -140,6 +140,8 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         mLstBills.setMultiChoiceModeListener(new MultiChoiceBillListener(scope.context(), mBillsObjects, mBarcodeParser));
     }
 
+
+
     @Subscribe
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
         //通知billListTab数据变化

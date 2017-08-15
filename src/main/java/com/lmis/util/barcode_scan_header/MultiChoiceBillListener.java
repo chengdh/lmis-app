@@ -8,8 +8,10 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.Toast;
 
+import com.j256.ormlite.stmt.query.In;
 import com.lmis.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ import java.util.Map;
  */
 public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListener {
     Context mContext;
-    HashMap<Integer, Boolean> mMultiSelectedRows = new HashMap<Integer, Boolean>();
+    List<Integer> mMultiSelectedRows = new ArrayList<>();
     int mSelectedCounter = 0;
     BarcodeParser mBarcodeParser;
     List<Object> mBillObjects = null;
@@ -33,10 +35,12 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mMultiSelectedRows.put(position, checked);
         if (checked) {
+
+            mMultiSelectedRows.add(position);
             mSelectedCounter++;
         } else {
+            mMultiSelectedRows.remove(position);
             mSelectedCounter--;
         }
         if (mSelectedCounter != 0) {
@@ -82,9 +86,10 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
      */
     private int deleteSelectedBills() {
         int ret = 0;
-        for (int position : mMultiSelectedRows.keySet()) {
+        for (int position : mMultiSelectedRows) {
             try {
-                String billNo =  ((Map.Entry)mBillObjects.get(position)).getKey().toString();
+                GoodsInfo gi = (GoodsInfo) mBillObjects.get(position - 1);
+                String billNo = gi.getmBarcode();
                 mBarcodeParser.removeBill(billNo);
                 ret++;
                 Toast.makeText(mContext, "运单扫码记录已删除!", Toast.LENGTH_LONG).show();

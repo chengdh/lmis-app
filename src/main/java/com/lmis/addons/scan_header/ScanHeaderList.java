@@ -52,7 +52,7 @@ import butterknife.InjectView;
  * Created by chengdh on 2017/7/12.
  */
 
-public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemClickListener {
     public static final String TAG = "ScanHeaderList";
 
 
@@ -96,7 +96,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     ScanHeaderLoader mScanHeaderLoader = null;
 
 
-    HashMap<Integer, Boolean> mMultiSelectedRows = new HashMap<Integer, Boolean>();
+    List<Integer> mMultiSelectedRows = new ArrayList<>();
 
     Integer mSelectedCounter = 0;
 
@@ -147,7 +147,6 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         ListView listView = mListView.getRefreshableView();
         listView.setOnItemClickListener(this);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setOnItemLongClickListener(this);
         listView.setMultiChoiceModeListener(mMultiChoiceListener);
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_scan_header_listview_items, mScanHeaderObjects) {
             @Override
@@ -247,10 +246,13 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     AbsListView.MultiChoiceModeListener mMultiChoiceListener = new AbsListView.MultiChoiceModeListener() {
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            mMultiSelectedRows.put(position, checked);
+
             if (checked) {
+                mMultiSelectedRows.add(position);
+
                 mSelectedCounter++;
             } else {
+                mMultiSelectedRows.remove(position);
                 mSelectedCounter--;
             }
             if (mSelectedCounter != 0) {
@@ -280,6 +282,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mSelectedCounter = 0;
+            mMultiSelectedRows.clear();
             mListView.getRefreshableView().clearChoices();
         }
 
@@ -615,11 +618,6 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     };
 
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
-    }
-
     /**
      * 删除选中单据.
      *
@@ -628,8 +626,8 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     private int deleteSelected() {
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
-        for (int position : mMultiSelectedRows.keySet()) {
-            LmisDataRow scanHeader = (LmisDataRow) mScanHeaderObjects.get(position);
+        for (int position : mMultiSelectedRows) {
+            LmisDataRow scanHeader = (LmisDataRow) mScanHeaderObjects.get(position - 1);
             delObjs.add(scanHeader);
             int id = scanHeader.getInt("id");
             db().delete(id);

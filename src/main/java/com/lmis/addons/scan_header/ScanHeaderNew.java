@@ -96,8 +96,13 @@ public class ScanHeaderNew extends BaseFragment {
             LmisDataRow fromOrg = mScanHeader.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mScanHeader.getM2ORecord("to_org_id").browse();
 
-            fromOrgID = fromOrg.getInt("id");
-            toOrgID = toOrg.getInt("id");
+            if (fromOrg != null) {
+                fromOrgID = fromOrg.getInt("id");
+            }
+
+            if (toOrg != null) {
+                toOrgID = toOrg.getInt("id");
+            }
         } else {
             //根据opttype 判断fromOrg与toOrg的值
             //分拣组入库，from_org_id=-1 to_org_id=当前用户登录机构

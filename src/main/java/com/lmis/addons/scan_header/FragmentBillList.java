@@ -21,6 +21,7 @@ import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode_scan_header.BarcodeParser;
 import com.lmis.util.barcode_scan_header.BarcodeQueryListener;
 import com.lmis.util.barcode_scan_header.GoodsInfo;
+import com.lmis.util.barcode_scan_header.GoodsInfoChangeEvent;
 import com.lmis.util.barcode_scan_header.MultiChoiceBillListener;
 import com.lmis.util.barcode_scan_header.ScandedBarcodeChangeEventForScanHeader;
 import com.lmis.util.controls.GoodsStatus;
@@ -170,6 +171,16 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         mLstBills.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mLstBills.setOnItemLongClickListener(this);
         mLstBills.setMultiChoiceModeListener(new MultiChoiceBillListener(scope.context(), mBillsObjects, mBarcodeParser));
+    }
+
+    @Subscribe
+    public void onGoodsInfoChangedEvent(GoodsInfoChangeEvent evt) {
+        //通知billListTab数据变化
+        mBillsObjects.clear();
+        mBillsObjects.addAll(mBarcodeParser.getmScanedBarcode());
+        mBillsAdapter.notifiyDataChange(mBillsObjects);
+        //清除选中状态
+        mLstBills.clearChoices();
     }
 
     @Subscribe

@@ -29,12 +29,13 @@ public class SortingInBarcodeParser extends BarcodeParser {
 
     @Override
     public void addBarcode(String barcode) throws InvalidBarcodeException {
-        GoodsInfo gs = new GoodsInfo(mContext, barcode);
+        GoodsInfo gs = new GoodsInfo(mContext, barcode, mOpType);
 
         //条码已解析事件
         mBus.post(new BarcodeParseSuccessEventForScanHeader(gs));
 
     }
+
     //判断当前分拣组是否有权限扫描该票据
     private boolean checkOrgPower(int from_org_id) {
         for (LmisDataRow o : getmAccessLoadOrgs()) {
@@ -47,11 +48,11 @@ public class SortingInBarcodeParser extends BarcodeParser {
     }
 
     @Subscribe
-    public void onGetBillFromServerSuccessEvent(GetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
+    public void onSortingInGetBillFromServerSuccessEvent(SortingInGetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();
 
         //判断单据状态
-        if(!gs.getmState().equals("billed")){
+        if (!gs.getmState().equals("billed")) {
             SoundPlayer.playBarcodeScanErrorSound(mContext);
             Toast.makeText(mContext, "单据状态不是已开票状态!", Toast.LENGTH_SHORT).show();
             return;

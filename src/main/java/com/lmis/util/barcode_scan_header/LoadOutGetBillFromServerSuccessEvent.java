@@ -1,13 +1,13 @@
 package com.lmis.util.barcode_scan_header;
 
 /**
- * Created by chengdh on 2017/7/19.
+ * Created by chengdh on 2017/8/15.
  */
 
-public class GetBillFromServerSuccessEvent {
+public class LoadOutGetBillFromServerSuccessEvent {
     GoodsInfo mGoodsInfo;
 
-    public GetBillFromServerSuccessEvent(GoodsInfo gs) {
+    public LoadOutGetBillFromServerSuccessEvent(GoodsInfo gs) {
         mGoodsInfo = gs;
     }
 

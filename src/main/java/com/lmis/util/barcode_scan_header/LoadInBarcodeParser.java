@@ -27,7 +27,7 @@ public class LoadInBarcodeParser extends BarcodeParser {
 
     @Override
     public void addBarcode(String barcode) throws InvalidBarcodeException {
-        GoodsInfo gs = new GoodsInfo(mContext, barcode);
+        GoodsInfo gs = new GoodsInfo(mContext, barcode, mOpType);
 
         //条码已解析事件
         mBus.post(new BarcodeParseSuccessEventForScanHeader(gs));
@@ -47,7 +47,7 @@ public class LoadInBarcodeParser extends BarcodeParser {
     }
 
     @Subscribe
-    public void onGetBillFromServerSuccessEvent(GetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
+    public void onLoadInGetBillFromServerSuccessEvent(LoadInGetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();
 
         //判断单据状态是否分拣入库状态

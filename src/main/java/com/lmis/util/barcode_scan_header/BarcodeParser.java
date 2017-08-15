@@ -1,7 +1,6 @@
 package com.lmis.util.barcode_scan_header;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.addons.scan_header.ScanHeaderDB;
@@ -164,7 +163,6 @@ public abstract class BarcodeParser {
         //添加scan_line信息
         LmisValues lineValue = new LmisValues();
 
-        lineValue.put("id", gs.getmID());
         lineValue.put("scan_header_id", mId);
         lineValue.put("barcode", gs.getmBarcode());
         lineValue.put("carrying_bill_id", gs.getmID());
@@ -222,11 +220,12 @@ public abstract class BarcodeParser {
         if (!containsBarcode(barcode))
             throw new BarcodeNotExistsException("条码不存在!");
 
+        String where = "scan_header_id = ? AND barcode = ?";
+        String[] whereArgs = new String[]{mId + "", barcode};
+
         int idx = barcodeIndex(barcode);
 
         mScanedBarcode.remove(idx);
-        String where = "scan_header_id = ? AND barcode = ?";
-        String[] whereArgs = new String[]{mId + "", barcode};
         mScanLineDB.delete(where, whereArgs);
 
         //更新合计数量

@@ -1,62 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scan_tab"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.lmis.util.controls.OrgLoadOrgSpinner
-        android:id="@+id/spinner_load_org_select"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        android:visibility="gone" />
-
-    <com.lmis.util.controls.OrgSortingOrgSpinner
-        android:id="@+id/spinner_sorting_org_select"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        android:visibility="gone" />
-
-
-    <EditText
-        android:id="@+id/edt_scan_barcode"
+    <LinearLayout
+        android:id="@+id/scan_tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:hint="扫描条码"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="20dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <com.lmis.util.controls.GoodsStatusSpinner
-        android:id="@+id/spinner_goods_status"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown" />
+        <com.lmis.util.controls.OrgLoadOrgSpinner
+            android:id="@+id/spinner_load_org_select"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:visibility="gone" />
 
-    <!--<EditText-->
+        <com.lmis.util.controls.OrgSortingOrgSpinner
+            android:id="@+id/spinner_sorting_org_select"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:visibility="gone" />
+
+
+        <EditText
+            android:id="@+id/edt_scan_barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:hint="扫描条码"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <com.lmis.util.controls.GoodsStatusSpinner
+            android:id="@+id/spinner_goods_status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <!--<EditText-->
         <!--android:id="@+id/edt_goods_status"-->
         <!--android:hint="请录入货物异常信息"-->
         <!--android:layout_width="fill_parent"-->
         <!--android:layout_height="wrap_content" />-->
 
 
-    <include layout="@layout/fragment_carrying_bill_view_for_scan" />
+    </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
 
-    <View
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        <include layout="@layout/fragment_carrying_bill_view_for_scan" />
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
+
+        <View
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
 
 
         <TableLayout
@@ -138,7 +151,6 @@
 
             </TableRow>
         </TableLayout>
+
     </LinearLayout>
-
-
 </LinearLayout>
