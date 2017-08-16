@@ -61,10 +61,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
     /**
      * The enum state.
-     * 数据分为草稿及已上传 已发货
+     * 数据分为草稿  装卸入库  已装车  已发货
      */
     private enum MState {
-        DRAFT, PROCESSED, SENDED
+        DRAFT, PROCESSED, SHIPPED
     }
 
     MState mState = MState.DRAFT;
@@ -197,10 +197,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 } else if (mCurrentState.equals("processed")) {
                     mState = MState.PROCESSED;
                     title = "已上传";
-                } else if (mCurrentState.equals("sended")) {
-                    mState = MState.SENDED;
+                } else if (mCurrentState.equals("shipped")) {
+                    mState = MState.SHIPPED;
                     title = "已发车";
                 }
+
             }
             if (bundle.containsKey("type")) {
                 mCurrentType = bundle.getString("type");
@@ -334,11 +335,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 break;
             case PROCESSED:
                 where += "AND processed = ? ";
-                whereArgs[2] = "loaded";
+                whereArgs[2] = "true";
                 break;
-            case SENDED:
+            case SHIPPED:
                 where += "AND processed = ? ";
-                whereArgs[2] = "sended";
+                whereArgs[2] = "shipped";
                 break;
 
             default:
@@ -385,28 +386,28 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
                 groupTitle = "分拣组入库";
 
-                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SORTING_IN, "draft")));
-                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SORTING_IN, "processed")));
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SORTING_IN, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SORTING_IN, "processed")));
                 break;
 
             //装卸组入库
             case (ScanHeaderOpType.LOAD_IN):
                 groupTitle = "装卸组入库";
 
-                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-                drawerItems.add(new DrawerItem(TAG, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
-                drawerItems.add(new DrawerItem(TAG, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN, "processed")));
                 break;
 
             //装卸组出库
             case (ScanHeaderOpType.LOAD_OUT):
                 groupTitle = "装卸组出库";
 
-                drawerItems.add(new DrawerItem(TAG, groupTitle, true));
-                drawerItems.add(new DrawerItem(TAG, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
-                drawerItems.add(new DrawerItem(TAG, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
-                drawerItems.add(new DrawerItem(TAG, "已发车", count(MState.SENDED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "sended")));
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
+                drawerItems.add(new DrawerItem(mCurrentType, "已发车", count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "shipped")));
 
                 break;
             default:

@@ -251,6 +251,7 @@ public class ScanHeaderNew extends BaseFragment {
             }
             try {
                 ((ScanHeaderDB) db()).save2server(mBarcodeParser.getmId());
+
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 return false;
@@ -264,7 +265,7 @@ public class ScanHeaderNew extends BaseFragment {
                 mUploadAsync.cancel(true);
                 Toast.makeText(scope.context(), "上传数据成功!", Toast.LENGTH_SHORT).show();
                 DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(ScanHeaderList.TAG);
+                drawer.refreshDrawer(mOpType);
                 //返回已处理界面
                 ScanHeaderList list = new ScanHeaderList();
                 Bundle arg = new Bundle();

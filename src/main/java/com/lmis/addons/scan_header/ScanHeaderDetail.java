@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode_scan_header.BarcodeQueryListener;
+import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.controls.GoodsStatus;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
@@ -53,6 +55,9 @@ public class ScanHeaderDetail extends BaseFragment {
 
     @InjectView(R.id.txv_driver_name)
     TextView mTxvDriverName;
+
+    @InjectView(R.id.linlayout_subtitle)
+    LinearLayout mLayoutSubtitle;
 
 
     //已扫描的条码列表
@@ -103,9 +108,8 @@ public class ScanHeaderDetail extends BaseFragment {
 
         MenuItem item = menu.findItem(R.id.menu_scan_header_detail_send);
         String state = mScanHeader.getString("processed");
-        if (state.equals("loaded")) {
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) && state.equals("true")) {
             item.setVisible(true);
-
         } else {
             item.setVisible(false);
         }
@@ -151,6 +155,11 @@ public class ScanHeaderDetail extends BaseFragment {
             mTxvSubTitle.setText(describe);
             mTxvVNo.setText(vNo);
             mTxvDriverName.setText(String.format("%s(%s)", driverName, mobile));
+            if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+                mLayoutSubtitle.setVisibility(View.VISIBLE);
+            } else {
+                mLayoutSubtitle.setVisibility(View.GONE);
+            }
 
             mScanedBillsObjects = new ArrayList<Object>(mScanHeader.getO2MRecord("scan_lines").browseEach());
             mScanedBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_scan_header_list_bills_item, mScanedBillsObjects) {
@@ -254,7 +263,7 @@ public class ScanHeaderDetail extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                ((ScanHeaderDB) db()).processSend(mId);
+                ((ScanHeaderDB) db()).processShip(mId);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 return false;
@@ -269,12 +278,12 @@ public class ScanHeaderDetail extends BaseFragment {
                 Toast.makeText(scope.context(), "发车处理成功!", Toast.LENGTH_SHORT).show();
                 setShipMenuItemVisible(false);
                 DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(ScanHeaderList.TAG);
+                drawer.refreshDrawer(mOpType);
                 //返回已处理界面
                 ScanHeaderList list = new ScanHeaderList();
                 Bundle arg = new Bundle();
                 arg.putString("type", mOpType);
-                arg.putString("state", "sended");
+                arg.putString("state", "shipped");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
 

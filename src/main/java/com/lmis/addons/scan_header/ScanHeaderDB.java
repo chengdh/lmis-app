@@ -101,17 +101,48 @@ public class ScanHeaderDB extends LmisDatabase {
 
         LmisValues v = new LmisValues();
         v.put("server_id", serverId);
-        v.put("processed", "loaded");
+        v.put("processed", true);
         v.put("process_datetime", new Date());
         update(v, id);
     }
+
+    /**
+     * 处理装车操作.
+     *
+     * @param id the id
+     * @throws JSONException the json exception
+     * @throws IOException   the io exception
+     */
+    public void processLoad(int id) throws JSONException, IOException {
+        LmisDataRow row = select(id);
+        JSONObject json = row.exportAsJSON();
+        String clazz = json.getString("op_type");
+        delUnusedAttrs(json);
+
+        JSONArray args = new JSONArray();
+        args.put(json);
+        Lmis instance = getLmisInstance();
+
+        json.remove("id");
+        JSONObject result = instance.callMethod(clazz, "create_and_process", args, null);
+        JSONObject sh = result.getJSONObject("result");
+        int serverId = sh.getInt("id");
+
+        LmisValues v = new LmisValues();
+        v.put("server_id", serverId);
+        v.put("processed", "loaded");
+        v.put("process_datetime", new Date());
+        update(v, id);
+
+    }
+
 
     /**
      * 处理发车操作.
      *
      * @param id the id
      */
-    public void processSend(int id) throws JSONException, IOException {
+    public void processShip(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
 
         Lmis instance = getLmisInstance();
@@ -122,7 +153,7 @@ public class ScanHeaderDB extends LmisDatabase {
 
         JSONObject result = instance.callMethod(clazz, "ship", args, serverId);
         LmisValues v = new LmisValues();
-        v.put("processed", "sended");
+        v.put("processed", "shipped");
         v.put("process_datetime", new Date());
         update(v, id);
 
