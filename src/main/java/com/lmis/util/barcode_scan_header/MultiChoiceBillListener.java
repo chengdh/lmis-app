@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListener {
     Context mContext;
-    List<Integer> mMultiSelectedRows = new ArrayList<>();
+    List<String> mMultiSelectedRows = new ArrayList<>();
     int mSelectedCounter = 0;
     BarcodeParser mBarcodeParser;
     List<Object> mBillObjects = null;
@@ -37,10 +37,10 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         if (checked) {
 
-            mMultiSelectedRows.add(position);
+            mMultiSelectedRows.add(Integer.toString(position));
             mSelectedCounter++;
         } else {
-            mMultiSelectedRows.remove(position);
+            mMultiSelectedRows.remove(Integer.toString(position));
             mSelectedCounter--;
         }
         if (mSelectedCounter != 0) {
@@ -86,9 +86,9 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
      */
     private int deleteSelectedBills() {
         int ret = 0;
-        for (int position : mMultiSelectedRows) {
+        for (String position : mMultiSelectedRows) {
             try {
-                GoodsInfo gi = (GoodsInfo) mBillObjects.get(position - 1);
+                GoodsInfo gi = (GoodsInfo) mBillObjects.get(Integer.parseInt(position));
                 String billNo = gi.getmBarcode();
                 mBarcodeParser.removeBill(billNo);
                 ret++;

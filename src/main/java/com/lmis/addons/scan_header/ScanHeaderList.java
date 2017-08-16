@@ -86,7 +86,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     LmisListAdapter mListViewAdapter = null;
 
     @InjectView(R.id.listScanHeaders)
-    PullToRefreshListView mListView;
+    ListView mListView;
 
     @InjectView(R.id.txvScanHeaderBlank)
     TextView mTxvBlank;
@@ -96,7 +96,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     ScanHeaderLoader mScanHeaderLoader = null;
 
 
-    List<Integer> mMultiSelectedRows = new ArrayList<>();
+    List<String> mMultiSelectedRows = new ArrayList<>();
 
     Integer mSelectedCounter = 0;
 
@@ -144,10 +144,9 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
      */
     private void init() {
         mTxvBlank.setVisibility(View.GONE);
-        ListView listView = mListView.getRefreshableView();
-        listView.setOnItemClickListener(this);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(mMultiChoiceListener);
+        mListView.setOnItemClickListener(this);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setMultiChoiceModeListener(mMultiChoiceListener);
         mListViewAdapter = new LmisListAdapter(getActivity(), R.layout.fragment_scan_header_listview_items, mScanHeaderObjects) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -162,7 +161,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
             }
 
         };
-        listView.setAdapter(mListViewAdapter);
+        mListView.setAdapter(mListViewAdapter);
 //        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 //            @Override
 //            public void onPullDownToRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
@@ -249,11 +248,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
             if (checked) {
-                mMultiSelectedRows.add(position);
+                mMultiSelectedRows.add(Integer.toString(position));
 
                 mSelectedCounter++;
             } else {
-                mMultiSelectedRows.remove(position);
+                mMultiSelectedRows.remove(Integer.toString(position));
                 mSelectedCounter--;
             }
             if (mSelectedCounter != 0) {
@@ -284,7 +283,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         public void onDestroyActionMode(ActionMode mode) {
             mSelectedCounter = 0;
             mMultiSelectedRows.clear();
-            mListView.getRefreshableView().clearChoices();
+            mListView.clearChoices();
         }
 
         @Override
@@ -443,10 +442,6 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        if (position == 0)
-            return;
-
-        position -= mListView.getRefreshableView().getHeaderViewsCount();
 
         mSelectedItemPosition = position;
         LmisDataRow row = (LmisDataRow) mScanHeaderObjects.get(position);
@@ -610,7 +605,6 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
             Log.d(TAG, "InventoryOutList->SyncFinishReceiverReceiver@onReceive");
             scope.main().refreshDrawer(TAG);
-            mListView.onRefreshComplete();
             mListViewAdapter.clear();
             mScanHeaderObjects.clear();
             mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
@@ -627,8 +621,8 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
     private int deleteSelected() {
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
-        for (int position : mMultiSelectedRows) {
-            LmisDataRow scanHeader = (LmisDataRow) mScanHeaderObjects.get(position - 1);
+        for (String position : mMultiSelectedRows) {
+            LmisDataRow scanHeader = (LmisDataRow) mScanHeaderObjects.get(Integer.parseInt(position));
             delObjs.add(scanHeader);
             int id = scanHeader.getInt("id");
             db().delete(id);
@@ -643,7 +637,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
 
         DrawerListener drawer = scope.main();
-        drawer.refreshDrawer(TAG);
+        drawer.refreshDrawer(mCurrentType);
 
         Toast.makeText(scope.context(), "单据已删除!", Toast.LENGTH_LONG).show();
         return ret;
