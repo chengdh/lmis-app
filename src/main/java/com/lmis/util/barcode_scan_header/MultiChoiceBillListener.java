@@ -86,11 +86,15 @@ public class MultiChoiceBillListener implements AbsListView.MultiChoiceModeListe
      */
     private int deleteSelectedBills() {
         int ret = 0;
+        List<String> bills = new ArrayList<>();
         for (String position : mMultiSelectedRows) {
+            GoodsInfo gi = (GoodsInfo) mBillObjects.get(Integer.parseInt(position));
+            String billNo = gi.getmBarcode();
+            bills.add(billNo);
+        }
+        for (String barcode : bills) {
             try {
-                GoodsInfo gi = (GoodsInfo) mBillObjects.get(Integer.parseInt(position));
-                String billNo = gi.getmBarcode();
-                mBarcodeParser.removeBill(billNo);
+                mBarcodeParser.removeBill(barcode);
                 ret++;
                 Toast.makeText(mContext, "运单扫码记录已删除!", Toast.LENGTH_LONG).show();
             } catch (InvalidBarcodeException ex) {

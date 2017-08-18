@@ -191,17 +191,23 @@ public class FragmentScanBarcode extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
                 String barcode = mEdtScanBarcode.getText().toString();
 
-                if (barcode.length() == 7 || barcode.length() == 8) {
+                if (barcode.length() == 8 || barcode.length() == 7) {
                     mCurrentGoodsInfo = null;
                     try {
-                        mBarcodeParser.addBarcode(s.toString());
+                        mBarcodeParser.addBarcode(barcode);
                         if (mScanHeader == null) {
                             LmisDatabase db = new ScanHeaderDB(scope.context());
                             mScanHeader = db.select(mBarcodeParser.getmId());
                         }
                         mEdtScanBarcode.setText("");
+                        mGoodsStatusSpinner.setSelection(0);
 
                     } catch (InvalidBarcodeException ex) {
                         Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
@@ -215,10 +221,6 @@ public class FragmentScanBarcode extends BaseFragment {
                         Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
                     }
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
 
             }
         });

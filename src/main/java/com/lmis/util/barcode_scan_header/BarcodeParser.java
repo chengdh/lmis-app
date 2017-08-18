@@ -249,10 +249,10 @@ public abstract class BarcodeParser {
         mScanedBarcode.removeAll(gsList);
         String barcodeStr = "-1";
         for (GoodsInfo gs : gsList) {
-            barcodeStr = "," + gs.getmBarcode();
+            barcodeStr = gs.getmBarcode() + ",";
         }
         String where = "scan_header_id= ? AND barcode in (?)";
-        String[] whereArgs = new String[]{mId + "", barcodeStr};
+        String[] whereArgs = new String[]{mId + "", barcodeStr.substring(0, barcodeStr.length() - 1)};
         mScanLineDB.delete(where, whereArgs);
 
         //更新合计数量

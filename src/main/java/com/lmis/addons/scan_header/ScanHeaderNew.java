@@ -299,4 +299,19 @@ public class ScanHeaderNew extends BaseFragment {
         actionBar.removeAllTabs();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.remove("android:support:fragments");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final android.app.ActionBar actionBar = getActivity().getActionBar();
+        actionBar.removeAllTabs();
+        initTabs();
+    }
+
 }
