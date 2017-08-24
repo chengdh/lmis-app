@@ -109,6 +109,11 @@ public class GoodsInfo {
      */
     Integer mID = -1;
 
+    Integer goodsStatusTypeLoadIn = 1;
+    String goodsStatusNoteLoadIn = "";
+    Integer goodsStatusTypeLoadOut = 1;
+    String goodsStatusNoteLoadOut = "";
+
 
     public GoodsInfo(Context context) {
         mContext = context;
@@ -285,6 +290,38 @@ public class GoodsInfo {
         this.mOptype = mOptype;
     }
 
+    public Integer getGoodsStatusTypeLoadIn() {
+        return goodsStatusTypeLoadIn;
+    }
+
+    public void setGoodsStatusTypeLoadIn(Integer goodsStatusTypeLoadIn) {
+        this.goodsStatusTypeLoadIn = goodsStatusTypeLoadIn;
+    }
+
+    public String getGoodsStatusNoteLoadIn() {
+        return goodsStatusNoteLoadIn;
+    }
+
+    public void setGoodsStatusNoteLoadIn(String goodsStatusNoteLoadIn) {
+        this.goodsStatusNoteLoadIn = goodsStatusNoteLoadIn;
+    }
+
+    public Integer getGoodsStatusTypeLoadOut() {
+        return goodsStatusTypeLoadOut;
+    }
+
+    public void setGoodsStatusTypeLoadOut(Integer goodsStatusTypeLoadOut) {
+        this.goodsStatusTypeLoadOut = goodsStatusTypeLoadOut;
+    }
+
+    public String getGoodsStatusNoteLoadOut() {
+        return goodsStatusNoteLoadOut;
+    }
+
+    public void setGoodsStatusNoteLoadOut(String goodsStatusNoteLoadOut) {
+        this.goodsStatusNoteLoadOut = goodsStatusNoteLoadOut;
+    }
+
     /**
      * 验证barcode
      */
@@ -440,6 +477,11 @@ public class GoodsInfo {
                         setmGoodsFee(bill.getDouble("goods_fee"));
                         setmState(bill.getString("state"));
                         setmStateDes(bill.getString("human_state_name"));
+                        setGoodsStatusTypeLoadIn(bill.getInt("goods_status_type_load_in"));
+                        setGoodsStatusNoteLoadIn(bill.getString("goods_status_note_load_in"));
+
+                        setGoodsStatusTypeLoadOut(bill.getInt("goods_status_type_load_out"));
+                        setGoodsStatusNoteLoadOut(bill.getString("goods_status_note_load_out"));
 
                         //FIXME 默认扫描全部条码
                         setmScanedQty(bill.getInt("goods_num"));

@@ -104,12 +104,14 @@
         android:text="运费"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#33b5e5"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/txv_pay_type"
@@ -149,12 +151,14 @@
         android:text="货款"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#33b5e5"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

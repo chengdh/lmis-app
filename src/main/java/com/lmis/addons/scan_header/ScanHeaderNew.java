@@ -179,6 +179,7 @@ public class ScanHeaderNew extends BaseFragment {
         final android.app.ActionBar actionBar = getActivity().getActionBar();
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(NAVIGATION_MODE_TABS);
+        actionBar.removeAllTabs();
         if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
             actionBar.addTab(actionBar.newTab().setText("车辆信息").setTabListener(tabListener));
         }
@@ -306,11 +307,8 @@ public class ScanHeaderNew extends BaseFragment {
         outState.remove("android:support:fragments");
     }
 
-    @Override
     public void onResume() {
         super.onResume();
-        final android.app.ActionBar actionBar = getActivity().getActionBar();
-        actionBar.removeAllTabs();
         initTabs();
     }
 

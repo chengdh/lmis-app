@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -244,10 +243,12 @@ public class FragmentScanBarcode extends BaseFragment {
                                                               }
                                                               Map.Entry gsType = (Map.Entry<Integer, String>) mGoodsStatusSpinner.getItemAtPosition(position);
                                                               Integer goodsStatusType = (Integer) gsType.getKey();
-                                                              int lineID = mCurrentGoodsInfo.getmID();
+
+                                                              int carryingBillID = mCurrentGoodsInfo.getmID();
+                                                              int scanHeaderID = mBarcodeParser.getmId();
                                                               LmisValues vals = new LmisValues();
                                                               vals.put("goods_status_type", goodsStatusType);
-                                                              updateScanLine(vals, lineID);
+                                                              updateScanLine(vals, scanHeaderID, carryingBillID);
 
                                                               if (goodsStatusType == GoodsStatus.GOODS_STATUS_INPUT) {
                                                                   openGoodsStatusInput();
@@ -290,11 +291,12 @@ public class FragmentScanBarcode extends BaseFragment {
                         if (mCurrentGoodsInfo == null) {
                             return;
                         }
-                        int lineID = mCurrentGoodsInfo.getmID();
+                        int carryingBillID = mCurrentGoodsInfo.getmID();
+                        int scanHeaderID = mBarcodeParser.getmId();
                         String goodsStatusNote = input.getText().toString();
                         LmisValues vals = new LmisValues();
                         vals.put("goods_status_note", goodsStatusNote);
-                        updateScanLine(vals, lineID);
+                        updateScanLine(vals, scanHeaderID, carryingBillID);
                     }
                 });
         // Setting Negative "NO" Button
@@ -313,7 +315,7 @@ public class FragmentScanBarcode extends BaseFragment {
 
     }
 
-    private int updateScanLine(LmisValues vals, int id) {
+    private int updateScanLine(LmisValues vals, int scan_header_id, int carrying_bill_id) {
 
         if (vals.contains("goods_status_type")) {
             mCurrentGoodsInfo.setmGoodsStatusType(vals.getInt("goods_status_type"));
@@ -324,7 +326,9 @@ public class FragmentScanBarcode extends BaseFragment {
         }
         ScanLineDB db = new ScanLineDB(scope.context());
         mBus.post(new GoodsInfoChangeEvent(mCurrentGoodsInfo));
-        return db.update(vals, id);
+        String where = "scan_header_id=? and carrying_bill_id=?";
+        String[] whereArgs = new String[]{scan_header_id + "", carrying_bill_id + ""};
+        return db.update(vals, where, whereArgs);
     }
 
     /**
@@ -374,9 +378,28 @@ public class FragmentScanBarcode extends BaseFragment {
         mTxvPayType.setText(gs.getmPayTypeDes());
         mTxvGoodsNum.setText(gs.getmGoodsNum() + "");
         mTxvStateDes.setText(gs.getmStateDes());
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+
+            int goodsStatusType = gs.getGoodsStatusTypeLoadIn();
+            String goodsStatusNote = gs.getGoodsStatusNoteLoadIn();
+            int spinnerPosition = getIndex(mGoodsStatusSpinner, goodsStatusType);
+            mGoodsStatusSpinner.setSelection(spinnerPosition, true);
+        }
         mEdtScanBarcode.requestFocus();
 
+    }
 
+    private static int getIndex(Spinner spinner, int goodsStatusType) {
+
+        int index = 0;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            Map.Entry item = (Map.Entry) spinner.getItemAtPosition(i);
+            if ((Integer) item.getKey() == goodsStatusType) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     /**
