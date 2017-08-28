@@ -47,6 +47,11 @@ public class SortingInBarcodeParser extends BarcodeParser {
 
     }
 
+    @Override
+    public void unRegisterEventBus() {
+        mBus.unregister(this);
+    }
+
     @Subscribe
     public void onSortingInGetBillFromServerSuccessEvent(SortingInGetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();

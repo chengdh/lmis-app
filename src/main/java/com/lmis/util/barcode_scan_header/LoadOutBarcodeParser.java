@@ -42,6 +42,11 @@ public class LoadOutBarcodeParser extends BarcodeParser {
 
     }
 
+    @Override
+    public void unRegisterEventBus() {
+        mBus.unregister(this);
+    }
+
     @Subscribe
     public void onLoadOutGetBillFromServerSuccessEvent(LoadOutGetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();

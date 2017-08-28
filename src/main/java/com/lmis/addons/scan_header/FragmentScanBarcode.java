@@ -460,4 +460,16 @@ public class FragmentScanBarcode extends BaseFragment {
         return null;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mBus.unregister(this);
+    }
+
 }

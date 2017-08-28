@@ -75,7 +75,6 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_scan_header_bill_list, container, false);
         ButterKnife.inject(this, mView);
-        mBus.register(this);
         initBillsListTab();
         return mView;
     }
@@ -204,4 +203,15 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         return null;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mBus.unregister(this);
+    }
 }

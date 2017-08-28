@@ -290,6 +290,7 @@ public class ScanHeaderNew extends BaseFragment {
         // Specify that tabs should be displayed in the action bar.
         actionBar.removeAllTabs();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        mBarcodeParser.unRegisterEventBus();
     }
 
     @Override

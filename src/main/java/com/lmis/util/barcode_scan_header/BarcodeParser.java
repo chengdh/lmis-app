@@ -66,6 +66,7 @@ public abstract class BarcodeParser {
     String mDriverName = "";
     String mMobile = "";
     String mIdNo = "";
+    String mNote = "";
 
     /**
      * 发出机构id.
@@ -178,6 +179,7 @@ public abstract class BarcodeParser {
         row.put("driver_name", mDriverName);
         row.put("mobile", mMobile);
         row.put("id_no", mIdNo);
+        row.put("note", mNote);
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
         row.put("from_org_id", mFromOrgID);
@@ -402,6 +404,15 @@ public abstract class BarcodeParser {
         save2DB();
     }
 
+    public String getmNote() {
+        return mNote;
+    }
+
+    public void setmNote(String mNote) {
+        this.mNote = mNote;
+        save2DB();
+    }
+
     /**
      * 运单号比较器，用于比较运单号
      * 传入的对象是k,v样式,k为条码,v为扫描数量
@@ -420,6 +431,8 @@ public abstract class BarcodeParser {
         }
 
     }
+
+    public abstract void unRegisterEventBus();
 
     public int getmFromOrgID() {
         return mFromOrgID;

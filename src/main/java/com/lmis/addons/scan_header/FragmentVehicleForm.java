@@ -43,6 +43,10 @@ public class FragmentVehicleForm extends BaseFragment {
     @InjectView(R.id.edt_v_no)
     EditText mEdtVNo;
 
+    @InjectView(R.id.edt_note)
+    EditText mEdtNote;
+
+
     @InjectView(R.id.edt_driver_name)
     EditText mEdtDriverName;
 
@@ -174,6 +178,22 @@ public class FragmentVehicleForm extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 mBarcodeParser.setmVNo(mEdtVNo.getText().toString());
 
+            }
+        });
+        mEdtNote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mBarcodeParser.setmNote(mEdtNote.getText().toString());
             }
         });
 

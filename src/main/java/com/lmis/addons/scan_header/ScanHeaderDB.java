@@ -58,6 +58,10 @@ public class ScanHeaderDB extends LmisDatabase {
         cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
 
+
+        //备注
+        cols.add(new LmisColumn("note", "note", LmisFields.varchar(200)));
+
         //是否已上传
         cols.add(new LmisColumn("processed", "processed", LmisFields.varchar(10), false));
         //上传时间
