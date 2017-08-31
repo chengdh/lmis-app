@@ -39,6 +39,10 @@ public class LoadInBarcodeParser extends BarcodeParser {
         mBus.unregister(this);
     }
 
+   @Override
+    public void registerEventBus() {
+        mBus.register(this);
+    }
 
     //判断当前装卸组是否有权限扫描该票据
     private boolean checkOrgPower(int to_org_id) {

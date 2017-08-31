@@ -115,7 +115,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     //货号
-                    "TEXT 15,250,\"Font001\",0,2,2,\"",
+                    "TEXT 15,250,\"Font001\",0,3,3,\"",
                     String.format("货    号:%s", bill.getString("goods_no").substring(2)).getBytes("GB2312"),
                     "\"\n",
 

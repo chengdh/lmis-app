@@ -294,6 +294,12 @@ public class ScanHeaderNew extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mBarcodeParser.registerEventBus();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         final android.app.ActionBar actionBar = getActivity().getActionBar();

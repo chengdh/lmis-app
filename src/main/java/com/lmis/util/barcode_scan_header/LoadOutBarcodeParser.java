@@ -43,6 +43,11 @@ public class LoadOutBarcodeParser extends BarcodeParser {
     }
 
     @Override
+    public void registerEventBus() {
+        mBus.register(this);
+    }
+
+    @Override
     public void unRegisterEventBus() {
         mBus.unregister(this);
     }

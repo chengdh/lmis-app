@@ -54,7 +54,6 @@ public class ScanHeaderDB extends LmisDatabase {
 
         cols.add(new LmisColumn("bill_date", "bill_date", LmisFields.varchar(20)));
 
-        cols.add(new LmisColumn("note", "note", LmisFields.varchar(20)));
         cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer(20)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
 

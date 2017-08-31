@@ -101,7 +101,7 @@ public abstract class BarcodeParser {
         mContext = context;
 
         ((Injector) mContext).inject(this);
-        mBus.register(this);
+//        mBus.register(this);
 
 
         mScanedBarcode = new ArrayList<GoodsInfo>();
@@ -433,6 +433,7 @@ public abstract class BarcodeParser {
     }
 
     public abstract void unRegisterEventBus();
+    public abstract void registerEventBus();
 
     public int getmFromOrgID() {
         return mFromOrgID;
