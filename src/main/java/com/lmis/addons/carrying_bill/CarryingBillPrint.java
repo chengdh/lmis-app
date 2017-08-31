@@ -293,7 +293,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1360,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
+                    "全国统一客服热线:400-862-9666".getBytes("GB2312"),
                     "\"\n"
 
 
@@ -466,7 +466,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 135,700,\"Font001\",0,2,2,\"",
-                    String.format("%s元", bill.getString("carrying_fee") + bill.getString("from_short_carrying_fee") + bill.getString("to_short_carrying_fee")).getBytes("GB2312"),
+                    String.format("%s元", bill.getDouble("carrying_fee") + bill.getDouble("from_short_carrying_fee") + bill.getDouble("to_short_carrying_fee")).getBytes("GB2312"),
                     "\"\n",
 
 
@@ -548,7 +548,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1360,\"Font001\",0,2,2,\"",
-                    "全国统一客服热线:400-619-4448".getBytes("GB2312"),
+                    "全国统一客服热线:400-862-9666".getBytes("GB2312"),
                     "\"\n"
 
             ));
