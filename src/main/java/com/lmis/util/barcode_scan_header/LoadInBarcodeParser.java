@@ -3,6 +3,7 @@ package com.lmis.util.barcode_scan_header;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.util.SoundPlayer;
 import com.squareup.otto.Subscribe;
@@ -46,8 +47,16 @@ public class LoadInBarcodeParser extends BarcodeParser {
 
     //判断当前装卸组是否有权限扫描该票据
     private boolean checkOrgPower(int to_org_id) {
+        OrgDB orgDB = new OrgDB(mContext);
+
+        LmisDataRow toOrg = orgDB.select(to_org_id);
+        LmisDataRow parentOrg = orgDB.select(toOrg.getInt("parent_id"));
+        int parentOrgID = -1;
+        if(parentOrg != null){
+            parentOrgID = parentOrg.getInt("id");
+        }
         for (LmisDataRow o : getmAccessLoadOrgs()) {
-            if (o.getInt("id") == to_org_id) {
+            if (o.getInt("id") == to_org_id || parentOrgID == o.getInt("id")) {
                 return true;
             }
         }
