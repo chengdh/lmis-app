@@ -40,7 +40,7 @@ public class LoadInBarcodeParser extends BarcodeParser {
         mBus.unregister(this);
     }
 
-   @Override
+    @Override
     public void registerEventBus() {
         mBus.register(this);
     }
@@ -50,10 +50,10 @@ public class LoadInBarcodeParser extends BarcodeParser {
         OrgDB orgDB = new OrgDB(mContext);
 
         LmisDataRow toOrg = orgDB.select(to_org_id);
-        LmisDataRow parentOrg = orgDB.select(toOrg.getInt("parent_id"));
+
         int parentOrgID = -1;
-        if(parentOrg != null){
-            parentOrgID = parentOrg.getInt("id");
+        if (toOrg.get("parent_id") != null && !toOrg.get("parent_id").equals("null")) {
+            parentOrgID = toOrg.getInt("parent_id");
         }
         for (LmisDataRow o : getmAccessLoadOrgs()) {
             if (o.getInt("id") == to_org_id || parentOrgID == o.getInt("id")) {
