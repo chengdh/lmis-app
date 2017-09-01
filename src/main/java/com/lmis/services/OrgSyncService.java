@@ -91,8 +91,14 @@ public class OrgSyncService extends InjectingService implements PerformSync {
             JSONObject jso = new JSONObject();
             jso.put("is_select", 1);
             arguments.add(jso);
+            LmisArguments userOrgArguments = new LmisArguments();
+            JSONObject argJso = new JSONObject();
+            argJso.put("is_select", 1);
+            argJso.put("user_id", user.getUser_id());
+            userOrgArguments.add(argJso);
+
             lmisOrgDB.syncWithMethod("all", new LmisArguments(), true);
-            lmisUserOrgDB.syncWithMethod("where", arguments, true);
+            lmisUserOrgDB.syncWithMethod("where", userOrgArguments, true);
             lmisOrgSortingOrgDB.syncWithMethod("where", arguments, true);
             lmisOrgLoadOrgDB.syncWithMethod("where", arguments, true);
 
