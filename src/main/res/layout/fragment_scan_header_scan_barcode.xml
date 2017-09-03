@@ -26,7 +26,6 @@
             android:spinnerMode="dropdown"
             android:visibility="gone" />
 
-
         <EditText
             android:id="@+id/edt_scan_barcode"
             android:layout_width="match_parent"
@@ -35,6 +34,16 @@
             android:hint="扫描条码"
             android:inputType="number"
             android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/edt_input_barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:hint="手动输入条码"
+            android:textAlignment="center"
+            android:visibility="gone"
             android:textSize="20dp" />
 
         <com.lmis.util.controls.GoodsStatusSpinner
@@ -57,7 +66,10 @@
         android:layout_height="0dp"
         android:layout_weight="3">
 
+
         <include layout="@layout/fragment_carrying_bill_view_for_scan" />
+
+
     </ScrollView>
 
     <LinearLayout

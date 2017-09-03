@@ -7,13 +7,20 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +73,9 @@ public class FragmentScanBarcode extends BaseFragment {
 
     @InjectView(R.id.edt_scan_barcode)
     EditText mEdtScanBarcode;
+
+    @InjectView(R.id.edt_input_barcode)
+    EditText mEdtInputBarcode;
 
     @InjectView(R.id.txv_from_org)
     TextView mTxvFromOrg;
@@ -143,6 +153,7 @@ public class FragmentScanBarcode extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_scan_header_scan_barcode, container, false);
         ButterKnife.inject(this, mView);
         Bundle args = getArguments();
@@ -163,6 +174,31 @@ public class FragmentScanBarcode extends BaseFragment {
         initData();
         initScanTab();
         return mView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_scanbarcode, menu);
+        final MenuItem toggleservice = menu.findItem(R.id.btn_switch_scanbarcode_mode);
+        final View actionView = toggleservice.getActionView();
+        final Switch btnSwitch = (Switch) actionView.findViewById(R.id.switchAB);
+        btnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mEdtInputBarcode.setVisibility(View.VISIBLE);
+                    mEdtScanBarcode.setVisibility(View.GONE);
+
+                } else {
+                    mEdtInputBarcode.setVisibility(View.GONE);
+                    mEdtScanBarcode.setVisibility(View.VISIBLE);
+
+                }
+                // Start or stop your Service
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void initData() {
@@ -221,6 +257,40 @@ public class FragmentScanBarcode extends BaseFragment {
                     }
                 }
 
+
+            }
+        });
+        mEdtInputBarcode.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String barcode = mEdtInputBarcode.getText().toString();
+
+                    if (barcode.length() >= 7) {
+                        mCurrentGoodsInfo = null;
+                        try {
+                            mBarcodeParser.addBarcode(barcode);
+                            if (mScanHeader == null) {
+                                LmisDatabase db = new ScanHeaderDB(scope.context());
+                                mScanHeader = db.select(mBarcodeParser.getmId());
+                            }
+                            mEdtInputBarcode.setText("");
+                            mGoodsStatusSpinner.setSelection(0);
+
+                        } catch (InvalidBarcodeException ex) {
+                            Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
+                        } catch (InvalidToOrgException ex) {
+                            Toast.makeText(scope.context(), "到货地不匹配!", Toast.LENGTH_LONG).show();
+                        } catch (BarcodeDuplicateException ex) {
+                            Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
+                        } catch (DBException e) {
+                            e.printStackTrace();
+                        } catch (BarcodeNotExistsException e) {
+                            Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
         });
         mLoadOrgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

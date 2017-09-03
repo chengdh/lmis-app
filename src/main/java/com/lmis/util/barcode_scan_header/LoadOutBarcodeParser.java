@@ -43,10 +43,9 @@ public class LoadOutBarcodeParser extends BarcodeParser {
         if (toOrg.get("parent_id") != null && !toOrg.get("parent_id").equals("null")) {
             parentOrgID = toOrg.getInt("parent_id");
         }
-        for (LmisDataRow o : getmAccessLoadOrgs()) {
-            if (o.getInt("id") == to_org_id || parentOrgID == o.getInt("id")) {
-                return true;
-            }
+
+        if (mToOrgID == to_org_id || mToOrgID == parentOrgID) {
+            return true;
         }
         return false;
 

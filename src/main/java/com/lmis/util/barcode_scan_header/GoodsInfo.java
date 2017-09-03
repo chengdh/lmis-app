@@ -326,7 +326,7 @@ public class GoodsInfo {
      * 验证barcode
      */
     public void validate() throws InvalidBarcodeException {
-        if ((mBarcode == null) || mBarcode.isEmpty() || mBarcode.length() != 7)
+        if ((mBarcode == null) || mBarcode.isEmpty())
             throw new InvalidBarcodeException("条码格式不正确!");
     }
 
