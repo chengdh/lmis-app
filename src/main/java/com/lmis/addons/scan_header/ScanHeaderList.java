@@ -480,6 +480,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         inflater.inflate(R.menu.menu_fragment_scan_header_list, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_scan_header_list_search).getActionView();
         mSearchView.setOnQueryTextListener(getQueryListener(mListViewAdapter));
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**

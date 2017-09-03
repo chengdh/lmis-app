@@ -177,7 +177,14 @@ public class FragmentScanBarcode extends BaseFragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.removeItem(R.id.btn_switch_scanbarcode_mode);
         inflater.inflate(R.menu.menu_fragment_scanbarcode, menu);
         final MenuItem toggleservice = menu.findItem(R.id.btn_switch_scanbarcode_mode);
         final View actionView = toggleservice.getActionView();
@@ -188,11 +195,14 @@ public class FragmentScanBarcode extends BaseFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mEdtInputBarcode.setVisibility(View.VISIBLE);
+                    mEdtInputBarcode.requestFocus();
                     mEdtScanBarcode.setVisibility(View.GONE);
 
                 } else {
                     mEdtInputBarcode.setVisibility(View.GONE);
                     mEdtScanBarcode.setVisibility(View.VISIBLE);
+                    mEdtScanBarcode.requestFocus();
+
 
                 }
                 // Start or stop your Service

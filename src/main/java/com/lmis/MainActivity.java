@@ -50,6 +50,9 @@ import android.widget.Toast;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule.Activity;
 import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
+import com.github.snowdream.android.app.UpdateFormat;
+import com.github.snowdream.android.app.UpdateOptions;
+import com.github.snowdream.android.app.UpdatePeriod;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -242,13 +245,13 @@ public class MainActivity extends InjectingFragmentActivity implements
         UpdateManager manager = new UpdateManager(this);
 
 //        UpdateOptions options = new UpdateOptions.Builder(this)
-//                .checkUrl("http://git.oschina.net/chengdh/lmis-app-release/raw/master/update.xml")
+//                .checkUrl("http://git.oschina.net/chengdh/lmis-app-release/raw/master/update_scanbarcode.xml")
 //                .updateFormat(UpdateFormat.XML)
 //                .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
 //                .checkPackageName(false)
 //                .build();
 //
-//        manager.check(this, options);
+//        manager.checkUpdate();
     }
 
     private void init() {
@@ -328,9 +331,8 @@ public class MainActivity extends InjectingFragmentActivity implements
                 mDrawerListView.setItemChecked(1, true);
                 position = 1;
             }
-        }
-        else{
-            return ;
+        } else {
+            return;
         }
         if (mDrawerItemSelectedPosition >= 0) {
             position = mDrawerItemSelectedPosition;
@@ -784,6 +786,7 @@ public class MainActivity extends InjectingFragmentActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt("current_drawer_item", mDrawerItemSelectedPosition);
+        outState.remove("android:support:fragments");
         super.onSaveInstanceState(outState);
     }
 

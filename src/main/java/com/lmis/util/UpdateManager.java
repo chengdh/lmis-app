@@ -34,7 +34,7 @@ import java.util.HashMap;
  * Created by chunsoft on 15/12/2.
  */
 public class UpdateManager {
-    private static final String URL_VERSION_XML = "http://git.oschina.net/chengdh/lmis-app-release/raw/master/update.xml";
+    private static final String URL_VERSION_XML = "http://git.oschina.net/chengdh/lmis-app-release/raw/master/update_scan_barcode.xml";
     //下载中
     private static final int DOWNLOAD = 1;
     //下载结束

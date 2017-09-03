@@ -308,11 +308,11 @@ public class ScanHeaderNew extends BaseFragment {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.remove("android:support:fragments");
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.remove("android:support:fragments");
+//    }
 
     public void onResume() {
         super.onResume();

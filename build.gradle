@@ -98,11 +98,17 @@ android {
             applicationIdSuffix '.debug'
             //runProguard false
             // zipAlign false // this is default for debug
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, 'T')
+            }
         }
         release {
             // runProguard true
             // proguardFile '..\proguard.cfg'
             signingConfig signingConfigs.release
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, 'R')
+            }
             //zipAlign true // this is default for release
             //testPackageName 'com.lmis.app.mobile.core.core'
             //testInstrumentationRunner 'android.test.InstrumentationTestRunner' // this is the default
@@ -111,3 +117,14 @@ android {
     productFlavors {
     }
 }
+
+def renameAPK(variant, defaultConfig, buildType) {
+    variant.outputs.each { output ->
+        def formattedDate = new Date().format('yyMMdd')
+
+        def file = output.packageApplication.outputFile
+        def fileName = applicationName + "_V" + defaultConfig.versionCode + "_" + formattedDate + "_" + buildType + ".apk"
+        output.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
+
