@@ -126,6 +126,15 @@ public abstract class BarcodeParser {
                 gs.setmBarcode(l.getString("barcode"));
                 gs.setmBillNo(l.getString("barcode"));
                 gs.setmID(l.getInt("carrying_bill_id"));
+                gs.setmFromOrgId(l.getInt("from_org_id"));
+                gs.setmToOrgId(l.getInt("to_org_id"));
+                if (l.get("goods_status_type") != null) {
+                    gs.setmGoodsStatusType(l.getInt("goods_status_type"));
+                }
+
+                if (l.get("goods_status_note") != null) {
+                    gs.setmGoodsStatusNote(l.getString("goods_status_note"));
+                }
                 gs.setmScanedQty(l.getInt("qty"));
                 mScanedBarcode.add(gs);
             }
@@ -168,6 +177,8 @@ public abstract class BarcodeParser {
         lineValue.put("barcode", gs.getmBarcode());
         lineValue.put("carrying_bill_id", gs.getmID());
         lineValue.put("qty", gs.getmScanedQty());
+        lineValue.put("from_org_id", gs.getmFromOrgId());
+        lineValue.put("to_org_id", gs.getmToOrgId());
         return mScanLineDB.create(lineValue);
     }
 
@@ -433,6 +444,7 @@ public abstract class BarcodeParser {
     }
 
     public abstract void unRegisterEventBus();
+
     public abstract void registerEventBus();
 
     public int getmFromOrgID() {

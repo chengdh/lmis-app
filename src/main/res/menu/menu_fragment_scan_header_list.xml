@@ -2,17 +2,16 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_scan_header_list_search"
-        android:icon="@drawable/ic_action_search"
-        android:showAsAction="always|collapseActionView"
-        android:actionViewClass="android.widget.SearchView"
-        android:visible="false"
-        android:title="@string/inventory_out_list_search">
-    </item>
-    <item
         android:id="@+id/menu_scan_header_new"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="always"
-        android:title="@string/inventory_out_list_new">
-    </item>
+        android:title="@string/inventory_out_list_new"></item>
+    <item
+        android:id="@+id/menu_scan_header_list_search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/inventory_out_list_search"
+        android:visible="false"></item>
+
 </menu>

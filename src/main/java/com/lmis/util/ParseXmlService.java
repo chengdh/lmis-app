@@ -43,7 +43,7 @@ public class ParseXmlService {
                     hashMap.put("version",childElement.getFirstChild().getNodeValue());
                 }
                 //软件名称
-                else if (("apkName".equals(childElement.getNodeName())))
+                else if (("appName".equals(childElement.getNodeName())))
                 {
                     hashMap.put("name",childElement.getFirstChild().getNodeValue());
                 }

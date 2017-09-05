@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.lmis.MainActivity;
 import com.lmis.R;
 import com.lmis.support.LmisDialog;
 
@@ -183,16 +184,27 @@ public class UpdateManager {
 //            }
 //        });
 //        mDownloadDialog = builder.create();
-        mDownloadDialog = new LmisDialog(mContext,false,"正在更新...");
+        if (mDownloadDialog != null) {
+            mDownloadDialog.dismiss();
+        }
+        mDownloadDialog = new LmisDialog(mContext, false, "正在更新...");
         mDownloadDialog.show();
         //下载文件
         downloadAPK();
     }
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mDownloadDialog.dismiss();
+        }
+    };
+
     /**
      * 下载APK文件
      */
     private void downloadAPK() {
+
         new DownloadAPKThread().start();
     }
 
@@ -250,7 +262,8 @@ public class UpdateManager {
                     e.printStackTrace();
                 }
             }
-            mDownloadDialog.dismiss();
+            handler.sendEmptyMessage(0);
+//            mDownloadDialog.dismiss();
         }
     }
 

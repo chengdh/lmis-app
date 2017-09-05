@@ -31,6 +31,8 @@ public class ScanLineDB extends LmisDatabase {
         cols.add(new LmisColumn("scan_header_id", "Scan Header", LmisFields.integer()));
         cols.add(new LmisColumn("carrying_bill_id", "carrying_bill_id", LmisFields.integer()));
         cols.add(new LmisColumn("qty", "Quantity", LmisFields.integer()));
+        cols.add(new LmisColumn("from_org_id", "from org id", LmisFields.integer()));
+        cols.add(new LmisColumn("to_org_id", "to org id", LmisFields.integer()));
         cols.add(new LmisColumn("goods_status_type", "goods status type", LmisFields.integer()));
         cols.add(new LmisColumn("goods_status_note", "goods status note", LmisFields.varchar(60)));
         cols.add(new LmisColumn("barcode", "barcode", LmisFields.varchar(20),false));

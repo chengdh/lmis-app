@@ -197,5 +197,6 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="update_cancel">取消</string>
     <string name="update_no">已经是最新版本</string>
     <string name="scan_header_send" />
+    <string name="settings_drawer_item_upgrade" >升级APP</string>
 
 </resources>

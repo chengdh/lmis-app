@@ -107,6 +107,7 @@ public class ActivityModule {
         String locale_general_setting = mActivity.getResources().getString(R.string.settings_drawer_item_general_setting);
         String locale_account = mActivity.getResources().getString(R.string.settings_drawer_item_account);
         String locale_about_us = mActivity.getResources().getString(R.string.settings_drawer_item_about_us);
+        String locale_upgrade = mActivity.getResources().getString(R.string.settings_drawer_item_upgrade);
 
 
         sys.add(new DrawerItem(key, settings_group_title, true));
@@ -122,6 +123,9 @@ public class ActivityModule {
                 R.drawable.ic_action_accounts, getFragBundle(new Fragment(),
                 "settings", MainActivity.SettingKeys.ACCOUNTS)
         ));
+        sys.add(new DrawerItem(key, locale_upgrade, 0, R.drawable.ic_action_upload,
+                getFragBundle(new Fragment(), "settings", MainActivity.SettingKeys.UPGRADE)));
+
         sys.add(new DrawerItem(key, locale_about_us, 0, R.drawable.ic_action_about,
                 getFragBundle(new Fragment(), "settings", MainActivity.SettingKeys.ABOUT_US)));
         return sys;

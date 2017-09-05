@@ -98,17 +98,17 @@ android {
             applicationIdSuffix '.debug'
             //runProguard false
             // zipAlign false // this is default for debug
-            applicationVariants.all { variant ->
-                renameAPK(variant, defaultConfig, 'T')
-            }
+//            applicationVariants.all { variant ->
+//                renameAPK(variant, defaultConfig, 'T')
+//            }
         }
         release {
             // runProguard true
             // proguardFile '..\proguard.cfg'
             signingConfig signingConfigs.release
-            applicationVariants.all { variant ->
-                renameAPK(variant, defaultConfig, 'R')
-            }
+//            applicationVariants.all { variant ->
+//                renameAPK(variant, defaultConfig, 'R')
+//            }
             //zipAlign true // this is default for release
             //testPackageName 'com.lmis.app.mobile.core.core'
             //testInstrumentationRunner 'android.test.InstrumentationTestRunner' // this is the default

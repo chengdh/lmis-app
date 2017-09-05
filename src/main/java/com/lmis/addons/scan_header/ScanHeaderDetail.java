@@ -100,6 +100,7 @@ public class ScanHeaderDetail extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_scan_header_detail, menu);
         mMenu = menu;
         mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_scan_header_detail_search).getActionView();

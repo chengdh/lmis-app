@@ -17,12 +17,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.lmis.R;
+import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
 import com.lmis.util.barcode_scan_header.BarcodeParser;
 import com.lmis.util.barcode_scan_header.BarcodeParserFactory;
+import com.lmis.util.barcode_scan_header.GoodsInfo;
 import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
@@ -138,7 +140,7 @@ public class ScanHeaderNew extends BaseFragment {
             public void onPageSelected(int position) {
                 final android.app.ActionBar actionBar = getActivity().getActionBar();
                 actionBar.setSelectedNavigationItem(position);
-
+                scope.main().supportInvalidateOptionsMenu();
             }
 
             @Override
@@ -185,7 +187,6 @@ public class ScanHeaderNew extends BaseFragment {
         }
         actionBar.addTab(actionBar.newTab().setText("扫描票据").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("票据列表").setTabListener(tabListener));
-
     }
 
 
@@ -201,6 +202,7 @@ public class ScanHeaderNew extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_scan_header_new, menu);
     }
 
@@ -221,6 +223,7 @@ public class ScanHeaderNew extends BaseFragment {
     public boolean validateBeforeUpload() {
 
         boolean success = true;
+        boolean successToOrg = true;
         if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
             mPager.setCurrentItem(0);
             FragmentVehicleForm page = (FragmentVehicleForm) mPageAdapter.getRegisteredFragment(0);
@@ -228,8 +231,31 @@ public class ScanHeaderNew extends BaseFragment {
             if (!success) {
                 Toast.makeText(scope.context(), "请输入装车信息!", Toast.LENGTH_SHORT).show();
             }
+            successToOrg = validateToOrg();
+
         }
-        return success;
+        return success && successToOrg;
+    }
+
+    private boolean validateToOrg() {
+        int toOrgID = mBarcodeParser.getmToOrgID();
+        OrgDB orgDB = new OrgDB(scope.context());
+
+        for (GoodsInfo gi : mBarcodeParser.getmScanedBarcode()) {
+            LmisDataRow gsToOrg = orgDB.select(gi.getmToOrgId());
+            if(gsToOrg == null){
+                continue;
+            }
+            int parentOrgID = -1;
+            if (gsToOrg.get("parent_id") != null && !gsToOrg.get("parent_id").equals("null")) {
+                parentOrgID = gsToOrg.getInt("parent_id");
+            }
+            if (gi.getmToOrgId() != toOrgID && parentOrgID != toOrgID) {
+                Toast.makeText(scope.context(), String.format("请确认到货地与运单[%s]是否匹配!", gi.getmBarcode()), Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -318,5 +344,6 @@ public class ScanHeaderNew extends BaseFragment {
         super.onResume();
         initTabs();
     }
+
 
 }

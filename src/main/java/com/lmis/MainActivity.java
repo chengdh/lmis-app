@@ -187,7 +187,9 @@ public class MainActivity extends InjectingFragmentActivity implements
         ACCOUNTS, /**
          * The ABOUT_US.
          */
-        ABOUT_US
+        ABOUT_US,
+
+        UPGRADE
     }
 
     private CharSequence mTitle;
@@ -564,6 +566,9 @@ public class MainActivity extends InjectingFragmentActivity implements
                 set_setting_menu = true;
                 AccountsDetail acFragment = new AccountsDetail();
                 startMainFragment(acFragment, true);
+                return true;
+            case UPGRADE:
+                checkUpgrade();
                 return true;
             case PROFILE:
                 set_setting_menu = true;

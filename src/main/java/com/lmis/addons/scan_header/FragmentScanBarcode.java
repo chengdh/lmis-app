@@ -208,7 +208,6 @@ public class FragmentScanBarcode extends BaseFragment {
                 // Start or stop your Service
             }
         });
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void initData() {

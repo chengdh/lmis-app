@@ -121,4 +121,5 @@ public class ScanHeaderPagerAdapter extends FragmentStatePagerAdapter {
         return registeredFragments.get(position);
     }
 
+
 }
