@@ -115,6 +115,11 @@ public class GoodsInfo {
     String goodsStatusNoteLoadOut = "";
 
 
+    //FIXME 数据量较大时 为防止扫描过慢 不再注入任何信息
+    public GoodsInfo(String barcode) {
+        mBarcode = barcode;
+    }
+
     public GoodsInfo(Context context) {
         mContext = context;
         ((Injector) context).inject(this);

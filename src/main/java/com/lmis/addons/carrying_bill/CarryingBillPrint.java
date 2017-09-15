@@ -250,7 +250,7 @@ public class CarryingBillPrint {
                     "\"\n",
 
                     "TEXT 15,1120,\"Font001\",0,2,2,\"",
-                    "  及时更正票据信息".getBytes("GB2312"),
+                    "  更正票据信息".getBytes("GB2312"),
                     "\"\n",
 
 

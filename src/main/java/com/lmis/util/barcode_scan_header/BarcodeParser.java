@@ -122,8 +122,9 @@ public abstract class BarcodeParser {
         if (mId > 0) {
             LmisDataRow record = mScanHeaderDB.select(mId);
             for (LmisDataRow l : record.getO2MRecord("scan_lines").browseEach()) {
-                GoodsInfo gs = new GoodsInfo(mContext);
-                gs.setmBarcode(l.getString("barcode"));
+
+                String barcode = l.getString("barcode");
+                GoodsInfo gs = new GoodsInfo(barcode);
                 gs.setmBillNo(l.getString("barcode"));
                 gs.setmID(l.getInt("carrying_bill_id"));
                 gs.setmFromOrgId(l.getInt("from_org_id"));
