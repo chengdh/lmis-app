@@ -1,6 +1,7 @@
 package com.lmis.addons.carrying_bill;
 
 import android.content.Context;
+import android.net.wifi.WifiEnterpriseConfig;
 
 import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
@@ -12,6 +13,7 @@ import com.lmis.orm.LmisValues;
 import com.lmis.util.StringHelper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -255,5 +257,31 @@ public class CarryingBillDB extends LmisDatabase {
         }
         return ret;
     }
+
+    /**
+     * 生成条码标签列表.
+     *
+     * @param bill the bill
+     * @return the labels
+     */
+    public static List<String> getLabels(JSONObject bill) {
+        List<String> ret = new ArrayList<String>();
+        try {
+            String sToOrgId = StringHelper.addZero(bill.getString("to_org_id"), 3);
+            String billNo = bill.getString("bill_no");
+            int goodsNum = bill.getInt("goods_num");
+            String sGoodsNum = StringHelper.addZero(bill.getString("goods_num"), 3);
+            String barcode;
+            for (int i = 1; i <= goodsNum; i++) {
+                String sSeq = StringHelper.addZero(String.valueOf(i), 3);
+                barcode = sToOrgId + billNo + sGoodsNum + sSeq;
+                ret.add(barcode);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return ret;
+    }
+
 
 }

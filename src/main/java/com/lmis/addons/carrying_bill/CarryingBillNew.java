@@ -748,7 +748,8 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 //打印小票
                 LmisDataRow bill = db().select(mCarryingBillID);
                 CarryingBillPrint.print(bill, scope.currentUser(), false);
-
+                //打印标签
+                LabelPrint.print(bill);
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();
