@@ -18,6 +18,6 @@
         android:id="@+id/menu_carrying_bill_print_barcode"
         android:icon="@drawable/ic_action_print"
         app:showAsAction="always"
-        android:visible="true"
-        android:title="打印条码"></item>
+        android:visible="false"
+        android:title="测试-打印条码"></item>
 </menu>

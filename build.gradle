@@ -2,10 +2,15 @@ apply plugin: 'com.android.application'
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+        jcenter()
     }
     dependencies {
         classpath 'org.batcha.gradle.plugins:git-dependencies:0.2'
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
     }
 }
 repositories {
@@ -18,6 +23,10 @@ repositories {
     maven { url "https://github.com/dahlgren/pulltorefresh-aar/raw/master" }
     maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
     maven { url "https://jitpack.io" }
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
 }
 
 dependencies {
@@ -27,9 +36,12 @@ dependencies {
     compile 'com.edmodo:rangebar:1.0.0'
     //DI 框架
     compile 'com.squareup.dagger:dagger:1.2.1'
+    annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.1'
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
 
     //Android view 注入框架
+
+    annotationProcessor 'com.jakewharton:butterknife:5.1.0'
     compile 'com.jakewharton:butterknife:5.1.0'
 
     //event bus
@@ -71,7 +83,7 @@ dependencies {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21

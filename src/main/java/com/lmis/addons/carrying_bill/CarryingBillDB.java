@@ -245,13 +245,13 @@ public class CarryingBillDB extends LmisDatabase {
      */
     public static List<String> getLabels(LmisDataRow bill) {
         List<String> ret = new ArrayList<String>();
-        String sToOrgId = StringHelper.addZero(bill.getString("to_org_id"), 3);
+        String sToOrgId = StringHelper.addZero(bill.getM2ORecord("to_org_id").browse().getInt("id"), 3);
         String billNo = bill.getString("bill_no");
         int goodsNum = bill.getInt("goods_num");
-        String sGoodsNum = StringHelper.addZero(bill.getString("goods_num"), 3);
+        String sGoodsNum = StringHelper.addZero(bill.getInt("goods_num"), 3);
         String barcode;
         for (int i = 1; i <= goodsNum; i++) {
-            String sSeq = StringHelper.addZero(String.valueOf(i), 3);
+            String sSeq = StringHelper.addZero(i, 3);
             barcode = sToOrgId + billNo + sGoodsNum + sSeq;
             ret.add(barcode);
         }
@@ -267,13 +267,13 @@ public class CarryingBillDB extends LmisDatabase {
     public static List<String> getLabels(JSONObject bill) {
         List<String> ret = new ArrayList<String>();
         try {
-            String sToOrgId = StringHelper.addZero(bill.getString("to_org_id"), 3);
+            String sToOrgId = StringHelper.addZero(bill.getInt("to_org_id"), 3);
             String billNo = bill.getString("bill_no");
             int goodsNum = bill.getInt("goods_num");
-            String sGoodsNum = StringHelper.addZero(bill.getString("goods_num"), 3);
+            String sGoodsNum = StringHelper.addZero(bill.getInt("goods_num"), 3);
             String barcode;
             for (int i = 1; i <= goodsNum; i++) {
-                String sSeq = StringHelper.addZero(String.valueOf(i), 3);
+                String sSeq = StringHelper.addZero(i, 3);
                 barcode = sToOrgId + billNo + sGoodsNum + sSeq;
                 ret.add(barcode);
             }

@@ -16,9 +16,9 @@ public class StringHelper {
         return String.valueOf(chars);
     }
 
-    public static String addZero(String str, int len) {
+    public static String addZero(Integer val, int len) {
         String fmt = "%0" + len + "d";
-        return String.format(fmt, str);
+        return String.format(fmt, val);
     }
 
 }

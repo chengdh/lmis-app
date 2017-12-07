@@ -26,7 +26,7 @@ public class LabelPrint {
      * @param bill the bill
      */
     public static void print(LmisDataRow bill) {
-        String devAddress = BlueTooth.getAddress("BT-LABEL");
+        String devAddress = BlueTooth.getAddress("BT-SPP");
         if (devAddress == null) {
             return;
         }
@@ -128,24 +128,21 @@ public class LabelPrint {
 
                         //货号
                         "TEXT 15,60,\"Font001\",0,2,2,\"",
-                        String.format("货号:").getBytes("GB2312"),
-                        "\"\n",
-                        "TEXT 135,60,\"Font001\",0,3,3,\"",
-                        String.format("%s", bill.getString("goods_no")).getBytes("GB2312"),
+                        String.format("货号:%s", bill.getString("goods_no")).getBytes("GB2312"),
                         "\"\n",
                         //日期
                         "TEXT 15,100,\"Font001\",0,2,2,\"",
-                        String.format("日期 :").getBytes("GB2312"),
+                        String.format("日期:%s", bill.getString("bill_date").substring(2)).getBytes("GB2312"),
                         "\"\n",
-                        "TEXT 135,100,\"Font001\",0,3,3,\"",
-                        String.format("%s", bill.getString("bill_date").substring(2)).getBytes("GB2312"),
-                        "\"\n",
-
 
                         //条形码
-                        "BARCODE 15,140,\"EAN128\",80,0,0,2,2,2,\"",
+                        "BARCODE 100,150,\"EAN128\",80,0,0,2,2,2,\"",
                         String.format("%s", labels.get(i - 1)).getBytes("GB2312"),
+                        "\"\n",
+                        "TEXT 15,230,\"Font001\",0,2,2,\"",
+                        labels.get(i - 1),
                         "\"\n"
+
 
                 ));
                 commands.add("PRINT 1\n");
