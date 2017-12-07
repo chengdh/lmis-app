@@ -130,9 +130,10 @@ public class LabelPrint {
                         "TEXT 15,60,\"Font001\",0,2,2,\"",
                         String.format("货号:%s", bill.getString("goods_no")).getBytes("GB2312"),
                         "\"\n",
+
                         //日期
                         "TEXT 15,100,\"Font001\",0,2,2,\"",
-                        String.format("日期:%s", bill.getString("bill_date").substring(2)).getBytes("GB2312"),
+                        String.format("日期:%s   %s(收)", bill.getString("bill_date").substring(2), bill.getString("to_customer_name")).getBytes("GB2312"),
                         "\"\n",
 
                         //条形码
