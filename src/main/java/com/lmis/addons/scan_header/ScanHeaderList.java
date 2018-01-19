@@ -317,6 +317,10 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 where += " AND from_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.LOAD_OUT;
                 break;
+            case ScanHeaderOpType.LOAD_IN_TEAM:
+                where += " AND to_org_id = ?";
+                whereArgs[0] = ScanHeaderOpType.LOAD_IN_TEAM;
+                break;
             default:
                 whereArgs[0] = ScanHeaderOpType.LOAD_IN;
                 break;
@@ -407,6 +411,17 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 drawerItems.add(new DrawerItem(mCurrentType, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_OUT, "draft")));
                 drawerItems.add(new DrawerItem(mCurrentType, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "processed")));
                 drawerItems.add(new DrawerItem(mCurrentType, "已发车", count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_OUT, "shipped")));
+
+                break;
+
+
+            //装卸组工作量统计
+            case (ScanHeaderOpType.LOAD_IN_TEAM):
+                groupTitle = "装卸工作量统计";
+
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN_TEAM, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOAD_IN_TEAM, "processed")));
 
                 break;
             default:
@@ -581,11 +596,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         public void onReceive(Context context, Intent intent) {
             try {
 
-                Log.d(TAG, "InventoryOutList->datasetChangeReceiver@onReceive");
+                Log.d(TAG, "ScanHeaderList->datasetChangeReceiver@onReceive");
 
                 String id = intent.getExtras().getString("id");
                 String model = intent.getExtras().getString("model");
-                if (model.equals("LoadListWithBarcode")) {
+                if (model.equals("ScanHeader")) {
                     LmisDataRow row = db().select(Integer.parseInt(id));
                     mScanHeaderObjects.add(0, row);
                     mListViewAdapter.notifiyDataChange(mScanHeaderObjects);
@@ -603,7 +618,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.d(TAG, "InventoryOutList->SyncFinishReceiverReceiver@onReceive");
+            Log.d(TAG, "ScanHeaderList->SyncFinishReceiverReceiver@onReceive");
             scope.main().refreshDrawer(TAG);
             mListViewAdapter.clear();
             mScanHeaderObjects.clear();

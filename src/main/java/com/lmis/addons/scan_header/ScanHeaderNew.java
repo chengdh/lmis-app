@@ -108,7 +108,7 @@ public class ScanHeaderNew extends BaseFragment {
         } else {
             //根据opttype 判断fromOrg与toOrg的值
             //分拣组入库，from_org_id=-1 to_org_id=当前用户登录机构
-            if (mOpType.equals(ScanHeaderOpType.SORTING_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN)) {
+            if (mOpType.equals(ScanHeaderOpType.SORTING_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN_TEAM)) {
                 fromOrgID = -1;
                 toOrgID = currentUser.getDefault_org_id();
             }
@@ -243,7 +243,7 @@ public class ScanHeaderNew extends BaseFragment {
 
         for (GoodsInfo gi : mBarcodeParser.getmScanedBarcode()) {
             LmisDataRow gsToOrg = orgDB.select(gi.getmToOrgId());
-            if(gsToOrg == null){
+            if (gsToOrg == null) {
                 continue;
             }
             int parentOrgID = -1;

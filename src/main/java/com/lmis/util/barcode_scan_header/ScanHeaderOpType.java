@@ -8,4 +8,5 @@ public class ScanHeaderOpType {
     public static final String SORTING_IN = "ScanHeaderSortingIn";
     public static final String LOAD_IN = "ScanHeaderLoadIn";
     public static final String LOAD_OUT = "ScanHeaderLoadOut";
+    public static final String LOAD_IN_TEAM = "ScanHeaderTeam";
 }

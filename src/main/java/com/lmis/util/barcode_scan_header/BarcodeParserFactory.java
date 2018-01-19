@@ -30,6 +30,10 @@ public class BarcodeParserFactory {
             case ScanHeaderOpType.LOAD_OUT:
                 parser = new LoadOutBarcodeParser(context,id,fromOrgId,toOrgId);
                 break;
+            case ScanHeaderOpType.LOAD_IN_TEAM:
+
+                parser = new LoadInTeamBarcodeParser(context,id,fromOrgId,toOrgId);
+                break;
 
         }
         return parser;

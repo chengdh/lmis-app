@@ -59,5 +59,9 @@ public class ModulesConfig extends ModulesConfigHelper {
         scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
         add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
 
+        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
+        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);
+        add(new Module("module_scan_header_load_in_team", "scan_header_load_in_team", scanHeaderLoadInTeam, 0), true);
+
     }
 }

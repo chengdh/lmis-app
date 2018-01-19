@@ -500,6 +500,10 @@ public class GoodsInfo {
 
                                 mBus.post(new LoadInGetBillFromServerSuccessEvent(GoodsInfo.this));
                                 break;
+                            case ScanHeaderOpType.LOAD_IN_TEAM:
+
+                                mBus.post(new LoadInTeamGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
                             case ScanHeaderOpType.LOAD_OUT:
 
                                 mBus.post(new LoadOutGetBillFromServerSuccessEvent(GoodsInfo.this));
