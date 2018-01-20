@@ -51,13 +51,13 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
 //        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
 
-        ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
-        scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
-        add(new Module("module_scan_header_load_in", "scan_header_load_in", scanHeaderLoadIn, 0), true);
-
-        ScanHeaderList scanHeaderLoadOut = new ScanHeaderList();
-        scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
-        add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
+//        ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
+//        scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
+//        add(new Module("module_scan_header_load_in", "scan_header_load_in", scanHeaderLoadIn, 0), true);
+//
+//        ScanHeaderList scanHeaderLoadOut = new ScanHeaderList();
+//        scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
+//        add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
 
         ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
         scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);

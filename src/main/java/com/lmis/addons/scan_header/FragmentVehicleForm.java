@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
@@ -106,7 +107,17 @@ public class FragmentVehicleForm extends BaseFragment {
     private void initData() {
         Log.d(TAG, "FragmentVehicleForm#initData");
         if (mScanHeader != null) {
-            //refresh mInventoryMove
+            //设置to_org_id spinner
+            int toOrgID = mScanHeader.getInt("to_org_id");
+
+            SpinnerAdapter adp = mSpinnerLoadOrgSelect.getAdapter();
+            for (int i = 0; i < adp.getCount(); i++) {
+                LmisDataRow r = (LmisDataRow) adp.getItem(i);
+                if (r.getInt("id") == toOrgID) {
+                    mSpinnerLoadOrgSelect.setSelection(i);
+                }
+
+            }
             mEdtDriverName.setText(mScanHeader.getString("driver_name"));
             mEdtVNo.setText(mScanHeader.getString("v_no"));
             mEdtMobile.setText(mScanHeader.getString("mobile"));
