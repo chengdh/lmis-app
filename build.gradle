@@ -75,7 +75,7 @@ android {
     compileSdkVersion 21
 //    buildToolsVersion '25.0.0'
     defaultConfig {
-        applicationId "com.lmis.scanv2"
+//        applicationId "com.lmis.scanv2"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 7

@@ -417,7 +417,7 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
             //装卸组工作量统计
             case (ScanHeaderOpType.LOAD_IN_TEAM):
-                groupTitle = "装卸工作量统计";
+                groupTitle = "卸货操作";
 
                 drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
                 drawerItems.add(new DrawerItem(mCurrentType, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOAD_IN_TEAM, "draft")));
