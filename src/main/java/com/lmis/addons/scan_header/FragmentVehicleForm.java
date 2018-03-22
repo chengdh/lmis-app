@@ -108,13 +108,14 @@ public class FragmentVehicleForm extends BaseFragment {
         Log.d(TAG, "FragmentVehicleForm#initData");
         if (mScanHeader != null) {
             //设置to_org_id spinner
-            int toOrgID = mScanHeader.getInt("to_org_id");
+            int toOrgID = mScanHeader.getM2ORecord("to_org_id").browse().getInt("id");
 
             SpinnerAdapter adp = mSpinnerLoadOrgSelect.getAdapter();
             for (int i = 0; i < adp.getCount(); i++) {
                 LmisDataRow r = (LmisDataRow) adp.getItem(i);
                 if (r.getInt("id") == toOrgID) {
                     mSpinnerLoadOrgSelect.setSelection(i);
+                    mSpinnerLoadOrgSelect.setEnabled(false);
                 }
 
             }
