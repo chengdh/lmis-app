@@ -21,19 +21,27 @@ public class BarcodeParserFactory {
         BarcodeParser parser = null;
         switch (opType) {
             case ScanHeaderOpType.SORTING_IN:
-                parser = new SortingInBarcodeParser(context,id,fromOrgId,toOrgId);
+                parser = new SortingInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.LOAD_IN:
 
-                parser = new LoadInBarcodeParser(context,id,fromOrgId,toOrgId);
+                parser = new LoadInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.LOAD_OUT:
-                parser = new LoadOutBarcodeParser(context,id,fromOrgId,toOrgId);
+                parser = new LoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.LOAD_IN_TEAM:
 
-                parser = new LoadInTeamBarcodeParser(context,id,fromOrgId,toOrgId);
+                parser = new LoadInTeamBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
+            case ScanHeaderOpType.INNER_TRANSIT_LOAD_IN:
+
+                parser = new InnerTransitLoadInBarcodeParser(context, id, fromOrgId, toOrgId);
+                break;
+            case ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT:
+//                parser = new LoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
+                break;
+
 
         }
         return parser;

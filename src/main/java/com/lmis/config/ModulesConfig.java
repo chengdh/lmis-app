@@ -1,20 +1,20 @@
 /*
  * OpenERP, Open Source Management Solution
  * Copyright (C) 2012-today OpenERP SA (<http:www.openerp.com>)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:www.gnu.org/licenses/>
- * 
+ *
  */
 package com.lmis.config;
 
@@ -58,6 +58,11 @@ public class ModulesConfig extends ModulesConfigHelper {
         ScanHeaderList scanHeaderLoadOut = new ScanHeaderList();
         scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
         add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
+
+        ScanHeaderList scanHeaderInnerTransitLoadIn = new ScanHeaderList();
+        scanHeaderInnerTransitLoadIn.setmCurrentType(ScanHeaderOpType.INNER_TRANSIT_LOAD_IN);
+        add(new Module("module_scan_header_inner_transit_load_in", "scan_header_inner_transit_load_in", scanHeaderInnerTransitLoadIn, 0), true);
+
 
 //        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
 //        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);

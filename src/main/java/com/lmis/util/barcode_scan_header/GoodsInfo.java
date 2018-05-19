@@ -100,6 +100,16 @@ public class GoodsInfo {
 
     String mPayTypeDes = "";
 
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    String billType = "";
+
     //货物异常类别及描述
     int mGoodsStatusType = 0;
     String mGoodsStatusNote = "";
@@ -487,6 +497,7 @@ public class GoodsInfo {
 
                         setGoodsStatusTypeLoadOut(bill.getInt("goods_status_type_load_out"));
                         setGoodsStatusNoteLoadOut(bill.getString("goods_status_note_load_out"));
+                        setBillType(bill.getString("type"));
 
                         //FIXME 默认扫描全部条码
                         setmScanedQty(bill.getInt("goods_num"));
@@ -508,6 +519,11 @@ public class GoodsInfo {
 
                                 mBus.post(new LoadOutGetBillFromServerSuccessEvent(GoodsInfo.this));
                                 break;
+
+                            case ScanHeaderOpType.INNER_TRANSIT_LOAD_IN:
+                                mBus.post(new InnerTransitLoadInGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
+
                             default:
                                 break;
                         }
