@@ -109,7 +109,7 @@ public class ScanHeaderDetail extends BaseFragment {
 
         MenuItem item = menu.findItem(R.id.menu_scan_header_detail_send);
         String state = mScanHeader.getString("processed");
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) && state.equals("true")) {
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT) && state.equals("true")) {
             item.setVisible(true);
         } else {
             item.setVisible(false);

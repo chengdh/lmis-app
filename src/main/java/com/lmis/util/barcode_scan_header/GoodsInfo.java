@@ -529,6 +529,9 @@ public class GoodsInfo {
                             case ScanHeaderOpType.LOCAL_TOWN_LOAD_IN:
                                 mBus.post(new LocalTownLoadInGetBillFromServerSuccessEvent(GoodsInfo.this));
                                 break;
+                            case ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT:
+                                mBus.post(new LocalTownLoadOutGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
 
                             default:
                                 break;

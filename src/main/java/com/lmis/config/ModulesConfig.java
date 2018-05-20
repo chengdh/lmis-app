@@ -71,9 +71,9 @@ public class ModulesConfig extends ModulesConfigHelper {
         scanHeaderLocalTownLoadIn.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_IN);
         add(new Module("module_scan_header_local_town_load_in", "scan_header_local_town_load_in", scanHeaderLocalTownLoadIn, 0), true);
 
-//        ScanHeaderList scanHeaderLocalTownLoadOut = new ScanHeaderList();
-//        scanHeaderLocalTownLoadOut.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT);
-//        add(new Module("module_scan_header_local_town_load_out", "scan_header_local_town_load_out", scanHeaderLocalTownLoadOut, 0), true);
+        ScanHeaderList scanHeaderLocalTownLoadOut = new ScanHeaderList();
+        scanHeaderLocalTownLoadOut.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT);
+        add(new Module("module_scan_header_local_town_load_out", "scan_header_local_town_load_out", scanHeaderLocalTownLoadOut, 0), true);
 
 //        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
 //        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);

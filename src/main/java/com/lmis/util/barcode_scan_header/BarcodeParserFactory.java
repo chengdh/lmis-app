@@ -44,7 +44,7 @@ public class BarcodeParserFactory {
                 parser = new LocalTownLoadInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT:
-//                parser = new LocalTownLoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
+                parser = new LocalTownLoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
 
 
         }
