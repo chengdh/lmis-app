@@ -108,12 +108,12 @@ public class ScanHeaderNew extends BaseFragment {
         } else {
             //根据opttype 判断fromOrg与toOrg的值
             //分拣组入库，from_org_id=-1 to_org_id=当前用户登录机构
-            if (mOpType.equals(ScanHeaderOpType.SORTING_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN_TEAM)) {
+            if (mOpType.equals(ScanHeaderOpType.SORTING_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_IN) || mOpType.equals(ScanHeaderOpType.LOAD_IN_TEAM)) {
                 fromOrgID = -1;
                 toOrgID = currentUser.getDefault_org_id();
             }
 
-            if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+            if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT)) {
                 fromOrgID = currentUser.getDefault_org_id();
             }
         }
@@ -182,7 +182,7 @@ public class ScanHeaderNew extends BaseFragment {
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT)) {
             actionBar.addTab(actionBar.newTab().setText("车辆信息").setTabListener(tabListener));
         }
         actionBar.addTab(actionBar.newTab().setText("扫描票据").setTabListener(tabListener));

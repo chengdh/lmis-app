@@ -39,7 +39,7 @@ public class BarcodeParserFactory {
                 parser = new InnerTransitLoadInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT:
-//                parser = new LoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
+                parser = new InnerTransitLoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
 
 

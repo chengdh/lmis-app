@@ -523,6 +523,9 @@ public class GoodsInfo {
                             case ScanHeaderOpType.INNER_TRANSIT_LOAD_IN:
                                 mBus.post(new InnerTransitLoadInGetBillFromServerSuccessEvent(GoodsInfo.this));
                                 break;
+                            case ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT:
+                                mBus.post(new InnerTransitLoadOutGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
 
                             default:
                                 break;

@@ -63,6 +63,10 @@ public class ModulesConfig extends ModulesConfigHelper {
         scanHeaderInnerTransitLoadIn.setmCurrentType(ScanHeaderOpType.INNER_TRANSIT_LOAD_IN);
         add(new Module("module_scan_header_inner_transit_load_in", "scan_header_inner_transit_load_in", scanHeaderInnerTransitLoadIn, 0), true);
 
+        ScanHeaderList scanHeaderInnerTransitLoadOut = new ScanHeaderList();
+        scanHeaderInnerTransitLoadOut.setmCurrentType(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT);
+        add(new Module("module_scan_header_inner_transit_load_out", "scan_header_inner_transit_load_out", scanHeaderInnerTransitLoadOut, 0), true);
+
 
 //        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
 //        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);
