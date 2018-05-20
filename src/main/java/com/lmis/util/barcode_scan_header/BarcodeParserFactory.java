@@ -35,12 +35,16 @@ public class BarcodeParserFactory {
                 parser = new LoadInTeamBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.INNER_TRANSIT_LOAD_IN:
-
                 parser = new InnerTransitLoadInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
             case ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT:
                 parser = new InnerTransitLoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;
+            case ScanHeaderOpType.LOCAL_TOWN_LOAD_IN:
+                parser = new LocalTownLoadInBarcodeParser(context, id, fromOrgId, toOrgId);
+                break;
+            case ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT:
+//                parser = new LocalTownLoadOutBarcodeParser(context, id, fromOrgId, toOrgId);
 
 
         }

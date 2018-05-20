@@ -325,6 +325,15 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 where += " AND from_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT;
                 break;
+
+            case ScanHeaderOpType.LOCAL_TOWN_LOAD_IN:
+                where += " AND to_org_id = ?";
+                whereArgs[0] = ScanHeaderOpType.LOCAL_TOWN_LOAD_IN;
+                break;
+            case ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT:
+                where += " AND from_org_id = ?";
+                whereArgs[0] = ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT;
+                break;
             case ScanHeaderOpType.LOAD_IN_TEAM:
                 where += " AND to_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.LOAD_IN_TEAM;
@@ -440,6 +449,26 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
                 drawerItems.add(new DrawerItem(mCurrentType, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT, "processed")));
                 drawerItems.add(new DrawerItem(mCurrentType, "已发车", count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT, "shipped")));
                 break;
+
+            //同城快运-装卸组入库
+            case (ScanHeaderOpType.LOCAL_TOWN_LOAD_IN):
+                groupTitle = "同城快运-装卸组入库";
+
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOCAL_TOWN_LOAD_IN, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOCAL_TOWN_LOAD_IN, "processed")));
+                break;
+
+            //同城快运-装卸组出库
+            case (ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT):
+                groupTitle = "同城快运-装卸组出库";
+
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, "草稿", count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, "已上传", count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT, "processed")));
+                drawerItems.add(new DrawerItem(mCurrentType, "已发车", count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT, "shipped")));
+                break;
+
 
             //装卸组工作量统计
             case (ScanHeaderOpType.LOAD_IN_TEAM):

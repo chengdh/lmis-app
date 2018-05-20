@@ -20,6 +20,7 @@ import com.lmis.util.barcode_scan_header.InnerTransitLoadOutBarcodeParser;
 import com.lmis.util.barcode_scan_header.LoadInBarcodeParser;
 import com.lmis.util.barcode_scan_header.LoadInTeamBarcodeParser;
 import com.lmis.util.barcode_scan_header.LoadOutBarcodeParser;
+import com.lmis.util.barcode_scan_header.LocalTownLoadInBarcodeParser;
 import com.lmis.util.barcode_scan_header.SortingInBarcodeParser;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
@@ -68,6 +69,7 @@ import dagger.Provides;
                 LoadInTeamBarcodeParser.class,
                 InnerTransitLoadInBarcodeParser.class,
                 InnerTransitLoadOutBarcodeParser.class,
+                LocalTownLoadInBarcodeParser.class,
                 com.lmis.util.barcode_scan_header.GoodsInfo.class,
                 OrgLoadOrgSpinner.class,
                 OrgSortingOrgSpinner.class
