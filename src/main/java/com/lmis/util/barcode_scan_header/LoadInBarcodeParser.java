@@ -8,6 +8,8 @@ import com.lmis.orm.LmisDataRow;
 import com.lmis.util.SoundPlayer;
 import com.squareup.otto.Subscribe;
 
+import java.util.Arrays;
+
 /**
  * Created by chengdh on 2017/7/23.
  */
@@ -67,6 +69,14 @@ public class LoadInBarcodeParser extends BarcodeParser {
     @Subscribe
     public void onLoadInGetBillFromServerSuccessEvent(LoadInGetBillFromServerSuccessEvent evt) throws InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo gs = evt.getmGoodsInfo();
+        //判断单据类型是否正确
+        String[] innerBillTypes = {"ComputerBill", "HandBill", "AutoCalculateComputerBill","ReturnBill","TonVolumeBill"};
+        if (!Arrays.asList(innerBillTypes).contains(gs.getBillType())) {
+            Toast.makeText(mContext, "单据类型不正确!", Toast.LENGTH_SHORT).show();
+
+            SoundPlayer.playBarcodeScanErrorSound(mContext);
+            return;
+        }
 
         //判断单据状态是否分拣入库状态
         if (!gs.getmState().equals("billed")) {

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 buildscript {
     repositories {
-//        mavenCentral()
-        jcenter()
+        mavenCentral()
+//        jcenter()
         google()
     }
     dependencies {
@@ -13,6 +13,8 @@ buildscript {
 repositories {
     mavenLocal()
     mavenCentral()
+
+    jcenter()
     flatDir {
         dirs 'libs'
     }
