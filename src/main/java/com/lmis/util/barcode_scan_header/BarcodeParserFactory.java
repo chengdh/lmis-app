@@ -20,6 +20,9 @@ public class BarcodeParserFactory {
     public static BarcodeParser getParser(Context context, int id, int fromOrgId, int toOrgId, String opType) {
         BarcodeParser parser = null;
         switch (opType) {
+            case ScanHeaderOpType.SUB_BRANCH:
+                parser = new SubBranchBarcodeParser(context, id, fromOrgId, toOrgId);
+                break;
             case ScanHeaderOpType.SORTING_IN:
                 parser = new SortingInBarcodeParser(context, id, fromOrgId, toOrgId);
                 break;

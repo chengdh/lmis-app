@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: "$project.rootDir/script-git-version.gradle"
 buildscript {
     repositories {
         mavenCentral()
@@ -125,7 +126,18 @@ android {
             //testInstrumentationRunner 'android.test.InstrumentationTestRunner' // this is the default
         }
     }
+    // Specifies a flavor dimension.
+    flavorDimensions "product"
     productFlavors {
+        dev {
+            versionName gitBranchName
+            dimension   "product"
+        }
+
+        prod {
+            versionName gitBranchName
+            dimension   "product"
+        }
     }
 }
 

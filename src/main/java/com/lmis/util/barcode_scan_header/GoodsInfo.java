@@ -503,6 +503,10 @@ public class GoodsInfo {
                         setmScanedQty(bill.getInt("goods_num"));
 
                         switch (mOptype) {
+                            case ScanHeaderOpType.SUB_BRANCH:
+                                mBus.post(new SubBranchGetBillFromServerSuccessEvent(GoodsInfo.this));
+                                break;
+
                             case ScanHeaderOpType.SORTING_IN:
                                 mBus.post(new SortingInGetBillFromServerSuccessEvent(GoodsInfo.this));
                                 break;

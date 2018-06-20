@@ -50,7 +50,12 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
 //        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
 //        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
+        ScanHeaderList scanHeaderSubBranch = new ScanHeaderList();
+        scanHeaderSubBranch.setmCurrentType(ScanHeaderOpType.SUB_BRANCH);
+        add(new Module("module_scan_header_sub_branch", "scan_header_sub_branch", scanHeaderSubBranch, 0), true);
 
+
+        /*
         ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
         scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
         add(new Module("module_scan_header_load_in", "scan_header_load_in", scanHeaderLoadIn, 0), true);
@@ -75,9 +80,10 @@ public class ModulesConfig extends ModulesConfigHelper {
         scanHeaderLocalTownLoadOut.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT);
         add(new Module("module_scan_header_local_town_load_out", "scan_header_local_town_load_out", scanHeaderLocalTownLoadOut, 0), true);
 
-//        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
-//        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);
-//        add(new Module("module_scan_header_load_in_team", "scan_header_load_in_team", scanHeaderLoadInTeam, 0), true);
+        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
+        scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);
+        add(new Module("module_scan_header_load_in_team", "scan_header_load_in_team", scanHeaderLoadInTeam, 0), true);
+        */
 
     }
 }

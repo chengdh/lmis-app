@@ -305,6 +305,11 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
         String[] whereArgs = new String[3];
         String where = "op_type = ?";
         switch (mCurrentType) {
+            case ScanHeaderOpType.SUB_BRANCH:
+                where += " AND from_org_id = ?";
+                whereArgs[0] = ScanHeaderOpType.SUB_BRANCH;
+                break;
+
             case ScanHeaderOpType.SORTING_IN:
                 where += " AND to_org_id = ?";
                 whereArgs[0] = ScanHeaderOpType.SORTING_IN;
@@ -402,6 +407,16 @@ public class ScanHeaderList extends BaseFragment implements AdapterView.OnItemCl
 
         //分拣组入库
         switch (mCurrentType) {
+            case (ScanHeaderOpType.SUB_BRANCH):
+
+                groupTitle = "分理处装车";
+
+                drawerItems.add(new DrawerItem(mCurrentType, groupTitle, true));
+                drawerItems.add(new DrawerItem(mCurrentType, draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(ScanHeaderOpType.SUB_BRANCH, "draft")));
+                drawerItems.add(new DrawerItem(mCurrentType, processedTitle, count(MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SUB_BRANCH, "processed")));
+//                drawerItems.add(new DrawerItem(mCurrentType, "已发车", count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment(ScanHeaderOpType.SUB_BRANCH, "shipped")));
+                break;
+
             case (ScanHeaderOpType.SORTING_IN):
 
                 groupTitle = "分拣组入库";

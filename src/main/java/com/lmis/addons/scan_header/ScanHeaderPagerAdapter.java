@@ -41,7 +41,7 @@ public class ScanHeaderPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
+        if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
             switch (position) {
                 case 0:
                     FragmentVehicleForm f0 = new FragmentVehicleForm();
@@ -97,7 +97,7 @@ public class ScanHeaderPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
+        if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
             return 3;
         } else
             return 2;

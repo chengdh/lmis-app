@@ -113,7 +113,7 @@ public class ScanHeaderNew extends BaseFragment {
                 toOrgID = currentUser.getDefault_org_id();
             }
 
-            if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
+            if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
                 fromOrgID = currentUser.getDefault_org_id();
             }
         }
@@ -182,7 +182,7 @@ public class ScanHeaderNew extends BaseFragment {
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
+        if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
             actionBar.addTab(actionBar.newTab().setText("车辆信息").setTabListener(tabListener));
         }
         actionBar.addTab(actionBar.newTab().setText("扫描票据").setTabListener(tabListener));
@@ -224,7 +224,7 @@ public class ScanHeaderNew extends BaseFragment {
 
         boolean success = true;
         boolean successToOrg = true;
-        if (mOpType.equals(ScanHeaderOpType.LOAD_OUT)) {
+        if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
             mPager.setCurrentItem(0);
             FragmentVehicleForm page = (FragmentVehicleForm) mPageAdapter.getRegisteredFragment(0);
             success = page.validateBeforeUpload();

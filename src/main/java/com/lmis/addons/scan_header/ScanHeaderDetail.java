@@ -156,7 +156,7 @@ public class ScanHeaderDetail extends BaseFragment {
             mTxvSubTitle.setText(describe);
             mTxvVNo.setText(vNo);
             mTxvDriverName.setText(String.format("%s(%s)", driverName, mobile));
-            if (mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
+            if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
                 mLayoutSubtitle.setVisibility(View.VISIBLE);
             } else {
                 mLayoutSubtitle.setVisibility(View.GONE);

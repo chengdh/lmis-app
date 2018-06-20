@@ -5,8 +5,17 @@ package com.lmis.util.barcode_scan_header;
  */
 
 public class ScanHeaderOpType {
+
+
+    //分理处装车
+    public static final String SUB_BRANCH = "ScanHeaderSubBranch";
+    //分拣组入库
     public static final String SORTING_IN = "ScanHeaderSortingIn";
+
+    //装卸组入库
     public static final String LOAD_IN = "ScanHeaderLoadIn";
+
+    //装卸组装车
     public static final String LOAD_OUT = "ScanHeaderLoadOut";
 
     //装卸组卸货
