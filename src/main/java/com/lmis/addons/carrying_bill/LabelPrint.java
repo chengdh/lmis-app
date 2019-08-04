@@ -107,6 +107,8 @@ public class LabelPrint {
             zpSDK.drawText(64 + 16, 168 + 16 + 24, seq, 4,0,0, false, false);
             zpSDK.drawBarCode(64 + 16 + 80, 168 + 16, label, 128, false, 3, 80);
 
+            zpSDK.drawText(64 + 16 + 80 + 48, 168 + 16 + 88, label, 3,0,0, false, false);
+
             zpSDK.drawLine(3, 0, 280 + 32, 568, 280 + 32, true);
 
 
