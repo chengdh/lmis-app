@@ -277,7 +277,7 @@ public class CarryingBillEdit extends BaseFragment {
                 public void afterTextChanged(Editable editable) {
                     reCalToShortCarryingFee();
                     reCalFromShortCarryingFee();
-                    reCalInsuredFee(mFromOrg);
+                    reCalInsuredFee(mToOrg);
 
                 }
             });

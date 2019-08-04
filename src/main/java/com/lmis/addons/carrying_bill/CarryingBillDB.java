@@ -1,13 +1,19 @@
 package com.lmis.addons.carrying_bill;
 
 import android.content.Context;
+import android.net.wifi.WifiEnterpriseConfig;
 
 import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
+import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 import com.lmis.orm.LmisValues;
+import com.lmis.util.StringHelper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,7 +180,7 @@ public class CarryingBillDB extends LmisDatabase {
         JSONObject response = instance.callMethod("ComputerBill", "create", args, null).getJSONObject("result");
         //FIXME 判断是否返回了id,rails model create 方法在失败时,会返回对应的model对象，但是valid?方法返回false
         //参考http://stackoverflow.com/questions/23975835/ruby-on-rails-active-record-return-value-when-create-fails
-        if(response.getString("id").equals("null"))
+        if (response.getString("id").equals("null"))
             throw new JSONException("保存运单时出现错误!");
 
 
@@ -230,4 +236,52 @@ public class CarryingBillDB extends LmisDatabase {
 
         return 2;
     }
+
+    /**
+     * 得到条码标签列表.
+     *
+     * @param bill the bill
+     * @return the list
+     */
+    public static List<String> getLabels(LmisDataRow bill) {
+        List<String> ret = new ArrayList<String>();
+        String sToOrgId = StringHelper.addZero(bill.getM2ORecord("to_org_id").browse().getInt("id"), 3);
+        String billNo = bill.getString("bill_no");
+        int goodsNum = bill.getInt("goods_num");
+        String sGoodsNum = StringHelper.addZero(bill.getInt("goods_num"), 3);
+        String barcode;
+        for (int i = 1; i <= goodsNum; i++) {
+            String sSeq = StringHelper.addZero(i, 3);
+            barcode = sToOrgId + billNo + sGoodsNum + sSeq;
+            ret.add(barcode);
+        }
+        return ret;
+    }
+
+    /**
+     * 生成条码标签列表.
+     *
+     * @param bill the bill
+     * @return the labels
+     */
+    public static List<String> getLabels(JSONObject bill) {
+        List<String> ret = new ArrayList<String>();
+        try {
+            String sToOrgId = StringHelper.addZero(bill.getInt("to_org_id"), 3);
+            String billNo = bill.getString("bill_no");
+            int goodsNum = bill.getInt("goods_num");
+            String sGoodsNum = StringHelper.addZero(bill.getInt("goods_num"), 3);
+            String barcode;
+            for (int i = 1; i <= goodsNum; i++) {
+                String sSeq = StringHelper.addZero(i, 3);
+                barcode = sToOrgId + billNo + sGoodsNum + sSeq;
+                ret.add(barcode);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return ret;
+    }
+
+
 }
