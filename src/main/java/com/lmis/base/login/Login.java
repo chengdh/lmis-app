@@ -142,7 +142,7 @@ public class Login extends BaseFragment {
         ButterKnife.inject(this, rootView);
 
         this.handleArguments((Bundle) getArguments());
-        getActivity().setTitle("Login");
+        getActivity().setTitle("登录系统");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         getActivity().getActionBar().setHomeButtonEnabled(false);
         edtPassword.setOnEditorActionListener(new OnEditorActionListener() {

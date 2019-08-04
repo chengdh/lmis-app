@@ -61,7 +61,7 @@ public class SyncWizard extends BaseFragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         rootView = inflater.inflate(com.lmis.R.layout.fragment_sync_wizard, container, false);
-        getActivity().setTitle("Configuration");
+        getActivity().setTitle("设置");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         getActivity().getActionBar().setHomeButtonEnabled(false);
 

@@ -67,7 +67,7 @@ dependencies {
     compile 'com.github.stuxuhai:jpinyin:1.1.7'
     compile 'com.github.rajasharan:SearchableSpinner:master'
 
-    compile files('libs/fb-android-dagger-1.0.3.jar', 'libs/bluetooth.jar')
+    compile files('libs/fb-android-dagger-1.0.3.jar', 'libs/bluetooth.jar','libs/zp_cpcl_new.jar')
 
     androidTestCompile 'junit:junit:4.11'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'

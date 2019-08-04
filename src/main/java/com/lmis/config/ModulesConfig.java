@@ -42,17 +42,17 @@ public class ModulesConfig extends ModulesConfigHelper {
     public ModulesConfig() {
         /* application modules */
         //add(new Module("module_idea", "Idea", new Idea(), 0), true);
-//        add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
+        add(new Module("module_carrying_bill", "Carrying Bill", new CarryingBillList(), 0), true);
 //        add(new Module("module_message", "Message", new MessageList(), 0), true);
 //        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
-//        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
+        add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
 //        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
 //        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
 //        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
 //        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
-        ScanHeaderList scanHeaderSubBranch = new ScanHeaderList();
-        scanHeaderSubBranch.setmCurrentType(ScanHeaderOpType.SUB_BRANCH);
-        add(new Module("module_scan_header_sub_branch", "scan_header_sub_branch", scanHeaderSubBranch, 0), true);
+//        ScanHeaderList scanHeaderSubBranch = new ScanHeaderList();
+//        scanHeaderSubBranch.setmCurrentType(ScanHeaderOpType.SUB_BRANCH);
+//        add(new Module("module_scan_header_sub_branch", "scan_header_sub_branch", scanHeaderSubBranch, 0), true);
 
 
         /*

@@ -8,8 +8,8 @@
     <!-- Account Fragment Strings -->
     <string name="logo_description">lmis</string>
     <string name="account_title">设置你的服务器信息</string>
-    <string name="account_description">输入物流平台服务器URL.</string>
-    <string name="account_edit_server_url">服务器URL</string>
+    <string name="account_description">输入物流平台服务器地址.</string>
+    <string name="account_edit_server_url">服务器地址</string>
     <string name="account_edit_server_port">端口</string>
     <string name="account_continue_button">下一步</string>
     <string name="account_login_button">登录</string>
@@ -145,7 +145,7 @@
     <string name="label_button_logout">登出</string>
     <string name="label_button_login">登录</string>
 
-    <string name="tip_server_port">如果需要,请在server URL后填写port</string>
+    <string name="tip_server_port">如果需要,请在服务器地址后填写port</string>
     <string name="label_use_secure">加密连接</string>
 
     <!-- sync wizard -->

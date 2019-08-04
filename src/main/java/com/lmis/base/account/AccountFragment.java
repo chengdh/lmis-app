@@ -119,7 +119,7 @@ public class AccountFragment extends BaseFragment {
         rootView = inflater.inflate(R.layout.fragment_account, container, false);
         ButterKnife.inject(this, rootView);
 
-        getActivity().setTitle("Setup Account");
+        getActivity().setTitle("设置服务器信息");
 
         edtServerUrl.requestFocus();
 

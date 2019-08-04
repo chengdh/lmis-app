@@ -747,7 +747,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 scope.main().startMainFragment(list, true);
                 //打印小票
                 LmisDataRow bill = db().select(mCarryingBillID);
-                CarryingBillPrint.print(bill, scope.currentUser(), false);
+                CarryingBillPrintCpcl.print(list.getActivity(),bill, scope.currentUser(), false);
 
 
             } else {

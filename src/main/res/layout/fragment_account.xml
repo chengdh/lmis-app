@@ -64,7 +64,7 @@
                 android:hint="@string/account_edit_server_url"
                 android:inputType="textUri"
                 android:singleLine="true"
-                android:text="zz.yanzhaowuliu.com" />
+                android:text="192.168.1.9:5000" />
 
             <com.lmis.util.controls.LmisTextView
                 android:id="@+id/txvDesc"
