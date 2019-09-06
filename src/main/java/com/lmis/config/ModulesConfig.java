@@ -27,6 +27,7 @@ import com.lmis.addons.goods_exception.GoodsExceptionList;
 import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.addons.message.MessageList;
 import com.lmis.addons.scan_header.ScanHeaderList;
+import com.lmis.addons.short_list.ShortListList;
 import com.lmis.support.Module;
 import com.lmis.support.ModulesConfigHelper;
 import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
@@ -46,41 +47,42 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        add(new Module("module_message", "Message", new MessageList(), 0), true);
 //        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
         add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
+        add(new Module("module_short_list", "short list", new ShortListList(), 0), true);
 //        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
-//        ScanHeaderList scanHeaderSortingIn = new ScanHeaderList();
+//        ShortListList scanHeaderSortingIn = new ShortListList();
 //        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);
 //        add(new Module("module_scan_header_sorting_in", "scan_header_sorting_in", scanHeaderSortingIn, 0), true);
-//        ScanHeaderList scanHeaderSubBranch = new ScanHeaderList();
+//        ShortListList scanHeaderSubBranch = new ShortListList();
 //        scanHeaderSubBranch.setmCurrentType(ScanHeaderOpType.SUB_BRANCH);
 //        add(new Module("module_scan_header_sub_branch", "scan_header_sub_branch", scanHeaderSubBranch, 0), true);
 
 
         /*
-        ScanHeaderList scanHeaderLoadIn = new ScanHeaderList();
+        ShortListList scanHeaderLoadIn = new ShortListList();
         scanHeaderLoadIn.setmCurrentType(ScanHeaderOpType.LOAD_IN);
         add(new Module("module_scan_header_load_in", "scan_header_load_in", scanHeaderLoadIn, 0), true);
 
-        ScanHeaderList scanHeaderLoadOut = new ScanHeaderList();
+        ShortListList scanHeaderLoadOut = new ShortListList();
         scanHeaderLoadOut.setmCurrentType(ScanHeaderOpType.LOAD_OUT);
         add(new Module("module_scan_header_load_out", "scan_header_load_out", scanHeaderLoadOut, 0), true);
 
-        ScanHeaderList scanHeaderInnerTransitLoadIn = new ScanHeaderList();
+        ShortListList scanHeaderInnerTransitLoadIn = new ShortListList();
         scanHeaderInnerTransitLoadIn.setmCurrentType(ScanHeaderOpType.INNER_TRANSIT_LOAD_IN);
         add(new Module("module_scan_header_inner_transit_load_in", "scan_header_inner_transit_load_in", scanHeaderInnerTransitLoadIn, 0), true);
 
-        ScanHeaderList scanHeaderInnerTransitLoadOut = new ScanHeaderList();
+        ShortListList scanHeaderInnerTransitLoadOut = new ShortListList();
         scanHeaderInnerTransitLoadOut.setmCurrentType(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT);
         add(new Module("module_scan_header_inner_transit_load_out", "scan_header_inner_transit_load_out", scanHeaderInnerTransitLoadOut, 0), true);
 
-        ScanHeaderList scanHeaderLocalTownLoadIn = new ScanHeaderList();
+        ShortListList scanHeaderLocalTownLoadIn = new ShortListList();
         scanHeaderLocalTownLoadIn.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_IN);
         add(new Module("module_scan_header_local_town_load_in", "scan_header_local_town_load_in", scanHeaderLocalTownLoadIn, 0), true);
 
-        ScanHeaderList scanHeaderLocalTownLoadOut = new ScanHeaderList();
+        ShortListList scanHeaderLocalTownLoadOut = new ShortListList();
         scanHeaderLocalTownLoadOut.setmCurrentType(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT);
         add(new Module("module_scan_header_local_town_load_out", "scan_header_local_town_load_out", scanHeaderLocalTownLoadOut, 0), true);
 
-        ScanHeaderList scanHeaderLoadInTeam = new ScanHeaderList();
+        ShortListList scanHeaderLoadInTeam = new ShortListList();
         scanHeaderLoadInTeam.setmCurrentType(ScanHeaderOpType.LOAD_IN_TEAM);
         add(new Module("module_scan_header_load_in_team", "scan_header_load_in_team", scanHeaderLoadInTeam, 0), true);
         */

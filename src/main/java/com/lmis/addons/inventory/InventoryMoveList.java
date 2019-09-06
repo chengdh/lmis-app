@@ -532,7 +532,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            Log.d(TAG, "ScanHeaderLoader#doInBackground");
+            Log.d(TAG, "ShortListLoader#doInBackground");
             HashMap<String, Object> map = getWhere(mType, mState);
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
@@ -544,7 +544,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            Log.d(TAG, "ScanHeaderLoader#onPostExecute");
+            Log.d(TAG, "ShortListLoader#onPostExecute");
             mListViewAdapter.notifiyDataChange(mInventoryObjects);
             checkInventoryListStatus();
             mInventoryLoader = null;

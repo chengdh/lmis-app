@@ -17,7 +17,7 @@ import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
  */
 
 public class ScanHeaderPagerAdapter extends FragmentStatePagerAdapter {
-    public static final String TAG = "ScanHeaderPagerAdapter";
+    public static final String TAG = "ShortListPagerAdapter";
 
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     BarcodeParser mBarcodeParser = null;

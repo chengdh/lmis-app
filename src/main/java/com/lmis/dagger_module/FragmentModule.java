@@ -29,6 +29,9 @@ import com.lmis.addons.scan_header.ScanHeaderList;
 import com.lmis.addons.scan_header.ScanHeaderNew;
 import com.lmis.addons.search_bill.CarryingBillEdit;
 import com.lmis.addons.search_bill.SearchBill;
+import com.lmis.addons.short_list.ShortListDetail;
+import com.lmis.addons.short_list.ShortListList;
+import com.lmis.addons.short_list.ShortListNew;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
 import com.lmis.base.account.AccountsDetail;
@@ -75,7 +78,12 @@ import dagger.Provides;
                 ScanHeaderDetail.class,
                 FragmentVehicleForm.class,
                 com.lmis.addons.scan_header.FragmentBillList.class,
-                com.lmis.addons.scan_header.FragmentScanBarcode.class
+                com.lmis.addons.scan_header.FragmentScanBarcode.class,
+                ShortListList.class,
+                ShortListNew.class,
+                ShortListDetail.class,
+                com.lmis.addons.short_list.FragmentVehicleForm.class,
+                com.lmis.addons.short_list.FragmentBillList.class
 
         })
 public class FragmentModule {

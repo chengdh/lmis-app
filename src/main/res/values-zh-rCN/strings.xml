@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">货场扫码</string>
+    <string name="app_name">宇玖速运</string>
     <string name="title_activity_main">货场扫码</string>
     <string name="drawer_open">打开导航面板</string>
     <string name="drawer_close">关闭导航面板</string>
@@ -37,8 +37,8 @@
 
     <!--inventory out 相关定义-->
 
-    <string name="inventory_out_blank">当前没有盘点单!</string>
-    <string name="inventory_out_group_title">盘点单</string>
+    <string name="inventory_out_blank">当前没有单据!</string>
+    <string name="inventory_out_group_title">单据</string>
     <string name="inventory_out_draw_item_draft">未上传</string>
     <string name="inventory_out_draw_item_processed">已上传</string>
     <string name="inventory_out_list_search">查找</string>

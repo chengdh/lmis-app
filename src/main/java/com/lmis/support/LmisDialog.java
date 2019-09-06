@@ -48,7 +48,7 @@ public class LmisDialog extends ProgressDialog {
      */
     public LmisDialog(Context context, boolean isCancelable, String message) {
         super(context);
-        this.setTitle("Please wait...");
+        this.setTitle("请稍等...");
         this.setCancelable(isCancelable);
         this.setMessage(message);
     }

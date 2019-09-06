@@ -1,4 +1,4 @@
-package com.lmis.addons.scan_header;
+package com.lmis.addons.short_list;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.lmis.R;
-import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.listview.LmisListAdapter;
 import com.lmis.util.barcode_scan_header.BarcodeParser;

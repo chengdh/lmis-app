@@ -1,4 +1,4 @@
-package com.lmis.addons.scan_header;
+package com.lmis.addons.short_list;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -38,7 +38,7 @@ import butterknife.InjectView;
  * Created by chengdh on 2017/7/12.
  */
 
-public class ScanHeaderDetail extends BaseFragment {
+public class ShortListDetail extends BaseFragment {
     public static final String TAG = "ShortListDetail";
 
     @InjectView(R.id.txv_title)
@@ -69,7 +69,7 @@ public class ScanHeaderDetail extends BaseFragment {
     View mView = null;
     Menu mMenu;
     Integer mId = null;
-    LmisDataRow mScanHeader = null;
+    LmisDataRow mShortList = null;
 
     SearchView mSearchViewBarcodeList;
 
@@ -108,7 +108,7 @@ public class ScanHeaderDetail extends BaseFragment {
 
 
         MenuItem item = menu.findItem(R.id.menu_scan_header_detail_send);
-        String state = mScanHeader.getString("processed");
+        String state = mShortList.getString("processed");
         if ((mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) && state.equals("true")) {
             item.setVisible(true);
         } else {
@@ -130,27 +130,27 @@ public class ScanHeaderDetail extends BaseFragment {
         if (bundle != null) {
             mOpType = bundle.getString("type");
             mId = bundle.getInt("scan_header_id");
-            mScanHeader = new ScanHeaderDB(scope.context()).select(mId);
-            LmisDataRow fromOrg = mScanHeader.getM2ORecord("from_org_id").browse();
-            LmisDataRow toOrg = mScanHeader.getM2ORecord("to_org_id").browse();
+            mShortList = new ShortListDB(scope.context()).select(mId);
+            LmisDataRow fromOrg = mShortList.getM2ORecord("from_org_id").browse();
+            LmisDataRow toOrg = mShortList.getM2ORecord("to_org_id").browse();
             String fromOrgName = "";
             String toOrgName = "";
             if (fromOrg != null) {
-                fromOrgName = mScanHeader.getM2ORecord("from_org_id").browse().getString("name");
+                fromOrgName = mShortList.getM2ORecord("from_org_id").browse().getString("name");
             }
             if (toOrg != null) {
-                toOrgName = mScanHeader.getM2ORecord("to_org_id").browse().getString("name");
+                toOrgName = mShortList.getM2ORecord("to_org_id").browse().getString("name");
             }
 
-            Integer goodsCount = mScanHeader.getInt("sum_goods_count");
-            Integer billsCount = mScanHeader.getInt("sum_bills_count");
+            Integer goodsCount = mShortList.getInt("sum_goods_count");
+            Integer billsCount = mShortList.getInt("sum_bills_count");
             String describe = String.format("共%d票%d件", billsCount, goodsCount);
-            String billDate = mScanHeader.getString("bill_date");
+            String billDate = mShortList.getString("bill_date");
             String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
-            String vNo = mScanHeader.getString("v_no");
-            String driverName = mScanHeader.getString("driver_name");
-            String mobile = mScanHeader.getString("mobile");
-            String idNo = mScanHeader.getString("id_no");
+            String vNo = mShortList.getString("v_no");
+            String driverName = mShortList.getString("driver_name");
+            String mobile = mShortList.getString("mobile");
+            String idNo = mShortList.getString("id_no");
             mTxvTitle.setText(fromTo);
             mTxvBillDate.setText(billDate);
             mTxvSubTitle.setText(describe);
@@ -162,7 +162,7 @@ public class ScanHeaderDetail extends BaseFragment {
                 mLayoutSubtitle.setVisibility(View.GONE);
             }
 
-            mScanedBillsObjects = new ArrayList<Object>(mScanHeader.getO2MRecord("scan_lines").browseEach());
+            mScanedBillsObjects = new ArrayList<Object>(mShortList.getO2MRecord("scan_lines").browseEach());
             mScanedBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_scan_header_list_bills_item, mScanedBillsObjects) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -228,7 +228,7 @@ public class ScanHeaderDetail extends BaseFragment {
 
     @Override
     public Object databaseHelper(Context context) {
-        return new ScanHeaderDB(context);
+        return new ShortListDB(context);
     }
 
     @Override
@@ -264,7 +264,7 @@ public class ScanHeaderDetail extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                ((ScanHeaderDB) db()).processShip(mId);
+                ((ShortListDB) db()).processShip(mId);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
                 return false;
@@ -281,7 +281,7 @@ public class ScanHeaderDetail extends BaseFragment {
                 DrawerListener drawer = scope.main();
                 drawer.refreshDrawer(mOpType);
                 //返回已处理界面
-                ScanHeaderList list = new ScanHeaderList();
+                ShortListList list = new ShortListList();
                 Bundle arg = new Bundle();
                 arg.putString("type", mOpType);
                 arg.putString("state", "shipped");

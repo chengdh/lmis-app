@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.lmis.util.controls.LmisTextView
+        android:id="@+id/txvShortListBlank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal"
+        android:padding="10dp"
+        android:text="@string/inventory_out_blank"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#77778f"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/listShortLists"
+        android:smoothScrollbar="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

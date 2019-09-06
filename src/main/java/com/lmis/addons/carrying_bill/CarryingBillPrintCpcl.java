@@ -41,7 +41,7 @@ public class CarryingBillPrintCpcl {
 //        zpSDK.connect(devAddress);
 
 
-        printCarryingBill(ctx,bill,user,rePrint);
+        printCarryingBill(ctx, bill, user, rePrint);
 
 //        zpSDK.pageSetup(568, 568);
 //        zpSDK.drawBarCode(8, 540, "12345678901234567", 128, true, 3, 60);
@@ -92,58 +92,289 @@ public class CarryingBillPrintCpcl {
         //203 dpi 8点/毫米
         zpSDK.pageSetup(600, 415);
 
-        //画外框
-        zpSDK.drawBox(3,0,0,568,370);
-        zpSDK.drawText(8,8,"宇玖速运",4,0,1,false,false);
-        zpSDK.drawText(360,8,bill.getString("bill_no"),4,0,1,false,false);
+        //打印时打印机会有部分边距
+        int bottomRightX = 568;
+        int bottomRightY = 370;
+        //第一行
+        int x1 = 0;
+        int y1 = 0;
 
+        zpSDK.drawText(x1, y1, "宇玖速运", 4, 0, 1, false, false);
 
-        zpSDK.drawLine(3,0,80,568,80,true);
+        zpSDK.drawBox(5, x1 + 400, 0, bottomRightX - 20, y1 + 50);
+        zpSDK.drawText(x1 + 420, y1 + 10, "客户联", 3, 0, 1, false, false);
 
-        zpSDK.drawLine(3,64,80,64,370,true);
+        //外框
+        int x2 = 0;
+        int y2 = y1 + 60;
+        zpSDK.drawBox(3, x2, y2, bottomRightX, bottomRightY);
 
-        zpSDK.drawText(8+8,88,"目",0,0,1,false,false);
-        zpSDK.drawText(8+8,112,"的",0,0,1,false,false);
-        zpSDK.drawText(8+8,136,"地",0,0,1,false,false);
-
+        //运单号 目的地  货号
+        int x21 = 0;
+        int y21 = y2 + 10;
+        String billNo = bill.getString("bill_no");
+        String goodsNo = bill.getString("goods_no");
 
         String toOrgName = bill.getM2ORecord("to_org_id").browse().getString("name");
-        zpSDK.drawText(64 + 16,88,toOrgName,3,0,1,false,false);
+        zpSDK.drawText(x21 + 10, y21, toOrgName, 3, 0, 1, false, false);
+        zpSDK.drawText(x21 + 10 + 150, y21, billNo, 3, 0, 1, false, false);
+        zpSDK.drawText(x21 + 10 + 150 + 150, y21, goodsNo, 3, 0, 1, false, false);
 
 
-        zpSDK.drawLine(3,0,160,568,160,true);
+        //直线
+        zpSDK.drawLine(3, x21, y21 + 40, bottomRightX, y21 + 40, true);
+
+        //收货网点/打印时间
+        int x3 = 0;
+        int y3 = y21 + 50;
+        String fromOrgName = bill.getM2ORecord("from_org_id").browse().getString("name");
+        String createdAt = bill.getString("created_at");
+        zpSDK.drawText(x3 + 10, y3, fromOrgName, 0, 0, 1, false, false);
+        zpSDK.drawText(x3 + 300, y3, createdAt, 0, 0, 1, false, false);
+
+        //直线
+        zpSDK.drawLine(3, x3, y3 + 40, bottomRightX, y3 + 40, true);
+
+        //寄方
+        int x4 = 0;
+        int y4 = y3 + 50;
+
+        String fromCustomerName = bill.getString("from_customer_name");
+        String fromCustomerMobile = bill.getString("from_customer_mobile");
+        zpSDK.drawText(x4 + 10, y4, "寄", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40, y4, "寄件人:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 80, y4, fromCustomerName, 0, 0, 1, false, false);
+
+        //竖线
+        zpSDK.drawLine(3, x4 + 40 + 80 + 110, y3 + 40, x4 + 40 + 80 + 110, y4 + 40, true);
+
+        zpSDK.drawText(x4 + 40 + 80 + 120, y4, "电话:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 80 + 120 + 80, y4, fromCustomerMobile, 0, 0, 1, false, false);
 
 
-        zpSDK.drawText(8+8,160+8,"货",0,0,1,false,false);
-        zpSDK.drawText(8+8,184+8,"物",0,0,1,false,false);
-        zpSDK.drawText(8+8,208+8,"信",0,0,1,false,false);
-        zpSDK.drawText(8+8,232+8,"息",0,0,1,false,false);
+        zpSDK.drawLine(3, x4 + 40, y4 + 40, bottomRightX, y4 + 40, true);
+
+        zpSDK.drawText(x4 + 10, y4 + 50, "方", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:", 0, 0, 1, false, false);
 
 
-        zpSDK.drawLine(3,0,280,568,280,true);
+        //横线
+        zpSDK.drawLine(3, x4, y4 + 60 + 40, bottomRightX, y4 + 60 + 40, true);
 
 
-        zpSDK.drawText(8+8,280+8,"发",0,0,1,false,false);
-        zpSDK.drawText(8+8,280+40,"货",0,0,1,false,false);
+        //竖线
+
+        zpSDK.drawLine(3, x4 + 35, y4 - 10, x4 + 35, bottomRightY, true);
+
+        //收方
+        int x5 = 0;
+        int y5 = y4 + 70 + 50;
+        String toCustomerName = bill.getString("to_customer_name");
+        String toCustomerMobile = bill.getString("to_customer_mobile");
+        zpSDK.drawText(x5 + 10, y5, "收", 0, 0, 1, false, false);
+        zpSDK.drawText(x5 + 40, y5, "收件人:", 0, 0, 1, false, false);
+        zpSDK.drawText(x5 + 40 + 80, y5, toCustomerName, 0, 0, 1, false, false);
+
+        //竖线
+        zpSDK.drawLine(3, x5 + 40 + 80 + 110, y4 + 60 + 40, x5 + 40 + 80 + 110, y5 + 40, true);
 
 
-//        zpSDK.drawText(400,8,bill.getString("from_org") + "-" + bill.getString("to_org"),12,0,1,false,false);
-//
-//        zpSDK.drawLine(1,8,64,592,64,true);
-//
-//        zpSDK.drawText(8,64,"收\r\n方",10,0,1,false,false);
-//
-//        zpSDK.drawLine(1,40,64,40,136,true);
-//
-//
-//        zpSDK.drawLine(1,8,136,592,136,true);
-//        zpSDK.drawText(8,136,"寄\r\n方",10,0,1,false,false);
-//
-//        zpSDK.drawLine(1,40,136,40,192,true);
-//
-//        zpSDK.drawLine(1,8,192,592,192,true);
+        zpSDK.drawText(x5 + 40 + 80 + 120, y5, "电话:", 0, 0, 1, false, false);
+        zpSDK.drawText(x5 + 40 + 80 + 120 + 80, y5, toCustomerMobile, 0, 0, 1, false, false);
+
+
+        zpSDK.drawLine(3, x5 + 40, y5 + 40, bottomRightX, y5 + 40, true);
+
+        zpSDK.drawText(x5 + 10, y5 + 50, "方", 0, 0, 1, false, false);
+        zpSDK.drawText(x5 + 40, y5 + 50, "地址:", 0, 0, 1, false, false);
+
+
         zpSDK.print(0, 0);
 
+        zpSDK.disconnect();
+
+        printCarryingBillSecondPage(ctx, bill, user, rePrint);
+
+    }
+
+    //打印运单第二联
+    public static void printCarryingBillSecondPage(Context ctx, LmisDataRow bill, LmisUser user, Boolean rePrint) {
+        String devAddress = BlueTooth.getAddress("CS3_8751");
+        if (devAddress == null) {
+            return;
+        }
+        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(ctx);
+        zpSDK.connect(devAddress);
+
+
+        //203 dpi 8点/毫米
+        zpSDK.pageSetup(600, 415);
+
+        //打印时打印机会有部分边距
+        int bottomRightX = 568;
+        int bottomRightY = 370;
+        //第一行
+        int x1 = 0;
+        int y1 = 0;
+
+//        zpSDK.drawText(x1, y1, "宇玖速运", 4, 0, 1, false, false);
+//
+//        zpSDK.drawBox(5, x1 + 400, 0, bottomRightX - 20, y1 + 50);
+//        zpSDK.drawText(x1 + 420, y1 + 10, "客户联", 3, 0, 1, false, false);
+
+        //外框
+        int x2 = 0;
+        int y2 = 0;
+        zpSDK.drawBox(3, x2, y2, bottomRightX, bottomRightY);
+
+        //运单号 目的地  货号
+        int x21 = 0;
+        int y21 = y2 + 10;
+        String billNo = bill.getString("bill_no");
+        String goodsNo = bill.getString("goods_no");
+
+        String toOrgName = bill.getM2ORecord("to_org_id").browse().getString("name");
+        zpSDK.drawText(x21 + 10, y21, toOrgName, 3, 0, 1, false, false);
+        zpSDK.drawText(x21 + 10 + 150, y21, billNo, 3, 0, 1, false, false);
+
+
+        zpSDK.drawBox(5, x2 + 400, y21, bottomRightX - 20, y21 + 40);
+        zpSDK.drawText(x2 + 420, y21 + 5, "客户联", 0, 0, 1, false, false);
+
+
+        //横线
+        zpSDK.drawLine(3, x21, y21 + 40, bottomRightX, y21 + 40, true);
+
+        //货物信息
+        int x3 = x2 + 10;
+        int y3 = y2 + 60;
+        zpSDK.drawText(x3, y3, "货", 0, 0, 1, false, false);
+        zpSDK.drawText(x3, y3 + 30, "物", 0, 0, 1, false, false);
+        zpSDK.drawText(x3, y3 + 30 + 30, "信", 0, 0, 1, false, false);
+        zpSDK.drawText(x3, y3 + 30 + 30 + 30, "息", 0, 0, 1, false, false);
+        //横线
+        zpSDK.drawLine(3, x2, y3 + 30 + 30 + 30 + 30, bottomRightX, y3 + 30 + 30 + 30 + 30, true);
+        //竖线
+        zpSDK.drawLine(3, x3 + 30, y21 + 40, x3 + 30, y3 + 30 + 30 + 30 + 30, true);
+
+
+        String goodsName = bill.getString("goods_info");
+        String goodsNum = bill.getString("goods_num");
+        String goodsVolume = bill.getString("goods_volume");
+        zpSDK.drawText(x3 + 40, y3, "名称:", 0, 0, 1, false, false);
+
+        zpSDK.drawText(x3 + 40 + 60, y3, goodsName, 0, 0, 1, false, false);
+
+
+        //竖线
+        zpSDK.drawLine(3, x3 + 40 + 80 + 110, y21 + 40, x3 + 40 + 80 + 110, y3 + 30, true);
+
+        zpSDK.drawText(x3 + 40 + 80 + 120, y3, "件数:", 0, 0, 1, false, false);
+
+        zpSDK.drawText(x3 + 40 + 80 + 120 + 60, y3, goodsNum, 0, 0, 1, false, false);
+
+        //横线
+        zpSDK.drawLine(3, x3 + 30, y3 + 30, bottomRightX, y3 + 30, true);
+
+        zpSDK.drawText(x3 + 40, y3 + 40, "重量:", 0, 0, 1, false, false);
+
+        zpSDK.drawText(x3 + 40 + 60, y3 + 40, "0", 0, 0, 1, false, false);
+
+        //竖线
+        zpSDK.drawLine(3, x3 + 40 + 80 + 110, y3 + 30, x3 + 40 + 80 + 110, y3 + 40+ 30, true);
+
+        zpSDK.drawText(x3 + 40 + 80 + 120, y3 + 40, "体积:", 0, 0, 1, false, false);
+
+        zpSDK.drawText(x3 + 40 + 80 + 120 + 60, y3 + 40, goodsVolume, 0, 0, 1, false, false);
+
+        //横线
+        zpSDK.drawLine(3, x3 + 30, y3 + 40 + 30, bottomRightX, y3 + 40 + 30, true);
+
+
+        zpSDK.drawText(x3 + 40, y3 + 40 + 40, "包装:", 0, 0, 1, false, false);
+        zpSDK.drawText(x3 + 40 + 60 , y3 + 40 + 40, "无", 0, 0, 1, false, false);
+
+        //费用信息
+        int x4 = 10;
+        int y4 = y3 + 120;
+        zpSDK.drawText(x4, y4, "费", 0, 0, 1, false, false);
+        zpSDK.drawText(x4, y4 + 30, "用", 0, 0, 1, false, false);
+        zpSDK.drawText(x4, y4 + 30 + 30, "信", 0, 0, 1, false, false);
+        zpSDK.drawText(x4, y4 + 30 + 30 + 30, "息", 0, 0, 1, false, false);
+        //横线
+        zpSDK.drawLine(3, 0, y4 + 30 + 30 + 30 + 30, bottomRightX, y4 + 30 + 30 + 30 + 30, true);
+        //竖线
+        zpSDK.drawLine(3, x4 + 30, y3 + 30 + 30 + 30 + 30, x4 + 30, y4 + 30 + 30 + 30 + 30, true);
+
+
+        int carryingFee = bill.getInt("carrying_fee");
+        int fromShortCarryingFee = bill.getInt("from_short_carrying_fee");
+        int toShortCarryingFee = bill.getInt("to_short_carrying_fee");
+        int goodsFee = bill.getInt("goods_fee");
+        String payType = PayType.payTypes().get(bill.getString("pay_type"));
+
+        zpSDK.drawText(x4 + 40, y4, "运费:", 0, 0, 1, false, false);
+
+        zpSDK.drawText(x4 + 40 + 60, y4, carryingFee + "", 0, 0, 1, false, false);
+
+         //竖线
+        zpSDK.drawLine(3, x4 + 40 + 60 + 70, y3 + 30 + 30 + 30 + 30, x4 + 40 + 60 + 70, y4 + 30, true);
+
+
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 10, y4, "送货费:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 10+ 60, y4, toShortCarryingFee + "", 0, 0, 1, false, false);
+
+        //竖线
+        zpSDK.drawLine(3, x4 + 40 + 60 + 80 + 10+ 60 + 60, y3 + 30 + 30 + 30 + 30, x4 + 40 + 60 + 80 + 10+ 60 + 60, y4 + 30, true);
+
+
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 10+ 60 + 80 , y4, "接货费:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 10+ 60 + 80 + 80, y4, fromShortCarryingFee + "", 0, 0, 1, false, false);
+
+        //横线
+        zpSDK.drawLine(3, x4 + 30, y4 + 30, bottomRightX, y4 + 30, true);
+
+
+        zpSDK.drawText(x4 + 40, y4 + 40, "外转费:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 80, y4 + 40, "0", 0, 0, 1, false, false);
+
+        //竖线
+        zpSDK.drawLine(3, x4 + 40 + 60 + 70 , y4 + 30, x4 + 40 + 60 + 70, y4 + 40+ 30,  true);
+
+
+        zpSDK.drawText(x4 + 40 + 60 + 80, y4 + 40, "保价费:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 80, y4 + 40, "0", 0, 0, 1, false, false);
+
+        //横线
+        zpSDK.drawLine(3, x4 + 30, y4 + 40 + 30, bottomRightX, y4 + 40 + 30, true);
+
+
+        zpSDK.drawText(x4 + 40, y4 + 40 + 40, "代收款:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 80, y4 + 40 + 40, goodsFee + "", 0, 0, 1, false, false);
+
+
+        //竖线
+        zpSDK.drawLine(3, x4 + 40 + 60 + 70 , y4 + 40+ 30, x4 + 40 + 60 + 70, y4 + 30 +30 + 30 + 30,  true);
+
+        zpSDK.drawText(x4 + 40 + 60 + 80, y4 + 40 + 40, "付款方式:", 0, 0, 1, false, false);
+        zpSDK.drawText(x4 + 40 + 60 + 80 + 120, y4 + 40 + 40, payType, 0, 0, 1, false, false);
+
+        //寄件人签名
+        int x5 = 10;
+        int y5 = y4 + 120;
+
+        zpSDK.drawText(x5, y5, "寄件人签名:", 0, 0, 1, false, false);
+
+        zpSDK.drawLine(3, 0, y5 + 30, bottomRightX, y5 + 30, true);
+
+        //客服电话
+        int x6 = 10;
+        int y6 = y5 + 40;
+
+        zpSDK.drawText(x6, y6, "客服:400-618-5656", 0, 0, 1, false, false);
+
+
+        zpSDK.print(0, 0);
 
         zpSDK.disconnect();
 
