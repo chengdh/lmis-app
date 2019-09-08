@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">宇玖速运</string>
-    <string name="title_activity_main">货场扫码</string>
+    <string name="title_activity_main">宇玖速运</string>
     <string name="drawer_open">打开导航面板</string>
     <string name="drawer_close">关闭导航面板</string>
 
@@ -17,7 +17,7 @@
 
     <!-- Login Fragment Strings -->
     <string name="login_title">设置登录信息</string>
-    <string name="login_description">选择数据库并输入用户名和密码.</string>
+    <string name="login_description">输入用户名和密码.</string>
     <string name="login_select_database">选择数据库</string>
     <string name="login_edit_username">用户名</string>
     <string name="login_edit_password">密码</string>

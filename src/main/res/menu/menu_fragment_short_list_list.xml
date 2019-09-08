@@ -10,7 +10,7 @@
         android:title="@string/inventory_out_list_search"
         android:visible="true"></item>
     <item
-        android:id="@+id/menu_short_new"
+        android:id="@+id/menu_short_list_new"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="always"
         android:title="@string/inventory_out_list_new"></item>

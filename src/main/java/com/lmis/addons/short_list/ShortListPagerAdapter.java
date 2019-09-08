@@ -27,21 +27,22 @@ public class ShortListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Fragment fg = null;
         switch (position) {
             case 0:
-                FragmentVehicleForm f0 = new FragmentVehicleForm();
+                fg = new FragmentVehicleForm();
                 Bundle arg0 = new Bundle();
-                f0.setArguments(arg0);
+                fg.setArguments(arg0);
 
-                f0.setmScanHeader(mShortList);
-                return f0;
-            case 2:
-                FragmentBillList f2 = new FragmentBillList();
-                return f2;
-            default:
-                return null;
+                ((FragmentVehicleForm)fg).setmShortList(mShortList);
+                break;
+            case 1:
+                fg = new FragmentBillList();
+                ((FragmentBillList)fg).setmShortList(mShortList);
+                break;
 
         }
+        return fg;
     }
 
 

@@ -15,20 +15,22 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.lmis.R;
-import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.orm.LmisDatabase;
+import com.lmis.orm.LmisValues;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
-import com.lmis.util.barcode_scan_header.GoodsInfo;
-import com.lmis.util.barcode_scan_header.ScanHeaderOpType;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import us.monoid.json.JSONObject;
 
 import static android.app.ActionBar.NAVIGATION_MODE_TABS;
 
@@ -81,6 +83,9 @@ public class ShortListNew extends BaseFragment {
 
         if (mShortListId > 0) {
             mShortList = new ShortListDB(scope.context()).select(mShortListId);
+        } else {
+            mShortList = new LmisDataRow();
+            mShortList.put("from_org_id", currentUser.getDefault_org_id());
         }
 
     }
@@ -165,17 +170,22 @@ public class ShortListNew extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_fragment_scan_header_new, menu);
+        inflater.inflate(R.menu.menu_fragment_short_list_new, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_scan_header_upload:
+            case R.id.menu_short_list_upload:
                 if (validateBeforeUpload()) {
-                    mUploadAsync = new Uploader();
-                    mUploadAsync.execute((Void) null);
-                    return true;
+                    if(save2DB()) {
+                        mUploadAsync = new Uploader();
+                        mUploadAsync.execute((Void) null);
+                        return true;
+                    }
+                }
+                else {
+                    Toast.makeText(scope.context(),"保存数据失败!",Toast.LENGTH_SHORT);
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -185,7 +195,6 @@ public class ShortListNew extends BaseFragment {
     public boolean validateBeforeUpload() {
 
         boolean success = true;
-        boolean successToOrg = true;
         mPager.setCurrentItem(0);
         FragmentVehicleForm page = (FragmentVehicleForm) mPageAdapter.getRegisteredFragment(0);
         success = page.validateBeforeUpload();
@@ -196,6 +205,89 @@ public class ShortListNew extends BaseFragment {
         return success;
     }
 
+    //获取货物数量合计
+    private int sumGoodsCount() {
+        List bills = (List) mShortList.get("bills");
+        int goodsCount = 0;
+        try {
+
+            for (Object o : bills) {
+                int goodsNum = ((JSONObject) o).getInt("goods_num");
+                goodsCount += goodsNum;
+
+            }
+
+        } catch (Exception ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+        return goodsCount;
+    }
+
+    //获取票数合计
+    private int sumBillsCount() {
+        List bills = (List) mShortList.get("bills");
+        return bills.size();
+    }
+
+
+    //保存至数据库
+    protected boolean save2DB() {
+        boolean ret = true;
+        //需要新建数据库
+        LmisValues row = new LmisValues();
+        row.put("sum_goods_count", sumGoodsCount());
+        row.put("sum_bills_count", sumBillsCount());
+        if (mShortListId == -1) {
+            row.put("from_org_id", mShortList.get("from_org_id"));
+            row.put("to_org_id", mShortList.get("to_org_id"));
+
+            row.put("driver", mShortList.get("driver"));
+            row.put("vehicle_no", mShortList.get("vehicle_no"));
+            row.put("mobile", mShortList.get("mobile"));
+
+            row.put("processed", false);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date now = new Date();
+            row.put("bill_date", sdf.format(now));
+            row.put("state", "draft");
+            mShortListId = (int) db().create(row);
+        } else {
+            //更新数据库
+            db().update(row, mShortListId);
+        }
+
+        //添加short_line信息
+
+        ShortListLineDB lineDB = new ShortListLineDB(scope.context());
+
+        List bills = (List) mShortList.get("bills");
+        for (Object o : bills) {
+            try {
+                String carrying_bill_id = ((JSONObject) o).getString("id");
+                String from_org_id = ((JSONObject) o).getString("from_org_id");
+                String to_org_id = ((JSONObject) o).getString("to_org_id");
+                String goods_num = ((JSONObject) o).getString("goods_num");
+                LmisValues lineValue = new LmisValues();
+                lineValue.put("short_list_id", mShortListId);
+                lineValue.put("carrying_bill_id", carrying_bill_id);
+                lineValue.put("from_org_id", from_org_id);
+                lineValue.put("to_org_id", to_org_id);
+                lineValue.put("qty", goods_num);
+                lineDB.create(lineValue);
+            }
+            catch(Exception ex){
+                ret = false;
+                Log.e(TAG,ex.getMessage());
+            }
+
+        }
+        return ret;
+    }
+
+    @Override
+    public LmisDatabase db() {
+        return new ShortListDB(scope.context());
+    }
 
     /**
      * 上传数据.

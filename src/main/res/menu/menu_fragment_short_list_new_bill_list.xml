@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item-->
+        <!--android:id="@+id/menu_short_list_new_select_all"-->
+        <!--android:icon="@drawable/ic_action_starred"-->
+        <!--android:title="全选"-->
+        <!--app:showAsAction="always"></item>-->
+
+    <!--<item-->
+        <!--android:id="@+id/menu_short_list_new_select_none"-->
+        <!--android:icon="@drawable/ic_action_unstarred"-->
+        <!--android:title="不选"-->
+        <!--app:showAsAction="always"></item>-->
+</menu>

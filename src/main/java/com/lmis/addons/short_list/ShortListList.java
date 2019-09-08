@@ -440,14 +440,14 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case (R.id.menu_scan_header_new):
+            case (R.id.menu_short_list_new):
                 Log.d(TAG, "New Menu select");
                 Bundle args = new Bundle();
                 Fragment fragment = new ShortListNew();
                 fragment.setArguments(args);
                 scope.main().startDetailFragment(fragment);
                 return true;
-            case (R.id.menu_scan_header_list_search):
+            case (R.id.menu_short_list_search):
                 Log.d(TAG, "Search menu select");
                 return true;
             default:

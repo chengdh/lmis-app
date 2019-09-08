@@ -25,7 +25,7 @@
                 android:text="到货地"
                 android:textColor="#33b5e5" />
 
-            <com.lmis.util.controls.OrgLoadOrgSpinner
+            <com.lmis.util.controls.YardsOrgSpinner
                 android:id="@+id/spinner_yards_select"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

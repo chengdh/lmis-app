@@ -87,7 +87,7 @@ public class ShortListDB extends LmisDatabase {
     public void save2server(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
         JSONObject json = row.exportAsJSON();
-        String clazz = json.getString("op_type");
+        String clazz = "short_list";
         delUnusedAttrs(json);
 
         JSONArray args = new JSONArray();
@@ -173,7 +173,7 @@ public class ShortListDB extends LmisDatabase {
         JSONArray arr = json.getJSONArray("scan_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
-            line.remove("scan_header_id");
+            line.remove("short_list_id");
             line.remove("barcode");
         }
 

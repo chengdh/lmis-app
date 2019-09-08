@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_short_list_upload"
         android:icon="@drawable/ic_action_upload"
-        android:showAsAction="always"
-        android:title="上传至服务器">
+        android:title="上传至服务器"
+        android:showAsAction="always">
     </item>
 </menu>
