@@ -44,7 +44,7 @@ public class ShortListDB extends LmisDatabase {
 
         //司机姓名
         cols.add(new LmisColumn("driver", "driver name", LmisFields.varchar(30)));
-       //司机电话
+        //司机电话
         cols.add(new LmisColumn("mobile", "mobile", LmisFields.varchar(30)));
         //发货地
         cols.add(new LmisColumn("from_org_id", "From Org", LmisFields.manyToOne(new OrgDB(mContext))));
@@ -66,7 +66,7 @@ public class ShortListDB extends LmisDatabase {
         //上传时间
         cols.add(new LmisColumn("process_datetime", "process time", LmisFields.varchar(20), false));
         //明细
-        cols.add(new LmisColumn("scan_lines", "Scan Lines", LmisFields.oneToMany(new ShortListLineDB(mContext))));
+        cols.add(new LmisColumn("carrying_bills", "carrying bills", LmisFields.oneToMany(new ShortListLineDB(mContext))));
         //货物件数
         cols.add(new LmisColumn("sum_goods_count", "sum goods count", LmisFields.integer(), false));
 
@@ -94,6 +94,7 @@ public class ShortListDB extends LmisDatabase {
         args.put(json);
         Lmis instance = getLmisInstance();
 
+        json.put("state", "billed");
         json.remove("id");
         JSONObject result = instance.callMethod(clazz, "create_and_process", args, null);
         JSONObject sh = result.getJSONObject("result");
@@ -147,16 +148,14 @@ public class ShortListDB extends LmisDatabase {
 
         Lmis instance = getLmisInstance();
 
-        String clazz = row.getString("op_type");
         int serverId = row.getInt("server_id");
         JSONArray args = new JSONArray();
 
-        JSONObject result = instance.callMethod(clazz, "ship", args, serverId);
+        JSONObject result = instance.callMethod("ShortList", "process", args, serverId);
         LmisValues v = new LmisValues();
         v.put("processed", "shipped");
         v.put("process_datetime", new Date());
         update(v, id);
-
     }
 
     /**
@@ -165,16 +164,30 @@ public class ShortListDB extends LmisDatabase {
      * @param json the json
      */
     private void delUnusedAttrs(JSONObject json) throws JSONException {
+        json.remove("id");
         json.remove("processed");
         json.remove("process_datetime");
-        json.remove("op_type");
         json.remove("sum_bills_count");
         json.remove("sum_goods_count");
-        JSONArray arr = json.getJSONArray("scan_lines_attributes");
+        JSONArray arr = json.getJSONArray("carrying_bills_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
+            String carrying_bill_id = line.getString("carrying_bill_id");
+            line.put("id", carrying_bill_id);
             line.remove("short_list_id");
             line.remove("barcode");
+            line.remove("carrying_bill_id");
+            line.remove("qty");
+            line.remove("from_org_id");
+            line.remove("to_org_id");
+            line.remove("bill_no");
+            line.remove("from_org_name");
+            line.remove("to_org_name");
+            line.remove("carrying_fee");
+            line.remove("goods_fee");
+            line.remove("goods_info");
+            line.remove("goods_num");
+
         }
 
     }

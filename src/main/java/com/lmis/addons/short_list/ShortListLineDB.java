@@ -31,6 +31,17 @@ public class ShortListLineDB extends LmisDatabase {
         cols.add(new LmisColumn("carrying_bill_id", "carrying_bill_id", LmisFields.integer()));
         cols.add(new LmisColumn("from_org_id", "from org id", LmisFields.integer()));
         cols.add(new LmisColumn("to_org_id", "to org id", LmisFields.integer()));
+
+        cols.add(new LmisColumn("from_org_name", "from_org_name", LmisFields.varchar(60)));
+        cols.add(new LmisColumn("to_org_name", "to_org_name", LmisFields.varchar(60)));
+
+        cols.add(new LmisColumn("bill_no", "to org id", LmisFields.varchar(60)));
+        cols.add(new LmisColumn("carrying_fee", "carrying_fee", LmisFields.integer()));
+        cols.add(new LmisColumn("goods_fee", "goods fee", LmisFields.integer()));
+
+        cols.add(new LmisColumn("goods_info", "goods info", LmisFields.integer()));
+        cols.add(new LmisColumn("goods_num", "goods num", LmisFields.integer()));
+
         cols.add(new LmisColumn("qty", "Quantity", LmisFields.integer()));
         cols.add(new LmisColumn("goods_status_type", "goods status type", LmisFields.integer()));
         cols.add(new LmisColumn("goods_status_note", "goods status note", LmisFields.varchar(60)));

@@ -86,6 +86,7 @@ public class ShortListNew extends BaseFragment {
         } else {
             mShortList = new LmisDataRow();
             mShortList.put("from_org_id", currentUser.getDefault_org_id());
+            mShortList.put("user_id", currentUser.getUser_id());
         }
 
     }
@@ -178,14 +179,13 @@ public class ShortListNew extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_short_list_upload:
                 if (validateBeforeUpload()) {
-                    if(save2DB()) {
+                    if (save2DB()) {
                         mUploadAsync = new Uploader();
                         mUploadAsync.execute((Void) null);
                         return true;
                     }
-                }
-                else {
-                    Toast.makeText(scope.context(),"保存数据失败!",Toast.LENGTH_SHORT);
+                } else {
+                    Toast.makeText(scope.context(), "保存数据失败!", Toast.LENGTH_SHORT);
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -246,6 +246,7 @@ public class ShortListNew extends BaseFragment {
             row.put("mobile", mShortList.get("mobile"));
 
             row.put("processed", false);
+            row.put("user_id", mShortList.getString("user_id"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
@@ -266,18 +267,33 @@ public class ShortListNew extends BaseFragment {
                 String carrying_bill_id = ((JSONObject) o).getString("id");
                 String from_org_id = ((JSONObject) o).getString("from_org_id");
                 String to_org_id = ((JSONObject) o).getString("to_org_id");
+                String bill_no = ((JSONObject) o).getString("bill_no");
+                String from_org_name = ((JSONObject) o).getString("from_org_name");
+                String to_org_name = ((JSONObject) o).getString("to_org_name");
+                String carrying_fee = ((JSONObject) o).getString("carrying_fee");
+                String goods_fee = ((JSONObject) o).getString("goods_fee");
+                String goods_info = ((JSONObject) o).getString("goods_info");
                 String goods_num = ((JSONObject) o).getString("goods_num");
+
                 LmisValues lineValue = new LmisValues();
                 lineValue.put("short_list_id", mShortListId);
                 lineValue.put("carrying_bill_id", carrying_bill_id);
                 lineValue.put("from_org_id", from_org_id);
                 lineValue.put("to_org_id", to_org_id);
+                lineValue.put("from_org_name", from_org_name);
+                lineValue.put("to_org_name", to_org_name);
+                lineValue.put("bill_no", bill_no);
+                lineValue.put("carrying_fee", carrying_fee);
+                lineValue.put("goods_fee", goods_fee);
+                lineValue.put("goods_info", goods_info);
+                lineValue.put("goods_num", goods_num);
+
                 lineValue.put("qty", goods_num);
+                lineValue.put("barcode", goods_num);
                 lineDB.create(lineValue);
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
                 ret = false;
-                Log.e(TAG,ex.getMessage());
+                Log.e(TAG, ex.getMessage());
             }
 
         }

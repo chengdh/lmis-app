@@ -62,9 +62,9 @@ public class ShortListDetail extends BaseFragment {
 
     //已扫描的条码列表
     @InjectView(R.id.listview_bills)
-    ListView mListScanedBills;
-    LmisListAdapter mScanedBillsAdapter = null;
-    List<Object> mScanedBillsObjects = null;
+    ListView mListBills;
+    LmisListAdapter mBillsAdapter = null;
+    List<Object> mBillsObjects = null;
 
     View mView = null;
     Menu mMenu;
@@ -72,8 +72,6 @@ public class ShortListDetail extends BaseFragment {
     LmisDataRow mShortList = null;
 
     SearchView mSearchViewBarcodeList;
-
-    String mOpType = null;
 
     ProcessSendder mProcessSenderAsync = null;
 
@@ -86,10 +84,11 @@ public class ShortListDetail extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        mView = inflater.inflate(R.layout.fragment_scan_header_detail, container, false);
+        mView = inflater.inflate(R.layout.fragment_short_list_detail, container, false);
 
         ButterKnife.inject(this, mView);
         initData();
+        initBillsList();
         return mView;
     }
 
@@ -104,16 +103,12 @@ public class ShortListDetail extends BaseFragment {
         inflater.inflate(R.menu.menu_fragment_scan_header_detail, menu);
         mMenu = menu;
         mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_scan_header_detail_search).getActionView();
-        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mScanedBillsAdapter));
+        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
 
 
         MenuItem item = menu.findItem(R.id.menu_scan_header_detail_send);
         String state = mShortList.getString("processed");
-        if ((mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) && state.equals("true")) {
-            item.setVisible(true);
-        } else {
-            item.setVisible(false);
-        }
+        item.setVisible(true);
     }
 
     private void setShipMenuItemVisible(boolean visible) {
@@ -128,8 +123,7 @@ public class ShortListDetail extends BaseFragment {
         Log.d(TAG, "ShortListDetail#initData");
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mOpType = bundle.getString("type");
-            mId = bundle.getInt("scan_header_id");
+            mId = bundle.getInt("short_list_id");
             mShortList = new ShortListDB(scope.context()).select(mId);
             LmisDataRow fromOrg = mShortList.getM2ORecord("from_org_id").browse();
             LmisDataRow toOrg = mShortList.getM2ORecord("to_org_id").browse();
@@ -147,58 +141,15 @@ public class ShortListDetail extends BaseFragment {
             String describe = String.format("共%d票%d件", billsCount, goodsCount);
             String billDate = mShortList.getString("bill_date");
             String fromTo = String.format("%s 至 %s", fromOrgName, toOrgName);
-            String vNo = mShortList.getString("v_no");
-            String driverName = mShortList.getString("driver_name");
+            String vNo = mShortList.getString("vehicle_no");
+            String driverName = mShortList.getString("driver");
             String mobile = mShortList.getString("mobile");
-            String idNo = mShortList.getString("id_no");
             mTxvTitle.setText(fromTo);
             mTxvBillDate.setText(billDate);
             mTxvSubTitle.setText(describe);
             mTxvVNo.setText(vNo);
             mTxvDriverName.setText(String.format("%s(%s)", driverName, mobile));
-            if (mOpType.equals(ScanHeaderOpType.SUB_BRANCH) || mOpType.equals(ScanHeaderOpType.LOAD_OUT) || mOpType.equals(ScanHeaderOpType.INNER_TRANSIT_LOAD_OUT) || mOpType.equals(ScanHeaderOpType.LOCAL_TOWN_LOAD_OUT)) {
-                mLayoutSubtitle.setVisibility(View.VISIBLE);
-            } else {
-                mLayoutSubtitle.setVisibility(View.GONE);
-            }
 
-            mScanedBillsObjects = new ArrayList<Object>(mShortList.getO2MRecord("scan_lines").browseEach());
-            mScanedBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_scan_header_list_bills_item, mScanedBillsObjects) {
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View mView = convertView;
-                    ViewHolderForBillsList holder;
-                    if (mView == null) {
-                        mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_scan_header_list_bills_item, parent, false);
-                        holder = new ViewHolderForBillsList(mView);
-                        mView.setTag(holder);
-                    } else {
-                        holder = (ViewHolderForBillsList) mView.getTag();
-                    }
-                    LmisDataRow line = (LmisDataRow) mScanedBillsObjects.get(position);
-                    String billNo = line.getString("barcode");
-                    int qty = line.getInt("qty");
-
-
-                    int goodsStatusType = 0;
-                    if (line.get("goods_status_type") != null) {
-                        goodsStatusType = line.getInt("goods_status_type");
-                    }
-                    String goodsStatusNote = "";
-                    if (line.get("goods_status_note") != null) {
-                        goodsStatusNote = line.getString("goods_status_note");
-                    }
-                    holder.txvBillNo.setText(billNo);
-                    holder.txvGoodsStatusType.setText(GoodsStatus.statusList().get(goodsStatusType));
-                    holder.txvGoodsStatusNote.setText(goodsStatusNote);
-                    holder.txvBillNo.setText(billNo);
-                    holder.txvBarcodeCount.setText(qty + "件");
-                    return mView;
-                }
-
-            };
-            mListScanedBills.setAdapter(mScanedBillsAdapter);
-            mListScanedBills.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
         }
     }
 
@@ -211,18 +162,71 @@ public class ShortListDetail extends BaseFragment {
         @InjectView(R.id.txv_bill_no)
         TextView txvBillNo;
         //描述信息
-        @InjectView(R.id.txv_barcode_count)
-        TextView txvBarcodeCount;
+        @InjectView(R.id.txv_goods_num)
+        TextView txvGoodsNum;
 
-        @InjectView(R.id.txv_goods_status_type)
-        TextView txvGoodsStatusType;
+        @InjectView(R.id.txv_goods_info)
+        TextView txvGoodsInfo;
 
-        @InjectView(R.id.txv_goods_status_note)
-        TextView txvGoodsStatusNote;
+        @InjectView(R.id.txv_from_to)
+        TextView txvFromTo;
+
 
         public ViewHolderForBillsList(View view) {
             ButterKnife.inject(this, view);
         }
+    }
+
+
+    /**
+     * 初始化票据列表.
+     */
+    private void initBillsList() {
+        Log.d(TAG, "FragmentBillList#initBillList");
+
+
+        mBillsObjects = new ArrayList<Object>(mShortList.getO2MRecord("carrying_bills").browseEach());
+
+        mBillsAdapter = new LmisListAdapter(scope.context(), R.layout.fragment_short_list_new_list_bills_item, mBillsObjects) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View mView = convertView;
+                ViewHolderForBillsList holder;
+                if (mView == null) {
+                    mView = getActivity().getLayoutInflater().inflate(R.layout.fragment_short_list_new_list_bills_item, parent, false);
+                    holder = new ViewHolderForBillsList(mView);
+                    mView.setTag(holder);
+                } else {
+                    holder = (ViewHolderForBillsList) mView.getTag();
+                }
+
+
+                LmisDataRow bill = (LmisDataRow) mBillsObjects.get(position);
+                try {
+                    String billNo = bill.getString("bill_no");
+                    String fromOrg = bill.getString("from_org_name");
+                    String toOrg = bill.getString("to_org_name");
+                    String carryingFee = bill.getString("carrying_fee");
+                    String goodsFee = bill.getString("goods_fee");
+                    String goodsInfo = bill.getString("goods_info");
+                    String goodsNum = bill.getString("goods_num");
+
+                    String fromTo = String.format("%s 至 %s", fromOrg, toOrg);
+
+                    holder.txvBillNo.setText(billNo);
+                    holder.txvFromTo.setText(fromTo);
+                    holder.txvGoodsInfo.setText(goodsInfo);
+                    holder.txvGoodsNum.setText(goodsNum);
+                } catch (Exception ex) {
+                    Log.d(TAG, ex.toString());
+                }
+
+                return mView;
+            }
+
+        };
+        mListBills.setAdapter(mBillsAdapter);
+        mListBills.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
     }
 
 
@@ -279,12 +283,10 @@ public class ShortListDetail extends BaseFragment {
                 Toast.makeText(scope.context(), "发车处理成功!", Toast.LENGTH_SHORT).show();
                 setShipMenuItemVisible(false);
                 DrawerListener drawer = scope.main();
-                drawer.refreshDrawer(mOpType);
                 //返回已处理界面
                 ShortListList list = new ShortListList();
                 Bundle arg = new Bundle();
-                arg.putString("type", mOpType);
-                arg.putString("state", "shipped");
+                arg.putString("state", "loaded");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
 

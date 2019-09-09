@@ -104,9 +104,21 @@ public class FragmentVehicleForm extends BaseFragment {
 
             }
         }
-        mEdtDriverName.setText(mShortList.getString("driver_name"));
-        mEdtVNo.setText(mShortList.getString("v_no"));
-        mEdtMobile.setText(mShortList.getString("mobile"));
+        String driverName = mShortList.getString("driver");
+        String vehicleNo = mShortList.getString("vehicle_no");
+        String mobile = mShortList.getString("mobile");
+
+        if(!driverName.equals("false")) {
+            mEdtDriverName.setText(driverName);
+        }
+
+        if(!vehicleNo.equals("false")) {
+            mEdtVNo.setText(vehicleNo);
+        }
+
+        if(!mobile.equals("false")) {
+            mEdtMobile.setText(mobile);
+        }
         mSpinnerYardsOrgSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

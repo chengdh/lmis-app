@@ -303,8 +303,9 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
                 break;
             case LOADED:
                 where += " AND processed = ? ";
-                whereArgs[0] = "loaded";
+                whereArgs[0] = "true";
                 break;
+            //TODO 以下状态未处理
             case SHIPPED:
                 where += " AND processed = ? ";
                 whereArgs[0] = "shipped";
@@ -348,9 +349,9 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
 
         OrgDB db = new OrgDB(context);
 
-        String groupTitle = "分理处短驳";
+        String groupTitle = "短驳单";
 
-        String draftTitle = "待处理";
+        String draftTitle = "草稿";
 
         String loadedTitle = "已装车";
 
@@ -359,7 +360,8 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
 
         drawerItems.add(new DrawerItem("short_lists", groupTitle, true));
         drawerItems.add(new DrawerItem("short_lists", draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
+        drawerItems.add(new DrawerItem("shoft_lists", loadedTitle, count(MState.LOADED, context), R.drawable.ic_action_archive, getFragment("loaded")));
+//        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
         return drawerItems;
     }
 
