@@ -31,7 +31,6 @@ import com.lmis.support.LmisUser;
 import com.lmis.util.LmisDate;
 import com.lmis.util.PreferenceManager;
 
-import org.apache.http.client.ClientProtocolException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class LmisHelper extends Lmis {
     }
 
     public LmisHelper(Context context, String host)
-            throws ClientProtocolException, JSONException, IOException,
+            throws JSONException, IOException,
             LmisVersionException {
         super(host);
         mContext = context;

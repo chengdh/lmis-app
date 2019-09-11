@@ -88,7 +88,7 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
+       setHasOptionsMenu(true);
         mView = inflater.inflate(R.layout.fragment_inventory_out_barcode_list, container, false);
         ButterKnife.inject(this, mView);
         mBus.register(this);

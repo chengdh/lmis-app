@@ -31,10 +31,15 @@ public class InventoryLineDB extends LmisDatabase {
         //主表id
         cols.add(new LmisColumn("load_list_with_barcode_id","Master Inventory", LmisFields.integer(20)));
         //扫描的barcode
-        cols.add(new LmisColumn("barcode","barcode", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("barcode","barcode", LmisFields.varchar(30)));
         cols.add(new LmisColumn("state", "state", LmisFields.varchar(20)));
+        cols.add(new LmisColumn("note", "note", LmisFields.varchar(200)));
         //手动全部出入库标记,用于标明用户是否手动将该条码关联的运单货物全部入库
         cols.add(new LmisColumn("manual_set_all","manual_set_all", LmisFields.integer(),false));
+
+        //上传的异常照片
+        cols.add(new LmisColumn("goods_photo_1", "Photo1", LmisFields.blob(),false));
+        cols.add(new LmisColumn("goods_photo_2", "Photo2", LmisFields.blob(),false));
 
         return cols;
     }

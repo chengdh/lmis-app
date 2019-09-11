@@ -32,10 +32,10 @@ public class CarryingBillPrintCpcl {
      * @param user
      */
     public static void print(Context ctx, LmisDataRow bill, LmisUser user, Boolean rePrint) {
-        String devAddress = BlueTooth.getAddress("CS3_8751");
-        if (devAddress == null) {
-            return;
-        }
+//        String devAddress = BlueTooth.getAddress("CS3_3535");
+//        if (devAddress == null) {
+//            return;
+//        }
 
 //        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(ctx);
 //        zpSDK.connect(devAddress);
@@ -81,7 +81,7 @@ public class CarryingBillPrintCpcl {
 
     //打印运单
     public static void printCarryingBill(Context ctx, LmisDataRow bill, LmisUser user, Boolean rePrint) {
-        String devAddress = BlueTooth.getAddress("CS3_8751");
+        String devAddress = BlueTooth.getAddress("CS3_3535");
         if (devAddress == null) {
             return;
         }
@@ -199,7 +199,7 @@ public class CarryingBillPrintCpcl {
 
     //打印运单第二联
     public static void printCarryingBillSecondPage(Context ctx, LmisDataRow bill, LmisUser user, Boolean rePrint) {
-        String devAddress = BlueTooth.getAddress("CS3_8751");
+        String devAddress = BlueTooth.getAddress("CS3_3535");
         if (devAddress == null) {
             return;
         }

@@ -17,6 +17,7 @@ import com.lmis.addons.goods_exception.GoodsExceptionView;
 import com.lmis.addons.idea.Idea;
 import com.lmis.addons.inventory.FragmentBarcodeList;
 import com.lmis.addons.inventory.FragmentBillList;
+import com.lmis.addons.inventory.FragmentInventoryMoveVehicleForm;
 import com.lmis.addons.inventory.FragmentScanBarcode;
 import com.lmis.addons.inventory.InventoryMove;
 import com.lmis.addons.inventory.InventoryMoveList;
@@ -83,7 +84,8 @@ import dagger.Provides;
                 ShortListNew.class,
                 ShortListDetail.class,
                 com.lmis.addons.short_list.FragmentVehicleForm.class,
-                com.lmis.addons.short_list.FragmentBillList.class
+                com.lmis.addons.short_list.FragmentBillList.class,
+                FragmentInventoryMoveVehicleForm.class
 
         })
 public class FragmentModule {

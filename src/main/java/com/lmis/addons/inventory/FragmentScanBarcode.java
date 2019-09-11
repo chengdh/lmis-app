@@ -99,16 +99,16 @@ public class FragmentScanBarcode extends BaseFragment {
         this.mBarcodeParser = mBarcodeParser;
     }
 
-    public LmisDataRow getmInventoryOut() {
-        return mInventoryOut;
+    public LmisDataRow getmInventoryMove() {
+        return mInventoryMove;
     }
 
-    public void setmInventoryOut(LmisDataRow mInventoryOut) {
-        this.mInventoryOut = mInventoryOut;
+    public void setmInventoryMove(LmisDataRow mInventoryMove) {
+        this.mInventoryMove = mInventoryMove;
     }
 
     BarcodeParser mBarcodeParser = null;
-    LmisDataRow mInventoryOut = null;
+    LmisDataRow mInventoryMove = null;
 
 
     @Override
@@ -126,8 +126,8 @@ public class FragmentScanBarcode extends BaseFragment {
         if (mBarcodeParser.getmMoveId() > 0) {
             //refresh mInventoryMove
             LmisDatabase db = new InventoryMoveDB(scope.context());
-            mInventoryOut = db.select(mBarcodeParser.getmMoveId());
-            LmisDataRow toOrg = mInventoryOut.getM2ORecord("to_org_id").browse();
+            mInventoryMove = db.select(mBarcodeParser.getmMoveId());
+            LmisDataRow toOrg = mInventoryMove.getM2ORecord("to_org_id").browse();
             ArrayAdapter adapter = (ArrayAdapter) mSpinnerYardsSelect.getAdapter();
             int pos = adapter.getPosition(toOrg);
             mSpinnerYardsSelect.setSelection(pos);
@@ -163,12 +163,12 @@ public class FragmentScanBarcode extends BaseFragment {
             public void onTextChanged(CharSequence s, int i, int i2, int i3) {
                 String barcode = mEdtScanBarcode.getText().toString();
 
-                if (barcode.length() == 16) {
+                if (barcode.length() == 21) {
                     try {
                         mBarcodeParser.addBarcode(s.toString());
-                        if (mInventoryOut == null) {
+                        if (mInventoryMove == null) {
                             LmisDatabase db = new InventoryMoveDB(scope.context());
-                            mInventoryOut = db.select(mBarcodeParser.getmMoveId());
+                            mInventoryMove = db.select(mBarcodeParser.getmMoveId());
                         }
                         mEdtScanBarcode.setText("");
                         DrawerListener drawer = scope.main();
@@ -194,7 +194,7 @@ public class FragmentScanBarcode extends BaseFragment {
             }
         });
         mEdtScanBarcode.requestFocus();
-        //
+
         mBtnAllScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

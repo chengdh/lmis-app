@@ -48,6 +48,7 @@ public class ModulesConfig extends ModulesConfigHelper {
 //        add(new Module("module_inventory_out", "Inventory Out", new InventoryMoveList(), 0), true);
         add(new Module("module_goods_exception", "Goods Exception", new GoodsExceptionList(), 0), true);
         add(new Module("module_short_list", "short list", new ShortListList(), 0), true);
+        add(new Module("module_inventory_move_list", "inventory move list", new InventoryMoveList(), 0), true);
 //        add(new Module("module_dashboard", "Dashboard", new DashBoard(), 0), true);
 //        ShortListList scanHeaderSortingIn = new ShortListList();
 //        scanHeaderSortingIn.setmCurrentType(ScanHeaderOpType.SORTING_IN);

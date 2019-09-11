@@ -25,31 +25,37 @@ public class InventoryMovePagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
-                FragmentScanBarcode f = new FragmentScanBarcode();
-                f.setmBarcodeParser(mBarcodeParser);
-                f.setmInventoryOut(mInventoryOut);
-                return f;
-            case 1:
-                FragmentBillList f1 = new FragmentBillList();
-                f1.setmBarcodeParser(mBarcodeParser);
-                return f1;
 
+            case 0:
+                FragmentInventoryMoveVehicleForm f0 = new FragmentInventoryMoveVehicleForm();
+                f0.setmBarcodeParser(mBarcodeParser);
+                f0.setmInventoryMove(mInventoryOut);
+                return f0;
+            case 1:
+                FragmentScanBarcode f1 = new FragmentScanBarcode();
+                f1.setmBarcodeParser(mBarcodeParser);
+                f1.setmInventoryMove(mInventoryOut);
+                return f1;
             case 2:
-                FragmentBarcodeList f2 = new FragmentBarcodeList();
+                FragmentBillList f2 = new FragmentBillList();
                 f2.setmBarcodeParser(mBarcodeParser);
                 return f2;
-            default:
-                FragmentScanBarcode f3 = new FragmentScanBarcode();
+
+            case 3:
+                FragmentBarcodeList f3 = new FragmentBarcodeList();
                 f3.setmBarcodeParser(mBarcodeParser);
-                f3.setmInventoryOut(mInventoryOut);
                 return f3;
+            default:
+                FragmentScanBarcode f4 = new FragmentScanBarcode();
+                f4.setmBarcodeParser(mBarcodeParser);
+                f4.setmInventoryMove(mInventoryOut);
+                return f4;
 
         }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }

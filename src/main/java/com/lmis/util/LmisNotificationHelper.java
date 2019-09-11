@@ -42,8 +42,6 @@ public class LmisNotificationHelper {
         if (notificationIntent != null) {
             notification.defaults |= Notification.DEFAULT_VIBRATE;
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
-            notification.setLatestEventInfo(context, title, subtitle,
-                    pendingIntent);
         }
         mNotifyManager.notify(0, notification);
     }
@@ -58,7 +56,7 @@ public class LmisNotificationHelper {
         this.notificationIntent = intent;
         pendingIntent = PendingIntent.getActivity(context, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
-                        | Notification.FLAG_AUTO_CANCEL
+                        | PendingIntent.FLAG_ONE_SHOT
         );
     }
 }

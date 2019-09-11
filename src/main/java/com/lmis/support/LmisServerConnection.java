@@ -26,12 +26,6 @@ import com.lmis.Lmis;
 import com.lmis.LmisVersionException;
 import com.lmis.auth.LmisAccountManager;
 
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-
 /**
  * The Class LmisServerConnection.
  */

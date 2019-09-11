@@ -8,10 +8,11 @@ buildscript {
             name 'Google'
         }
         jcenter()
+        google()
     }
     dependencies {
         classpath 'org.batcha.gradle.plugins:git-dependencies:0.2'
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
     }
 }
 repositories {
@@ -33,63 +34,65 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile 'us.monoid.web:resty:0.3.2'
-    compile 'com.edmodo:rangebar:1.0.0'
+    implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'us.monoid.web:resty:0.3.2'
+    implementation 'com.edmodo:rangebar:1.0.0'
     //DI 框架
-    compile 'com.squareup.dagger:dagger:1.2.1'
+    implementation 'com.squareup.dagger:dagger:1.2.1'
     annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.1'
-    compile 'com.squareup.dagger:dagger-compiler:1.2.1'
+    implementation 'com.squareup.dagger:dagger-compiler:1.2.1'
 
     //Android view 注入框架
 
     annotationProcessor 'com.jakewharton:butterknife:5.1.0'
-    compile 'com.jakewharton:butterknife:5.1.0'
+    implementation 'com.jakewharton:butterknife:5.1.0'
 
     //event bus
-    compile 'com.squareup:otto:1.3.4'
+    implementation 'com.squareup:otto:1.3.4'
 
     //pulltorefresh
-    compile 'com.github.chrisbanes.pulltorefresh:library:2.1.2-SNAPSHOT@aar'
+    implementation 'com.github.chrisbanes.pulltorefresh:library:2.1.2-SNAPSHOT@aar'
 
 
-    compile('com.github.snowdream.android.app:updater:1.0@aar') {
+    implementation('com.github.snowdream.android.app:updater:1.0@aar') {
         exclude group: 'com.android.support'
         transitive = true
     }
-    compile('com.android.support:support-v4:19.0.+')
-    compile('com.android.support:appcompat-v7:19.0.+')
+    implementation('com.android.support:support-v4:19.0')
+    implementation('com.android.support:appcompat-v7:19.0')
 
     //crosswalker
-    compile 'org.xwalk:xwalk_core_library:10.39.235.15'
+    implementation 'org.xwalk:xwalk_core_library:10.39.235.15'
 
     //添加图标
-    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.0.9' // (v4.4)
-    compile 'com.joanzapata.iconify:android-iconify-entypo:2.0.9' // (v3,2015)
-    compile 'com.joanzapata.iconify:android-iconify-typicons:2.0.9' // (v2.0.7)
-    compile 'com.joanzapata.iconify:android-iconify-material:2.0.9' // (v2.0.0)
-    compile 'com.joanzapata.iconify:android-iconify-material-community:2.0.9' // (v1.2.65)
-    compile 'com.joanzapata.iconify:android-iconify-meteocons:2.0.9' // (latest)
-    compile 'com.joanzapata.iconify:android-iconify-weathericons:2.0.9' // (v2.0)
-    compile 'com.joanzapata.iconify:android-iconify-simplelineicons:2.0.9' // (v1.0.0)
-    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.0.9' // (v2.0.1)
-    compile 'com.github.stuxuhai:jpinyin:1.1.7'
-    compile 'com.github.rajasharan:SearchableSpinner:master'
+    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.0.9' // (v4.4)
+    implementation 'com.joanzapata.iconify:android-iconify-entypo:2.0.9' // (v3,2015)
+    implementation 'com.joanzapata.iconify:android-iconify-typicons:2.0.9' // (v2.0.7)
+    implementation 'com.joanzapata.iconify:android-iconify-material:2.0.9' // (v2.0.0)
+    implementation 'com.joanzapata.iconify:android-iconify-material-community:2.0.9' // (v1.2.65)
+    implementation 'com.joanzapata.iconify:android-iconify-meteocons:2.0.9' // (latest)
+    implementation 'com.joanzapata.iconify:android-iconify-weathericons:2.0.9' // (v2.0)
+    implementation 'com.joanzapata.iconify:android-iconify-simplelineicons:2.0.9' // (v1.0.0)
+    implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.0.9' // (v2.0.1)
+    implementation 'com.github.stuxuhai:jpinyin:1.1.7'
+    implementation 'com.github.rajasharan:SearchableSpinner:master'
+    implementation files('libs/bluetooth.jar')
+    implementation files('libs/fb-android-dagger-1.0.3.jar')
 
-    compile files('libs/fb-android-dagger-1.0.3.jar', 'libs/bluetooth.jar','libs/zp_cpcl_new.jar')
+    implementation files('libs/zp_cpcl_new.jar')
 
-    androidTestCompile 'junit:junit:4.11'
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    androidTestImplementation 'junit:junit:4.11'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'org.mockito:mockito-core:1.9.5'
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
 //        applicationId "com.lmis.scanv2"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 28
         versionCode 7
         versionName '1.7'
         javaCompileOptions {
@@ -105,7 +108,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('/Users/chengdh/.keystore/my-android-app-key.keystore')
+            storeFile file('/Users/chengdongh/my-android-app-key.keystore')
             storePassword 'yesnoyesno'
             keyAlias 'cheng-app'
             keyPassword 'yesnoyesno'

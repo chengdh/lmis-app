@@ -74,10 +74,17 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
     /**
      * 单据类型.
-     * 分理处盘货单/货场确认单/货场发货单/分公司确认单
+     * 分理处盘货单-BRANCH_OUT
+     * 货场确认单-YARD_CONFIRM
+     * 货场入库单-YARD_IN
+     * 货场分拣单-YARD_SORT  #TODO
+     * 货场发货单-YARD_OUT
+     * 分公司入库单-BRANCH_IN #TODO
+     * 分公司确认单-BRANCH_CONFIRM
+     * YARD_IN与YARD_CONFIRM的区别是YARD_IN是扫描入库，YARD_CONFIRM是对原来BRANCH_OUT的确认
      */
     private enum MType {
-        BRANCH_OUT, YARD_CONFIRM, YARD_OUT, BRANCH_CONFIRM
+        BRANCH_OUT, YARD_CONFIRM,YARD_IN,YARD_SORT, YARD_OUT, BRANCH_CONFIRM
     }
 
     MType mType = MType.BRANCH_OUT;
@@ -629,15 +636,17 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
         for (int position : mMultiSelectedRows.keySet()) {
-            LmisDataRow inventoryOut = (LmisDataRow) mInventoryObjects.get(position);
-            delObjs.add(inventoryOut);
-            int id = inventoryOut.getInt("id");
-            db().delete(id);
-            InventoryLineDB ldb = new InventoryLineDB(scope.context());
-            String where = "load_list_with_barcode_id = ?";
-            String[] whereArgs = new String[]{id + ""};
-            ldb.delete(where, whereArgs);
-            ret++;
+            if(position > 0) {
+                LmisDataRow inventoryOut = (LmisDataRow) mInventoryObjects.get(position - 1);
+                delObjs.add(inventoryOut);
+                int id = inventoryOut.getInt("id");
+                db().delete(id);
+                InventoryLineDB ldb = new InventoryLineDB(scope.context());
+                String where = "load_list_with_barcode_id = ?";
+                String[] whereArgs = new String[]{id + ""};
+                ldb.delete(where, whereArgs);
+                ret++;
+            }
         }
         mMultiSelectedRows.clear();
         mInventoryObjects.removeAll(delObjs);

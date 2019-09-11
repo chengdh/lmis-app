@@ -84,7 +84,7 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
         Bundle bundle = getArguments();
         if (bundle != null) {
             mOpType = bundle.getString("type");
-            if(bundle.containsKey("inventory_move_id")) {
+            if (bundle.containsKey("inventory_move_id")) {
                 mInventoryMoveId = bundle.getInt("inventory_move_id");
             }
         }
@@ -116,21 +116,6 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     private void initPager() {
         mPageAdapter = new InventoryMovePagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryMove);
         mPager.setAdapter(mPageAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mTabHost.setCurrentTab(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     /**
@@ -139,6 +124,8 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     private void initTabs() {
         mTabHost.setup();
         //TODO 此处加上tab图标
+
+        mTabHost.addTab(mTabHost.newTabSpec("TAB_VEHICLE_FORM").setIndicator("车辆信息").setContent(R.id.tab_blank));
         mTabHost.addTab(mTabHost.newTabSpec("TAB_SCAN_BARCODE").setIndicator("扫描条码").setContent(R.id.tab_blank));
         mTabHost.addTab(mTabHost.newTabSpec("TAB_BILLS_LIST").setIndicator("票据明细").setContent(R.id.tab_blank));
         mTabHost.addTab(mTabHost.newTabSpec("TAB_BARCODES_LIST").setIndicator("条码明细").setContent(R.id.tab_blank));
@@ -153,12 +140,14 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
      */
     @Override
     public void onTabChanged(String s) {
-        if (s.equals("TAB_SCAN_BARCODE")) {
+        if (s.equals("TAB_VEHICLE_FORM")) {
             mPager.setCurrentItem(0);
-        } else if (s.equals("TAB_BILLS_LIST")) {
+        } else if (s.equals("TAB_SCAN_BARCODE")) {
             mPager.setCurrentItem(1);
-        } else if (s.equals("TAB_BARCODES_LIST")) {
+        } else if (s.equals("TAB_BILLS_LIST")) {
             mPager.setCurrentItem(2);
+        } else if (s.equals("TAB_BARCODES_LIST")) {
+            mPager.setCurrentItem(3);
         }
     }
 
@@ -204,7 +193,7 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if(mBarcodeParser.getmMoveId() == -1){
+            if (mBarcodeParser.getmMoveId() == -1) {
                 return false;
             }
             try {

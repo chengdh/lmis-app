@@ -27,7 +27,7 @@ public class LabelPrint {
      * @param bill the bill
      */
     public static void print(Context ctx, LmisDataRow bill) {
-        String devAddress = BlueTooth.getAddress("CS3_8751");
+        String devAddress = BlueTooth.getAddress("CS3_3535");
         if (devAddress == null) {
             return;
         }
@@ -56,7 +56,7 @@ public class LabelPrint {
 
     //使用cpcl语言打印标签
     public static void printLabelCpcl(Context ctx, LmisDataRow bill, int maxLabelCount) {
-        String devAddress = BlueTooth.getAddress("CS3_8751");
+        String devAddress = BlueTooth.getAddress("CS3_3535");
         if (devAddress == null) {
             return;
         }

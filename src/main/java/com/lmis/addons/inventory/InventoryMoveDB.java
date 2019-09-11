@@ -48,7 +48,14 @@ public class InventoryMoveDB extends LmisDatabase {
 
         cols.add(new LmisColumn("bill_no", "bill_no", LmisFields.varchar(20)));
 
+        cols.add(new LmisColumn("driver", "driver", LmisFields.varchar(20)));
+
+        cols.add(new LmisColumn("vehicle_no", "vehicle_no", LmisFields.varchar(20)));
+
+        cols.add(new LmisColumn("mobile", "mobile", LmisFields.varchar(20)));
+
         cols.add(new LmisColumn("bill_date", "bill_date", LmisFields.varchar(20)));
+
 
         cols.add(new LmisColumn("note", "note", LmisFields.varchar(20)));
         cols.add(new LmisColumn("user_id", "user_id", LmisFields.integer(20)));
@@ -80,20 +87,20 @@ public class InventoryMoveDB extends LmisDatabase {
     public void save2server(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
         String opType = row.getString("op_type");
-        JSONObject json = row.exportAsJSON();
-        delUnusedAttrs(json);
+        JSONObject json = row.exportAsJSON(false);
 
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
         LmisUser user = LmisUser.current(mContext);
         if(opType.equals(InventoryMoveOpType.YARD_CONFIRM) || opType.equals(InventoryMoveOpType.BRANCH_CONFIRM)){
+            delUnusedAttrsForUpdate(json);
             json.put("confirmer_id",user.getUser_id());
             instance.callMethod("LoadListWithBarcode", "update_attributes", args, id);
             instance.callMethod("LoadListWithBarcode", "confirm", null, id);
         }
         else{
-            json.remove("id");
+            delUnusedAttrsForCreate(json);
             instance.callMethod("LoadListWithBarcode", "create", args, null);
         }
         LmisValues v = new LmisValues();
@@ -107,16 +114,28 @@ public class InventoryMoveDB extends LmisDatabase {
      *
      * @param json the json
      */
-    private void delUnusedAttrs(JSONObject json) throws JSONException {
+    private void delUnusedAttrsForCreate(JSONObject json) throws JSONException {
         json.remove("processed");
         json.remove("process_datetime");
         json.remove("op_type");
+        json.remove("id");
         JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
             line.remove("load_list_with_barcode_id");
         }
 
+    }
+    private void delUnusedAttrsForUpdate(JSONObject json) throws JSONException {
+        json.remove("processed");
+        json.remove("process_datetime");
+        json.remove("op_type");
+        json.remove("id");
+        JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject line = (JSONObject) arr.get(i);
+            line.put("state","confirmed");
+        }
     }
 
 }

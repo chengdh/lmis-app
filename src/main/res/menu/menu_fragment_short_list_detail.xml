@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/menu_short_list_detail_ship"
+        android:icon="@drawable/truck"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/scan_header_send"></item>
+
+        <item
+        android:id="@+id/menu_short_list_detail_print"
+        android:icon="@drawable/ic_action_print"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/scan_header_send"></item>
+
+
+    <!--<item-->
+        <!--android:id="@+id/menu_scan_header_detail_search"-->
+        <!--android:actionViewClass="android.widget.SearchView"-->
+        <!--android:icon="@drawable/ic_action_search"-->
+        <!--android:showAsAction="always|collapseActionView"-->
+        <!--android:title="@string/inventory_out_list_search"></item>-->
+</menu>

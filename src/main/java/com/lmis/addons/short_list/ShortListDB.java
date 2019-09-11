@@ -86,7 +86,7 @@ public class ShortListDB extends LmisDatabase {
      */
     public void save2server(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
-        JSONObject json = row.exportAsJSON();
+        JSONObject json = row.exportAsJSON(true);
         String clazz = "short_list";
         delUnusedAttrs(json);
 
@@ -116,7 +116,7 @@ public class ShortListDB extends LmisDatabase {
      */
     public void processLoad(int id) throws JSONException, IOException {
         LmisDataRow row = select(id);
-        JSONObject json = row.exportAsJSON();
+        JSONObject json = row.exportAsJSON(true);
         String clazz = json.getString("op_type");
         delUnusedAttrs(json);
 

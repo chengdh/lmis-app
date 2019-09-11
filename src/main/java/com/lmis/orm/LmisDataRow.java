@@ -1,20 +1,20 @@
 /*
  * OpenERP, Open Source Management Solution
  * Copyright (C) 2012-today OpenERP SA (<http:www.openerp.com>)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:www.gnu.org/licenses/>
- * 
+ *
  */
 package com.lmis.orm;
 
@@ -137,30 +137,30 @@ public class LmisDataRow {
     /**
      * 将数据转换为json
      *
+     * @param removeId
      * @return the jSON object
      * @throws JSONException the jSON exception
      */
-    public JSONObject exportAsJSON() throws JSONException {
+    public JSONObject exportAsJSON(boolean removeId) throws JSONException {
         JSONObject ret = new JSONObject();
         for (Map.Entry<String, Object> o : _data.entrySet()) {
             Object value = o.getValue();
             String key = o.getKey();
-            if (key == "id" || key == "oea_name")
+            if (key == "oea_name" || (key == "id" && removeId)) {
                 continue;
-
+            }
             if (value instanceof LmisM2ORecord) {
                 try {
                     LmisDataRow row = ((LmisM2ORecord) value).browse();
                     ret.put(key, row.getInt("id"));
-                }
-                catch(Exception ex){
+                } catch (Exception ex) {
                     ret.put(key, -1);
                 }
             } else if (value instanceof LmisO2MRecord) {
                 //对O2M循环处理
                 int i = 0;
                 for (LmisDataRow line : ((LmisO2MRecord) value).browseEach()) {
-                    JSONObject jsonLine = line.exportAsJSON();
+                    JSONObject jsonLine = line.exportAsJSON(removeId);
                     ret.append(key + "_attributes", jsonLine);
 
                 }
@@ -169,7 +169,7 @@ public class LmisDataRow {
                 int i = 0;
                 //对M2M循环处理
                 for (LmisDataRow line : ((LmisM2MRecord) value).browseEach()) {
-                    JSONObject jsonLine = line.exportAsJSON();
+                    JSONObject jsonLine = line.exportAsJSON(removeId);
                     ret.append(key + "_attributes", jsonLine);
                 }
             } else if (value instanceof byte[]) {

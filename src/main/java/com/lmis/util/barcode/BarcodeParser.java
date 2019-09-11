@@ -72,6 +72,44 @@ public abstract class BarcodeParser {
 
     protected String mOpType = null;
 
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public String getmVehicleNo() {
+        return mVehicleNo;
+    }
+
+    public void setmVehicleNo(String mVehicleNo) {
+        this.mVehicleNo = mVehicleNo;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    protected  String driver = null;
+    protected  String mVehicleNo = null;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    protected  String mobile= null;
+    protected  String note= null;
+
     /**
      * Instantiates a new Barcode parser.
      *
@@ -132,6 +170,11 @@ public abstract class BarcodeParser {
         if (mMoveId == -1) {
             row.put("from_org_id", mFromOrgID);
             row.put("to_org_id", mToOrgID);
+            row.put("driver", driver);
+            row.put("vehicle_no", mVehicleNo);
+            row.put("mobile", mobile);
+            row.put("note", note);
+
             row.put("processed", false);
             row.put("op_type", mOpType);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -405,6 +448,4 @@ public abstract class BarcodeParser {
     public int getmMoveId() {
         return mMoveId;
     }
-
-
 }

@@ -100,15 +100,7 @@ public class ShortListDetail extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_fragment_scan_header_detail, menu);
-        mMenu = menu;
-        mSearchViewBarcodeList = (SearchView) menu.findItem(R.id.menu_scan_header_detail_search).getActionView();
-        mSearchViewBarcodeList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));
-
-
-        MenuItem item = menu.findItem(R.id.menu_scan_header_detail_send);
-        String state = mShortList.getString("processed");
-        item.setVisible(true);
+        inflater.inflate(R.menu.menu_fragment_short_list_detail, menu);
     }
 
     private void setShipMenuItemVisible(boolean visible) {
@@ -243,9 +235,11 @@ public class ShortListDetail extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_scan_header_detail_send:
+            case R.id.menu_short_list_detail_ship:
                 mProcessSenderAsync = new ProcessSendder();
                 mProcessSenderAsync.execute((Void) null);
+                return true;
+            case R.id.menu_short_list_detail_print:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

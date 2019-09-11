@@ -110,7 +110,7 @@ public class GoodsInfo {
      * 验证barcode
      */
     public void validate() throws InvalidBarcodeException {
-        if ((mBarcode == null) || mBarcode.isEmpty() || mBarcode.length() != 16)
+        if ((mBarcode == null) || mBarcode.isEmpty() || mBarcode.length() != 21)
             throw new InvalidBarcodeException("条码格式不正确!");
     }
 
@@ -121,9 +121,9 @@ public class GoodsInfo {
         validate();
 
         mToOrgId = Integer.parseInt(mBarcode.substring(0, 3));
-        mBillNo = mBarcode.substring(3, 10);
-        mGoodsNum = Integer.parseInt(mBarcode.substring(10, 13));
-        mSeq = Integer.parseInt(mBarcode.substring(13));
+        mBillNo = mBarcode.substring(3, 15);
+        mGoodsNum = Integer.parseInt(mBarcode.substring(15, 18));
+        mSeq = Integer.parseInt(mBarcode.substring(18));
         getOrgName();
     }
 

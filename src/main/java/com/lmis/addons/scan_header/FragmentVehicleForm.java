@@ -34,7 +34,7 @@ import butterknife.InjectView;
  */
 public class FragmentVehicleForm extends BaseFragment {
 
-    public static final String TAG = "FragmentVehicleForm";
+    public static final String TAG = "FragmentInventoryMoveVehicleForm";
 
     String mOpType = ScanHeaderOpType.LOAD_OUT;
 
@@ -105,7 +105,7 @@ public class FragmentVehicleForm extends BaseFragment {
     }
 
     private void initData() {
-        Log.d(TAG, "FragmentVehicleForm#initData");
+        Log.d(TAG, "FragmentInventoryMoveVehicleForm#initData");
         if (mScanHeader != null) {
             //设置to_org_id spinner
             int toOrgID = mScanHeader.getM2ORecord("to_org_id").browse().getInt("id");

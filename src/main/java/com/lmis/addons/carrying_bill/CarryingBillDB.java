@@ -1,7 +1,6 @@
 package com.lmis.addons.carrying_bill;
 
 import android.content.Context;
-import android.net.wifi.WifiEnterpriseConfig;
 
 import com.lmis.Lmis;
 import com.lmis.base.org.OrgDB;
@@ -11,9 +10,6 @@ import com.lmis.orm.LmisDatabase;
 import com.lmis.orm.LmisFields;
 import com.lmis.orm.LmisValues;
 import com.lmis.util.StringHelper;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -170,7 +166,7 @@ public class CarryingBillDB extends LmisDatabase {
      * @throws JSONException the jSON exception
      */
     public void save2server(int id) throws JSONException, IOException {
-        JSONObject json = select(id).exportAsJSON();
+        JSONObject json = select(id).exportAsJSON(true);
         delUnusedAttr(json);
 
         JSONArray args = new JSONArray();

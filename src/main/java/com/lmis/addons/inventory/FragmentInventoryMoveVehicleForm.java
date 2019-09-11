@@ -1,23 +1,20 @@
-package com.lmis.addons.short_list;
+package com.lmis.addons.inventory;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
+import com.lmis.util.barcode.BarcodeParser;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 
@@ -32,9 +29,9 @@ import butterknife.InjectView;
  * 录入车辆信息
  * Created by chengdh on 14-9-14.
  */
-public class FragmentVehicleForm extends BaseFragment {
+public class FragmentInventoryMoveVehicleForm extends BaseFragment {
 
-    public static final String TAG = "FragmentInventoryMoveVehicleForm";
+    public static final String TAG = "FragmentInvMoveVehicleForm";
 
     @Inject
     Bus mBus;
@@ -46,36 +43,42 @@ public class FragmentVehicleForm extends BaseFragment {
     EditText mEdtNote;
 
 
-    @InjectView(R.id.edt_driver)
+    @InjectView(R.id.edt_driver_name)
     EditText mEdtDriverName;
 
     @InjectView(R.id.edt_mobile)
     EditText mEdtMobile;
 
-    @InjectView(R.id.spinner_yards_select)
-    Spinner mSpinnerYardsOrgSelect;
-
     View mView = null;
 
-    LmisDataRow mShortList = null;
+    LmisDataRow mInventoryMove = null;
 
-    public LmisDataRow getmShortList() {
-        return mShortList;
+    public BarcodeParser getmBarcodeParser() {
+        return mBarcodeParser;
     }
 
-    public void setmShortList(LmisDataRow mShortList) {
-        this.mShortList = mShortList;
+    public void setmBarcodeParser(BarcodeParser mBarcodeParser) {
+        this.mBarcodeParser = mBarcodeParser;
+    }
+
+    BarcodeParser mBarcodeParser = null;
+    public LmisDataRow getmInventoryMove() {
+        return mInventoryMove;
+    }
+
+    public void setmInventoryMove(LmisDataRow mInventoryMove) {
+        this.mInventoryMove = mInventoryMove;
     }
 
     @Override
     public Object databaseHelper(Context context) {
-        return new ShortListDB(context);
+        return new InventoryMoveDB(context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.fragment_short_list_form, container, false);
+        mView = inflater.inflate(R.layout.fragment_inventory_move_vehicle_form, container, false);
         ButterKnife.inject(this, mView);
         Bundle args = getArguments();
         mBus.register(this);
@@ -88,51 +91,14 @@ public class FragmentVehicleForm extends BaseFragment {
         return null;
     }
 
+    @SuppressLint("LongLogTag")
     private void initData() {
         Log.d(TAG, "FragmentInventoryMoveVehicleForm#initData");
-        if (mShortList != null && mShortList.get("id") != null) {
-            //设置to_org_id spinner
-            int toOrgID = mShortList.getM2ORecord("to_org_id").browse().getInt("id");
-
-            SpinnerAdapter adp = mSpinnerYardsOrgSelect.getAdapter();
-            for (int i = 0; i < adp.getCount(); i++) {
-                LmisDataRow r = (LmisDataRow) adp.getItem(i);
-                if (r.getInt("id") == toOrgID) {
-                    mSpinnerYardsOrgSelect.setSelection(i);
-                    mSpinnerYardsOrgSelect.setEnabled(false);
-                }
-
-            }
+        if (mInventoryMove != null) {
+            mEdtDriverName.setText(mInventoryMove.getString("driver"));
+            mEdtVNo.setText(mInventoryMove.getString("vehicle_no"));
+            mEdtMobile.setText(mInventoryMove.getString("mobile"));
         }
-        String driverName = mShortList.getString("driver");
-        String vehicleNo = mShortList.getString("vehicle_no");
-        String mobile = mShortList.getString("mobile");
-
-        if(!driverName.equals("false")) {
-            mEdtDriverName.setText(driverName);
-        }
-
-        if(!vehicleNo.equals("false")) {
-            mEdtVNo.setText(vehicleNo);
-        }
-
-        if(!mobile.equals("false")) {
-            mEdtMobile.setText(mobile);
-        }
-        mSpinnerYardsOrgSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerAdapter adp = mSpinnerYardsOrgSelect.getAdapter();
-                LmisDataRow r = (LmisDataRow) adp.getItem(position);
-                mShortList.put("to_org_id", r.getString("id"));
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         mEdtDriverName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -146,7 +112,32 @@ public class FragmentVehicleForm extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mShortList.put("driver", s.toString());
+
+                mBarcodeParser.setDriver(s.toString());
+                if (mInventoryMove != null) {
+                    mInventoryMove.put("driver", s.toString());
+                }
+
+            }
+        });
+        mEdtMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (mInventoryMove != null) {
+                    mInventoryMove.put("mobile", s.toString());
+                }
+                mBarcodeParser.setMobile(s.toString());
 
             }
         });
@@ -163,12 +154,16 @@ public class FragmentVehicleForm extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mShortList.put("vehicle_no", s.toString());
+
+                if (mInventoryMove != null) {
+                    mInventoryMove.put("vehicle_no", s.toString());
+                }
+
+                mBarcodeParser.setmVehicleNo(s.toString());
 
             }
         });
-
-        mEdtMobile.addTextChangedListener(new TextWatcher() {
+        mEdtNote.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -181,7 +176,11 @@ public class FragmentVehicleForm extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mShortList.put("mobile", s.toString());
+
+                if (mInventoryMove != null) {
+                    mInventoryMove.put("note", mEdtNote.getText().toString());
+                }
+                mBarcodeParser.setNote(s.toString());
             }
         });
 
