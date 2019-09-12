@@ -84,7 +84,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
      * YARD_IN与YARD_CONFIRM的区别是YARD_IN是扫描入库，YARD_CONFIRM是对原来BRANCH_OUT的确认
      */
     private enum MType {
-        BRANCH_OUT, YARD_CONFIRM,YARD_IN,YARD_SORT, YARD_OUT, BRANCH_CONFIRM
+        BRANCH_OUT, YARD_CONFIRM, YARD_IN, YARD_SORT, YARD_OUT, BRANCH_IN, BRANCH_CONFIRM
     }
 
     MType mType = MType.BRANCH_OUT;
@@ -224,6 +224,12 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
                     mType = MType.BRANCH_OUT;
                 } else if (mCurrentType.equals(InventoryMoveOpType.YARD_CONFIRM)) {
                     mType = MType.YARD_CONFIRM;
+                } else if (mCurrentType.equals(InventoryMoveOpType.YARD_IN)) {
+                    mType = MType.YARD_IN;
+
+                } else if (mCurrentType.equals(InventoryMoveOpType.BRANCH_IN)) {
+                    mType = MType.BRANCH_IN;
+
                 } else if (mCurrentType.equals(InventoryMoveOpType.YARD_OUT)) {
                     mType = MType.YARD_OUT;
                 } else if (mCurrentType.equals(InventoryMoveOpType.BRANCH_CONFIRM)) {
@@ -320,6 +326,11 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
                 where += " AND from_org_id = ?";
                 whereArgs[0] = InventoryMoveOpType.BRANCH_OUT;
                 break;
+
+            case YARD_IN:
+                where += " AND to_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.YARD_IN;
+                break;
             case YARD_CONFIRM:
                 where += " AND to_org_id = ?";
                 whereArgs[0] = InventoryMoveOpType.YARD_CONFIRM;
@@ -327,6 +338,11 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             case YARD_OUT:
                 where += " AND from_org_id = ?";
                 whereArgs[0] = InventoryMoveOpType.YARD_OUT;
+                break;
+
+            case BRANCH_IN:
+                where += " AND to_org_id = ?";
+                whereArgs[0] = InventoryMoveOpType.BRANCH_IN;
                 break;
             case BRANCH_CONFIRM:
                 where += " AND to_org_id = ?";
@@ -393,14 +409,23 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
 
         if (currentOrg.getBoolean("is_yard")) {
 
-            //货场收货
-            String yardConfirmTitle = "货场入库";
-            String yardConfirmDraft = "待处理";
-            String yardConfirmProcessed = "已处理";
+            //货场手工入库
+            String yardInTitle = "货场入库";
+            String yardInDraft = "待处理";
+            String yardInProcessed = "已处理";
 
-            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
-            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
+            drawerItems.add(new DrawerItem(TAG, yardInTitle, true));
+            drawerItems.add(new DrawerItem(TAG, yardInDraft, count(MType.YARD_IN, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_IN, "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardInProcessed, count(MType.YARD_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_IN, "processed")));
+
+            //货场收货
+//            String yardConfirmTitle = "货场入库确认";
+//            String yardConfirmDraft = "待处理";
+//            String yardConfirmProcessed = "已处理";
+//
+//            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
+//            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
+//            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
 
             //货场出库
             String yardOutTitle = "货场出库";
@@ -413,7 +438,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         }
 
         //分理处/分公司入库
-        String branchConfirmTitle = "入库扫码";
+        String branchConfirmTitle = "到货扫码";
         String branchConfirmDraft = "待处理";
         String branchConfirmProcessed = "已处理";
 
@@ -636,7 +661,7 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
         int ret = 0;
         List<Object> delObjs = new ArrayList<Object>();
         for (int position : mMultiSelectedRows.keySet()) {
-            if(position > 0) {
+            if (position > 0) {
                 LmisDataRow inventoryOut = (LmisDataRow) mInventoryObjects.get(position - 1);
                 delObjs.add(inventoryOut);
                 int id = inventoryOut.getInt("id");

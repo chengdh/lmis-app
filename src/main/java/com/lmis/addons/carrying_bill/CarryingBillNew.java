@@ -236,7 +236,6 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         mEdtInsuredFee.setEnabled(false);
         mEdtCustomerID.setVisibility(View.GONE);
         mSearchSpinnerToOrg.setOnSelectionChangeListener(this);
-        ;
         mSpinnerPayType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

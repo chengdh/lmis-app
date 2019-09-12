@@ -11,9 +11,11 @@ import com.lmis.R;
 import com.lmis.support.LmisUser;
 import com.lmis.util.barcode.BarcodeParser;
 import com.lmis.util.barcode.BranchConfirmBarcodeParser;
+import com.lmis.util.barcode.BranchInBarcodeParser;
 import com.lmis.util.barcode.BranchOutBarcodeParser;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.YardConfirmBarcodeParser;
+import com.lmis.util.barcode.YardInBarcodeParser;
 import com.lmis.util.barcode.YardOutBarcodeParser;
 import com.lmis.util.barcode_scan_header.InnerTransitLoadInBarcodeParser;
 import com.lmis.util.barcode_scan_header.InnerTransitLoadOutBarcodeParser;
@@ -58,12 +60,21 @@ import dagger.Provides;
                 YardsOrgSpinner.class,
                 SummaryChidrenSpinner.class,
                 ExcludeAccessOrgSearchableSpinner.class,
+
+                /* inventory move */
                 BarcodeParser.class,
                 BranchOutBarcodeParser.class,
                 YardConfirmBarcodeParser.class,
+                YardInBarcodeParser.class,
                 YardOutBarcodeParser.class,
+                BranchInBarcodeParser.class,
                 BranchConfirmBarcodeParser.class,
                 GoodsInfo.class,
+                /* inventory move */
+
+
+
+                /* scan header */
                 com.lmis.util.barcode_scan_header.BarcodeParser.class,
                 SubBranchBarcodeParser.class,
                 SortingInBarcodeParser.class,
@@ -75,6 +86,7 @@ import dagger.Provides;
                 LocalTownLoadInBarcodeParser.class,
                 LocalTownLoadOutBarcodeParser.class,
                 com.lmis.util.barcode_scan_header.GoodsInfo.class,
+                /* scan header */
                 OrgLoadOrgSpinner.class,
                 OrgSortingOrgSpinner.class
 

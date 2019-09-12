@@ -79,6 +79,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_inventory_move_bill_list, menu);
         mSearchViewBillList = (SearchView) menu.findItem(R.id.menu_inventory_out_bill_list_search).getActionView();
         mSearchViewBillList.setOnQueryTextListener(new BarcodeQueryListener(mBillsAdapter));

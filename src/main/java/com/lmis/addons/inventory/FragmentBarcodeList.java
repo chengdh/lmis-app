@@ -98,6 +98,7 @@ public class FragmentBarcodeList extends BaseFragment implements AdapterView.OnI
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_fragment_inventory_move_barcode_list, menu);
         mSearch = (SearchView) menu.findItem(R.id.menu_inventory_out_barcode_list_search).getActionView();
         mSearch.setOnQueryTextListener(new BarcodeQueryListener(mBarcodesAdapter));

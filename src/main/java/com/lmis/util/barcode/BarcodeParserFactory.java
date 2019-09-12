@@ -19,12 +19,16 @@ public class BarcodeParserFactory {
      */
     public static BarcodeParser getParser(Context context, int move_id, int fromOrgId, int toOrgId, String opType) {
         BarcodeParser parser = null;
-        if (opType.equals(InventoryMoveOpType.BRANCH_OUT))
+        if (opType.equals(InventoryMoveOpType.BRANCH_OUT)) {
             parser = new BranchOutBarcodeParser(context, move_id, fromOrgId, toOrgId);
-        else if (opType.equals(InventoryMoveOpType.YARD_CONFIRM)) {
+        } else if (opType.equals(InventoryMoveOpType.YARD_IN)) {
+            parser = new YardInBarcodeParser(context, move_id, fromOrgId, toOrgId);
+        } else if (opType.equals(InventoryMoveOpType.YARD_CONFIRM)) {
             parser = new YardConfirmBarcodeParser(context, move_id, fromOrgId, toOrgId);
         } else if (opType.equals(InventoryMoveOpType.YARD_OUT)) {
             parser = new YardOutBarcodeParser(context, move_id, fromOrgId, toOrgId);
+        } else if (opType.equals(InventoryMoveOpType.BRANCH_IN)) {
+            parser = new BranchInBarcodeParser(context, move_id, fromOrgId, toOrgId);
         } else if (opType.equals(InventoryMoveOpType.BRANCH_CONFIRM)) {
             parser = new BranchConfirmBarcodeParser(context, move_id, fromOrgId, toOrgId);
         }

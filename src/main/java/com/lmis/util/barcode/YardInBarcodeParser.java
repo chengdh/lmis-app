@@ -5,9 +5,13 @@ import android.content.Context;
 import com.lmis.util.SoundPlayer;
 
 /**
+ * 货场入库
  * Created by chengdh on 14-9-18.
  */
-public class YardOutBarcodeParser extends BarcodeParser {
+public class YardInBarcodeParser extends BarcodeParser {
+
+
+    final static String CONFIRMED = "confirmed";
     /**
      * Instantiates a new Barcode parser.
      *
@@ -16,8 +20,8 @@ public class YardOutBarcodeParser extends BarcodeParser {
      * @param fromOrgId the from org id
      * @param toOrgId 要判定的到货地id
      */
-    public YardOutBarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId) {
-        super(context, move_id, fromOrgId, toOrgId, false, false, InventoryMoveOpType.YARD_OUT);
+    public YardInBarcodeParser(Context context, int move_id, int fromOrgId, int toOrgId) {
+        super(context, move_id, fromOrgId, toOrgId, false, false, InventoryMoveOpType.YARD_IN);
     }
 
     @Override
@@ -34,12 +38,10 @@ public class YardOutBarcodeParser extends BarcodeParser {
                 throw new BarcodeDuplicateException("重复扫描条码!");
             }
         }
-        if(gs.getmToOrgId() != mToOrgID){
-            SoundPlayer.playBarcodeScanErrorSound(mContext);
-            throw new InvalidToOrgException("到货地错误!");
-        }
         mScanedBarcode.add(gs);
         SoundPlayer.playBarcodeScanSuccessSound(mContext);
+
+        //先保存
         if (save2DB(barcode) > 0) {
             //publish相关事件
             mBus.post(new GoodsInfoAddSuccessEvent(gs));
@@ -47,6 +49,18 @@ public class YardOutBarcodeParser extends BarcodeParser {
         } else {
             SoundPlayer.playBarcodeScanErrorSound(mContext);
             throw new DBException("保存条码信息时出现错误!");
+        }
+
+        //自动确认
+        if (confirm2DB(gs)) {
+            gs.setmState(CONFIRMED);
+            SoundPlayer.playBarcodeScanSuccessSound(mContext);
+            //publish相关事件
+            mBus.post(new GoodsInfoConfirmSuccessEvent(gs));
+            mBus.post(new ScandedBarcodeConfirmChangeEvent(sumGoodsCount(), sumConfirmedGoodsCount()));
+        } else {
+            SoundPlayer.playBarcodeScanErrorSound(mContext);
+            throw new DBException("更新条码信息时出现错误!");
         }
     }
 }

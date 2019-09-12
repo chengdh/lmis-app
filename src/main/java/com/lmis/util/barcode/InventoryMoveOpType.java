@@ -6,7 +6,9 @@ package com.lmis.util.barcode;
  */
 public class InventoryMoveOpType {
     public static final String BRANCH_OUT = "branch_out";
+    public static final String YARD_IN = "yard_in";
     public static final String YARD_CONFIRM = "yard_confirm";
     public static final String YARD_OUT = "yard_out";
+    public static final String BRANCH_IN = "branch_in";
     public static final String BRANCH_CONFIRM = "branch_confirm";
 }

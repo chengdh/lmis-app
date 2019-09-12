@@ -30,10 +30,13 @@ import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
 import com.lmis.util.barcode.InvalidToOrgException;
+import com.lmis.util.barcode.InventoryMoveOpType;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
 import com.lmis.util.barcode.ScandedBarcodeConfirmChangeEvent;
+import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.rajasharan.widget.SearchableSpinner;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -47,7 +50,7 @@ import butterknife.InjectView;
 /**
  * Created by chengdh on 14-9-14.
  */
-public class FragmentScanBarcode extends BaseFragment {
+public class FragmentScanBarcode extends BaseFragment implements SearchableSpinner.OnSelectionChangeListener {
 
     public static final String TAG = "FragmentScanBarcode";
 
@@ -57,8 +60,17 @@ public class FragmentScanBarcode extends BaseFragment {
     @InjectView(R.id.edt_scan_barcode)
     EditText mEdtScanBarcode;
 
+    //货场选择
     @InjectView(R.id.spinner_yards_select)
     Spinner mSpinnerYardsSelect;
+
+    //分公司选择
+    @InjectView(R.id.spinner_org_load_orgs_select)
+    ExcludeAccessOrgSearchableSpinner mSpinnerOrgLoadOrgsSelect;
+
+    @InjectView(R.id.txv_to_org_display)
+    TextView mTxvToOrgDisplay;
+
 
     @InjectView(R.id.txv_bill_no)
     TextView mTxvBillNo;
@@ -85,7 +97,6 @@ public class FragmentScanBarcode extends BaseFragment {
 
     @InjectView(R.id.btn_all_scan)
     Button mBtnAllScan;
-
 
 
     View mView = null;
@@ -128,9 +139,8 @@ public class FragmentScanBarcode extends BaseFragment {
             LmisDatabase db = new InventoryMoveDB(scope.context());
             mInventoryMove = db.select(mBarcodeParser.getmMoveId());
             LmisDataRow toOrg = mInventoryMove.getM2ORecord("to_org_id").browse();
-            ArrayAdapter adapter = (ArrayAdapter) mSpinnerYardsSelect.getAdapter();
-            int pos = adapter.getPosition(toOrg);
-            mSpinnerYardsSelect.setSelection(pos);
+
+            mTxvToOrgDisplay.setText(toOrg.getString("name"));
             mBtnSumGoodsNum.setText(mBarcodeParser.sumConfirmedGoodsCount() + "" + "/" + mBarcodeParser.sumGoodsCount());
             mBtnSumBillsCount.setText(mBarcodeParser.sumBillsCount() + "");
         }
@@ -141,6 +151,47 @@ public class FragmentScanBarcode extends BaseFragment {
      * 初始化扫描条码tab界面.
      */
     private void initScanTab() {
+        if (mBarcodeParser.getmMoveId() > 0) {
+
+            mSpinnerYardsSelect.setVisibility(View.GONE);
+            mSpinnerYardsSelect.setVisibility(View.GONE);
+            mTxvToOrgDisplay.setVisibility(View.VISIBLE);
+            //refresh mInventoryMove
+        }
+        else {
+
+            LmisDataRow toOrg = null;
+            mTxvToOrgDisplay.setVisibility(View.GONE);
+            //判断是何种操作optType,如果是yard_out操作,则需要选择分公司或分理处,其他操作，都是选择货场yards
+            if (mBarcodeParser.getmOpType().equals(InventoryMoveOpType.YARD_OUT)) {
+                mSpinnerOrgLoadOrgsSelect.setVisibility(View.VISIBLE);
+                toOrg = mSpinnerOrgLoadOrgsSelect.getSelectedOrg();
+            } else {
+                mSpinnerOrgLoadOrgsSelect.setVisibility(View.GONE);
+                mSpinnerYardsSelect.setVisibility(View.VISIBLE);
+                toOrg = (LmisDataRow) mSpinnerYardsSelect.getSelectedItem();
+
+            }
+            mBarcodeParser.setmToOrgID(toOrg.getInt("id"));
+
+        }
+
+
+
+
+        mSpinnerOrgLoadOrgsSelect.setOnSelectionChangeListener(this);
+//        mSpinnerOrgLoadOrgsSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                LmisDataRow toOrg = (LmisDataRow) mSpinnerOrgLoadOrgsSelect.getSelectedItem();
+//                mBarcodeParser.setmToOrgID(toOrg.getInt("id"));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         mSpinnerYardsSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -305,4 +356,10 @@ public class FragmentScanBarcode extends BaseFragment {
         return null;
     }
 
+    @Override
+    public void onSelectionChanged(String s) {
+        LmisDataRow org = mSpinnerOrgLoadOrgsSelect.getSelectedOrg();
+        mBarcodeParser.setmToOrgID(org.getInt("id"));
+
+    }
 }

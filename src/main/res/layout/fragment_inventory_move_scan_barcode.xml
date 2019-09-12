@@ -9,8 +9,29 @@
     <com.lmis.util.controls.YardsOrgSpinner
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:id="@+id/spinner_yards_select"
         android:spinnerMode="dropdown" />
+
+    <com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner
+        android:id="@+id/spinner_org_load_orgs_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="~"
+        android:id="@+id/txv_to_org_display"
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:visibility="gone"
+        style="?android:attr/listSeparatorTextViewStyle" />
+
 
     <EditText
         android:layout_width="match_parent"

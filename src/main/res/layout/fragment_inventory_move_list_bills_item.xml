@@ -16,9 +16,9 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/txv_barcode_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txv_barcode_count"
-        android:layout_weight="1"
-        android:layout_gravity="right" />
+        android:layout_gravity="right|center_vertical"
+        android:layout_weight="1" />
 </LinearLayout>

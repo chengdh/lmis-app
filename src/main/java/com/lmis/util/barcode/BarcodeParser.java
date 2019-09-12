@@ -72,6 +72,14 @@ public abstract class BarcodeParser {
 
     protected String mOpType = null;
 
+    public String getmOpType() {
+        return mOpType;
+    }
+
+    public void setmOpType(String mOpType) {
+        this.mOpType = mOpType;
+    }
+
     public String getDriver() {
         return driver;
     }
