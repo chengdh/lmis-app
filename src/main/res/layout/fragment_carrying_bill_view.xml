@@ -51,6 +51,20 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_alignParentRight="false"
                     android:layout_toRightOf="@+id/txv_bill_no" />
+                <TextView
+                    android:id="@+id/txv_service_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textview_border"
+                    android:gravity="left"
+                    android:padding="8dp"
+                    android:layout_margin="4dp"
+                    android:text="急|回单"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/holo_green_light"
+                    android:textStyle="bold"
+                    android:layout_toRightOf="@+id/txv_goods_no" />
+
 
                 <TextView
                     android:id="@+id/txv_state_des"
@@ -99,7 +113,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="~" />
+                    android:text="至" />
 
                 <TextView
                     android:id="@+id/txv_to_org"
@@ -156,6 +170,45 @@
                     android:text="13565445655"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:text="银行卡号"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#33b5e5"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txv_bank_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="8dp"
+                    android:text="工商银行"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:layout_width="1dip"
+                    android:layout_height="fill_parent"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/txv_card_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="6200201121312312321"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"

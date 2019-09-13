@@ -101,10 +101,11 @@ public class ShortListDetail extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_fragment_short_list_detail, menu);
+        mMenu = menu;
     }
 
     private void setShipMenuItemVisible(boolean visible) {
-        MenuItem item = mMenu.findItem(R.id.menu_scan_header_detail_send);
+        MenuItem item = mMenu.findItem(R.id.menu_short_list_detail_ship);
         item.setVisible(visible);
     }
 
@@ -240,6 +241,7 @@ public class ShortListDetail extends BaseFragment {
                 mProcessSenderAsync.execute((Void) null);
                 return true;
             case R.id.menu_short_list_detail_print:
+                ShortListPrintCpcl.printShortListCpcl(scope.context(),mShortList,ShortListPrintCpcl.PRINTER_NAME);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

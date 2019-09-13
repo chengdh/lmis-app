@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -35,6 +36,8 @@ import com.rajasharan.widget.SearchableSpinner;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -106,6 +109,14 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     @InjectView(R.id.edt_goods_info)
     EditText mEdtGoodsInfo;
 
+    @InjectView(R.id.edt_goods_volume)
+    EditText mEdtGoodsVolume;
+
+    @InjectView(R.id.edt_goods_weight)
+    EditText mEdtGoodsWeight;
+
+    @InjectView(R.id.edt_package)
+    EditText mEdtPackage;
 
     /**
      * The M spinner pay type.
@@ -184,6 +195,20 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
      */
     @InjectView(R.id.edt_customer_id)
     EditText mEdtCustomerID;
+
+    @InjectView(R.id.spinner_bank_name)
+    Spinner mSpinnerBankName;
+
+    @InjectView(R.id.edt_card_no)
+    EditText mEdtCardNo;
+
+    @InjectView(R.id.cbx_is_receipt)
+    CheckBox mCbxIsReceipt;
+
+
+    @InjectView(R.id.cbx_is_urgent)
+    CheckBox mCbxIsUrgent;
+
 
     /**
      * 数据保存处理.
@@ -483,20 +508,35 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
      * @return the boolean
      */
     private Boolean save2DB() {
+
         LmisValues vals = new LmisValues();
-        LmisUser currentUser = scope.currentUser();
-        vals.put("from_org_id", currentUser.getDefault_org_id());
-//        LmisDataRow toOrg = (LmisDataRow) mSpinnerToOrg.getSelectedItem();
+        vals.put("from_org_id", scope.currentOrg().getInt("id"));
+        LmisDataRow fromOrg = scope.currentOrg();
+        vals.put("from_org_name", fromOrg.getString("name"));
+
         LmisDataRow toOrg = mSearchSpinnerToOrg.getSelectedOrg();
         vals.put("to_org_id", toOrg.getInt("id"));
+
+        vals.put("to_org_name", toOrg.getString("name"));
+
         vals.put("from_customer_name", mEdtFromCustomerName.getText());
         vals.put("from_customer_mobile", mEdtFromCustomerMobile.getText());
+
+        vals.put("bank_name", mSpinnerBankName.getSelectedItem());
+        vals.put("card_no", mEdtCardNo.getText());
+
+        vals.put("is_urgent", mCbxIsUrgent.isChecked());
+        vals.put("is_receipt", mCbxIsReceipt.isChecked());
 
         vals.put("to_customer_name", mEdtToCustomerName.getText());
         vals.put("to_customer_mobile", mEdtToCustomerMobile.getText());
 
 
         vals.put("goods_info", mEdtGoodsInfo.getText());
+        vals.put("goods_volume", mEdtGoodsVolume.getText());
+        vals.put("goods_weight", mEdtGoodsWeight.getText());
+        vals.put("package", mEdtPackage.getText());
+
         vals.put("goods_num", mEdtGoodsNum.getText());
 
         vals.put("carrying_fee", mEdtCarryingFee.getText());
@@ -506,6 +546,9 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
 
         vals.put("from_short_carrying_fee", mEdtFromShortCarryingFee.getText());
         vals.put("to_short_carrying_fee", mEdtToShortCarryingFee.getText());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String createdAtStr = format.format(new Date());
+        vals.put("created_at_str", createdAtStr);
 
         String fromCustomerID = mEdtCustomerID.getText().toString();
         String fromCustomerCode = mEdtCustomerNo.getText().toString();
@@ -746,10 +789,11 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 scope.main().startMainFragment(list, true);
                 //打印小票
                 LmisDataRow bill = db().select(mCarryingBillID);
-                CarryingBillPrintCpcl.print(list.getActivity(),bill, scope.currentUser(), false);
+
+                CarryingBillPrintCpcl.print(list.getActivity(),bill, scope.currentUser(), false,CarryingBillPrintCpcl.PRINTER_NAME);
 
                 //打印标签
-//                LabelPrint.print(, bill);
+                LabelPrintCpcl.printLabelCpcl(scope.context(),bill,15,LabelPrintCpcl.PRINTER_NAME);
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();

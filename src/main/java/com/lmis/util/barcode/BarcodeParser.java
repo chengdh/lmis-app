@@ -42,7 +42,7 @@ public abstract class BarcodeParser {
     Context mContext;
 
     @Inject
-    protected InventoryMoveDB mInventoryOutDB;
+    protected InventoryMoveDB mInventoryMoveDB;
     @Inject
     protected InventoryLineDB mInventoryLineDB;
     /**
@@ -150,7 +150,7 @@ public abstract class BarcodeParser {
      */
     private void initData() {
         if (mMoveId > 0) {
-            LmisDataRow record = mInventoryOutDB.select(mMoveId);
+            LmisDataRow record = mInventoryMoveDB.select(mMoveId);
             for (LmisDataRow line : record.getO2MRecord("load_list_with_barcode_lines").browseEach()) {
                 try {
                     GoodsInfo gs = new GoodsInfo(mContext, line.getString("barcode"));
@@ -169,8 +169,9 @@ public abstract class BarcodeParser {
     /**
      * Save dB.
      * 将扫码数据保存奥数据库
+     * @param gs
      */
-    protected long save2DB(String barcode) {
+    protected long save2DB(GoodsInfo gs) {
         //需要新建数据库
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
@@ -189,20 +190,21 @@ public abstract class BarcodeParser {
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
             row.put("state","draft");
-            mMoveId = (int) mInventoryOutDB.create(row);
+            mMoveId = (int) mInventoryMoveDB.create(row);
         } else {
             //更新数据库
-            mInventoryOutDB.update(row, mMoveId);
+            mInventoryMoveDB.update(row, mMoveId);
         }
 
         //添加inventory_line信息
         LmisValues lineValue = new LmisValues();
         lineValue.put("load_list_with_barcode_id", mMoveId);
-        lineValue.put("barcode", barcode);
+        lineValue.put("barcode", gs.getmBarcode());
         lineValue.put("manual_set_all", false);
-        return mInventoryLineDB.create(lineValue);
+        long ret = mInventoryLineDB.create(lineValue);
+        gs.setmID((int)ret);
+        return ret;
     }
-
 
     /**
      * 将条码确认信息保存到数据库.
@@ -265,7 +267,7 @@ public abstract class BarcodeParser {
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
-        mInventoryOutDB.update(row, mMoveId);
+        mInventoryMoveDB.update(row, mMoveId);
 
 
         mBus.post(new BarcodeRemoveEvent(gs));
@@ -292,7 +294,7 @@ public abstract class BarcodeParser {
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
-        mInventoryOutDB.update(row, mMoveId);
+        mInventoryMoveDB.update(row, mMoveId);
 
         mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));
         return gsList.size();

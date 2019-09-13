@@ -70,6 +70,13 @@ public class CarryingBillDB extends LmisDatabase {
         //到货地
         cols.add(new LmisColumn("to_org_id", "To Org", LmisFields.manyToOne(new OrgDB(mContext))));
 
+        //发货地
+        cols.add(new LmisColumn("from_org_name", "From Org", LmisFields.varchar(60),false));
+
+        //到货地
+        cols.add(new LmisColumn("to_org_name", "To Org", LmisFields.varchar(60),false));
+
+
         //发货人id
         LmisColumn colFromCustomerID = new LmisColumn("from_customer_id", "From Customer ID", LmisFields.integer());
         cols.add(colFromCustomerID);
@@ -99,6 +106,9 @@ public class CarryingBillDB extends LmisDatabase {
         LmisColumn colPayType = new LmisColumn("pay_type", "Pay Type", LmisFields.varchar(20));
         cols.add(colPayType);
 
+        //服务备注
+        LmisColumn colServiceNote= new LmisColumn("service_note", "service_note", LmisFields.varchar(30),false);
+        cols.add(colServiceNote);
 
         //运费
         LmisColumn colCarryingFee = new LmisColumn("carrying_fee", "Carrying fee", LmisFields.integer());
@@ -136,8 +146,25 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(colGoodsNum);
 
         //体积
-        LmisColumn colGoodsVolume = new LmisColumn("goods_volume", "Goods Volume", LmisFields.integer());
+        LmisColumn colGoodsVolume = new LmisColumn("goods_volume", "Goods Volume", LmisFields.varchar(20));
         cols.add(colGoodsVolume);
+
+        //重量
+        LmisColumn colGoodsWeight = new LmisColumn("goods_weight", "package", LmisFields.varchar(20));
+        cols.add(colGoodsWeight);
+
+
+        //包装
+        LmisColumn colPackage = new LmisColumn("package", "package", LmisFields.varchar(60));
+        cols.add(colPackage);
+
+
+        //加急与回单
+        LmisColumn isUrgent = new LmisColumn("is_urgent", "is urgent", LmisFields.varchar(20),false);
+        LmisColumn isReceipt = new LmisColumn("is_receipt", "is receipt", LmisFields.varchar(20),false);
+        cols.add(isUrgent);
+        cols.add(isReceipt);
+
 
         //type
         LmisColumn colType = new LmisColumn("type", "Type", LmisFields.varchar(20));
@@ -146,6 +173,18 @@ public class CarryingBillDB extends LmisDatabase {
         //备注
         LmisColumn colNote = new LmisColumn("note", "Note", LmisFields.text());
         cols.add(colNote);
+
+        //创建时间
+        LmisColumn colCreatedAtStr= new LmisColumn("created_at_str", "created_at_str", LmisFields.varchar(40),false);
+        cols.add(colCreatedAtStr);
+
+        //银行
+        LmisColumn colBankName = new LmisColumn("bank_name", "bank name", LmisFields.varchar(40));
+        cols.add(colBankName);
+
+        //卡号
+        LmisColumn colCardNo = new LmisColumn("card_no", "card no", LmisFields.varchar(40));
+        cols.add(colCardNo);
 
         //录入人员
         LmisColumn colUser = new LmisColumn("user_id", "User", LmisFields.integer());
@@ -167,7 +206,21 @@ public class CarryingBillDB extends LmisDatabase {
      */
     public void save2server(int id) throws JSONException, IOException {
         JSONObject json = select(id).exportAsJSON(true);
+
+        JSONObject billAttributes = new JSONObject();
+        if(json.getString("is_urgent").equals("true")){
+            billAttributes.put("customerable_id",id);
+            billAttributes.put("customerable_type","CarryingBill");
+            billAttributes.put("is_urgent",1);
+        }
+        if(json.getString("is_receipt").equals("true")){
+            billAttributes.put("is_receipt",1);
+            billAttributes.put("customerable_id",id);
+            billAttributes.put("customerable_type","CarryingBill");
+        }
+        json.put("bill_association_object_attributes",billAttributes);
         delUnusedAttr(json);
+
 
         JSONArray args = new JSONArray();
         args.put(json);
@@ -186,6 +239,10 @@ public class CarryingBillDB extends LmisDatabase {
         v.put("bill_no", response.getString("bill_no"));
         v.put("goods_no", response.getString("goods_no"));
         v.put("bill_date", response.getString("bill_date"));
+
+
+        json.put("bill_association_object_attributes",billAttributes);
+
         update(v, id);
     }
 
@@ -213,8 +270,14 @@ public class CarryingBillDB extends LmisDatabase {
      * @throws JSONException the jSON exception
      */
     private void delUnusedAttr(JSONObject json) throws JSONException {
+
+        json.remove("from_org_name");
+        json.remove("to_org_name");
         json.remove("from_customer_code");
+        json.remove("is_urgent");
+        json.remove("is_receipt");
         json.remove("processed");
+        json.remove("created_at_str");
         json.remove("process_datetime");
     }
 

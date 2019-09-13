@@ -28,6 +28,7 @@ import com.lmis.util.barcode_scan_header.SortingInBarcodeParser;
 import com.lmis.util.barcode_scan_header.SubBranchBarcodeParser;
 import com.lmis.util.controls.AccessOrgSpinner;
 import com.lmis.util.controls.AllOrgSpinner;
+import com.lmis.util.controls.BanksSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.controls.ExcludeAccessOrgSpinner;
 import com.lmis.util.controls.GoodsStatusSpinner;
@@ -60,6 +61,7 @@ import dagger.Provides;
                 YardsOrgSpinner.class,
                 SummaryChidrenSpinner.class,
                 ExcludeAccessOrgSearchableSpinner.class,
+                BanksSpinner.class,
 
                 /* inventory move */
                 BarcodeParser.class,

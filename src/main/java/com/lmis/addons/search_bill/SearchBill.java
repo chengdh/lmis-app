@@ -21,6 +21,7 @@ import com.lmis.Lmis;
 import com.lmis.R;
 import com.lmis.addons.carrying_bill.CarryingBillDB;
 import com.lmis.addons.carrying_bill.CarryingBillPrint;
+import com.lmis.addons.carrying_bill.CarryingBillPrintCpcl;
 import com.lmis.addons.carrying_bill.PayType;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
@@ -131,6 +132,16 @@ public class SearchBill extends BaseFragment {
     @InjectView(R.id.txv_note)
     TextView mTxvNote;
 
+    @InjectView(R.id.txv_bank_name)
+    TextView mTxvBankName;
+
+    @InjectView(R.id.txv_card_no)
+    TextView mTxvCardNo;
+
+    @InjectView(R.id.txv_service_note)
+    TextView mTxvServiceNote;
+
+
     View mView = null;
 
     Menu mMenu;
@@ -228,6 +239,11 @@ public class SearchBill extends BaseFragment {
         mTxvGoodsInfo.setText(goodsInfo);
         String note = jsonBill.getString("note");
         mTxvNote.setText(note);
+
+        mTxvBankName.setText(jsonBill.getString("bank_name"));
+        mTxvCardNo.setText(jsonBill.getString("card_no"));
+        String serviceNote = jsonBill.getString("service_note");
+        mTxvServiceNote.setText(serviceNote);
     }
 
     @Override
@@ -302,7 +318,7 @@ public class SearchBill extends BaseFragment {
         if (mJsonBill == null)
             return;
 
-        CarryingBillPrint.printForJson(mJsonBill, scope.currentUser(), true);
+        CarryingBillPrintCpcl.printForJson(scope.context(),mJsonBill, scope.currentUser(), true,CarryingBillPrintCpcl.PRINTER_NAME);
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -29,6 +30,7 @@ import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
+import com.lmis.util.controls.BanksSpinner;
 import com.lmis.util.drawer.DrawerItem;
 
 import java.util.List;
@@ -183,6 +185,20 @@ public class CarryingBillEdit extends BaseFragment {
      */
     @InjectView(R.id.edt_customer_id)
     EditText mEdtCustomerID;
+
+    @InjectView(R.id.spinner_bank_name)
+    BanksSpinner mSpinnerBankName;
+
+    @InjectView(R.id.edt_card_no)
+    EditText mEdtCardNo;
+
+    @InjectView(R.id.cbx_is_receipt)
+    CheckBox mCbxIsReceipt;
+
+
+    @InjectView(R.id.cbx_is_urgent)
+    CheckBox mCbxIsUrgent;
+
 
     /**
      * 数据上传 task.
@@ -381,6 +397,17 @@ public class CarryingBillEdit extends BaseFragment {
             String note = mJsonBill.getString("note");
             mEdtNote.setText(note);
 
+            String bankName = mJsonBill.getString("bank_name");
+            mSpinnerBankName.setSelectionBank(bankName);
+            mEdtCardNo.setText(mJsonBill.getString("card_no"));
+            if (mJsonBill.getString("is_urgent").equals("true")) {
+                mCbxIsUrgent.setChecked(true);
+            }
+            if (mJsonBill.getString("is_receipt").equals("true")) {
+                mCbxIsReceipt.setChecked(true);
+            }
+
+
         } catch (Exception ex) {
             Log.d(TAG, "未传入要修改的运单对象!");
             return;
@@ -578,6 +605,22 @@ public class CarryingBillEdit extends BaseFragment {
         ret.put("to_short_carrying_fee", mEdtToShortCarryingFee.getText().toString());
         ret.put("goods_fee", mEdtGoodsFee.getText().toString());
         ret.put("note", mEdtNote.getText().toString());
+        ret.put("bank_name", mSpinnerBankName.getSelectedItem());
+        ret.put("card_no", mEdtCardNo.getText());
+
+        JSONObject billAttributes = new JSONObject();
+        if(mCbxIsUrgent.isChecked()){
+            billAttributes.put("customerable_id",mJsonBill.getInt("id"));
+            billAttributes.put("customerable_type","CarryingBill");
+            billAttributes.put("is_urgent",1);
+        }
+        if(mCbxIsReceipt.isChecked()){
+            billAttributes.put("is_receipt",1);
+            billAttributes.put("customerable_id",mJsonBill.getInt("id"));
+            billAttributes.put("customerable_type","CarryingBill");
+        }
+
+        ret.put("bill_association_object_attributes",billAttributes);
 
         return ret;
     }

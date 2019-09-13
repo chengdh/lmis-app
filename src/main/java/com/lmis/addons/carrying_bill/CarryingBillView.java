@@ -18,6 +18,9 @@ import com.lmis.orm.LmisDataRow;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.drawer.DrawerItem;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -80,6 +83,16 @@ public class CarryingBillView extends BaseFragment {
 
     @InjectView(R.id.txv_note)
     TextView mTxvNote;
+
+
+    @InjectView(R.id.txv_bank_name)
+    TextView mTxvBankName;
+
+    @InjectView(R.id.txv_card_no)
+    TextView mTxvCardNo;
+
+    @InjectView(R.id.txv_service_note)
+    TextView mTxvServiceNote;
 
     View mView = null;
 
@@ -153,8 +166,10 @@ public class CarryingBillView extends BaseFragment {
 
                 }
             });
-
-
+            mTxvBankName.setText(mCarryingBill.getString("bank_name"));
+            mTxvCardNo.setText(mCarryingBill.getString("card_no"));
+            String serviceNote = getServiceNote();
+            mTxvServiceNote.setText(serviceNote);
 
             String payType = mCarryingBill.getString("pay_type");
             String payTypeDes = PayType.payTypes().get(payType);
@@ -180,6 +195,23 @@ public class CarryingBillView extends BaseFragment {
 
     }
 
+    private String getServiceNote() {
+        //service note
+        String serviceNote1 = "";
+        String serviceNote2 = "";
+        if(mCarryingBill.getString("is_urgent").equals("true")){
+            serviceNote1 = "急";
+
+        }
+        if(mCarryingBill.getString("is_receipt").equals("true")){
+            serviceNote2 = "回单";
+        }
+
+        List<String > serviceNoteList = Arrays.asList(serviceNote1,serviceNote2);
+        String serviceNote = StringUtils.join(serviceNoteList,"|");
+        return serviceNote;
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_carrying_bill_view, menu);
@@ -189,16 +221,11 @@ public class CarryingBillView extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.menu_carrying_bill_print):
-//                LabelPrint.printLabelCpcl(this.getActivity(),mCarryingBill,10);
-                CarryingBillPrintCpcl.print(this.getActivity(),mCarryingBill,scope.currentUser(), true);
+                CarryingBillPrintCpcl.print(scope.context(),mCarryingBill,scope.currentUser(), true,CarryingBillPrintCpcl.PRINTER_NAME );
                 break;
-//            case (R.id.menu_carrying_bill_print_barcode):
-//                CarryingBillPrint.testPrintBarcode();
-//                break;
             case (R.id.menu_carrying_bill_print_label):
-                LabelPrint.printLabelCpcl(this.getActivity(),mCarryingBill,20);
+                LabelPrintCpcl.printLabelCpcl(scope.context(),mCarryingBill,20,LabelPrintCpcl.PRINTER_NAME);
                 break;
-
             default:
                 super.onOptionsItemSelected(item);
                 break;

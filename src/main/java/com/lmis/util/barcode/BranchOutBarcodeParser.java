@@ -36,7 +36,7 @@ public class BranchOutBarcodeParser extends BarcodeParser {
         }
         mScanedBarcode.add(gs);
         SoundPlayer.playBarcodeScanSuccessSound(mContext);
-        if (save2DB(barcode) > 0) {
+        if (save2DB(gs) > 0) {
             //publish相关事件
             mBus.post(new GoodsInfoAddSuccessEvent(gs));
             mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));

@@ -142,7 +142,6 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
     }
 
 
-
     @Subscribe
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
         //通知billListTab数据变化

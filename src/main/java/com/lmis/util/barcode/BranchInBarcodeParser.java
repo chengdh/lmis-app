@@ -58,7 +58,7 @@ public class BranchInBarcodeParser extends BarcodeParser {
         }
 
         //先保存条码
-        if (save2DB(barcode) > 0) {
+        if (save2DB(gs) > 0) {
             //publish相关事件
             mBus.post(new GoodsInfoAddSuccessEvent(gs));
             mBus.post(new ScandedBarcodeChangeEvent(sumGoodsCount(), sumBillsCount()));

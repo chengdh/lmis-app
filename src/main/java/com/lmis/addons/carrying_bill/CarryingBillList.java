@@ -274,7 +274,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         String[] whereArgs = null;
         switch (type) {
             case DRAFT:
-                where = "processed = ? ";
+                where = "processed is null or processed = ? ";
                 whereArgs = new String[]{"false"};
                 break;
             default:
