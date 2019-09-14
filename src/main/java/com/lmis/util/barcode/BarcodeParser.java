@@ -104,8 +104,8 @@ public abstract class BarcodeParser {
         this.note = note;
     }
 
-    protected  String driver = null;
-    protected  String mVehicleNo = null;
+    protected  String driver = "";
+    protected  String mVehicleNo = "";
 
     public String getMobile() {
         return mobile;
@@ -115,8 +115,8 @@ public abstract class BarcodeParser {
         this.mobile = mobile;
     }
 
-    protected  String mobile= null;
-    protected  String note= null;
+    protected  String mobile= "";
+    protected  String note= "";
 
     /**
      * Instantiates a new Barcode parser.
@@ -190,6 +190,9 @@ public abstract class BarcodeParser {
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
             row.put("state","draft");
+            if(gs.getmState().equals("confirmed")) {
+                row.put("state", "confirmed");
+            }
             mMoveId = (int) mInventoryMoveDB.create(row);
         } else {
             //更新数据库

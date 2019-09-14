@@ -89,6 +89,7 @@ public class InventoryMoveDB extends LmisDatabase {
         String opType = row.getString("op_type");
         JSONObject json = row.exportAsJSON(false);
 
+
         JSONArray args = new JSONArray();
         args.put(json);
         Lmis instance = getLmisInstance();
@@ -101,6 +102,7 @@ public class InventoryMoveDB extends LmisDatabase {
         }
         else{
             delUnusedAttrsForCreate(json);
+            json.put("user_id",user.getUser_id());
             instance.callMethod("LoadListWithBarcode", "create", args, null);
         }
         LmisValues v = new LmisValues();
@@ -122,6 +124,11 @@ public class InventoryMoveDB extends LmisDatabase {
         JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
+            if(line.optJSONObject("goods_photo_1") != null) {
+                line.put("goods_photo_1_file_name", "goods_photo_1_" + json.getString("barcode") + ".png");
+            }
+
+            line.remove("id");
             line.remove("load_list_with_barcode_id");
         }
 
@@ -134,6 +141,10 @@ public class InventoryMoveDB extends LmisDatabase {
         JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
             JSONObject line = (JSONObject) arr.get(i);
+            if(line.optJSONObject("goods_photo_1") != null) {
+                line.put("goods_photo_1_file_name", "goods_photo_1_" + json.getString("barcode") + ".png");
+            }
+
             line.put("state","confirmed");
         }
     }

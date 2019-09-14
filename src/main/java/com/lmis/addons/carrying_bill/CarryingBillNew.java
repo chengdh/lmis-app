@@ -13,10 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lmis.CurrentOrgChangeEvent;
@@ -30,6 +33,7 @@ import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisDialog;
 import com.lmis.support.LmisUser;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
+import com.lmis.util.controls.PayTypeSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
 import com.rajasharan.widget.SearchableSpinner;
@@ -37,6 +41,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +127,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
      * The M spinner pay type.
      */
     @InjectView(R.id.spin_pay_type)
-    Spinner mSpinnerPayType;
+    PayTypeSpinner mSpinnerPayType;
 
     /**
      * The M edt carrying fee.
@@ -352,6 +357,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 mEdtCustomerNo.setEnabled(true);
                 mEdtFromCustomerName.setEnabled(true);
                 mEdtFromCustomerMobile.setEnabled(true);
+                setPayTypes(true);
                 mEdtCustomerNo.requestFocus();
             }
         });
@@ -731,6 +737,24 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         }
     }
 
+    //根据客户信息确定是否添加或删除月结选项
+    private void setPayTypes(boolean removeMonthPay){
+        final List<Map.Entry> payTypes;
+        if(removeMonthPay){
+            payTypes = new ArrayList<Map.Entry>(PayType.payTypesWithOutRE().entrySet());
+        }
+        else{
+            payTypes = new ArrayList<Map.Entry>(PayType.payTypes().entrySet());
+        }
+        mSpinnerPayType.setmPayTypes(payTypes);
+        ArrayAdapter adapter = (ArrayAdapter) mSpinnerPayType.getAdapter();
+        adapter.notifyDataSetChanged();
+        if(!removeMonthPay) {
+            mSpinnerPayType.setPayType(PayType.PAY_TYPE_RETURN);
+        }
+
+    }
+
     /**
      * 上传运单数据到服务器.
      */
@@ -881,6 +905,12 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                         mEdtCustomerNo.setEnabled(false);
                         mEdtFromCustomerName.setEnabled(false);
                         mEdtFromCustomerMobile.setEnabled(false);
+                        if(customer.getString("is_month_pay").equals("true")){
+                            setPayTypes(false);
+                        }
+                        else {
+                            setPayTypes(true);
+                        }
                         Toast.makeText(scope.context(), "已查到客户信息!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {

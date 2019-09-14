@@ -49,11 +49,6 @@
         android:layout_margin="8dp"
         android:hint="备注" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"

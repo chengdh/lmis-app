@@ -38,8 +38,8 @@ public class InventoryLineDB extends LmisDatabase {
         cols.add(new LmisColumn("manual_set_all","manual_set_all", LmisFields.integer(),false));
 
         //上传的异常照片
-        cols.add(new LmisColumn("goods_photo_1", "Photo1", LmisFields.blob(),false));
-        cols.add(new LmisColumn("goods_photo_2", "Photo2", LmisFields.blob(),false));
+        cols.add(new LmisColumn("goods_photo_1", "Photo1", LmisFields.blob()));
+        cols.add(new LmisColumn("goods_photo_2", "Photo2", LmisFields.blob()));
 
         return cols;
     }

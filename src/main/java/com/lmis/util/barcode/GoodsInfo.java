@@ -5,6 +5,7 @@ import android.content.Context;
 import com.fizzbuzz.android.dagger.Injector;
 import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.util.SoundPlayer;
 
 import java.util.List;
 
@@ -34,9 +35,18 @@ public class GoodsInfo {
      */
     String mBillNo = null;
 
+    public String getmNote() {
+        return mNote;
+    }
+
+    public void setmNote(String mNote) {
+        this.mNote = mNote;
+    }
+
     /**
      * 货号.
      */
+    String mNote = "";
     String mGoodsNo = null;
     String mBillDate = null;
     double mCarryingFee = 0;
@@ -110,8 +120,10 @@ public class GoodsInfo {
      * 验证barcode
      */
     public void validate() throws InvalidBarcodeException {
-        if ((mBarcode == null) || mBarcode.isEmpty() || mBarcode.length() != 21)
+        if ((mBarcode == null) || mBarcode.isEmpty() || mBarcode.length() != 21) {
+            SoundPlayer.playBarcodeScanErrorSound(mContext);
             throw new InvalidBarcodeException("条码格式不正确!");
+        }
     }
 
     /**

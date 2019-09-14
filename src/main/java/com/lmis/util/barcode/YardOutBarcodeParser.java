@@ -31,7 +31,7 @@ public class YardOutBarcodeParser extends BarcodeParser {
         for (GoodsInfo f : mScanedBarcode) {
             if (f.getmBarcode().equals(barcode)) {
                 SoundPlayer.playBarcodeScanErrorSound(mContext);
-                throw new BarcodeDuplicateException("重复扫描条码!");
+                throw new BarcodeDuplicateException("重复扫描条码!",f);
             }
         }
         if(gs.getmToOrgId() != mToOrgID){

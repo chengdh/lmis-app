@@ -22,6 +22,14 @@ public class PayTypeSpinner extends Spinner {
 
     ArrayAdapter<Map.Entry> mAdapter = null;
 
+    public List<Map.Entry> getmPayTypes() {
+        return mPayTypes;
+    }
+
+    public void setmPayTypes(List<Map.Entry> mPayTypes) {
+        this.mPayTypes = mPayTypes;
+    }
+
     List<Map.Entry> mPayTypes = null;
 
 
@@ -29,7 +37,7 @@ public class PayTypeSpinner extends Spinner {
         super(context, attrs);
         ((Injector) context).inject(this);
 
-        mPayTypes = new ArrayList<Map.Entry>(PayType.payTypes().entrySet());
+        mPayTypes = new ArrayList<Map.Entry>(PayType.payTypesWithOutRE().entrySet());
         mAdapter = new ArrayAdapter<Map.Entry>(context, android.R.layout.simple_spinner_dropdown_item, mPayTypes) {
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -49,5 +57,15 @@ public class PayTypeSpinner extends Spinner {
             }
         };
         setAdapter(mAdapter);
+    }
+    public int setPayType(String payTypeCode) {
+        int pos = 0;
+        for(Map.Entry item : mPayTypes){
+            if(item.getKey().equals(payTypeCode)){
+                this.setSelection(pos);
+            }
+            pos++;
+        }
+        return pos;
     }
 }

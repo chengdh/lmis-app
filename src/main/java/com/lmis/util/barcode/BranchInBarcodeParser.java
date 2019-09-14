@@ -36,7 +36,7 @@ public class BranchInBarcodeParser extends BarcodeParser {
             if (f.getmBarcode().equals(barcode)) {
                 findedItem = f;
                 SoundPlayer.playBarcodeScanErrorSound(mContext);
-                throw new BarcodeDuplicateException("重复扫描条码!");
+                throw new BarcodeDuplicateException("重复扫描条码!",f);
             }
         }
 

@@ -179,7 +179,8 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawLine(3, x4 + 40, y4 + 40, bottomRightX, y4 + 40, true);
 
             zpSDK.drawText(x4 + 10, y4 + 50, "方", 0, 0, 1, false, false);
-            zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:", 0, 0, 1, false, false);
+            String bankInfo = String.format("%s  %s",jsonBill.getString("bank_name"),jsonBill.getString("card_no"));
+            zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:" + bankInfo, 0, 0, 1, false, false);
 
 
             //横线

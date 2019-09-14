@@ -1,7 +1,12 @@
 package com.lmis.addons.inventory;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -9,9 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +25,10 @@ import android.widget.Toast;
 import com.lmis.R;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.orm.LmisDatabase;
+import com.lmis.orm.LmisValues;
+import com.lmis.receivers.ScanBarcodeBroadcastReceiver;
 import com.lmis.support.BaseFragment;
+import com.lmis.util.ImageUtil;
 import com.lmis.util.barcode.BarcodeDuplicateException;
 import com.lmis.util.barcode.BarcodeNotExistsException;
 import com.lmis.util.barcode.BarcodeParseSuccessEvent;
@@ -53,6 +62,8 @@ import butterknife.InjectView;
 public class FragmentScanBarcode extends BaseFragment implements SearchableSpinner.OnSelectionChangeListener {
 
     public static final String TAG = "FragmentScanBarcode";
+
+    private static final int SCANBARCODE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 102;
 
     @Inject
     Bus mBus;
@@ -98,6 +109,34 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
     @InjectView(R.id.btn_all_scan)
     Button mBtnAllScan;
 
+    @InjectView(R.id.btn_camera)
+    ImageButton mBtnCamera;
+
+    @InjectView(R.id.goods_photo)
+    ImageView mImageView;
+
+    @InjectView(R.id.btn_delete_img)
+    ImageButton mImageButton;
+
+    @InjectView(R.id.layout_goods_exception)
+    View mViewGoodsException;
+
+    @InjectView(R.id.edt_note)
+    EditText mEdtNote;
+
+    @InjectView(R.id.btn_goods_exception_ok)
+    Button mBtnGoodsExceptionOk;
+
+    @InjectView(R.id.btn_goods_exception_cancel)
+    Button mBtnGoodsExceptionCancel;
+
+
+    private IntentFilter mScanBarcodeIntentFilter = null;
+    private ScanBarcodeBroadcastReceiver mScanBarcodeBroadcastReceiver = null;
+
+
+    Bitmap mImg = null;
+
 
     View mView = null;
     GoodsInfo mCurGoodsInfo = null;
@@ -128,7 +167,7 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
         ButterKnife.inject(this, mView);
         mBus.register(this);
         initData();
-        initScanTab();
+        initControl();
         return mView;
     }
 
@@ -143,22 +182,48 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
             mTxvToOrgDisplay.setText(toOrg.getString("name"));
             mBtnSumGoodsNum.setText(mBarcodeParser.sumConfirmedGoodsCount() + "" + "/" + mBarcodeParser.sumGoodsCount());
             mBtnSumBillsCount.setText(mBarcodeParser.sumBillsCount() + "");
+
+
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mScanBarcodeIntentFilter = new IntentFilter();
+        mScanBarcodeBroadcastReceiver = new ScanBarcodeBroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "scanbarcode receiver.");
+                String barcode = intent.getStringExtra("barcode_string");
+                mEdtScanBarcode.requestFocus();
+                mEdtScanBarcode.setText(barcode);
+
+            }
+        };
+        mScanBarcodeIntentFilter.addAction("android.intent.ACTION_DECODE_DATA");
+        scope.context().registerReceiver(mScanBarcodeBroadcastReceiver, mScanBarcodeIntentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        scope.context().unregisterReceiver(mScanBarcodeBroadcastReceiver);
     }
 
     /**
      * 初始化扫描条码tab界面.
      */
-    private void initScanTab() {
+    private void initControl() {
+
         if (mBarcodeParser.getmMoveId() > 0) {
 
             mSpinnerYardsSelect.setVisibility(View.GONE);
             mSpinnerYardsSelect.setVisibility(View.GONE);
             mTxvToOrgDisplay.setVisibility(View.VISIBLE);
             //refresh mInventoryMove
-        }
-        else {
+        } else {
 
             LmisDataRow toOrg = null;
             mTxvToOrgDisplay.setVisibility(View.GONE);
@@ -175,8 +240,34 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
             mBarcodeParser.setmToOrgID(toOrg.getInt("id"));
 
         }
+        mBtnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurGoodsInfo != null && mCurGoodsInfo.getmID() != -1) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, SCANBARCODE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                } else {
+                    Toast.makeText(scope.context(), "请先扫描条码!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        mBtnGoodsExceptionOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurGoodsInfo != null && mCurGoodsInfo.getmID() != -1) {
+                    saveException();
+                } else {
+                    Toast.makeText(scope.context(), "请先扫描条码!", Toast.LENGTH_LONG).show();
+                }
 
-
+            }
+        });
+        mBtnGoodsExceptionCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewGoodsException.setVisibility(View.GONE);
+            }
+        });
 
 
         mSpinnerOrgLoadOrgsSelect.setOnSelectionChangeListener(this);
@@ -212,38 +303,47 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
 
             @Override
             public void onTextChanged(CharSequence s, int i, int i2, int i3) {
-                String barcode = mEdtScanBarcode.getText().toString();
 
-                if (barcode.length() == 21) {
-                    try {
-                        mBarcodeParser.addBarcode(s.toString());
-                        if (mInventoryMove == null) {
-                            LmisDatabase db = new InventoryMoveDB(scope.context());
-                            mInventoryMove = db.select(mBarcodeParser.getmMoveId());
-                        }
-                        mEdtScanBarcode.setText("");
-                        DrawerListener drawer = scope.main();
-                        drawer.refreshDrawer(InventoryMoveList.TAG);
+                Log.d(TAG, "scan barcode on text changed");
 
-                    } catch (InvalidBarcodeException ex) {
-                        Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
-                    } catch (InvalidToOrgException ex) {
-                        Toast.makeText(scope.context(), "到货地不匹配!", Toast.LENGTH_LONG).show();
-                    } catch (BarcodeDuplicateException ex) {
-                        Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
-                    } catch (DBException e) {
-                        e.printStackTrace();
-                    } catch (BarcodeNotExistsException e) {
-                        Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
-                    }
-                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d(TAG, "scan barcode after text changed");
+                String barcode = editable.toString();
+                if (barcode == null || barcode.length() == 0) {
+                    return;
+                }
+
+                try {
+                    mViewGoodsException.setVisibility(View.GONE);
+                    mBarcodeParser.addBarcode(barcode);
+                    if (mInventoryMove == null) {
+                        LmisDatabase db = new InventoryMoveDB(scope.context());
+                        mInventoryMove = db.select(mBarcodeParser.getmMoveId());
+                    }
+                    DrawerListener drawer = scope.main();
+                    drawer.refreshDrawer(InventoryMoveList.TAG);
+
+                } catch (InvalidBarcodeException ex) {
+                    Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
+                } catch (InvalidToOrgException ex) {
+                    Toast.makeText(scope.context(), "到货地不匹配!", Toast.LENGTH_LONG).show();
+                } catch (BarcodeDuplicateException ex) {
+                    setUi(ex.getmGoodsInfo());
+                    Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
+                } catch (DBException e) {
+                    e.printStackTrace();
+                } catch (BarcodeNotExistsException e) {
+                    Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
+                }
+                mEdtScanBarcode.setText("");
 
             }
         });
+        mEdtScanBarcode.setSelectAllOnFocus(true);
+        mEdtScanBarcode.setFocusableInTouchMode(true);
         mEdtScanBarcode.requestFocus();
 
         mBtnAllScan.setOnClickListener(new View.OnClickListener() {
@@ -291,6 +391,8 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
         mTxvGoodsNum.setText("");
         mTxvBarcode.setText("");
         mTxvSeq.setText("");
+        mImageView.setImageBitmap(null);
+        mViewGoodsException.setVisibility(View.GONE);
         mEdtScanBarcode.requestFocus();
     }
 
@@ -301,12 +403,30 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
      */
     @Subscribe
     public void onBarcodeParseSuccessEvent(BarcodeParseSuccessEvent evt) {
-        mCurGoodsInfo = evt.getmGoodsInfo();
+        setUi(evt.getmGoodsInfo());
+
+    }
+
+    private void setUi(GoodsInfo gs) {
+        mCurGoodsInfo = gs;
         mTxvBillNo.setText(mCurGoodsInfo.getmBillNo());
         mTxvToOrgName.setText(mCurGoodsInfo.getmToOrgName());
         mTxvGoodsNum.setText(mCurGoodsInfo.getmGoodsNum() + "");
         mTxvSeq.setText(mCurGoodsInfo.getmSeq() + "");
         mTxvBarcode.setText(mCurGoodsInfo.getmBarcode());
+        mViewGoodsException.setVisibility(View.VISIBLE);
+        if(mCurGoodsInfo != null && mCurGoodsInfo.getmID() > -1) {
+            InventoryLineDB inventoryLineDB = new InventoryLineDB(scope.context());
+            LmisDataRow line = inventoryLineDB.select(mCurGoodsInfo.getmID());
+            String note = line.getString("note");
+            byte[] image = (byte[]) line.get("goods_photo_1");
+            if (image != null) {
+                mImg = ImageUtil.getImage(image);
+                mImageView.setImageBitmap(mImg);
+            }
+            mEdtNote.setText(note);
+        }
+        mEdtScanBarcode.requestFocus();
     }
 
     /**
@@ -338,6 +458,7 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
      */
     @Subscribe
     public void onGoodsInfoAddSuccessEvent(GoodsInfoAddSuccessEvent evt) {
+        mCurGoodsInfo = evt.getmGoodsInfo();
     }
 
     @Subscribe
@@ -362,4 +483,44 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
         mBarcodeParser.setmToOrgID(org.getInt("id"));
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SCANBARCODE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Image captured and saved to fileUri specified in the Intent
+                if (data.hasExtra("data")) {
+                    Bitmap thumbnail = data.getParcelableExtra("data");
+                    mImg = thumbnail;
+                    mImageView.setImageBitmap(thumbnail);
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // User cancelled the image capture
+            } else {
+                // Image capture failed, advise user
+            }
+        }
+    }
+
+    private void saveException() {
+        InventoryLineDB inventoryLineDB = new InventoryLineDB(scope.context());
+
+        LmisValues vals = new LmisValues();
+        String note = mEdtNote.getText().toString();
+        mCurGoodsInfo.setmNote(note);
+        if (mImg != null) {
+            byte[] b = ImageUtil.getBytes(mImg);
+            vals.put("goods_photo_1", b);
+        }
+        if (note != null && !note.isEmpty()) {
+            vals.put("note", note);
+
+        }
+        vals.put("state","goods_exception");
+        inventoryLineDB.update(vals, mCurGoodsInfo.getmID());
+        Toast.makeText(scope.context(), "异常信息已保存!", Toast.LENGTH_LONG).show();
+
+    }
+
+
 }
