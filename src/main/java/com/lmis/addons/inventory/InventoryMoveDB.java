@@ -119,7 +119,6 @@ public class InventoryMoveDB extends LmisDatabase {
     private void delUnusedAttrsForCreate(JSONObject json) throws JSONException {
         json.remove("processed");
         json.remove("process_datetime");
-        json.remove("op_type");
         json.remove("id");
         JSONArray arr = json.getJSONArray("load_list_with_barcode_lines_attributes");
         for (int i = 0; i < arr.length(); i++) {
@@ -145,7 +144,7 @@ public class InventoryMoveDB extends LmisDatabase {
                 line.put("goods_photo_1_file_name", "goods_photo_1_" + json.getString("barcode") + ".png");
             }
 
-            line.put("state","confirmed");
+//            line.put("state","confirmed");
         }
     }
 

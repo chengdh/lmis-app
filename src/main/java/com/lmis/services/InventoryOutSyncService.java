@@ -64,7 +64,7 @@ public class InventoryOutSyncService extends InjectingService implements Perform
             String where = "to_org_id = ?";
             String[] whereArgs = new String[]{user.getDefault_org_id() + ""};
             List<Integer> oldIDs = db.ids(where, whereArgs);
-            if (lmis.syncWithMethod("waitting_confirm", arguments)) {
+            if (lmis.syncWithMethod("get_confirms_for_app", arguments)) {
                 int affected_rows = lmis.getAffectedRows();
                 Log.d(TAG, "InventoryOutSyncService[arguments]:" + arguments.toString());
                 Log.d(TAG, "InventoryOutSyncService->affected_rows:" + affected_rows);

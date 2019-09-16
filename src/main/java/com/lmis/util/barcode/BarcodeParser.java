@@ -228,7 +228,7 @@ public abstract class BarcodeParser {
      * @param barcode the barcode
      */
     public abstract void addBarcode(String barcode)
-            throws InvalidBarcodeException, InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException;
+            throws InvalidBarcodeException, InvalidToOrgException, BarcodeAlreadyConfirmedException,DBException, BarcodeNotExistsException, BarcodeDuplicateException;
 
     /**
      * 设置该条码关联的运单货物全部为已扫描.

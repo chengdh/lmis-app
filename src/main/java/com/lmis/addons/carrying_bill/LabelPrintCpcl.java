@@ -57,8 +57,7 @@ public class LabelPrintCpcl {
             }
 
             List<String> labels = CarryingBillDB.getLabels(jsonBill);
-//            for (int i = 0; i < labels.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < printCount; i++) {
 
                 String label = labels.get(i);
 

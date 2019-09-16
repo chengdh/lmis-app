@@ -43,7 +43,7 @@ public class LmisNotificationHelper {
             notification.defaults |= Notification.DEFAULT_VIBRATE;
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
         }
-        mNotifyManager.notify(0, notification);
+//        mNotifyManager.notify(0, notification);
     }
 
     public void stopSyncNotification(Context context) {

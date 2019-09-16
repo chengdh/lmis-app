@@ -22,11 +22,12 @@ public class YardConfirmBarcodeParser extends BarcodeParser {
     }
 
     @Override
-    public void addBarcode(String barcode) throws InvalidBarcodeException, InvalidToOrgException, DBException,BarcodeNotExistsException, BarcodeDuplicateException {
+    public void addBarcode(String barcode) throws InvalidBarcodeException, InvalidToOrgException,BarcodeAlreadyConfirmedException, DBException,BarcodeNotExistsException, BarcodeDuplicateException {
         GoodsInfo findedItem = null;
         for (GoodsInfo f : mScanedBarcode) {
             if (f.getmBarcode().equals(barcode)) {
                 findedItem = f;
+
             }
         }
 
@@ -39,13 +40,14 @@ public class YardConfirmBarcodeParser extends BarcodeParser {
         //该条码已确认
         if(findedItem != null && findedItem.getmState().equals(CONFIRMED)){
             SoundPlayer.playBarcodeScanErrorSound(mContext);
-            throw new BarcodeDuplicateException("该条码已确认!");
+            throw new BarcodeAlreadyConfirmedException("该条码已确认!",findedItem);
         }
 
         //该条码等待确认
         findedItem.setmState(CONFIRMED);
         SoundPlayer.playBarcodeScanSuccessSound(mContext);
         if (confirm2DB(findedItem)) {
+            findedItem.setmState(CONFIRMED);
             //publish相关事件
             mBus.post(new GoodsInfoConfirmSuccessEvent(findedItem));
             mBus.post(new ScandedBarcodeConfirmChangeEvent(sumGoodsCount(),sumConfirmedGoodsCount()));

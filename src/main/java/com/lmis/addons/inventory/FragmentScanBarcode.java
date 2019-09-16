@@ -29,6 +29,7 @@ import com.lmis.orm.LmisValues;
 import com.lmis.receivers.ScanBarcodeBroadcastReceiver;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.ImageUtil;
+import com.lmis.util.barcode.BarcodeAlreadyConfirmedException;
 import com.lmis.util.barcode.BarcodeDuplicateException;
 import com.lmis.util.barcode.BarcodeNotExistsException;
 import com.lmis.util.barcode.BarcodeParseSuccessEvent;
@@ -37,6 +38,7 @@ import com.lmis.util.barcode.BarcodeRemoveEvent;
 import com.lmis.util.barcode.DBException;
 import com.lmis.util.barcode.GoodsInfo;
 import com.lmis.util.barcode.GoodsInfoAddSuccessEvent;
+import com.lmis.util.barcode.GoodsInfoConfirmSuccessEvent;
 import com.lmis.util.barcode.InvalidBarcodeException;
 import com.lmis.util.barcode.InvalidToOrgException;
 import com.lmis.util.barcode.InventoryMoveOpType;
@@ -337,7 +339,11 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
                     e.printStackTrace();
                 } catch (BarcodeNotExistsException e) {
                     Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
+                } catch (BarcodeAlreadyConfirmedException ex) {
+                    setUi(ex.getmGoodsInfo());
+                    Toast.makeText(scope.context(), "该货物条码已确认!", Toast.LENGTH_LONG).show();
                 }
+
                 mEdtScanBarcode.setText("");
 
             }
@@ -408,6 +414,9 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
     }
 
     private void setUi(GoodsInfo gs) {
+        if(gs == null){
+            return;
+        }
         mCurGoodsInfo = gs;
         mTxvBillNo.setText(mCurGoodsInfo.getmBillNo());
         mTxvToOrgName.setText(mCurGoodsInfo.getmToOrgName());
@@ -418,11 +427,15 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
         if(mCurGoodsInfo != null && mCurGoodsInfo.getmID() > -1) {
             InventoryLineDB inventoryLineDB = new InventoryLineDB(scope.context());
             LmisDataRow line = inventoryLineDB.select(mCurGoodsInfo.getmID());
-            String note = line.getString("note");
             byte[] image = (byte[]) line.get("goods_photo_1");
             if (image != null) {
                 mImg = ImageUtil.getImage(image);
                 mImageView.setImageBitmap(mImg);
+            }
+
+            String note = line.getString("note");
+            if(note == null || note.isEmpty() || note.equals("false") || note.equals("null")){
+                note = "破损/包装破/丢失";
             }
             mEdtNote.setText(note);
         }
@@ -438,6 +451,11 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
     public void onScanedBarcodeChangedEvent(ScandedBarcodeChangeEvent evt) {
         mBtnSumGoodsNum.setText(evt.getmSumGoodsNum() + "");
         mBtnSumBillsCount.setText(evt.getmSumBillsCount() + "");
+    }
+
+    @Subscribe
+    public void onGoodsInfoConfirmSuccessEvent(GoodsInfoConfirmSuccessEvent evt) {
+        mCurGoodsInfo = evt.getmGoodsInfo();
     }
 
     /**

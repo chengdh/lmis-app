@@ -24,18 +24,12 @@ public class BranchConfirmBarcodeParser extends BarcodeParser {
     }
 
     @Override
-    public void addBarcode(String barcode) throws InvalidBarcodeException, InvalidToOrgException, DBException, BarcodeNotExistsException, BarcodeDuplicateException {
-        GoodsInfo gs = new GoodsInfo(mContext, barcode);
-
-        //条码已解析事件
-        mBus.post(new BarcodeParseSuccessEvent(gs));
+    public void addBarcode(String barcode) throws InvalidBarcodeException, InvalidToOrgException, DBException,BarcodeAlreadyConfirmedException, BarcodeNotExistsException, BarcodeDuplicateException {
 
         GoodsInfo findedItem = null;
         for (GoodsInfo f : mScanedBarcode) {
             if (f.getmBarcode().equals(barcode)) {
                 findedItem = f;
-                SoundPlayer.playBarcodeScanErrorSound(mContext);
-                throw new BarcodeDuplicateException("重复扫描条码!",f);
             }
         }
 
@@ -48,7 +42,7 @@ public class BranchConfirmBarcodeParser extends BarcodeParser {
         //该条码已确认
         if (findedItem != null && findedItem.getmState().equals(CONFIRMED)) {
             SoundPlayer.playBarcodeScanErrorSound(mContext);
-            throw new BarcodeDuplicateException("该条码已确认!");
+            throw new BarcodeAlreadyConfirmedException("该条码已确认!",findedItem);
         }
         //到货地不匹配
         if(findedItem.getmToOrgId() != mToOrgID){
@@ -58,11 +52,11 @@ public class BranchConfirmBarcodeParser extends BarcodeParser {
 
         //该条码等待确认
 
-        if (confirm2DB(gs)) {
-            gs.setmState(CONFIRMED);
+        if (confirm2DB(findedItem)) {
+            findedItem.setmState(CONFIRMED);
             SoundPlayer.playBarcodeScanSuccessSound(mContext);
             //publish相关事件
-            mBus.post(new GoodsInfoConfirmSuccessEvent(gs));
+            mBus.post(new GoodsInfoConfirmSuccessEvent(findedItem));
             mBus.post(new ScandedBarcodeConfirmChangeEvent(sumGoodsCount(), sumConfirmedGoodsCount()));
         } else {
             SoundPlayer.playBarcodeScanErrorSound(mContext);
