@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
-apply from: "$project.rootDir/script-git-version.gradle"
 buildscript {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/central' }
         maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
     }
     dependencies {
-        classpath 'org.batcha.gradle.plugins:git-dependencies:0.2'
         classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.lint:lint:26.3.2'
     }
 }
-repositories {
-    maven { url 'https://maven.aliyun.com/repository/central' }
-    maven { url 'https://maven.aliyun.com/repository/google' }
-    maven { url 'https://maven.aliyun.com/repository/jcenter' }
-    maven { url "https://jitpack.io" }
-
-    flatDir {
-        dirs 'libs'
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url "https://jitpack.io" }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -129,12 +129,12 @@ android {
     flavorDimensions "product"
     productFlavors {
         dev {
-            versionName gitBranchName
+            versionName "dev"
             dimension "product"
         }
 
         prod {
-            versionName gitBranchName
+            versionName "prod"
             dimension "product"
         }
     }

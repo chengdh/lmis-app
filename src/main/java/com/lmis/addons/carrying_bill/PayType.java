@@ -19,7 +19,7 @@ public class PayType {
         ret.put(PAY_TYPE_TH, "提货付");
         ret.put(PAY_TYPE_CASH, "现金付");
         ret.put(PAY_TYPE_RETURN, "月结");
-        ret.put(PAY_TYPE_K_GOODSFEE, "货款扣");
+//        ret.put(PAY_TYPE_K_GOODSFEE, "货款扣");
         return ret;
     }
 
@@ -29,7 +29,7 @@ public class PayType {
 
         ret.put(PAY_TYPE_TH, "提货付");
         ret.put(PAY_TYPE_CASH, "现金付");
-        ret.put(PAY_TYPE_K_GOODSFEE, "货款扣");
+//        ret.put(PAY_TYPE_K_GOODSFEE, "货款扣");
         return ret;
     }
 

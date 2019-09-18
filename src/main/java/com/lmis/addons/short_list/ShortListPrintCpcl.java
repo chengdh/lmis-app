@@ -38,6 +38,7 @@ public class ShortListPrintCpcl {
         try {
             JSONObject jsonBill = bill.exportAsJSON(false);
             printShortListCpclWithJson(ctx, jsonBill, printerName);
+            printShortListCpclWithJson(ctx, jsonBill, printerName);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();
@@ -72,7 +73,7 @@ public class ShortListPrintCpcl {
             int x1 = 0;
             int y1 = 0;
 
-            zpSDK.drawText(x1 + 250, y1, "短驳单", 4, 0, 1, false, false);
+            zpSDK.drawText(x1 + 250, y1, "短驳单", 3, 0, 1, false, false);
             String fromTo = String.format("%s 至 %s  %s", fromOrgName, toOrgName, billDate);
             zpSDK.drawText(x1 + 30, y1 + 50 + 10, fromTo, 2, 0, 1, false, false);
             String note = String.format("%s  %s   %s", vehicleNo, driver, mobile);
@@ -85,8 +86,8 @@ public class ShortListPrintCpcl {
             int x2 = 0;
             int y2 = y1 + 50 + 10 + 40 + 20 + 20;
 
-            int firstLinesSize = 6;
-            if (lines.length() <= 6) {
+            int firstLinesSize = 5;
+            if (lines.length() <= 5) {
                 firstLinesSize = lines.length();
             }
             JSONArray firstPageLines = new JSONArray();
@@ -97,7 +98,7 @@ public class ShortListPrintCpcl {
             zpSDK.print(0, 0);
             zpSDK.disconnect();
 
-            if (lines.length() <= 6) {
+            if (lines.length() <= 5) {
                 return;
             }
 
@@ -123,11 +124,12 @@ public class ShortListPrintCpcl {
 
         int x2 = 0;
         int y2 = startY;
+        int stepY = 0;
         try {
             for (int i = 0; i < jsonLines.length(); i++) {
                 JSONObject line = jsonLines.getJSONObject(i);
 
-                int stepY = 40 * i;
+                stepY = 40 * i;
 
 
                 String billNo = line.getString("bill_no");
@@ -139,19 +141,20 @@ public class ShortListPrintCpcl {
                 String ft = String.format("%s->%s", fOrgName, tOrgName);
 
 
-                String paddingBillNo = String.format("%s",billNo);
-                String paddingGoodsInfo = String.format("%-8s",goodsInfo);
-                String paddingGoodsNum = String.format("%s件",goodsNum);
+                String paddingBillNo = String.format("%s", billNo);
+                String paddingGoodsInfo = String.format("%s", goodsInfo);
+                String paddingGoodsNum = String.format("%s件", goodsNum);
 
-                String paddingFt = String.format("%-10s", ft);
+                String paddingFt = String.format("%s", ft);
 
-                String lineDes = String.format("|%s|%s|%s|%s|", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
+                String lineDes = String.format("%s/%s/%s/%s", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
 
                 zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
 
                 zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
 
             }
+//            printFooter(zpSDK,y2+stepY + 30 + 20);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();
@@ -168,15 +171,17 @@ public class ShortListPrintCpcl {
         int bottomRightY = 370;
 
         int x2 = 0;
-        int y2 = 0;
+        int y2 = 20;
+
+        int stepY = 0 ;
         try {
             for (int i = 0; i < jsonLines.length(); i++) {
                 JSONObject line = jsonLines.getJSONObject(i);
 
-                int stepY = 40 * i;
+                stepY = 40 * i;
 
                 //判断是否超过打印高度
-                if (i > 0 && i % 10 == 0) {
+                if (i > 0 && i % 8 == 0) {
                     JSONArray leftLines = new JSONArray();
                     for (int j = i; j < jsonLines.length(); j++) {
                         leftLines.put(jsonLines.getJSONObject(j));
@@ -191,20 +196,24 @@ public class ShortListPrintCpcl {
                     String fOrgName = line.getString("from_org_name");
                     String tOrgName = line.getString("to_org_name");
 
+                    String ft = String.format("%s->%s", fOrgName, tOrgName);
 
-                    String paddingBillNo = String.format("%-20s",billNo);
-                    String paddingGoodsInfo = String.format("0-1%s",goodsInfo);
-                    String paddingGoodsNum = String.format("%-10s",goodsNum);
 
-                    String paddingFt = String.format("%-4s->%-4s", fOrgName, tOrgName);
+                    String paddingBillNo = String.format("%s", billNo);
+                    String paddingGoodsInfo = String.format("%s", goodsInfo);
+                    String paddingGoodsNum = String.format("%s件", goodsNum);
 
-                    String lineDes = String.format("%s %s %s %s件", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
+                    String paddingFt = String.format("%s", ft);
+
+                    String lineDes = String.format("%s/%s/%s/%s", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
 
                     zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
                     zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
                 }
 
             }
+
+            printFooter(zpSDK,y2+stepY + 30 + 20);
             zpSDK.print(0, 0);
             zpSDK.disconnect();
         } catch (
@@ -214,5 +223,8 @@ public class ShortListPrintCpcl {
         }
     }
 
+    public static void printFooter(zpBluetoothPrinter zpSDK, int y) {
 
+        zpSDK.drawText(10, y, "交接签字:", 2, 0, 1, false, false);
+    }
 }
