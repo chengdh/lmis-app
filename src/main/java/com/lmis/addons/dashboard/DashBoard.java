@@ -8,9 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.lmis.CurrentOrgChangeEvent;
 import com.lmis.R;
@@ -21,8 +19,6 @@ import com.lmis.support.LmisUser;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import org.xwalk.core.XWalkView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,7 @@ public class DashBoard extends BaseFragment {
     Bus mBus;
 
     @InjectView(R.id.web_view_dashboard)
-    XWalkView mWebView;
+    WebView mWebView;
 
     View mView = null;
 
@@ -76,7 +72,7 @@ public class DashBoard extends BaseFragment {
             jsArray += "&children_org_ids[]=" + r.getInt("id") + "";
         }
         String url = DASHBOARD_URL + "?from_org_id=" + curOrgId + jsArray;
-        mWebView.load(url, null);
+        mWebView.loadUrl(url);
         Log.d("loadDashboardUrl : ", url);
     }
 

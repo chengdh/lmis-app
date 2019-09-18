@@ -78,7 +78,7 @@ public class ShortListPrintCpcl {
             String note = String.format("%s  %s   %s", vehicleNo, driver, mobile);
             zpSDK.drawText(x1 + 30, y1 + 50 + 10 + 40, note, 2, 0, 1, false, false);
 
-            zpSDK.drawLine(3, x1, y1 + 50 + 10 + 40 + 20, bottomRightX, y1 + 50 + 10 + 40 + 20, true);
+            zpSDK.drawLine(3, x1, y1 + 50 + 10 + 40 + 30, bottomRightX, y1 + 50 + 10 + 40 + 30, true);
 
             JSONArray lines = jsonBill.getJSONArray("carrying_bills_attributes");
 
@@ -97,8 +97,11 @@ public class ShortListPrintCpcl {
             zpSDK.print(0, 0);
             zpSDK.disconnect();
 
-            //打印剩余的行数
+            if (lines.length() <= 6) {
+                return;
+            }
 
+            //打印剩余的行数
             JSONArray leftLines = new JSONArray();
             for (int k = firstLinesSize; k < lines.length(); k++) {
                 leftLines.put(lines.getJSONObject(k));
@@ -133,9 +136,16 @@ public class ShortListPrintCpcl {
                 String fOrgName = line.getString("from_org_name");
                 String tOrgName = line.getString("to_org_name");
 
-                String ft = String.format("%s至%s", fOrgName, tOrgName);
+                String ft = String.format("%s->%s", fOrgName, tOrgName);
 
-                String lineDes = String.format("%s %s %s %s件", billNo, ft, goodsInfo, goodsNum);
+
+                String paddingBillNo = String.format("%s",billNo);
+                String paddingGoodsInfo = String.format("%-8s",goodsInfo);
+                String paddingGoodsNum = String.format("%s件",goodsNum);
+
+                String paddingFt = String.format("%-10s", ft);
+
+                String lineDes = String.format("|%s|%s|%s|%s|", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
 
                 zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
 
@@ -181,12 +191,16 @@ public class ShortListPrintCpcl {
                     String fOrgName = line.getString("from_org_name");
                     String tOrgName = line.getString("to_org_name");
 
-                    String ft = String.format("%s至%s", fOrgName, tOrgName);
 
-                    String lineDes = String.format("%s %s %s %s件", billNo, ft, goodsInfo, goodsNum);
+                    String paddingBillNo = String.format("%-20s",billNo);
+                    String paddingGoodsInfo = String.format("0-1%s",goodsInfo);
+                    String paddingGoodsNum = String.format("%-10s",goodsNum);
+
+                    String paddingFt = String.format("%-4s->%-4s", fOrgName, tOrgName);
+
+                    String lineDes = String.format("%s %s %s %s件", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
 
                     zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
-
                     zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
                 }
 

@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import com.lmis.R;
 import com.lmis.support.BaseFragment;
 import com.lmis.util.drawer.DrawerItem;
 import com.squareup.otto.Bus;
-
-import org.xwalk.core.XWalkView;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class DashBoardTurnover extends BaseFragment {
     Bus mBus;
 
     @InjectView(R.id.web_view_dashboard_turnover)
-    XWalkView mWebView;
+    WebView mWebView;
 
     View mView = null;
 
@@ -48,7 +47,7 @@ public class DashBoardTurnover extends BaseFragment {
     }
 
     private void init() {
-        mWebView.load(TURNOBER_URL, null);
+        mWebView.loadUrl(TURNOBER_URL);
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.xwalk.core.XWalkView
+    <WebView
         android:id="@+id/web_view_dashboard"
         android:orientation="vertical"
         android:layout_width="fill_parent"
