@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.lmis"
     android:versionCode="1"
     android:versionName="0.1">
@@ -19,14 +20,16 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
@@ -38,7 +41,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Android Account Authentication Service -->
         <service android:name="com.lmis.auth.LmisAuthenticateService">
@@ -66,7 +71,7 @@
                 <action android:name="com.lmis.ACTION_ACCOUNT_CONFIG" />
             </intent-filter>
         </activity>
-                <!--org sync service-->
+        <!--org sync service-->
         <service
             android:name="com.lmis.services.OrgSyncService"
             android:exported="true">
@@ -86,6 +91,28 @@
             android:exported="true"
             android:label="@string/label_org"
             android:syncable="true" />
+
+        <!--area sync service-->
+        <service
+            android:name="com.lmis.services.AreaSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_area" />
+        </service>
+
+
+        <provider
+            android:name="com.lmis.providers.area.AreaProvider"
+            android:authorities="com.lmis.providers.area"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/label_area"
+            android:syncable="true" />
+
 
         <!--user_org sync-->
         <!--<service-->

@@ -101,8 +101,9 @@ public class LabelPrintCpcl {
                 zpSDK.drawLine(3, 0, 280 + 32, 568, 280 + 32, true);
 
 
-                zpSDK.drawText(8 + 8, 280 + 8 + 24, "发", 0, 0, 1, false, false);
-                zpSDK.drawText(8 + 8, 280 + 40 + 24, "货", 0, 0, 1, false, false);
+                zpSDK.drawText(8 + 8, 280 + 8 + 24, "始", 0, 0, 1, false, false);
+                zpSDK.drawText(8 + 8, 280 + 8 + 24 + 30, "发", 0, 0, 1, false, false);
+                zpSDK.drawText(8 + 8 +20, 280 + 8 + 24 + 15, "地", 0, 0, 1, false, false);
 
 
                 String fromOrgName = jsonBill.getString("from_org_name");

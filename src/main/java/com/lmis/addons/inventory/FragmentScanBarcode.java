@@ -44,9 +44,11 @@ import com.lmis.util.barcode.InvalidToOrgException;
 import com.lmis.util.barcode.InventoryMoveOpType;
 import com.lmis.util.barcode.ScandedBarcodeChangeEvent;
 import com.lmis.util.barcode.ScandedBarcodeConfirmChangeEvent;
+import com.lmis.util.barcode.ScannerSuccessEvent;
 import com.lmis.util.controls.ExcludeAccessOrgSearchableSpinner;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.lmis.util.event.StartMainFragmentEvent;
 import com.rajasharan.widget.SearchableSpinner;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -132,11 +134,6 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
     @InjectView(R.id.btn_goods_exception_cancel)
     Button mBtnGoodsExceptionCancel;
 
-
-    private IntentFilter mScanBarcodeIntentFilter = null;
-    private ScanBarcodeBroadcastReceiver mScanBarcodeBroadcastReceiver = null;
-
-
     Bitmap mImg = null;
 
 
@@ -190,28 +187,71 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mScanBarcodeIntentFilter = new IntentFilter();
-        mScanBarcodeBroadcastReceiver = new ScanBarcodeBroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "scanbarcode receiver.");
-                String barcode = intent.getStringExtra("barcode_string");
-                mEdtScanBarcode.requestFocus();
-                mEdtScanBarcode.setText(barcode);
+    //打开其他窗口时,要关闭扫描
+    @Subscribe
+    public void onStartMainFragment(StartMainFragmentEvent evt){
+        Log.d(TAG,"onStartMainFragment");
+        mBus.unregister(this);
+    }
 
-            }
-        };
-        mScanBarcodeIntentFilter.addAction("android.intent.ACTION_DECODE_DATA");
-        scope.context().registerReceiver(mScanBarcodeBroadcastReceiver, mScanBarcodeIntentFilter);
+    //打开其他窗口时,要关闭扫描
+    @Subscribe
+    public void onStartDetailFragment(StartMainFragmentEvent evt){
+        Log.d(TAG,"onStartDetailFragment");
+        mBus.unregister(this);
     }
 
     @Override
     public void onPause() {
+        Log.d(TAG,"onPause");
         super.onPause();
-        scope.context().unregisterReceiver(mScanBarcodeBroadcastReceiver);
+        mBus.unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG,"onResume");
+        super.onResume();
+        mBus.register(this);
+    }
+
+    @Subscribe
+    public void onScanSuccessEvent(ScannerSuccessEvent evt){
+        String barcode = evt.getStrBarcode();
+        if (barcode == null || barcode.length() == 0) {
+            return;
+        }
+
+        try {
+            mViewGoodsException.setVisibility(View.GONE);
+            mBarcodeParser.addBarcode(barcode);
+            if (mInventoryMove == null) {
+                LmisDatabase db = new InventoryMoveDB(scope.context());
+                mInventoryMove = db.select(mBarcodeParser.getmMoveId());
+            }
+            DrawerListener drawer = scope.main();
+            drawer.refreshDrawer(InventoryMoveList.TAG);
+
+        } catch (InvalidBarcodeException ex) {
+            Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
+        } catch (InvalidToOrgException ex) {
+            Toast.makeText(scope.context(), "到货地不匹配!", Toast.LENGTH_LONG).show();
+        } catch (BarcodeDuplicateException ex) {
+            setUi(ex.getmGoodsInfo());
+            Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
+        } catch (DBException e) {
+            e.printStackTrace();
+        } catch (BarcodeNotExistsException e) {
+            Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
+        } catch (BarcodeAlreadyConfirmedException ex) {
+            setUi(ex.getmGoodsInfo());
+            Toast.makeText(scope.context(), "该货物条码已确认!", Toast.LENGTH_LONG).show();
+        }
+
+        mEdtScanBarcode.setText(barcode);
+        mEdtScanBarcode.requestFocus();
+
+
     }
 
     /**
@@ -312,39 +352,6 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.d(TAG, "scan barcode after text changed");
-                String barcode = editable.toString();
-                if (barcode == null || barcode.length() == 0) {
-                    return;
-                }
-
-                try {
-                    mViewGoodsException.setVisibility(View.GONE);
-                    mBarcodeParser.addBarcode(barcode);
-                    if (mInventoryMove == null) {
-                        LmisDatabase db = new InventoryMoveDB(scope.context());
-                        mInventoryMove = db.select(mBarcodeParser.getmMoveId());
-                    }
-                    DrawerListener drawer = scope.main();
-                    drawer.refreshDrawer(InventoryMoveList.TAG);
-
-                } catch (InvalidBarcodeException ex) {
-                    Toast.makeText(scope.context(), "条码格式不正确!", Toast.LENGTH_LONG).show();
-                } catch (InvalidToOrgException ex) {
-                    Toast.makeText(scope.context(), "到货地不匹配!", Toast.LENGTH_LONG).show();
-                } catch (BarcodeDuplicateException ex) {
-                    setUi(ex.getmGoodsInfo());
-                    Toast.makeText(scope.context(), "该货物条码已扫描!", Toast.LENGTH_LONG).show();
-                } catch (DBException e) {
-                    e.printStackTrace();
-                } catch (BarcodeNotExistsException e) {
-                    Toast.makeText(scope.context(), "货物条码不存在!", Toast.LENGTH_LONG).show();
-                } catch (BarcodeAlreadyConfirmedException ex) {
-                    setUi(ex.getmGoodsInfo());
-                    Toast.makeText(scope.context(), "该货物条码已确认!", Toast.LENGTH_LONG).show();
-                }
-
-                mEdtScanBarcode.setText("");
 
             }
         });
@@ -414,7 +421,7 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
     }
 
     private void setUi(GoodsInfo gs) {
-        if(gs == null){
+        if (gs == null) {
             return;
         }
         mCurGoodsInfo = gs;
@@ -424,7 +431,7 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
         mTxvSeq.setText(mCurGoodsInfo.getmSeq() + "");
         mTxvBarcode.setText(mCurGoodsInfo.getmBarcode());
         mViewGoodsException.setVisibility(View.VISIBLE);
-        if(mCurGoodsInfo != null && mCurGoodsInfo.getmID() > -1) {
+        if (mCurGoodsInfo != null && mCurGoodsInfo.getmID() > -1) {
             InventoryLineDB inventoryLineDB = new InventoryLineDB(scope.context());
             LmisDataRow line = inventoryLineDB.select(mCurGoodsInfo.getmID());
             byte[] image = (byte[]) line.get("goods_photo_1");
@@ -434,7 +441,7 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
             }
 
             String note = line.getString("note");
-            if(note == null || note.isEmpty() || note.equals("false") || note.equals("null")){
+            if (note == null || note.isEmpty() || note.equals("false") || note.equals("null")) {
                 note = "破损/包装破/丢失";
             }
             mEdtNote.setText(note);
@@ -534,11 +541,15 @@ public class FragmentScanBarcode extends BaseFragment implements SearchableSpinn
             vals.put("note", note);
 
         }
-        vals.put("state","goods_exception");
+        vals.put("state", "goods_exception");
         inventoryLineDB.update(vals, mCurGoodsInfo.getmID());
         Toast.makeText(scope.context(), "异常信息已保存!", Toast.LENGTH_LONG).show();
 
     }
 
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG,"onDetach");
+    }
 }

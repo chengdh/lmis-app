@@ -1,20 +1,20 @@
 /*
  * OpenERP, Open Source Management Solution
  * Copyright (C) 2012-today OpenERP SA (<http:www.openerp.com>)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:www.gnu.org/licenses/>
- * 
+ *
  */
 package com.lmis.base.login;
 
@@ -41,6 +41,7 @@ import com.fizzbuzz.android.dagger.InjectingActivityModule;
 import com.lmis.R;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.orm.LmisHelper;
+import com.lmis.providers.area.AreaProvider;
 import com.lmis.providers.il_config.IlConfigProvider;
 import com.lmis.providers.org.OrgProvider;
 import com.lmis.providers.user_org.UserOrgProvider;
@@ -117,6 +118,7 @@ public class Login extends BaseFragment {
     boolean mSyncOrgs = false;
     boolean mSyncUserOrgs = false;
     boolean mSyncIlConfigs = false;
+    boolean mSyncAreas = false;
 
     /**
      * The Lmis Object
@@ -240,7 +242,11 @@ public class Login extends BaseFragment {
             if (authority.equals(IlConfigProvider.AUTHORITY)) {
                 mSyncIlConfigs = true;
             }
-            if (mSyncOrgs && mSyncIlConfigs) {
+            if (authority.equals(AreaProvider.AUTHORITY)) {
+                mSyncAreas = true;
+            }
+
+            if (mSyncOrgs && mSyncIlConfigs && mSyncAreas) {
                 mSyncDialog.dismiss();
                 startSyncWizard();
             }
@@ -345,8 +351,10 @@ public class Login extends BaseFragment {
                 if (LmisAccountManager.createAccount(getActivity(), userData)) {
                     mSyncDialog.show();
                     scope.main().requestSync(OrgProvider.AUTHORITY);
-                    scope.main().requestSync(UserOrgProvider.AUTHORITY);
+                    //已经在OrgSyncService中处理了
+//                    scope.main().requestSync(UserOrgProvider.AUTHORITY);
                     scope.main().requestSync(IlConfigProvider.AUTHORITY);
+                    scope.main().requestSync(AreaProvider.AUTHORITY);
                 }
             } else {
                 edtPassword.setError(errorMsg);

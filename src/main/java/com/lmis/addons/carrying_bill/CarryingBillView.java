@@ -126,11 +126,20 @@ public class CarryingBillView extends BaseFragment {
         if (bundle != null) {
             mCarryingBillId = bundle.getInt("carrying_bill_id");
             mCarryingBill = new CarryingBillDB(scope.context()).select(mCarryingBillId);
+
+            String billType = mCarryingBill.getString("type");
+
             LmisDataRow fromOrg = mCarryingBill.getM2ORecord("from_org_id").browse();
             mTxvFromOrg.setText(fromOrg.getString("name"));
 
             LmisDataRow toOrg = mCarryingBill.getM2ORecord("to_org_id").browse();
             mTxvToOrg.setText(toOrg.getString("name"));
+
+            if(billType.equals(CarryingBillType.TransitBill)) {
+                LmisDataRow toArea = mCarryingBill.getM2ORecord("area_id").browse();
+                mTxvToOrg.setText(toArea.getString("name"));
+            }
+
 
             String billNo = mCarryingBill.getString("bill_no");
             mTxvBillNo.setText(billNo);

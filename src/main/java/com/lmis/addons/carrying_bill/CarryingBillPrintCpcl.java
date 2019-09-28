@@ -180,7 +180,10 @@ public class CarryingBillPrintCpcl {
 
             zpSDK.drawText(x4 + 10, y4 + 50, "方", 0, 0, 1, false, false);
             String bankInfo = String.format("%s  %s",jsonBill.getString("bank_name"),jsonBill.getString("card_no"));
-            zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:" + bankInfo, 0, 0, 1, false, false);
+//            zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:" + bankInfo, 0, 0, 1, false, false);
+
+            String from_customer_code = jsonBill.getString("from_customer_code");
+            zpSDK.drawText(x4 + 40, y4 + 60, "客户编号:" + from_customer_code, 0, 0, 1, false, false);
 
 
             //横线
@@ -252,7 +255,12 @@ public class CarryingBillPrintCpcl {
             String billNo = jsonBill.getString("bill_no");
             String goodsNo = jsonBill.getString("goods_no");
 
+            String billType = jsonBill.getString("type");
+
             String toOrgName = jsonBill.getString("to_org_name");
+            if(billType.equals(CarryingBillType.TransitBill)){
+                toOrgName = jsonBill.getString("area_name");
+            }
             zpSDK.drawText(x21 + 10, y21, toOrgName, 3, 0, 1, false, false);
             zpSDK.drawText(x21 + 10 + 150, y21, billNo, 3, 0, 1, false, false);
 
@@ -394,7 +402,7 @@ public class CarryingBillPrintCpcl {
             int x6 = 10;
             int y6 = y5 + 40;
 
-            zpSDK.drawText(x6, y6, "客服:400-618-5656", 0, 0, 1, false, false);
+            zpSDK.drawText(x6, y6, "客服:400-618-5856", 0, 0, 1, false, false);
 
 
             zpSDK.print(0, 0);

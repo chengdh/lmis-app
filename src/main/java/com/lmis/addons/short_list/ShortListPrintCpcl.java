@@ -154,7 +154,7 @@ public class ShortListPrintCpcl {
                 zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
 
             }
-//            printFooter(zpSDK,y2+stepY + 30 + 20);
+            printFooter(zpSDK,y2+stepY + 30 + 20);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();

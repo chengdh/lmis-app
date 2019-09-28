@@ -22,6 +22,7 @@ import com.lmis.R;
 import com.lmis.addons.carrying_bill.CarryingBillDB;
 import com.lmis.addons.carrying_bill.CarryingBillPrint;
 import com.lmis.addons.carrying_bill.CarryingBillPrintCpcl;
+import com.lmis.addons.carrying_bill.LabelPrintCpcl;
 import com.lmis.addons.carrying_bill.PayType;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
@@ -293,6 +294,7 @@ public class SearchBill extends BaseFragment {
         mMenu.findItem(R.id.menu_bill_edit).setVisible(show);
         mMenu.findItem(R.id.menu_bill_invalidate).setVisible(show);
         mMenu.findItem(R.id.menu_bill_print).setVisible(show);
+        mMenu.findItem(R.id.menu_bill_print_label).setVisible(show);
     }
 
     private void editBill() {
@@ -321,6 +323,14 @@ public class SearchBill extends BaseFragment {
         CarryingBillPrintCpcl.printForJson(scope.context(),mJsonBill, scope.currentUser(), true,CarryingBillPrintCpcl.PRINTER_NAME);
     }
 
+    private void printBillLabel() {
+        if (mJsonBill == null)
+            return;
+
+        LabelPrintCpcl.printLabelCpclWithJson(scope.context(),mJsonBill, 15, LabelPrintCpcl.PRINTER_NAME);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -333,6 +343,10 @@ public class SearchBill extends BaseFragment {
             case R.id.menu_bill_print:
                 printBill();
                 break;
+            case R.id.menu_bill_print_label:
+                printBillLabel();
+                break;
+
             default:
                 super.onOptionsItemSelected(item);
         }

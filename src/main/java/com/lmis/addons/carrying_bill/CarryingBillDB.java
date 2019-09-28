@@ -3,6 +3,7 @@ package com.lmis.addons.carrying_bill;
 import android.content.Context;
 
 import com.lmis.Lmis;
+import com.lmis.base.area.AreaDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisColumn;
 import com.lmis.orm.LmisDataRow;
@@ -55,7 +56,7 @@ public class CarryingBillDB extends LmisDatabase {
         List<LmisColumn> cols = new ArrayList<LmisColumn>();
 
         //运单号
-        LmisColumn colBillNo = new LmisColumn("bill_no", "BillNo", LmisFields.varchar(7));
+        LmisColumn colBillNo = new LmisColumn("bill_no", "BillNo", LmisFields.varchar(20));
         cols.add(colBillNo);
 
         //货号
@@ -65,8 +66,26 @@ public class CarryingBillDB extends LmisDatabase {
         LmisColumn colBillDate = new LmisColumn("bill_date", "BillDate", LmisFields.varchar(20));
         cols.add(colBillDate);
 
+
+        //单据类型
+        LmisColumn colType = new LmisColumn("type", "Type", LmisFields.varchar(20));
+        cols.add(colType);
+
+
+        //中转地
+        cols.add(new LmisColumn("transit_org_id", "transit Org", LmisFields.manyToOne(new OrgDB(mContext))));
+        cols.add(new LmisColumn("transit_org_name", "transit Org", LmisFields.varchar(60),false));
+
+
+        //外转到货地区
+        cols.add(new LmisColumn("area_id", "area", LmisFields.manyToOne(new AreaDB(mContext))));
+        //发货地
+        cols.add(new LmisColumn("area_name", "area name", LmisFields.varchar(60),false));
+
+
         //发货地
         cols.add(new LmisColumn("from_org_id", "From Org", LmisFields.manyToOne(new OrgDB(mContext))));
+
         //到货地
         cols.add(new LmisColumn("to_org_id", "To Org", LmisFields.manyToOne(new OrgDB(mContext))));
 
@@ -166,10 +185,6 @@ public class CarryingBillDB extends LmisDatabase {
         cols.add(isReceipt);
 
 
-        //type
-        LmisColumn colType = new LmisColumn("type", "Type", LmisFields.varchar(20));
-        cols.add(colType);
-
         //备注
         LmisColumn colNote = new LmisColumn("note", "Note", LmisFields.text());
         cols.add(colNote);
@@ -206,6 +221,7 @@ public class CarryingBillDB extends LmisDatabase {
      */
     public void save2server(int id) throws JSONException, IOException {
         JSONObject json = select(id).exportAsJSON(true);
+        String billType = json.getString("type");
 
         JSONObject billAttributes = new JSONObject();
         if(json.getString("is_urgent").equals("true")){
@@ -226,7 +242,7 @@ public class CarryingBillDB extends LmisDatabase {
         args.put(json);
         Lmis instance = getLmisInstance();
 
-        JSONObject response = instance.callMethod("ComputerBill", "create", args, null).getJSONObject("result");
+        JSONObject response = instance.callMethod(billType, "create", args, null).getJSONObject("result");
         //FIXME 判断是否返回了id,rails model create 方法在失败时,会返回对应的model对象，但是valid?方法返回false
         //参考http://stackoverflow.com/questions/23975835/ruby-on-rails-active-record-return-value-when-create-fails
         if (response.getString("id").equals("null"))
@@ -279,6 +295,7 @@ public class CarryingBillDB extends LmisDatabase {
         json.remove("processed");
         json.remove("created_at_str");
         json.remove("process_datetime");
+        json.remove("type");
     }
 
     /**

@@ -17,16 +17,16 @@
  * 
  */
 
-package com.lmis.providers.expense;
+package com.lmis.providers.area;
 
 import com.lmis.support.provider.LmisContentProvider;
 
 /**
  * The Class AreaProvider.
  */
-public class ExpenseProvider extends LmisContentProvider {
+public class AreaProvider extends LmisContentProvider {
 	public static String CONTENTURI = "AreaProvider";
-	public static String AUTHORITY = "com.lmis.providers.expense";
+	public static String AUTHORITY = "com.lmis.providers.area";
 
 	@Override
 	public String authority() {

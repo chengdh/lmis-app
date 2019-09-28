@@ -419,13 +419,13 @@ public class InventoryMoveList extends BaseFragment implements AdapterView.OnIte
             drawerItems.add(new DrawerItem(TAG, yardInProcessed, count(MType.YARD_IN, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_IN, "processed")));
 
             //货场收货
-//            String yardConfirmTitle = "货场入库确认";
-//            String yardConfirmDraft = "待处理";
-//            String yardConfirmProcessed = "已处理";
-//
-//            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
-//            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
-//            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
+            String yardConfirmTitle = "货场入库确认";
+            String yardConfirmDraft = "待处理";
+            String yardConfirmProcessed = "已处理";
+
+            drawerItems.add(new DrawerItem(TAG, yardConfirmTitle, true));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmDraft, count(MType.YARD_CONFIRM, MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment(InventoryMoveOpType.YARD_CONFIRM, "draft")));
+            drawerItems.add(new DrawerItem(TAG, yardConfirmProcessed, count(MType.YARD_CONFIRM, MState.PROCESSED, context), R.drawable.ic_action_archive, getFragment(InventoryMoveOpType.YARD_CONFIRM, "processed")));
 
             //货场出库
             String yardOutTitle = "货场出库";

@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SyncAdapterType;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -53,6 +54,8 @@ import com.fizzbuzz.android.dagger.InjectingFragmentActivity;
 import com.github.snowdream.android.app.UpdateFormat;
 import com.github.snowdream.android.app.UpdateOptions;
 import com.github.snowdream.android.app.UpdatePeriod;
+import com.lmis.addons.inventory.InventoryMoveDB;
+import com.lmis.addons.inventory.InventoryMoveList;
 import com.lmis.auth.LmisAccountManager;
 import com.lmis.base.about.AboutFragment;
 import com.lmis.base.account.AccountFragment;
@@ -61,15 +64,26 @@ import com.lmis.base.account.UserProfile;
 import com.lmis.dagger_module.ActivityModule;
 import com.lmis.dagger_module.OrgModule;
 import com.lmis.orm.LmisDataRow;
+import com.lmis.orm.LmisDatabase;
+import com.lmis.receivers.ScanBarcodeBroadcastReceiver;
 import com.lmis.support.BaseFragment;
 import com.lmis.support.LmisUser;
 import com.lmis.support.fragment.FragmentListener;
 import com.lmis.util.OnBackButtonPressedListener;
 import com.lmis.util.PreferenceManager;
 import com.lmis.util.UpdateManager;
+import com.lmis.util.barcode.BarcodeAlreadyConfirmedException;
+import com.lmis.util.barcode.BarcodeDuplicateException;
+import com.lmis.util.barcode.BarcodeNotExistsException;
+import com.lmis.util.barcode.DBException;
+import com.lmis.util.barcode.InvalidBarcodeException;
+import com.lmis.util.barcode.InvalidToOrgException;
+import com.lmis.util.barcode.ScannerSuccessEvent;
 import com.lmis.util.drawer.DrawerAdatper;
 import com.lmis.util.drawer.DrawerItem;
 import com.lmis.util.drawer.DrawerListener;
+import com.lmis.util.event.StartDetailFragmentEvent;
+import com.lmis.util.event.StartMainFragmentEvent;
 import com.lmis.widgets.WidgetHelper;
 import com.squareup.otto.Bus;
 
@@ -195,6 +209,8 @@ public class MainActivity extends InjectingFragmentActivity implements
     private CharSequence mTitle;
     private OnBackButtonPressedListener backPressed = null;
     private boolean mLandscape = false;
+    private IntentFilter mScanBarcodeIntentFilter = null;
+    private ScanBarcodeBroadcastReceiver mScanBarcodeBroadcastReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +231,14 @@ public class MainActivity extends InjectingFragmentActivity implements
             mLandscape = true;
         }
         init();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mScanBarcodeBroadcastReceiver != null){
+            mContext.unregisterReceiver(mScanBarcodeBroadcastReceiver);
+        }
     }
 
     @Override
@@ -256,6 +280,28 @@ public class MainActivity extends InjectingFragmentActivity implements
 //        manager.checkUpdate();
     }
 
+    //初始化扫描头
+    private void initScanReceiver(){
+        mScanBarcodeIntentFilter = new IntentFilter();
+        mScanBarcodeBroadcastReceiver = new ScanBarcodeBroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "scanbarcode receiver.");
+                String barcode = intent.getStringExtra("barcode_string");
+                Log.d(TAG, "scan barcode after text changed");
+                if (barcode == null || barcode.length() == 0) {
+                    return;
+                }
+                mBus.post(new ScannerSuccessEvent(barcode));
+            }
+        };
+
+        mScanBarcodeIntentFilter.addAction("android.intent.ACTION_DECODE_DATA");
+        this.mContext.registerReceiver(mScanBarcodeBroadcastReceiver, mScanBarcodeIntentFilter);
+        Log.d(TAG, "registerReceiver");
+
+    }
+
     private void init() {
         Log.d(TAG, "MainActivity->init()");
         initDrawerControls();
@@ -280,6 +326,7 @@ public class MainActivity extends InjectingFragmentActivity implements
             } else {
                 initDrawer();
                 initSpinner();
+                initScanReceiver();
             }
         }
     }
@@ -680,6 +727,13 @@ public class MainActivity extends InjectingFragmentActivity implements
         if (bundle != null) {
             settingsBundle.putAll(bundle);
         }
+        if (ContentResolver.isSyncPending(account, authority)  ||
+                ContentResolver.isSyncActive(account, authority)) {
+            Log.i("ContentResolver", "SyncPending, canceling");
+            ContentResolver.cancelSync(account, authority);
+        }
+        ContentResolver.setIsSyncable(account, authority,1);
+        ContentResolver.setSyncAutomatically(account, authority, true);
         ContentResolver.requestSync(account, authority, settingsBundle);
     }
 
@@ -806,6 +860,7 @@ public class MainActivity extends InjectingFragmentActivity implements
             tran.addToBackStack(null);
         }
         tran.commit();
+        mBus.post(new StartMainFragmentEvent(fragment));
     }
 
     @Override
@@ -818,6 +873,7 @@ public class MainActivity extends InjectingFragmentActivity implements
             tran.addToBackStack(null);
         }
         tran.commit();
+        mBus.post(new StartDetailFragmentEvent(fragment));
     }
 
     @Override

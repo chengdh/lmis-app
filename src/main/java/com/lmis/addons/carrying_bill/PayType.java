@@ -24,7 +24,7 @@ public class PayType {
     }
 
 
-    public static Map<String, String> payTypesWithOutRE() {
+    public static Map<String, String> payTypesWithoutRE() {
         Map<String, String> ret = new LinkedHashMap<String, String>();
 
         ret.put(PAY_TYPE_TH, "提货付");

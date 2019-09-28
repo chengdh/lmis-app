@@ -96,7 +96,9 @@ public class LmisAccountManager {
         String accountName = bundleData.getAndroidName();
         Account account = new Account(accountName, accountType);
         Bundle bundle = bundleData.getAsBundle();
-        return accMgr.addAccountExplicitly(account, password, bundle);
+        boolean ret = accMgr.addAccountExplicitly(account, password, bundle);
+        return ret;
+
     }
 
     /**

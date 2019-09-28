@@ -25,5 +25,10 @@
         android:icon="@drawable/ic_action_search"
         android:visible="false"
         android:title="@string/print" />
+    <item
+        android:id="@+id/menu_bill_print_label"
+        android:icon="@drawable/ic_action_search"
+        android:visible="false"
+        android:title="打印条码" />
 
 </menu>

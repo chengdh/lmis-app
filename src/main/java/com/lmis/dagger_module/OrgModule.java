@@ -3,7 +3,7 @@ package com.lmis.dagger_module;
 import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingActivityModule;
-import com.lmis.Lmis;
+import com.lmis.base.area.AreaDB;
 import com.lmis.base.load_org.OrgLoadOrgDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.base.sorting_org.OrgSortingOrgDB;
@@ -200,11 +200,24 @@ public class OrgModule {
         return ret;
     }
 
+    @Provides
+    @SummaryOrgs
+    public List<LmisDataRow> providesSummaryOrgs(@InjectingActivityModule.Activity Context ctx) {
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        //未登录时
+        if (LmisUser.current(ctx) != null) {
+            String where = "is_active = ? AND is_summary = ? AND is_visible = ?";
+            String[] whereArgs = new String[]{"true", "true", "true"};
+            return new OrgDB(ctx).select(where, whereArgs);
+        }
+        return ret;
+    }
+
 
     //总部机构列表
     @Provides
     @SummaryChildrenOrgs
-    public List<LmisDataRow> providesSummaryOrgs(@InjectingActivityModule.Activity Context ctx) {
+    public List<LmisDataRow> providesSummaryChildrenOrgs(@InjectingActivityModule.Activity Context ctx) {
         List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
         //未登录时
         if (LmisUser.current(ctx) != null) {
@@ -230,6 +243,26 @@ public class OrgModule {
         return ret;
     }
 
+    //外转区域列表
+    @Provides
+    @AllAreas
+    public List<LmisDataRow> providesAllAreas(@InjectingActivityModule.Activity Context ctx) {
+        List<LmisDataRow> ret = new ArrayList<LmisDataRow>();
+        //未登录时
+        if (LmisUser.current(ctx) != null) {
+            String where = "is_active = ?" ;
+            String[] whereArgs = new String[]{"true"};
+            AreaDB db = new AreaDB(ctx);
+            List<LmisDataRow> allAreas = db.select(where, whereArgs);
+            if (allAreas.size() > 0) {
+                ret.addAll(allAreas);
+            }
+
+        }
+        return ret;
+    }
+
+
     //所有机构
     @Qualifier
     @Target({FIELD, PARAMETER, METHOD})
@@ -237,6 +270,15 @@ public class OrgModule {
     @Retention(RUNTIME)
     public @interface AllOrgs {
     }
+
+    //所有外转区域
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface AllAreas{
+    }
+
 
     //当前用户可访问机构
     @Qualifier
@@ -261,6 +303,16 @@ public class OrgModule {
     @Retention(RUNTIME)
     public @interface YardsOrgs {
     }
+
+
+    //总部
+    @Qualifier
+    @Target({FIELD, PARAMETER, METHOD})
+    @Documented
+    @Retention(RUNTIME)
+    public @interface SummaryOrgs {
+    }
+
 
     @Qualifier
     @Target({FIELD, PARAMETER, METHOD})

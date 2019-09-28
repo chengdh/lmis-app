@@ -2,15 +2,21 @@ package com.lmis.addons.inventory;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import com.lmis.orm.LmisDataRow;
 import com.lmis.util.barcode.BarcodeParser;
 
+import java.util.List;
+
 /**
  * Created by chengdh on 14-9-14.
  */
-public class InventoryMovePagerAdapter extends FragmentStatePagerAdapter {
+public class InventoryMovePagerAdapter extends FragmentStatePagerAdapter{
     public static final String TAG = "InventoryOutPagerAdapter";
 
     BarcodeParser mBarcodeParser = null;

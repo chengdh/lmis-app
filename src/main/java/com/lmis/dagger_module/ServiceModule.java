@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.fizzbuzz.android.dagger.InjectingService;
 import com.fizzbuzz.android.dagger.Injector;
+import com.lmis.services.AreaSyncService;
 import com.lmis.services.IlConfigSyncService;
 import com.lmis.services.InventoryOutSyncService;
 import com.lmis.services.MessageSyncService;
@@ -26,7 +27,8 @@ import dagger.Provides;
                 UserOrgSyncService.class,
                 IlConfigSyncService.class,
                 MessageSyncService.class,
-                InventoryOutSyncService.class
+                InventoryOutSyncService.class,
+                AreaSyncService.class
         })
 
 public class ServiceModule {

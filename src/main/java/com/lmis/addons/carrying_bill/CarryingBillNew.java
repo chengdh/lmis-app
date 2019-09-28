@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,14 +73,29 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
      */
     View mView = null;
 
+
+    @InjectView(R.id.txv_label_transit_org)
+    TextView mTxvLabelTransitOrg;
+
+    @InjectView(R.id.txv_label_area)
+    TextView mTxvLabelArea;
+
+    @InjectView(R.id.txv_label_to_org)
+    TextView mTxvLabelToOrg;
+
     /**
      * The M spinner to org.
      */
-    //@InjectView(R.id.spinner_to_org)
-    //Spinner mSpinnerToOrg;
+    @InjectView(R.id.spinner_transit_org)
+    Spinner mSpinnerTransitOrg;
+
+    @InjectView(R.id.spinner_area)
+    Spinner mSpinnerArea;
 
     @InjectView(R.id.search_spinner_to_org)
     ExcludeAccessOrgSearchableSpinner mSearchSpinnerToOrg;
+
+
 
     /**
      * The M edt from customer name.
@@ -235,6 +249,9 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     int mCarryingBillID = -1;
     LmisDataRow mCurOrg;
 
+    //运单类型
+    String mBillType = "ComputerBill";
+
     /**
      * On create view.
      *
@@ -262,6 +279,36 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         Integer default_org_id = currentUser.getDefault_org_id();
         OrgDB orgDB = new OrgDB(scope.context());
         mCurOrg = orgDB.select(default_org_id);
+        Bundle args = getArguments();
+        if(args.containsKey("type")){
+            mBillType = args.getString("type");
+        }
+        if(mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)){
+            mTxvLabelTransitOrg.setVisibility(View.VISIBLE);
+            mSpinnerTransitOrg.setVisibility(View.VISIBLE);
+        }
+        else{
+            mTxvLabelTransitOrg.setVisibility(View.GONE);
+            mSpinnerTransitOrg.setVisibility(View.GONE);
+        }
+
+        if(mBillType.equals(CarryingBillType.TransitBill)){
+            mTxvLabelArea.setVisibility(View.VISIBLE);
+
+            mSpinnerArea.setVisibility(View.VISIBLE);
+
+            mTxvLabelToOrg.setVisibility(View.GONE);
+            mSearchSpinnerToOrg.setVisibility(View.GONE);
+        }
+        else{
+
+            mTxvLabelArea.setVisibility(View.GONE);
+            mSpinnerArea.setVisibility(View.GONE);
+
+
+            mTxvLabelToOrg.setVisibility(View.VISIBLE);
+            mSearchSpinnerToOrg.setVisibility(View.VISIBLE);
+        }
 
         mEdtInsuredFee.setEnabled(false);
         mEdtCustomerID.setVisibility(View.GONE);
@@ -516,6 +563,18 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     private Boolean save2DB() {
 
         LmisValues vals = new LmisValues();
+        vals.put("type",mBillType);
+        if(mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)){
+            LmisDataRow transitOrg = (LmisDataRow) mSpinnerTransitOrg.getSelectedItem();
+            vals.put("transit_org_id",transitOrg.get("id"));
+            vals.put("transit_org_name", transitOrg.getString("name"));
+        }
+
+        if(mBillType.equals(CarryingBillType.TransitBill)){
+            LmisDataRow area = (LmisDataRow) mSpinnerArea.getSelectedItem();
+            vals.put("area_id",area.get("id"));
+            vals.put("area_name", area.getString("name"));
+        }
         vals.put("from_org_id", scope.currentOrg().getInt("id"));
         LmisDataRow fromOrg = scope.currentOrg();
         vals.put("from_org_name", fromOrg.getString("name"));
@@ -741,18 +800,28 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     private void setPayTypes(boolean removeMonthPay){
         final List<Map.Entry> payTypes;
         if(removeMonthPay){
-            payTypes = new ArrayList<Map.Entry>(PayType.payTypesWithOutRE().entrySet());
+            payTypes = new ArrayList<Map.Entry>(PayType.payTypesWithoutRE().entrySet());
         }
         else{
             payTypes = new ArrayList<Map.Entry>(PayType.payTypes().entrySet());
         }
-        mSpinnerPayType.setmPayTypes(payTypes);
+//        mSpinnerPayType.setmPayTypes(payTypes);
         ArrayAdapter adapter = (ArrayAdapter) mSpinnerPayType.getAdapter();
+        adapter.clear();
+        adapter.addAll(payTypes);
         adapter.notifyDataSetChanged();
         if(!removeMonthPay) {
             mSpinnerPayType.setPayType(PayType.PAY_TYPE_RETURN);
         }
 
+    }
+
+    public String getmBillType() {
+        return mBillType;
+    }
+
+    public void setmBillType(String mBillType) {
+        this.mBillType = mBillType;
     }
 
     /**

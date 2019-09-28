@@ -174,7 +174,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
                     String fromOrg = bill.getString("from_org_name");
                     String toOrg = bill.getString("to_org_name");
 
-                    String fromTo = String.format("%s 至 %s", fromOrg, toOrg);
+                    String fromTo = String.format("%s->%s", fromOrg, toOrg);
 
                     holder.txvBillNo.setText(billNo);
                     holder.txvFromTo.setText(fromTo);

@@ -39,6 +39,7 @@
         android:id="@+id/edt_scan_barcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="false"
         android:gravity="center_horizontal"
         android:hint="扫描条码"
         android:inputType="number"

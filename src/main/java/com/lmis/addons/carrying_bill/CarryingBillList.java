@@ -58,6 +58,17 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
     SearchView mSearchView;
     View mView = null;
 
+    public String getmBillType() {
+        return mBillType;
+    }
+
+    public void setmBillType(String mBillType) {
+        this.mBillType = mBillType;
+    }
+
+    //运单类型
+    String mBillType = "ComputerBill";
+
     List<Object> mCarryingBillObjects = new ArrayList<Object>();
 
     BillLoader mCarryingBillLoader = null;
@@ -143,7 +154,7 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
      * The enum M type.
      * 数据分为草稿及已处理
      */
-    private enum MType {
+    private enum MState {
         DRAFT, PROCESSED
     }
 
@@ -187,8 +198,8 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
 
     private void initData() {
         Log.d(TAG, "CarryingBillList->initData()");
-        String title = "Draft";
-        MType type = MType.DRAFT;
+        String title = "草稿";
+        MState billState = MState.DRAFT;
 //        if(mSelectedItemPosition > -1) {
 //            return;
 //        }
@@ -199,17 +210,18 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
                 mCarryingBillLoader.cancel(true);
                 mCarryingBillLoader = null;
             }
-            if (bundle.containsKey("type")) {
-                mCurrentType = bundle.getString("type");
+            if (bundle.containsKey("state")) {
+                mCurrentType = bundle.getString("state");
                 if (mCurrentType.equals("draft")) {
-                    type = MType.DRAFT;
+                    billState = MState.DRAFT;
                 } else if (mCurrentType.equals("processed")) {
-                    type = MType.PROCESSED;
-                    title = "Processed";
+                    billState = MState.PROCESSED;
+                    title = "已上传";
                 }
+                mBillType = bundle.getString("type");
             }
             scope.main().setTitle(title);
-            mCarryingBillLoader = new BillLoader(type);
+            mCarryingBillLoader = new BillLoader(mBillType,billState);
             mCarryingBillLoader.execute((Void) null);
         }
     }
@@ -247,7 +259,11 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
 
         drawerItems.add(new DrawerItem(TAG, "运单", true));
-        drawerItems.add(new DrawerItem(TAG, "运单录入", count(MType.PROCESSED, context), R.drawable.ic_menu_carrying_bill, getFragment("processed")));
+        drawerItems.add(new DrawerItem(TAG, "机打运单", count(CarryingBillType.ComputerBill, MState.PROCESSED, context), R.drawable.ic_menu_carrying_bill, getFragment(CarryingBillType.ComputerBill, "processed")));
+        drawerItems.add(new DrawerItem(TAG, "内部中转运单", count(CarryingBillType.InnerTransitBill, MState.PROCESSED, context), R.drawable.ic_menu_carrying_bill, getFragment(CarryingBillType.InnerTransitBill, "processed")));
+        drawerItems.add(new DrawerItem(TAG, "外部中转运单", count(CarryingBillType.TransitBill, MState.PROCESSED, context), R.drawable.ic_menu_carrying_bill, getFragment(CarryingBillType.TransitBill, "processed")));
+
+
         Bundle args = new Bundle();
         args.putInt("no_use", 1);
         SearchBill fragment = new SearchBill();
@@ -256,30 +272,30 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         return drawerItems;
     }
 
-    private int count(MType type, Context context) {
+    private int count(String billType, MState billState, Context context) {
         int count = 0;
         CarryingBillDB db = (CarryingBillDB) databaseHelper(context);
         String where = null;
         String whereArgs[] = null;
-        HashMap<String, Object> obj = getWhere(type);
+        HashMap<String, Object> obj = getWhere(billType, billState);
         where = (String) obj.get("where");
         whereArgs = (String[]) obj.get("whereArgs");
         count = db.count(where, whereArgs);
         return count;
     }
 
-    public HashMap<String, Object> getWhere(MType type) {
+    public HashMap<String, Object> getWhere(String billType, MState billState) {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        String where = null;
+        String where = " type= ?";
         String[] whereArgs = null;
-        switch (type) {
+        switch (billState) {
             case DRAFT:
-                where = "processed is null or processed = ? ";
-                whereArgs = new String[]{"false"};
+                where += " and  processed is null or processed = ? ";
+                whereArgs = new String[]{billType,"false"};
                 break;
             default:
-                where = "processed = ? ";
-                whereArgs = new String[]{"true"};
+                where += " and processed = ? ";
+                whereArgs = new String[]{billType,"true"};
                 break;
         }
         map.put("where", where);
@@ -287,10 +303,15 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         return map;
     }
 
-    private BaseFragment getFragment(String value) {
+    private BaseFragment getFragment(String billType, String billState) {
         CarryingBillList list = new CarryingBillList();
         Bundle bundle = new Bundle();
-        bundle.putString("type", value);
+
+        //单据类型
+        bundle.putString("type", billType);
+        //单据状态
+        bundle.putString("state", billState);
+
         list.setArguments(bundle);
         return list;
     }
@@ -309,6 +330,9 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
             case (R.id.menu_carrying_bill_new):
                 Log.d(TAG, "New Menu select");
                 Fragment fragmentNew = new CarryingBillNew();
+                Bundle args = new Bundle();
+                args.putString("type",mBillType);
+                fragmentNew.setArguments(args);
                 scope.main().startDetailFragment(fragmentNew);
                 return true;
             case (R.id.menu_carrying_bill_list_search):
@@ -327,16 +351,18 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
     }
 
     public class BillLoader extends AsyncTask<Void, Void, Boolean> {
-        MType mType = null;
+        MState mState = null;
+        String mBillType = "ComputerBill";
 
-        public BillLoader(MType type) {
-            mType = type;
+        public BillLoader(String billType,MState billState) {
+            mState = billState;
+            mBillType = billType;
         }
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
             Log.d(TAG, "BillLoader#doInBackground");
-            HashMap<String, Object> map = getWhere(mType);
+            HashMap<String, Object> map = getWhere(mBillType, mState);
             String where = (String) map.get("where");
             String whereArgs[] = (String[]) map.get("whereArgs");
             List<LmisDataRow> result = db().select(where, whereArgs, null, null, "bill_date DESC");
@@ -402,4 +428,5 @@ public class CarryingBillList extends BaseFragment implements AdapterView.OnItem
         Toast.makeText(scope.context(), "单据已删除!", Toast.LENGTH_LONG).show();
         return ret;
     }
+
 }

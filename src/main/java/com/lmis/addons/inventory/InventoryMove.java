@@ -61,6 +61,14 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     Upload mUploadAsync = null;
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Log.d(TAG,"onSaveInstanceState:");
+        outState.putString("state", "test");
+    }
+
     /**
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      *                           from a previous saved state as given here.
@@ -69,7 +77,13 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            String state = savedInstanceState.getString("curChoice", "new test");
+            Log.d(TAG,"onCreateView:" + state);
+        }
         mView = inflater.inflate(R.layout.fragment_inventory_move, container, false);
+
 
         ButterKnife.inject(this, mView);
         initData();
@@ -116,6 +130,7 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
     private void initPager() {
         mPageAdapter = new InventoryMovePagerAdapter(getFragmentManager(), mBarcodeParser, mInventoryMove);
         mPager.setAdapter(mPageAdapter);
+        mPageAdapter.notifyDataSetChanged();
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -241,4 +256,5 @@ public class InventoryMove extends BaseFragment implements TabHost.OnTabChangeLi
             pdialog.dismiss();
         }
     }
+
 }
