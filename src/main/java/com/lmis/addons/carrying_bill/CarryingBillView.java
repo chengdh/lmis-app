@@ -136,8 +136,7 @@ public class CarryingBillView extends BaseFragment {
             mTxvToOrg.setText(toOrg.getString("name"));
 
             if(billType.equals(CarryingBillType.TransitBill)) {
-                LmisDataRow toArea = mCarryingBill.getM2ORecord("area_id").browse();
-                mTxvToOrg.setText(toArea.getString("name"));
+                mTxvToOrg.setText(mCarryingBill.getString("area_name"));
             }
 
 
