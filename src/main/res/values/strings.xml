@@ -166,6 +166,7 @@ Your inbox contains private messages or emails sent to you as well as informatio
     <string name="sync_wizard_user_orgs">User Orgs</string>
     <string name="sync_wizard_inventory_moves">Inventory Move</string>
     <string name="sync_wizard_il_configs">Il Config</string>
+    <string name="sync_wizard_area">area</string>
 
     <!-- provider label-->
     <string name="label_messages">Messages</string>

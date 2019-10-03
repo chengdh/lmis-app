@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -29,13 +30,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by chunsoft on 15/12/2.
  */
 public class UpdateManager {
-    private static final String URL_VERSION_XML = "http://git.oschina.net/chengdh/lmis-app-release/raw/master/update_scan_barcode.xml";
+    private static final String URL_VERSION_XML = "http://114.115.130.233:9090/assets/update_yujiusuyun_app.xml";
     //下载中
     private static final int DOWNLOAD = 1;
     //下载结束

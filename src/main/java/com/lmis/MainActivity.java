@@ -269,15 +269,6 @@ public class MainActivity extends InjectingFragmentActivity implements
 
     private void checkUpgrade() {
         UpdateManager manager = new UpdateManager(this);
-
-//        UpdateOptions options = new UpdateOptions.Builder(this)
-//                .checkUrl("http://git.oschina.net/chengdh/lmis-app-release/raw/master/update_scanbarcode.xml")
-//                .updateFormat(UpdateFormat.XML)
-//                .updatePeriod(new UpdatePeriod(UpdatePeriod.EACH_TIME))
-//                .checkPackageName(false)
-//                .build();
-//
-//        manager.checkUpdate();
     }
 
     //初始化扫描头

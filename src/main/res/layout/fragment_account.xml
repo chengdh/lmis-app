@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_edit_server_url"
                 android:inputType="textUri"
-                android:text="yujiu.link56yun.cn:9090"
+                android:text="114.115.130.233:9090"
                 android:singleLine="true" />
 
             <com.lmis.util.controls.LmisTextView

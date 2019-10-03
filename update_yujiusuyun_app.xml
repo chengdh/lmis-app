@@ -3,11 +3,11 @@
     <appName>宇玖速运App</appName>
     <appDescription>宇玖速运App</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>1</versionCode>
-    <versionName>1.0</versionName>
+    <versionCode>2</versionCode>
+    <versionName>1.2</versionName>
     <forceUpdate>true</forceUpdate>
     <autoUpdate>true</autoUpdate>
-    <apkUrl>https://gitee.com/chengdh/lmis-app-release/raw/master/yujiusuyun-lmis-app-release.apk</apkUrl>
+    <apkUrl>http://114.115.130.233:9090/assets/yujiusuyun-lmis-app-release.apk</apkUrl>
     <updateTips>
         <default>update tips</default>
         <en>update tips</en>
