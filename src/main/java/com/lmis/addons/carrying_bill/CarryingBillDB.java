@@ -289,6 +289,8 @@ public class CarryingBillDB extends LmisDatabase {
 
         json.remove("from_org_name");
         json.remove("to_org_name");
+        json.remove("transit_org_name");
+        json.remove("area_name");
         json.remove("from_customer_code");
         json.remove("is_urgent");
         json.remove("is_receipt");

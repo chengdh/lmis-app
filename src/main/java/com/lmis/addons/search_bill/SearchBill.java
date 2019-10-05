@@ -173,7 +173,7 @@ public class SearchBill extends BaseFragment {
         mMenuSearch = menu.findItem(R.id.menu_bill_search_search);
         mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setQueryHint("输入运单号或扫描条码");
-        mSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+        mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mQueryTextListener = new MyQueryTextLisener();
         mSearchView.setOnQueryTextListener(mQueryTextListener);
         mMenuSearch.expandActionView();
