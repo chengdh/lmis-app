@@ -3,6 +3,7 @@ package com.lmis.addons.carrying_bill;
 import android.content.Context;
 import android.util.Log;
 
+import us.monoid.json.JSONException;
 import zpSDK.zpSDK.*;
 
 import com.lmis.orm.LmisDataRow;
@@ -25,6 +26,18 @@ public class CarryingBillPrintCpcl {
 
     public final static String TAG = "CarryingBillPrintCpcl";
     public final static String PRINTER_NAME = "CS3_8751";
+
+    private static String getBillAttr(JSONObject bill,String key){
+        String ret = "";
+        try {
+            ret = bill.getString(key);
+        } catch (JSONException e) {
+            Log.e(TAG,e.getMessage());
+            e.printStackTrace();
+        }
+        return ret;
+
+    }
 
     /**
      * Print void.
@@ -81,12 +94,12 @@ public class CarryingBillPrintCpcl {
         String serviceNote2 = "";
         List serviceNotes = new ArrayList();
         try {
-            if (jsonBill.getString("is_urgent").equals("true")) {
+            if (getBillAttr(jsonBill,"is_urgent").equals("true")) {
                 serviceNote1 = "急";
                 serviceNotes.add(serviceNote1);
 
             }
-            if (jsonBill.getString("is_receipt").equals("true")) {
+            if (getBillAttr(jsonBill,"is_receipt").equals("true")) {
                 serviceNote2 = "回单";
                 serviceNotes.add(serviceNote2);
             }
@@ -128,10 +141,10 @@ public class CarryingBillPrintCpcl {
             //运单号 目的地  货号
             int x21 = 0;
             int y21 = y2 + 10;
-            String billNo = jsonBill.getString("bill_no");
-            String goodsNo = jsonBill.getString("goods_no");
+            String billNo = getBillAttr(jsonBill,"bill_no");
+            String goodsNo = getBillAttr(jsonBill,"goods_no");
 
-            String toOrgName = jsonBill.getString("to_org_name");
+            String toOrgName = getBillAttr(jsonBill,"to_org_name");
             zpSDK.drawText(x21 + 10, y21, toOrgName, 3, 0, 1, false, false);
             zpSDK.drawText(x21 + 10 + 120, y21, billNo, 3, 0, 1, false, false);
             zpSDK.drawText(x21 + 10 + 120 + 200, y21, goodsNo, 3, 0, 1, false, false);
@@ -151,8 +164,8 @@ public class CarryingBillPrintCpcl {
             //收货网点/打印时间
             int x3 = 0;
             int y3 = y21 + 50;
-            String fromOrgName = jsonBill.getString("from_org_name");
-            String createdAt = jsonBill.getString("created_at_str");
+            String fromOrgName = getBillAttr(jsonBill,"from_org_name");
+            String createdAt = getBillAttr(jsonBill,"created_at_str");
             zpSDK.drawText(x3 + 10, y3, fromOrgName, 0, 0, 1, false, false);
             zpSDK.drawText(x3 + 300, y3, createdAt, 0, 0, 1, false, false);
 
@@ -163,8 +176,8 @@ public class CarryingBillPrintCpcl {
             int x4 = 0;
             int y4 = y3 + 50;
 
-            String fromCustomerName = jsonBill.getString("from_customer_name");
-            String fromCustomerMobile = jsonBill.getString("from_customer_mobile");
+            String fromCustomerName = getBillAttr(jsonBill,"from_customer_name");
+            String fromCustomerMobile = getBillAttr(jsonBill,"from_customer_mobile");
             zpSDK.drawText(x4 + 10, y4, "寄", 0, 0, 1, false, false);
             zpSDK.drawText(x4 + 40, y4, "寄件人:", 0, 0, 1, false, false);
             zpSDK.drawText(x4 + 40 + 100, y4, fromCustomerName, 0, 0, 1, false, false);
@@ -179,10 +192,10 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawLine(3, x4 + 40, y4 + 40, bottomRightX, y4 + 40, true);
 
             zpSDK.drawText(x4 + 10, y4 + 50, "方", 0, 0, 1, false, false);
-            String bankInfo = String.format("%s  %s",jsonBill.getString("bank_name"),jsonBill.getString("card_no"));
+            String bankInfo = String.format("%s  %s",getBillAttr(jsonBill,"bank_name"),getBillAttr(jsonBill,"card_no"));
 //            zpSDK.drawText(x4 + 40, y4 + 60, "银行卡号:" + bankInfo, 0, 0, 1, false, false);
 
-            String from_customer_code = jsonBill.getString("from_customer_code");
+            String from_customer_code = getBillAttr(jsonBill,"from_customer_code");
             zpSDK.drawText(x4 + 40, y4 + 60, "客户编号:" + from_customer_code, 0, 0, 1, false, false);
 
 
@@ -197,8 +210,8 @@ public class CarryingBillPrintCpcl {
             //收方
             int x5 = 0;
             int y5 = y4 + 70 + 50;
-            String toCustomerName = jsonBill.getString("to_customer_name");
-            String toCustomerMobile = jsonBill.getString("to_customer_mobile");
+            String toCustomerName = getBillAttr(jsonBill,"to_customer_name");
+            String toCustomerMobile = getBillAttr(jsonBill,"to_customer_mobile");
             zpSDK.drawText(x5 + 10, y5, "收", 0, 0, 1, false, false);
             zpSDK.drawText(x5 + 40, y5, "收件人:", 0, 0, 1, false, false);
             zpSDK.drawText(x5 + 40 + 100, y5, toCustomerName, 0, 0, 1, false, false);
@@ -252,14 +265,14 @@ public class CarryingBillPrintCpcl {
             //运单号 目的地  货号
             int x21 = 0;
             int y21 = y2 + 10;
-            String billNo = jsonBill.getString("bill_no");
-            String goodsNo = jsonBill.getString("goods_no");
+            String billNo = getBillAttr(jsonBill,"bill_no");
+            String goodsNo = getBillAttr(jsonBill,"goods_no");
 
-            String billType = jsonBill.getString("type");
+            String billType = getBillAttr(jsonBill,"type");
 
-            String toOrgName = jsonBill.getString("to_org_name");
+            String toOrgName = getBillAttr(jsonBill,"to_org_name");
             if(billType.equals(CarryingBillType.TransitBill)){
-                toOrgName = jsonBill.getString("area_name");
+                toOrgName = getBillAttr(jsonBill,"area_name");
             }
             zpSDK.drawText(x21 + 10, y21, toOrgName, 3, 0, 1, false, false);
             zpSDK.drawText(x21 + 10 + 150, y21, billNo, 3, 0, 1, false, false);
@@ -285,11 +298,11 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawLine(3, x3 + 30, y21 + 40, x3 + 30, y3 + 30 + 30 + 30 + 30, true);
 
 
-            String goodsName = jsonBill.getString("goods_info");
-            String goodsNum = jsonBill.getString("goods_num");
-            String goodsVolume = jsonBill.getString("goods_volume");
-            String goodsWeight = jsonBill.getString("goods_weight");
-            String goodsPackage = jsonBill.getString("package");
+            String goodsName = getBillAttr(jsonBill,"goods_info");
+            String goodsNum = getBillAttr(jsonBill,"goods_num");
+            String goodsVolume = getBillAttr(jsonBill,"goods_volume");
+            String goodsWeight = getBillAttr(jsonBill,"goods_weight");
+            String goodsPackage = getBillAttr(jsonBill,"package");
 
             zpSDK.drawText(x3 + 40, y3, "名称:", 0, 0, 1, false, false);
 
@@ -337,12 +350,12 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawLine(3, x4 + 30, y3 + 30 + 30 + 30 + 30, x4 + 30, y4 + 30 + 30 + 30 + 30, true);
 
 
-            String carryingFee = jsonBill.getString("carrying_fee");
-            String fromShortCarryingFee = jsonBill.getString("from_short_carrying_fee");
-            String toShortCarryingFee = jsonBill.getString("to_short_carrying_fee");
-            String goodsFee = jsonBill.getString("goods_fee");
-            String payType = PayType.payTypes().get(jsonBill.getString("pay_type"));
-            String insuredFee = jsonBill.getString("insured_fee");
+            String carryingFee = getBillAttr(jsonBill,"carrying_fee");
+            String fromShortCarryingFee = getBillAttr(jsonBill,"from_short_carrying_fee");
+            String toShortCarryingFee = getBillAttr(jsonBill,"to_short_carrying_fee");
+            String goodsFee = getBillAttr(jsonBill,"goods_fee");
+            String payType = PayType.payTypes().get(getBillAttr(jsonBill,"pay_type"));
+            String insuredFee = getBillAttr(jsonBill,"insured_fee");
 
             zpSDK.drawText(x4 + 40, y4, "运费:", 0, 0, 1, false, false);
 

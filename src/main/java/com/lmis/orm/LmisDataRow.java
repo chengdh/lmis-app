@@ -176,9 +176,9 @@ public class LmisDataRow {
                 //使用data uri的方式标示base64 encode后的图片,在服务端paperclip会自动解析
                 ret.put(key, "data:image/png;base64," + Base64.encodeToString((byte[]) value, 0));
             } else {
-                if(value == null){
-                    value = "";
-                }
+//                if(value == null){
+//                    value = "";
+//                }
                 ret.put(key, value);
             }
 
