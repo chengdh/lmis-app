@@ -59,6 +59,7 @@ public class LabelPrintCpcl {
             List<String> labels = CarryingBillDB.getLabels(jsonBill);
             for (int i = 0; i < printCount; i++) {
 
+//            for (int i = 0; i < 1; i++) {
                 String label = labels.get(i);
 
                 //203 dpi 8点/毫米
@@ -93,10 +94,10 @@ public class LabelPrintCpcl {
 
 
                 String seq = String.format("%s/%s", i + 1, labels.size());
-                zpSDK.drawText(64 + 20 , 168 + 16 + 24, seq, 4, 0, 0, false, false);
-                zpSDK.drawBarCode(64 + 20+ 140, 168 + 16, label, 128, false, 2, 80);
+                zpSDK.drawText(64 + 20 , 168 + 16 + 24, seq, 3, 0, 0, false, false);
+                zpSDK.drawBarCode(64 + 20+ 100, 168 + 16, label, 128, false, 2, 80);
 
-                zpSDK.drawText(64 + 20 + 140 , 168 + 16 + 88, label, 3, 0, 0, false, false);
+                zpSDK.drawText(64 + 20 + 100 , 168 + 16 + 88, label, 3, 0, 0, false, false);
 
                 zpSDK.drawLine(3, 0, 280 + 32, 568, 280 + 32, true);
 
