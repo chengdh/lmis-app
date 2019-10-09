@@ -340,7 +340,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 reCalToShortCarryingFee();
                 reCalFromShortCarryingFee();
                 //重新计算保险费
-                reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
+                reCalInsuredFee(mCurOrg);
             }
         });
 
@@ -733,7 +733,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     @Subscribe
     public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt) {
         mCurOrg = evt.getmOrg();
-        //reCalInsuredFee(mCurOrg);
+        reCalInsuredFee(mCurOrg);
     }
 
 
@@ -741,7 +741,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     public void onSelectionChanged(String s) {
         reCalToShortCarryingFee();
         reCalFromShortCarryingFee();
-        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
+//        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
     }
 
 
@@ -886,7 +886,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 CarryingBillPrintCpcl.print(list.getActivity(),bill, scope.currentUser(), false,CarryingBillPrintCpcl.PRINTER_NAME);
 
                 //打印标签
-                LabelPrintCpcl.printLabelCpcl(scope.context(),bill,15,LabelPrintCpcl.PRINTER_NAME);
+                LabelPrintCpcl.printLabelCpcl(scope.context(),bill,LabelPrintCpcl.MAX_PRINT_LABEL_COUNT,LabelPrintCpcl.PRINTER_NAME);
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();

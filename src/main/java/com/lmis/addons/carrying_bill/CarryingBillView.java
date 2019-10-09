@@ -232,7 +232,7 @@ public class CarryingBillView extends BaseFragment {
                 CarryingBillPrintCpcl.print(scope.context(),mCarryingBill,scope.currentUser(), true,CarryingBillPrintCpcl.PRINTER_NAME );
                 break;
             case (R.id.menu_carrying_bill_print_label):
-                LabelPrintCpcl.printLabelCpcl(scope.context(),mCarryingBill,15,LabelPrintCpcl.PRINTER_NAME);
+                LabelPrintCpcl.printLabelCpcl(scope.context(),mCarryingBill,LabelPrintCpcl.MAX_PRINT_LABEL_COUNT,LabelPrintCpcl.PRINTER_NAME);
                 break;
             default:
                 super.onOptionsItemSelected(item);

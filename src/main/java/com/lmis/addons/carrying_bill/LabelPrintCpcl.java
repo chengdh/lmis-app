@@ -21,6 +21,7 @@ import zpSDK.zpSDK.zpBluetoothPrinter;
 public class LabelPrintCpcl {
     public final static String TAG = "LabelPrintCpcl";
     public final static String PRINTER_NAME = "CS3_8751";
+    public final static int MAX_PRINT_LABEL_COUNT= 30;
 
     private static zpBluetoothPrinter getZpBluetoothPrinter(Context ctx, String printerName) {
         String devAddress = BlueTooth.getAddress(printerName);
@@ -63,7 +64,8 @@ public class LabelPrintCpcl {
                 String label = labels.get(i);
 
                 //203 dpi 8点/毫米
-                zpSDK.pageSetup(600, 415);
+//                zpSDK.pageSetup(600, 415);
+                zpSDK.pageSetup(560, 400);
 
                 //画外框
                 zpSDK.drawBox(3, 0, 0, 568, 370);
@@ -112,7 +114,7 @@ public class LabelPrintCpcl {
                 zpSDK.drawText(64 + 16, 280 + 8 + 40, fromOrgName, 0, 0, 1, false, false);
                 zpSDK.drawText(64 + 16 + 240, 280 + 8 + 40, createdAt, 0, 0, 1, false, false);
 
-                zpSDK.print(0, 0);
+                zpSDK.print(0, 1);
 
             }
 

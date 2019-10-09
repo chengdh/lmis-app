@@ -119,7 +119,8 @@ public class CarryingBillPrintCpcl {
     public static void printCarryingBillWithJson(JSONObject jsonBill, LmisUser user, Boolean rePrint, zpBluetoothPrinter zpSDK) {
         try {
             //203 dpi 8点/毫米
-            zpSDK.pageSetup(600, 415);
+//            zpSDK.pageSetup(600, 415);
+            zpSDK.pageSetup(560, 400);
 
             //打印时打印机会有部分边距
             int bottomRightX = 568;
@@ -230,7 +231,7 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawText(x5 + 40, y5 + 50, "地址:", 0, 0, 1, false, false);
 
 
-            zpSDK.print(0, 0);
+            zpSDK.print(0, 1);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();
@@ -243,8 +244,9 @@ public class CarryingBillPrintCpcl {
     public static void printCarryingBillSecondPageWithJson(JSONObject jsonBill, LmisUser user, Boolean rePrint, zpBluetoothPrinter zpSDK) {
         try {
             //203 dpi 8点/毫米
-            zpSDK.pageSetup(600, 415);
+//            zpSDK.pageSetup(600, 415);
 
+            zpSDK.pageSetup(560, 400);
             //打印时打印机会有部分边距
             int bottomRightX = 568;
             int bottomRightY = 370;
@@ -418,7 +420,7 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawText(x6, y6, "客服:400-618-5856", 0, 0, 1, false, false);
 
 
-            zpSDK.print(0, 0);
+            zpSDK.print(0, 1);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();
