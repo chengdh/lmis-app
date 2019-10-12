@@ -19,6 +19,7 @@
 package com.lmis.orm;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +155,7 @@ public class LmisDataRow {
                     LmisDataRow row = ((LmisM2ORecord) value).browse();
                     ret.put(key, row.getInt("id"));
                 } catch (Exception ex) {
-                    ret.put(key, -1);
+                    Log.e("LmisDataRow",ex.getMessage());
                 }
             } else if (value instanceof LmisO2MRecord) {
                 //对O2M循环处理

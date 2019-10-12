@@ -58,6 +58,12 @@ public class SearchBill extends BaseFragment {
             put("settlemented", "已日结");
             put("refunded", "已返款");
             put("refunded_confirmed", "返款已确认");
+            put("refunded_confirmed", "返款已确认");
+
+            put("short_list_loaded","短驳已装车");
+            put("short_list_shipped","短驳已发车");
+            put("short_list_reached","短驳已到货");
+
             put("payment_listed", "准备支付");
             put("paid", "货款已付");
             put("posted", "已过帐");
@@ -327,7 +333,7 @@ public class SearchBill extends BaseFragment {
         if (mJsonBill == null)
             return;
 
-        LabelPrintCpcl.printLabelCpclWithJson(scope.context(),mJsonBill, 15, LabelPrintCpcl.PRINTER_NAME);
+        LabelPrintCpcl.printLabelCpclWithJson(scope.context(),mJsonBill,LabelPrintCpcl.MAX_PRINT_LABEL_COUNT , LabelPrintCpcl.PRINTER_NAME);
     }
 
 
