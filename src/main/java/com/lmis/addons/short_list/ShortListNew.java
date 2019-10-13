@@ -179,7 +179,7 @@ public class ShortListNew extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_short_list_upload:
                 if (validateBeforeUpload()) {
-                    if (save2DB()) {
+                    if (save2DB("shipped")) {
                         mUploadAsync = new Uploader();
                         mUploadAsync.execute((Void) null);
                         return true;
@@ -231,12 +231,13 @@ public class ShortListNew extends BaseFragment {
 
 
     //保存至数据库
-    protected boolean save2DB() {
+    protected boolean save2DB(String state) {
         boolean ret = true;
         //需要新建数据库
         LmisValues row = new LmisValues();
         row.put("sum_goods_count", sumGoodsCount());
         row.put("sum_bills_count", sumBillsCount());
+        row.put("state", state);
         if (mShortListId == -1) {
             row.put("from_org_id", mShortList.get("from_org_id"));
             row.put("to_org_id", mShortList.get("to_org_id"));
@@ -250,7 +251,6 @@ public class ShortListNew extends BaseFragment {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date now = new Date();
             row.put("bill_date", sdf.format(now));
-            row.put("state", "draft");
             mShortListId = (int) db().create(row);
         } else {
             //更新数据库
@@ -297,6 +297,7 @@ public class ShortListNew extends BaseFragment {
             }
 
         }
+        mShortList = db().select(mShortListId);
         return ret;
     }
 
@@ -335,12 +336,13 @@ public class ShortListNew extends BaseFragment {
             if (success) {
                 mUploadAsync.cancel(true);
                 Toast.makeText(scope.context(), "上传数据成功!", Toast.LENGTH_SHORT).show();
+                ShortListPrintCpcl.printShortListCpcl(scope.context(),mShortList,ShortListPrintCpcl.PRINTER_NAME);
                 DrawerListener drawer = scope.main();
                 drawer.refreshDrawer("short_lists");
                 //返回已处理界面
                 ShortListList list = new ShortListList();
                 Bundle arg = new Bundle();
-                arg.putString("state", "loaded");
+                arg.putString("state", "shipped");
                 list.setArguments(arg);
                 scope.main().startMainFragment(list, true);
 

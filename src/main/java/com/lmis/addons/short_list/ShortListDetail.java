@@ -102,6 +102,7 @@ public class ShortListDetail extends BaseFragment {
         menu.clear();
         inflater.inflate(R.menu.menu_fragment_short_list_detail, menu);
         mMenu = menu;
+        setShipMenuItemVisible(false);
     }
 
     private void setShipMenuItemVisible(boolean visible) {
@@ -142,6 +143,7 @@ public class ShortListDetail extends BaseFragment {
             mTxvSubTitle.setText(describe);
             mTxvVNo.setText(vNo);
             mTxvDriverName.setText(String.format("%s(%s)", driverName, mobile));
+
 
         }
     }

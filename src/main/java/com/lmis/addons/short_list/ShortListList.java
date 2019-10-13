@@ -298,28 +298,28 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
         LmisUser user = LmisUser.current(getActivity());
         switch (state) {
             case DRAFT:
-                where += " AND (processed = ? or processed IS NULL)";
-                whereArgs[0] = "false";
+                where += " AND (state = ? or processed IS NULL)";
+                whereArgs[0] = "draft";
                 break;
             case LOADED:
-                where += " AND processed = ? ";
-                whereArgs[0] = "true";
+                where += " AND state= ? ";
+                whereArgs[0] = "loaded";
                 break;
             //TODO 以下状态未处理
             case SHIPPED:
-                where += " AND processed = ? ";
+                where += " AND state= ? ";
                 whereArgs[0] = "shipped";
                 break;
 
             case REACHED:
-                where += " AND processed = ? ";
+                where += " AND state = ? ";
                 whereArgs[0] = "reached";
                 break;
 
 
             default:
-                where += " AND (processed = ? or processed IS NULL)";
-                whereArgs[0] = "false";
+                where += " AND (state = ? or state IS NULL)";
+                whereArgs[0] = "draft";
                 break;
         }
         map.put("where", where);
@@ -360,8 +360,8 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
 
         drawerItems.add(new DrawerItem("short_lists", groupTitle, true));
         drawerItems.add(new DrawerItem("short_lists", draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
-        drawerItems.add(new DrawerItem("shoft_lists", loadedTitle, count(MState.LOADED, context), R.drawable.ic_action_archive, getFragment("loaded")));
-//        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
+//        drawerItems.add(new DrawerItem("shoft_lists", loadedTitle, count(MState.LOADED, context), R.drawable.ic_action_archive, getFragment("loaded")));
+        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
         return drawerItems;
     }
 
