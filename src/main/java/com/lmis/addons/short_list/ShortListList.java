@@ -356,12 +356,14 @@ public class ShortListList extends BaseFragment implements AdapterView.OnItemCli
         String loadedTitle = "已装车";
 
         String shippedTitle = "已发车";
+        String reachedTitle = "已到货";
 
 
         drawerItems.add(new DrawerItem("short_lists", groupTitle, true));
         drawerItems.add(new DrawerItem("short_lists", draftTitle, count(MState.DRAFT, context), R.drawable.ic_action_inbox, getFragment("draft")));
 //        drawerItems.add(new DrawerItem("shoft_lists", loadedTitle, count(MState.LOADED, context), R.drawable.ic_action_archive, getFragment("loaded")));
-        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
+//        drawerItems.add(new DrawerItem("shoft_lists", shippedTitle, count(MState.SHIPPED, context), R.drawable.ic_action_archive, getFragment("shipped")));
+        drawerItems.add(new DrawerItem("shoft_lists", reachedTitle, count(MState.REACHED, context), R.drawable.ic_action_archive, getFragment("reached")));
         return drawerItems;
     }
 

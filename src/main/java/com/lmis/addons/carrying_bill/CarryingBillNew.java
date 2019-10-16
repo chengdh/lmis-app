@@ -340,7 +340,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 reCalToShortCarryingFee();
                 reCalFromShortCarryingFee();
                 //重新计算保险费
-                reCalInsuredFee(mCurOrg);
+                reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
             }
         });
 
@@ -409,7 +409,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
             }
         });
         //计算初始保险费
-        reCalInsuredFee(mCurOrg);
+        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
     }
 
 
@@ -733,7 +733,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     @Subscribe
     public void onCurOrgChangeEvent(CurrentOrgChangeEvent evt) {
         mCurOrg = evt.getmOrg();
-        reCalInsuredFee(mCurOrg);
+//        reCalInsuredFee(mCurOrg);
     }
 
 
@@ -741,7 +741,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     public void onSelectionChanged(String s) {
         reCalToShortCarryingFee();
         reCalFromShortCarryingFee();
-//        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
+        reCalInsuredFee(mSearchSpinnerToOrg.getSelectedOrg());
     }
 
 

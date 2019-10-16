@@ -179,7 +179,7 @@ public class ShortListNew extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_short_list_upload:
                 if (validateBeforeUpload()) {
-                    if (save2DB("shipped")) {
+                    if (save2DB("reached")) {
                         mUploadAsync = new Uploader();
                         mUploadAsync.execute((Void) null);
                         return true;

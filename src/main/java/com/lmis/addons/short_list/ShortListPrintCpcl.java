@@ -135,6 +135,7 @@ public class ShortListPrintCpcl {
 
             printFooter(zpSDK, y2 + stepY + 30 + 20);
             zpSDK.print(0, 0);
+            zpSDK.print(0, 0);
             zpSDK.disconnect();
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
