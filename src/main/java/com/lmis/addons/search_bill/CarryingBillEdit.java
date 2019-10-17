@@ -613,14 +613,15 @@ public class CarryingBillEdit extends BaseFragment {
             billAttributes.put("customerable_id",mJsonBill.getInt("id"));
             billAttributes.put("customerable_type","CarryingBill");
             billAttributes.put("is_urgent",1);
+            ret.put("bill_association_object_attributes",billAttributes);
         }
         if(mCbxIsReceipt.isChecked()){
             billAttributes.put("is_receipt",1);
             billAttributes.put("customerable_id",mJsonBill.getInt("id"));
             billAttributes.put("customerable_type","CarryingBill");
+            ret.put("bill_association_object_attributes",billAttributes);
         }
 
-        ret.put("bill_association_object_attributes",billAttributes);
 
         return ret;
     }

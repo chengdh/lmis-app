@@ -306,15 +306,11 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         private void getBillsFromServer() throws JSONException, IOException {
 
             LmisUser currentUser = scope.currentUser();
-            JSONObject json = new JSONObject();
-            json.put("state", "billed");
-            json.put("from_org_id", currentUser.getDefault_org_id());
-
             JSONArray args = new JSONArray();
-            args.put(json);
+            args.put(currentUser.getDefault_org_id());
             Lmis instance = db().getLmisInstance();
 
-            JSONObject result = instance.callMethod("ComputerBill", "where", args, null);
+            JSONObject result = instance.callMethod("ComputerBill", "waitting_short_list_load", args, null);
             JSONArray bills = result.getJSONArray("result");
             mBillsObjects.clear();
             mSelectedBillsObjects.clear();

@@ -3,8 +3,8 @@
     <appName>宇玖速运App</appName>
     <appDescription>宇玖速运App</appDescription>
     <packageName>com.lmis</packageName>
-    <versionCode>6</versionCode>
-    <versionName>1.6</versionName>
+    <versionCode>7</versionCode>
+    <versionName>1.7</versionName>
     <forceUpdate>true</forceUpdate>
     <autoUpdate>true</autoUpdate>
     <apkUrl>http://114.115.130.233:9090/assets/yujiusuyun-lmis-app-release.apk</apkUrl>

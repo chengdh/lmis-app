@@ -96,7 +96,6 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     ExcludeAccessOrgSearchableSpinner mSearchSpinnerToOrg;
 
 
-
     /**
      * The M edt from customer name.
      */
@@ -280,27 +279,25 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         OrgDB orgDB = new OrgDB(scope.context());
         mCurOrg = orgDB.select(default_org_id);
         Bundle args = getArguments();
-        if(args.containsKey("type")){
+        if (args.containsKey("type")) {
             mBillType = args.getString("type");
         }
-        if(mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)){
+        if (mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)) {
             mTxvLabelTransitOrg.setVisibility(View.VISIBLE);
             mSpinnerTransitOrg.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             mTxvLabelTransitOrg.setVisibility(View.GONE);
             mSpinnerTransitOrg.setVisibility(View.GONE);
         }
 
-        if(mBillType.equals(CarryingBillType.TransitBill)){
+        if (mBillType.equals(CarryingBillType.TransitBill)) {
             mTxvLabelArea.setVisibility(View.VISIBLE);
 
             mSpinnerArea.setVisibility(View.VISIBLE);
 
             mTxvLabelToOrg.setVisibility(View.GONE);
             mSearchSpinnerToOrg.setVisibility(View.GONE);
-        }
-        else{
+        } else {
 
             mTxvLabelArea.setVisibility(View.GONE);
             mSpinnerArea.setVisibility(View.GONE);
@@ -563,16 +560,16 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     private Boolean save2DB() {
 
         LmisValues vals = new LmisValues();
-        vals.put("type",mBillType);
-        if(mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)){
+        vals.put("type", mBillType);
+        if (mBillType.equals(CarryingBillType.InnerTransitBill) || mBillType.equals(CarryingBillType.TransitBill)) {
             LmisDataRow transitOrg = (LmisDataRow) mSpinnerTransitOrg.getSelectedItem();
-            vals.put("transit_org_id",transitOrg.get("id"));
+            vals.put("transit_org_id", transitOrg.get("id"));
             vals.put("transit_org_name", transitOrg.getString("name"));
         }
 
-        if(mBillType.equals(CarryingBillType.TransitBill)){
+        if (mBillType.equals(CarryingBillType.TransitBill)) {
             LmisDataRow area = (LmisDataRow) mSpinnerArea.getSelectedItem();
-            vals.put("area_id",area.get("id"));
+            vals.put("area_id", area.get("id"));
             vals.put("area_name", area.getString("name"));
         }
         vals.put("from_org_id", scope.currentOrg().getInt("id"));
@@ -711,6 +708,10 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
      * @return the int
      */
     private int reCalInsuredFee(LmisDataRow curOrg) {
+        if (mBillType.equals(CarryingBillType.TransitBill) || mBillType.equals(CarryingBillType.InnerTransitBill)) {
+            mEdtInsuredFee.setText(0 + "");
+            return 0;
+        }
         OrgDB orgDB = new OrgDB(scope.context());
         IlConfigDB configDB = new IlConfigDB(scope.context());
         int setInsuredFee = 0;
@@ -797,12 +798,11 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     }
 
     //根据客户信息确定是否添加或删除月结选项
-    private void setPayTypes(boolean removeMonthPay){
+    private void setPayTypes(boolean removeMonthPay) {
         final List<Map.Entry> payTypes;
-        if(removeMonthPay){
+        if (removeMonthPay) {
             payTypes = new ArrayList<Map.Entry>(PayType.payTypesWithoutRE().entrySet());
-        }
-        else{
+        } else {
             payTypes = new ArrayList<Map.Entry>(PayType.payTypes().entrySet());
         }
 //        mSpinnerPayType.setmPayTypes(payTypes);
@@ -810,7 +810,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
         adapter.clear();
         adapter.addAll(payTypes);
         adapter.notifyDataSetChanged();
-        if(!removeMonthPay) {
+        if (!removeMonthPay) {
             mSpinnerPayType.setPayType(PayType.PAY_TYPE_RETURN);
         }
 
@@ -883,10 +883,10 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                 //打印小票
                 LmisDataRow bill = db().select(mCarryingBillID);
 
-                CarryingBillPrintCpcl.print(list.getActivity(),bill, scope.currentUser(), false,CarryingBillPrintCpcl.PRINTER_NAME);
+                CarryingBillPrintCpcl.print(list.getActivity(), bill, scope.currentUser(), false, CarryingBillPrintCpcl.PRINTER_NAME);
 
                 //打印标签
-                LabelPrintCpcl.printLabelCpcl(scope.context(),bill,LabelPrintCpcl.MAX_PRINT_LABEL_COUNT,LabelPrintCpcl.PRINTER_NAME);
+                LabelPrintCpcl.printLabelCpcl(scope.context(), bill, LabelPrintCpcl.MAX_PRINT_LABEL_COUNT, LabelPrintCpcl.PRINTER_NAME);
 
             } else {
                 Toast.makeText(scope.context(), "上传运单数据失败!", Toast.LENGTH_SHORT).show();
@@ -974,10 +974,9 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
                         mEdtCustomerNo.setEnabled(false);
                         mEdtFromCustomerName.setEnabled(false);
                         mEdtFromCustomerMobile.setEnabled(false);
-                        if(customer.getString("is_month_pay").equals("true")){
+                        if (customer.getString("is_month_pay").equals("true")) {
                             setPayTypes(false);
-                        }
-                        else {
+                        } else {
                             setPayTypes(true);
                         }
                         Toast.makeText(scope.context(), "已查到客户信息!", Toast.LENGTH_SHORT).show();
