@@ -3,12 +3,9 @@ package com.lmis.addons.short_list;
 import android.content.Context;
 import android.util.Log;
 
-import com.lmis.addons.carrying_bill.CarryingBillDB;
 import com.lmis.base.org.OrgDB;
 import com.lmis.orm.LmisDataRow;
 import com.lmis.util.BlueTooth;
-
-import java.util.List;
 
 import us.monoid.json.JSONArray;
 import us.monoid.json.JSONException;
@@ -105,6 +102,7 @@ public class ShortListPrintCpcl {
             int x2 = 0;
             int y2 = y1 + 50 + 10 + 40 + 30 + 20;
             int stepY = 0;
+            int sumCarryingFeeTotal = 0;
             for (int i = 0; i < lines.length(); i++) {
                 JSONObject line = lines.getJSONObject(i);
 
@@ -116,6 +114,8 @@ public class ShortListPrintCpcl {
                 String goodsNum = line.getString("goods_num");
                 String fOrgName = line.getString("from_org_name");
                 String tOrgName = line.getString("to_org_name");
+                int carryingFeeTotal = Integer.parseInt(line.getString("carrying_fee"));
+                sumCarryingFeeTotal +=carryingFeeTotal;
 
                 String ft = String.format("%s->%s", fOrgName, tOrgName);
 
@@ -126,14 +126,14 @@ public class ShortListPrintCpcl {
 
                 String paddingFt = String.format("%s", ft);
 
-                String lineDes = String.format("%s/%s/%s/%s/", paddingBillNo, tOrgName, paddingGoodsInfo, paddingGoodsNum);
+                String lineDes = String.format("%s/%s/%s/%s/%s元", paddingBillNo, tOrgName, paddingGoodsInfo, paddingGoodsNum,carryingFeeTotal);
 
                 zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
 
                 zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
             }
 
-            printFooter(zpSDK, y2 + stepY + 30 + 20);
+            printFooter(zpSDK, y2 + stepY + 30 + 20,sumCarryingFeeTotal );
             zpSDK.print(0, 0);
             zpSDK.print(0, 0);
             zpSDK.disconnect();
@@ -246,14 +246,14 @@ public class ShortListPrintCpcl {
 
                 String paddingFt = String.format("%s", ft);
 
-                String lineDes = String.format("%s/%s/%s/%s", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
+                String lineDes = String.format("%s/%s/%s/%s元", paddingBillNo, paddingFt, paddingGoodsInfo, paddingGoodsNum);
 
                 zpSDK.drawText(x2 + 10, y2 + stepY, lineDes, 2, 0, 1, false, false);
 
                 zpSDK.drawLine(3, x2, y2 + stepY + 30, bottomRightX, y2 + stepY + 30, true);
 
             }
-            printFooter(zpSDK, y2 + stepY + 30 + 20);
+            printFooter(zpSDK, y2 + stepY + 30 + 20,0);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             ex.printStackTrace();
@@ -312,7 +312,7 @@ public class ShortListPrintCpcl {
 
             }
 
-            printFooter(zpSDK, y2 + stepY + 30 + 20);
+            printFooter(zpSDK, y2 + stepY + 30 + 20,0);
             zpSDK.print(0, 0);
             zpSDK.disconnect();
         } catch (
@@ -322,8 +322,10 @@ public class ShortListPrintCpcl {
         }
     }
 
-    public static void printFooter(zpBluetoothPrinter zpSDK, int y) {
+    public static void printFooter(zpBluetoothPrinter zpSDK, int y, int sumFee) {
 
-        zpSDK.drawText(10, y, "交接签字:", 2, 0, 1, false, false);
+        zpSDK.drawText(10, y,String.format("运费合计:%s元",sumFee) , 2, 0, 1, false, false);
+
+        zpSDK.drawText(10, y + 30, "交接签字:", 2, 0, 1, false, false);
     }
 }

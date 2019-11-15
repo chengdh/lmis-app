@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants"
     android:padding="8dp"
-    android:weightSum="8">
+    android:weightSum="9">
 
     <CheckBox
         android:id="@+id/cbx_select_bill"
@@ -50,5 +50,12 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="10件" />
+    <TextView
+        android:id="@+id/txv_carrying_fee_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="30" />
 
 </LinearLayout>

@@ -367,8 +367,8 @@ public class CarryingBillPrintCpcl {
             zpSDK.drawLine(3, x4 + 40 + 60 + 100, y3 + 30 + 30 + 30 + 30, x4 + 40 + 60 + 100, y4 + 30, true);
 
 
-            zpSDK.drawText(x4 + 40 + 60 + 100 + 10, y4, "送货费:", 0, 0, 1, false, false);
-            zpSDK.drawText(x4 + 40 + 60 + 100 + 10 + 90, y4, toShortCarryingFee + "", 0, 0, 1, false, false);
+            zpSDK.drawText(x4 + 40 + 60 + 100 + 10, y4, "到货短途:", 0, 0, 1, false, false);
+            zpSDK.drawText(x4 + 40 + 60 + 100 + 10 + 110, y4, toShortCarryingFee + "", 0, 0, 1, false, false);
 
             //竖线
             zpSDK.drawLine(3, x4 + 40 + 60 + 100 + 10 + 90 + 90, y3 + 30 + 30 + 30 + 30, x4 + 40 + 60 + 100 + 10 + 90 + 90, y4 + 30, true);

@@ -83,7 +83,8 @@ public class LabelPrintCpcl {
 
 
                 String toOrgName = jsonBill.getString("to_org_name");
-                zpSDK.drawText(64 + 16, 88, toOrgName, 4, 0, 1, false, false);
+                String toCustomerName = jsonBill.getString("to_customer_name");
+                zpSDK.drawText(64 + 16, 88, toOrgName + "    (" + toCustomerName + ")", 4, 0, 1, false, false);
 
 
                 zpSDK.drawLine(3, 0, 160, 568, 160, true);

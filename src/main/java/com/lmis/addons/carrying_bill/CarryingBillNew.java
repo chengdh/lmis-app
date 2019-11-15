@@ -494,24 +494,24 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
             mEdtFromCustomerName.requestFocus();
             ret = false;
         }
-        String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
-        if (fromCustomerMobile.length() != 11) {
-            mEdtFromCustomerMobile.setError("发货人手机不正确!");
-            mEdtFromCustomerMobile.requestFocus();
-            ret = false;
-        }
+//        String fromCustomerMobile = mEdtFromCustomerMobile.getText().toString();
+//        if (fromCustomerMobile.length() != 11) {
+//            mEdtFromCustomerMobile.setError("发货人手机不正确!");
+//            mEdtFromCustomerMobile.requestFocus();
+//            ret = false;
+//        }
         String toCustomerName = mEdtToCustomerName.getText().toString();
         if (toCustomerName != null && toCustomerName.length() == 0) {
             mEdtToCustomerName.setError("收货人不可为空!");
             mEdtToCustomerName.requestFocus();
             ret = false;
         }
-        String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
-        if (toCustomerMobile.length() != 11) {
-            mEdtToCustomerMobile.setError("收货人手机不正确!");
-            mEdtToCustomerMobile.requestFocus();
-            ret = false;
-        }
+//        String toCustomerMobile = mEdtToCustomerMobile.getText().toString();
+//        if (toCustomerMobile.length() != 11) {
+//            mEdtToCustomerMobile.setError("收货人手机不正确!");
+//            mEdtToCustomerMobile.requestFocus();
+//            ret = false;
+//        }
 
         String goodsNum = mEdtGoodsNum.getText().toString();
         if (goodsNum != null && goodsNum.length() == 0) {

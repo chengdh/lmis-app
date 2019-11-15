@@ -140,6 +140,10 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
         @InjectView(R.id.txv_from_to)
         TextView txvFromTo;
 
+        @InjectView(R.id.txv_carrying_fee_total)
+        TextView txvCarryingFeeTotal;
+
+
 
         public ViewHolderForBillsList(View view) {
             ButterKnife.inject(this, view);
@@ -173,6 +177,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
                     String goodsInfo = bill.getString("goods_info");
                     String fromOrg = bill.getString("from_org_name");
                     String toOrg = bill.getString("to_org_name");
+                    String carryingFeeTotal = bill.getString("carrying_fee_total");
 
                     String fromTo = String.format("%s->%s", fromOrg, toOrg);
 
@@ -180,6 +185,7 @@ public class FragmentBillList extends BaseFragment implements AdapterView.OnItem
                     holder.txvFromTo.setText(fromTo);
                     holder.txvGoodsInfo.setText(goodsInfo);
                     holder.txvGoodsNum.setText(goodsNum);
+                    holder.txvCarryingFeeTotal.setText(carryingFeeTotal);
                 }
                 catch(Exception ex){
                     Log.d(TAG,ex.toString());

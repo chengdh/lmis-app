@@ -270,7 +270,7 @@ public class ShortListNew extends BaseFragment {
                 String bill_no = ((JSONObject) o).getString("bill_no");
                 String from_org_name = ((JSONObject) o).getString("from_org_name");
                 String to_org_name = ((JSONObject) o).getString("to_org_name");
-                String carrying_fee = ((JSONObject) o).getString("carrying_fee");
+                String carrying_fee = ((JSONObject) o).getString("carrying_fee_total");
                 String goods_fee = ((JSONObject) o).getString("goods_fee");
                 String goods_info = ((JSONObject) o).getString("goods_info");
                 String goods_num = ((JSONObject) o).getString("goods_num");
