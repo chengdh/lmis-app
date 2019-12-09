@@ -199,6 +199,8 @@ public class CarryingBillEdit extends BaseFragment {
     @InjectView(R.id.cbx_is_urgent)
     CheckBox mCbxIsUrgent;
 
+    @InjectView(R.id.cbx_is_outside)
+    CheckBox mCbxIsOutside;
 
     /**
      * 数据上传 task.
@@ -406,6 +408,10 @@ public class CarryingBillEdit extends BaseFragment {
             if (mJsonBill.getString("is_receipt").equals("true")) {
                 mCbxIsReceipt.setChecked(true);
             }
+            if (mJsonBill.getString("is_outside").equals("true")) {
+                mCbxIsOutside.setChecked(true);
+            }
+
 
 
         } catch (Exception ex) {
@@ -621,6 +627,13 @@ public class CarryingBillEdit extends BaseFragment {
             billAttributes.put("customerable_type","CarryingBill");
             ret.put("bill_association_object_attributes",billAttributes);
         }
+        if(mCbxIsOutside.isChecked()){
+            billAttributes.put("is_outside",1);
+            billAttributes.put("customerable_id",mJsonBill.getInt("id"));
+            billAttributes.put("customerable_type","CarryingBill");
+            ret.put("bill_association_object_attributes",billAttributes);
+        }
+
 
 
         return ret;

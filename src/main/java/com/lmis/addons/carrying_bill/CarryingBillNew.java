@@ -228,6 +228,11 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
     CheckBox mCbxIsUrgent;
 
 
+    @InjectView(R.id.cbx_is_outside)
+    CheckBox mCbxIsOutside;
+
+
+
     /**
      * 数据保存处理.
      */
@@ -589,6 +594,7 @@ public class CarryingBillNew extends BaseFragment implements SearchableSpinner.O
 
         vals.put("is_urgent", mCbxIsUrgent.isChecked());
         vals.put("is_receipt", mCbxIsReceipt.isChecked());
+        vals.put("is_outside", mCbxIsOutside.isChecked());
 
         vals.put("to_customer_name", mEdtToCustomerName.getText());
         vals.put("to_customer_mobile", mEdtToCustomerMobile.getText());

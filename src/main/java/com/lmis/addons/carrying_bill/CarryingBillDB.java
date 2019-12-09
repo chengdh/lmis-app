@@ -181,8 +181,10 @@ public class CarryingBillDB extends LmisDatabase {
         //加急与回单
         LmisColumn isUrgent = new LmisColumn("is_urgent", "is urgent", LmisFields.varchar(20),false);
         LmisColumn isReceipt = new LmisColumn("is_receipt", "is receipt", LmisFields.varchar(20),false);
+        LmisColumn isOutside = new LmisColumn("is_outside", "is outside", LmisFields.varchar(20),false);
         cols.add(isUrgent);
         cols.add(isReceipt);
+        cols.add(isOutside);
 
 
         //备注
@@ -231,6 +233,11 @@ public class CarryingBillDB extends LmisDatabase {
         }
         if(json.getString("is_receipt").equals("true")){
             billAttributes.put("is_receipt",1);
+            billAttributes.put("customerable_id",id);
+            billAttributes.put("customerable_type","CarryingBill");
+        }
+        if(json.getString("is_outside").equals("true")){
+            billAttributes.put("is_ouside",1);
             billAttributes.put("customerable_id",id);
             billAttributes.put("customerable_type","CarryingBill");
         }
@@ -294,6 +301,7 @@ public class CarryingBillDB extends LmisDatabase {
         json.remove("from_customer_code");
         json.remove("is_urgent");
         json.remove("is_receipt");
+        json.remove("is_outside");
         json.remove("processed");
         json.remove("created_at_str");
         json.remove("process_datetime");

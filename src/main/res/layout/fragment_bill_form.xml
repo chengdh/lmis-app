@@ -304,6 +304,14 @@
                 android:layout_weight="2"
                 android:text="回单"
                 android:textSize="14dp" />
+            <com.lmis.util.controls.LmisCheckBox
+                android:id="@+id/cbx_is_outside"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="外部票"
+                android:textSize="14dp" />
+
 
         </LinearLayout>
 
