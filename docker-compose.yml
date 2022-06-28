@@ -1,0 +1,7 @@
+version: '3'
+services:
+  yanzhao-mis-app:
+    image: mingc/android-build-box:1.20 
+    volumes:
+       - .:/project
+       - "$HOME/.dockercache/gradle": /root/.gradle
